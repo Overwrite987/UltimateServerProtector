@@ -29,7 +29,7 @@ Admin commands that can be included in the config:
 • bStats
 https://bstats.org/plugin/bukkit/UltimateServerProtector/13347
 
-RuBikkit.org
-SpigotMC.ru
-Black-Minecraft.com
-Paper
+RuBikkit.org - https://rubukkit.org/threads/admin-sec-ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.177400/
+SpigotMC.ru - https://spigotmc.ru/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.737/
+Black-Minecraft.com - https://black-minecraft.com/plugins/2161-ultimateserverprotectors-unikalnyj-admin-pass-dlja-igrokov-vashego-servera.html
+PaperMc.io - https://forums.papermc.io/threads/ultimateserverprotector-best-security-plugin-full-async.500/
