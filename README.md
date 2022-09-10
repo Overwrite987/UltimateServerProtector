@@ -17,19 +17,31 @@ serverprotector.protect - if available, asks the player to enter the admin passw
 serverprotector.admin - allows you to use the /usp command and see notifications about successful/failed password entry attempts
 
 • Commands
+
 /pas <password> - you need to have admin rights or OP to enter it. (you can change this command in the config) 
+
 /usp reload - config reload command 
+
 /usp reboot - plugin restart command 
+
 Admin commands that can be included in the config: 
+
 /usp setpass (nickname) (pass) - add a player and his pass to the config 
+
 /usp addop (nickname) - add a player to the list of operators 
+
 /usp addip (ip) - add IP to adminipwhitelist 
+
 /ultimateserverprotector and /serverprotector - analogs of the /usp command
   
 • bStats
 https://bstats.org/plugin/bukkit/UltimateServerProtector/13347
 
 RuBikkit.org - https://rubukkit.org/threads/admin-sec-ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.177400/
+
 SpigotMC.ru - https://spigotmc.ru/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.737/
+
 Black-Minecraft.com - https://black-minecraft.com/plugins/2161-ultimateserverprotectors-unikalnyj-admin-pass-dlja-igrokov-vashego-servera.html
+
 PaperMc.io - https://forums.papermc.io/threads/ultimateserverprotector-best-security-plugin-full-async.500/
+
