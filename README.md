@@ -13,7 +13,9 @@ It is worth saying that if a player is not recorded in the config, but has admin
 3) Asynchrony and multithreading, which ensure high performance. Plugin does not load the server at all.
 
 • Permissions
+
 serverprotector.protect - if available, asks the player to enter the admin password. Inserted into the plugin so that you don't have to specify an extra permission in the config. 
+
 serverprotector.admin - allows you to use the /usp command and see notifications about successful/failed password entry attempts
 
 • Commands
