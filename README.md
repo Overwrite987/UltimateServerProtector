@@ -1,7 +1,5 @@
 • This is an  incredibly lightweight plugin, that add an "admin-password" to your server.
 
-
-
 • The main features should be considered the function of adding rights to check and creating a personal admin password for each player! All together, this creates an almost insurmountable barrier for the "hackers".
 
 Each admin login attempt can be recorded in logs in a separate file in the plugin folder. Each activation and deactivation of the plugin can also be logged. 
@@ -30,3 +28,8 @@ Admin commands that can be included in the config:
   
 • bStats
 https://bstats.org/plugin/bukkit/UltimateServerProtector/13347
+
+RuBikkit.org
+SpigotMC.ru
+Black-Minecraft.com
+Paper
