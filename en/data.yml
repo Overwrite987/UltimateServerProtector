@@ -1,0 +1,6 @@
+# Unique passwords for admins
+data:
+  Overwrite: # player 1
+    pass: '123123' # player's 1 password
+  test99999: # player 2
+    pass: '321321' # player's 2 password

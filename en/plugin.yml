@@ -1,0 +1,8 @@
+name: UltimateServerProtector
+version: 14.0
+author: Overwrite
+main: ru.Overwrite.protect.Main
+api-version: 1.13
+commands:
+   ultimateserverprotector:
+      aliases: [usp, serverprotector]

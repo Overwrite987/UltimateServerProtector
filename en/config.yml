@@ -1,0 +1,198 @@
+# =================================== #
+# ＵｌｔｉｍａｔｅＳｅｒｖｅｒＰｒｏｔｅｃｔｏｒ by Overwrite
+# =================================== #
+
+# Main settings
+main-settings:
+  # Plugin prefix (hex - &#colorID)
+  prefix: '&f&l[&c&lProtection&f&l] '
+  # If false is specified, then you will need to write a password to the chat to enter the password
+  use-command: true
+  # Password command. (specified without / at the beginning) (by default - pas)
+  pas-command: 'pas'
+  # The name of the user data file. (by default - data.yml)
+  data-file: 'data.yml'
+  # Please don't disable
+  enable-metrics: true
+  update-checker: true
+
+# Additional lock settings
+blocking-settings:
+  # Whether to block item drop
+  block-item-drop: true
+  # Whether to block items pickup
+  block-item-pickup: true
+  # Whether to block tab completion (/version + TAB)
+  block-tab-complete: true
+  # Whether to make the player immortal while entering the password
+  block-damage: true
+  # Whether to block the mob trigger on the player while entering the password
+  block-mobs-targeting: true
+  
+# Session settings
+session-settings:
+  # Save player's IP
+  session: true
+  # Should player data be deleted after a while
+  session-time-enabled: false
+  # The time after which the data about the registered player will be deleted in seconds (the countdown starts from the player's exit)
+  session-time: 21600 #(6 hrs)
+
+# Punishment settings
+punish-settings:
+  # Should punishments be applied to players with admin-permissions who are not in the config
+  notadmin-punish: true
+  # Should punishment be applied to a player who did not have time to enter the admin password for the number of attempts allotted to him
+  enable-attemps: true
+  # Maximum number of attempts to enter the admin password
+  max-attempts: 3
+  # Should punishment be applied to a player who did not have time to enter the admin password for a certain time
+  enable-time: true
+  # The time for which the player will have to enter the admin password in seconds
+  time: 60
+ 
+# Secure Settings
+secure-settings:
+  # Should punishments be applied to operators that are not on the list
+  enable-op-whitelist: true
+  # Whether to enable commands for adding new players to the config
+  enable-admin-commands: false
+  # Should punishments be applied to people who have prohibited permissions (default - false)
+  enable-permission-blacklist: false
+  # Whether to enable IPWhitelist for admins (default - false)
+  enable-ip-whitelist: false
+  # Should plugin turn off the server if the plugin is disabled (default - false)
+  shutdown-on-disable: false
+  # Whether to allow a specific players to join the game without an admin password and notifications (disabled by default and unsafe!)
+  enable-excluded-players: false
+
+# Message settingd
+message-settings:
+  # Delay between auto-messages and titles in seconds
+  delay: 1
+  # Enable titles?
+  send-titles: true
+  # Enable broadcasts for admins?
+  enable-broadcasts: true
+  # Enable broadcasts for console?
+  enable-console-broadcasts: true
+
+# Settings of sounds that will be played when entering commands/actions
+sound-settings:
+  # Whether to turn on sounds on commands
+  enable-sounds: true
+  # Aviable sounds: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+  # Sound when catching a player with admin-perms
+  on-capture: ENTITY_ITEM_BREAK
+  # Sound with an incorrect password
+  on-pas-fail: ENTITY_VILLAGER_NO
+  # Sound with the correct password
+  on-pas-correct: ENTITY_PLAYER_LEVELUP
+  # Volume from 0.0 to 1.0, where 1.0 is max.
+  volume: 0.75
+  # Pitch from 0.5 to 2.0, default: 1.0
+  pitch: 1.0
+
+# Setting up the effects that are given before entering the password
+effect-settings:
+  # Whether to enable the effect that will be given to the admin before entering the password
+  enable-effects: true
+  # What effects should be applied to the player (EFFECT:LEVEL)
+  effects:
+    - 'BLINDNESS:3'
+ 
+# Log settings
+logging-settings:
+  # Log successful/failed password entry attempts?
+  logging-pas: true
+  # Log admin joins?
+  logging-join: true
+  # Log plugin enable and disable?
+  logging-enable-disable: true
+  
+# Commands that will be applied to violators
+commands:
+
+# Commands that will be applied to those who have admin-permissions, but who are not in the config
+  not-in-config:
+  - 'kick %player% You are not admin!'
+  - 'deop %player%'
+ 
+# Commands that will be applied to those who hava OP, but who are not in op-whitelist
+  not-in-opwhitelist:
+  - 'deop %player%'
+  #- 'ban %player% Вам нельзя иметь права оператора!'
+
+# Commands that will be applied to those who have forbidden permissions (disabled by default)
+  have-blacklisted-perm:
+  - 'lp user %player% permission clear'
+  #- 'ban %player% Вам нельзя иметь такие права!'
+ 
+# Commands that will be applied to those who logged in with admin-perms and are specified in the config, but have a non-admin IP
+  not-admin-ip:
+  - 'kick %player% Your IP is not in whitelist'
+  #- 'deop %player'
+ 
+# Commands that will be applied to those who entered the pass incorrectly for the attempts allotted to him
+  failed-pass:
+  - 'ban %player% You entered the admin password incorrectly, your account is banned'
+  - 'deop %player%'
+ 
+# Commands that will be applied to those who have not entered a pass in the allotted time
+  failed-time:
+  - 'ban %player% You did not have time to enter the admin password in the allotted time'
+  - 'deop %player%'
+
+# Permissions for which the player will need to enter the admin password (Add as many as you need)
+permissions:
+ - '*'
+ - 'bukkit.*'
+ - 'minecraft.*'
+ - 'essentials.*'
+ - 'cmi.*'
+ - 'worldguard.*'
+ - 'worldedit.*'
+ - 'fawe.*'
+ - 'permissions.*'
+ - 'luckperms.*'
+ - 'luckperms.editor'
+ - 'luckperms.applyedits'
+ - 'citizens.*'
+ - 'citizenscmd.*'
+ - 'znpcs.*'
+ - 'holograms.*'
+ - 'multiverse.*'
+ - 'coreprotect.*'
+ - 'mycommand.*'
+ - 'dh.admin'
+ - 'ls.admin'
+ - 'authme.admin'
+ - 'protocol.admin'
+ - 'placeholderapi.admin'
+ - 'plugman.admin'
+
+# Commands that can be entered before entering the admin password
+allowed-commands:
+ - '/l'
+ - '/login'
+ - '/reg'
+ - '/register'
+
+# Which players are allowed to have OP
+op-whitelist:
+ - Overwrite
+ - test99999
+
+# Which IP is admin-ip
+ip-whitelist:
+ - '127.0.0.1'
+ - '0.0.0.0'
+
+# Permissions that no one except the players from the excluded-players section will be able to have (by default - disabled)
+blacklisted-perms: 
+ - '*'
+ 
+# Players who can join the server, without admin-password
+excluded-players:
+  - test99999
+  - test123123
