@@ -1,13 +1,13 @@
 package ru.Overwrite.protect;
 
+import org.bstats.bukkit.Metrics;
 import org.bukkit.Bukkit;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.Overwrite.protect.listeners.AdditionalListener;
@@ -16,9 +16,7 @@ import ru.Overwrite.protect.listeners.JoinListener;
 import ru.Overwrite.protect.listeners.LeaveListener;
 import ru.Overwrite.protect.listeners.MainListener;
 import ru.Overwrite.protect.utils.Config;
-import ru.Overwrite.protect.utils.Metrics;
-import ru.Overwrite.protect.utils.RGBcolors;
-import ru.Overwrite.protect.utils.UpdateChecker;
+import ru.Overwrite.protect.utils.Utils;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -30,16 +28,23 @@ import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.function.UnaryOperator;
 import java.io.InputStream;
 import java.net.URL;
 
 public final class Main extends JavaPlugin {
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
 
-    public HashMap<String, String> ips = new HashMap<>();
+    private static FileConfiguration message;
+    private static String prefix;
 
-    public HashMap<Player, Integer> login = new HashMap<>();
+    public final Map<String, String> ips = new HashMap<>();
 
-    public HashMap<Player, Integer> time = new HashMap<>();
+    public final Map<Player, Integer> login = new HashMap<>();
+
+    public final Map<Player, Integer> time = new HashMap<>();
 
     public List<String> permissions;
 
@@ -49,8 +54,11 @@ public final class Main extends JavaPlugin {
         return instance;
     }
 
+    private CommandClass commands;
+
+
     public void onEnable() {
-        if (getServer().getName() == "CraftBukkit") {
+        if (getServer().getName().equals("CraftBukkit") || getServer().getName().equals("Spigot")) {
             getLogger().info("§6============= §6! WARNING ! §c=============");
             getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
             getLogger().info("§eСкачать Paper для новых версий: §ahttps://papermc.io/downloads");
@@ -60,43 +68,43 @@ public final class Main extends JavaPlugin {
             return;
         }
         long startTime = System.currentTimeMillis();
-        Date date = new Date();
-        SimpleDateFormat formatter = new SimpleDateFormat("[dd-MM-yyyy] HH:mm:ss -");
+        Date date = new Date(startTime);
         instance = this;
         saveDefaultConfig();
-        Bukkit.getPluginManager().registerEvents(new ChatListener(), this);
-        Bukkit.getPluginManager().registerEvents(new JoinListener(), this);
-        Bukkit.getPluginManager().registerEvents(new LeaveListener(), this);
-        Bukkit.getPluginManager().registerEvents(new MainListener(), this);
-        Bukkit.getPluginManager().registerEvents(new AdditionalListener(), this);
+        PluginManager pluginManager = Bukkit.getPluginManager();
+        pluginManager.registerEvents(new ChatListener(), this);
+        pluginManager.registerEvents(new JoinListener(), this);
+        pluginManager.registerEvents(new LeaveListener(), this);
+        pluginManager.registerEvents(new MainListener(), this);
+        pluginManager.registerEvents(new AdditionalListener(), this);
         FileConfiguration data = Config.getFile(getConfig().getString("main-settings.data-file"));
         Config.save(data, getConfig().getString("main-settings.data-file"));
-        FileConfiguration message = Config.getFile("message.yml");
+        message = Config.getFile("message.yml");
         Config.save(message, "message.yml");
+        commands = new CommandClass(this);
         if (getConfig().getBoolean("main-settings.use-command")) {
             try {
-                PluginCommand command = null;
+                PluginCommand command;
                 CommandMap map = null;
-                Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(new Class[] { String.class, Plugin.class });
+                Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 c.setAccessible(true);
-                command = c.newInstance(new Object[] { getConfig().getString("main-settings.pas-command"), this });
-                if (Bukkit.getPluginManager() instanceof SimplePluginManager) {
+                command = c.newInstance(getConfig().getString("main-settings.pas-command"), this);
+                if (pluginManager instanceof SimplePluginManager) {
                     Field f = SimplePluginManager.class.getDeclaredField("commandMap");
                     f.setAccessible(true);
-                    map = (CommandMap)f.get(Bukkit.getPluginManager());
+                    map = (CommandMap)f.get(pluginManager);
                 }
                 if (map != null)
-                    map.register(getDescription().getName(), (Command)command);
-                if (command != null)
-                    command.setExecutor((CommandExecutor)new CommandClass());
+                    map.register(getDescription().getName(), command);
+                command.setExecutor(commands);
             } catch (Exception e) {
                 getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
-                Bukkit.getPluginManager().disablePlugin(this);
+                pluginManager.disablePlugin(this);
             }
         } else {
             getLogger().info("Для ввода пароля используется чат!");
         }
-        getCommand("ultimateserverprotector").setExecutor((CommandExecutor)new CommandClass());
+        Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(commands);
         permissions = getConfig().getStringList("permissions");
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, Runner::run, 20L, 40L);
         Runner.startMSG();
@@ -116,7 +124,7 @@ public final class Main extends JavaPlugin {
             Runner.startPermsCheck();
         }
         if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
-            logToFile(message.getString("log-format.enabled").replace("%date%", formatter.format(date)));
+            logToFile(message.getString("log-format.enabled").replace("%date%", DATE_FORMAT.format(date)));
         }
         if (getConfig().getBoolean("main-settings.enable-metrics")) {
             new Metrics(this, 13347);
@@ -140,18 +148,44 @@ public final class Main extends JavaPlugin {
         getLogger().info("Плагин включен за " + (endTime - startTime) + " милисекунд(ы)");
     }
 
-    public Boolean isPermissions(Player p) {
-        boolean bool = false;
-        for (String s : Main.getInstance().permissions) {
-            if (p.isOp() || p.hasPermission("serverprotector.protect") || p.hasPermission(s))
-                bool = true;
-        }
-        return Boolean.valueOf(bool);
+    @Override
+    public void reloadConfig() {
+        super.reloadConfig();
+        message = Config.getFile("message.yml");
+        prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
     }
 
-    public Boolean isAdmin(String nick) {
+    public static String getMessageFull(String key) {
+        return prefix + getMessage(key);
+    }
+
+    public static String getMessageFull(String key, UnaryOperator<String> preprocess) {
+        return prefix + getMessage(key, preprocess);
+    }
+
+    public static String getMessage(String key) {
+        return Utils.colorize(message.getString(key, "&4&lERROR&r"));
+    }
+
+    public static String getMessage(String key, UnaryOperator<String> preprocess) {
+        return Utils.colorize(preprocess.apply(message.getString(key, "&4&lERROR&r")));
+    }
+
+    public static String getPrefix() {
+        return prefix;
+    }
+
+    public boolean isPermissions(Player p) {
+        if (p.isOp() || p.hasPermission("serverprotector.protect")) return true;
+        for (String s : Main.getInstance().permissions) {
+            if (p.hasPermission(s)) return true;
+        }
+        return false;
+    }
+
+    public boolean isAdmin(String nick) {
         FileConfiguration data = Config.getFile(getConfig().getString("main-settings.data-file"));
-        return Boolean.valueOf(data.contains("data.$nick".replace("$nick", nick)));
+        return data.contains("data." + nick);
     }
 
     public void logToFile(String message) {
@@ -177,18 +211,17 @@ public final class Main extends JavaPlugin {
     public void onDisable() {
         Date date = new Date();
         FileConfiguration message = Config.getFile("message.yml");
-        SimpleDateFormat formatter = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
         Bukkit.getScheduler().cancelTasks(this);
         login.clear();
         ips.clear();
         time.clear();
         permissions.clear();
-        CommandClass.attemps.clear();
+        commands.attempts.clear();
         if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
-            logToFile(message.getString("log-format.disabled").replace("%date%", formatter.format(date)));
+            logToFile(message.getString("log-format.disabled").replace("%date%", DATE_FORMAT.format(date)));
         }
         if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(RGBcolors.translate(getConfig().getString("main-settings.prefix") + (message.getString("broadcasts.disabled"))), "serverprotector.admin");
+            Bukkit.broadcast(Main.getMessageFull("broadcasts.disabled"), "serverprotector.admin");
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
             Bukkit.shutdown();

@@ -2,31 +2,29 @@ package ru.Overwrite.protect;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
 import ru.Overwrite.protect.utils.Config;
-import ru.Overwrite.protect.utils.RGBcolors;
+import ru.Overwrite.protect.utils.Utils;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
 
-public class Runner {
+import static ru.Overwrite.protect.Main.DATE_FORMAT;
 
+public class Runner {
     public static void run() {
         FileConfiguration config = Main.getInstance().getConfig();
         FileConfiguration message = Config.getFile("message.yml");
         for (Player p : Bukkit.getOnlinePlayers()) {
             Date date = new Date();
-            SimpleDateFormat formatter = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
             if (!Main.getInstance().login.containsKey(p)) {
                 if (Main.getInstance().isPermissions(p) &&
                         !(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName())) &&
-                        !Main.getInstance().ips.containsKey(p.getName()+p.getAddress().getAddress().getHostAddress())) {
+                        !Main.getInstance().ips.containsKey(p.getName()+Utils.getIp(p))) {
                     Main.getInstance().login.put(p, 0);
                     if (config.getBoolean("sound-settings.enable-sounds")) {
                         p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-capture")),
@@ -35,17 +33,16 @@ public class Runner {
                     if (config.getBoolean("effect-settings.enable-effects")) {
                         giveEffect(Main.getInstance(), p);
                     }
+                    if (config.getBoolean("logging-settings.logging-pas")) {
+                        Main.getInstance().logToFile(message.getString("log-format.captured").replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p))
+                                .replace("%date%", DATE_FORMAT.format(date)));
+                    }
+                    String msg = Main.getMessageFull("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                     if (config.getBoolean("message-settings.enable-broadcasts")) {
-                        Bukkit.broadcast(RGBcolors.translate(config.getString("main-settings.prefix") +
-                                (message.getString("broadcasts.captured").replace("%player%", p.getName()).replace("%ip%", p.getAddress().getAddress().getHostAddress()))), "serverprotector.admin");
+                        Bukkit.broadcast(msg, "serverprotector.admin");
                     }
                     if (config.getBoolean("message-settings.enable-console-broadcasts")) {
-                        Bukkit.getConsoleSender().sendMessage(RGBcolors.translate(config.getString("main-settings.prefix") +
-                                (message.getString("broadcasts.captured").replace("%player%", p.getName()).replace("%ip%", p.getAddress().getAddress().getHostAddress()))));
-                    }
-                    if (config.getBoolean("logging-settings.logging-pas")) {
-                        Main.getInstance().logToFile(message.getString("log-format.captured").replace("%player%", p.getName()).replace("%ip%", p.getAddress().getAddress().getHostAddress())
-                                .replace("%date%", formatter.format(date)));
+                        Bukkit.getConsoleSender().sendMessage(msg);
                     }
                 }
             }
@@ -82,14 +79,14 @@ public class Runner {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (Main.getInstance().login.containsKey(p)) {
-                        p.sendMessage(RGBcolors.translate(config.getString("main-settings.prefix") + message.getString("msg.message")));
+                        p.sendMessage(Utils.colorize(config.getString("main-settings.prefix") + message.getString("msg.message")));
                         if (config.getBoolean("message-settings.send-titles"))
-                            p.sendTitle(RGBcolors.translate(message.getString("titles.title")), RGBcolors.translate(message.getString("titles.subtitle")));
+                            p.sendTitle(Main.getMessage("titles.title"), Main.getMessage("titles.subtitle"));
                         return;
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(Main.getInstance(), 0L, config.getInt("message-settings.delay")*20);
+        }).runTaskTimerAsynchronously(Main.getInstance(), 0L, config.getInt("message-settings.delay") * 20L);
     }
 
     public static void startOpCheck() {
@@ -122,7 +119,7 @@ public class Runner {
     public static void checkFail(Main plugin, Player p, List<String> command) {
         Bukkit.getServer().getScheduler().runTask(plugin, () -> {
             for (String c : command) {
-                Bukkit.dispatchCommand((CommandSender)Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
+                Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
             }
         });
     }
@@ -135,7 +132,7 @@ public class Runner {
                     if (Main.getInstance().login.containsKey(p) && !Main.getInstance().time.containsKey(p)) {
                         Main.getInstance().time.put(p, 1);
                     } else if (Main.getInstance().login.containsKey(p)) {
-                        Main.getInstance().time.put(p, (Main.getInstance().time.get(p)).intValue() + 1);
+                        Main.getInstance().time.put(p, Main.getInstance().time.get(p) + 1);
                     }
                     if (!noTimeLeft(p) && config.getBoolean("punish-settings.enable-time"))
                         checkFail(Main.getInstance(), p, config.getStringList("commands.failed-time"));

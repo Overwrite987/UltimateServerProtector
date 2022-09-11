@@ -12,7 +12,7 @@ import ru.Overwrite.protect.Main;
 
 public class MainListener implements Listener {
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onMove(PlayerMoveEvent e) {
         Player p = e.getPlayer();
         if (Main.getInstance().login.containsKey(p)) {
@@ -20,7 +20,7 @@ public class MainListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onBreak(BlockBreakEvent e) {
         Player p = e.getPlayer();
         if (Main.getInstance().login.containsKey(p)) {
@@ -28,7 +28,7 @@ public class MainListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlace(BlockPlaceEvent e) {
         Player p = e.getPlayer();
         if (Main.getInstance().login.containsKey(p)) {
@@ -36,7 +36,7 @@ public class MainListener implements Listener {
         }
     }
 
-    @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = false)
+    @EventHandler(priority = EventPriority.HIGHEST)
     public void onPlayerInteract(PlayerInteractEvent e) {
         Player p = e.getPlayer();
         if (Main.getInstance().login.containsKey(p)) {
