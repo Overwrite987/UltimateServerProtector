@@ -7,18 +7,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import ru.Overwrite.protect.utils.Config;
 import ru.Overwrite.protect.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
 
-import static ru.Overwrite.protect.Main.DATE_FORMAT;
-
 public class Runner {
     public static void run() {
         FileConfiguration config = Main.getInstance().getConfig();
-        FileConfiguration message = Config.getFile("message.yml");
         for (Player p : Bukkit.getOnlinePlayers()) {
             Date date = new Date();
             if (!Main.getInstance().login.containsKey(p)) {
@@ -34,8 +30,7 @@ public class Runner {
                         giveEffect(Main.getInstance(), p);
                     }
                     if (config.getBoolean("logging-settings.logging-pas")) {
-                        Main.getInstance().logToFile(message.getString("log-format.captured").replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p))
-                                .replace("%date%", DATE_FORMAT.format(date)));
+                        Main.getInstance().logAction("log-format.captured", p, date);
                     }
                     String msg = Main.getMessageFull("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                     if (config.getBoolean("message-settings.enable-broadcasts")) {
@@ -51,7 +46,7 @@ public class Runner {
 
     private static void giveEffect(Main plugin, Player p) {
         FileConfiguration config = Main.getInstance().getConfig();
-        Bukkit.getServer().getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             for (String s : config.getStringList("effect-settings.effects")) {
                 PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
                 int level = Integer.parseInt(s.split(":")[1]) - 1;
@@ -74,12 +69,11 @@ public class Runner {
 
     public static void startMSG() {
         FileConfiguration config = Main.getInstance().getConfig();
-        FileConfiguration message = Config.getFile("message.yml");
         (new BukkitRunnable() {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (Main.getInstance().login.containsKey(p)) {
-                        p.sendMessage(Utils.colorize(config.getString("main-settings.prefix") + message.getString("msg.message")));
+                        p.sendMessage(Main.getMessage("msg.message"));
                         if (config.getBoolean("message-settings.send-titles"))
                             p.sendTitle(Main.getMessage("titles.title"), Main.getMessage("titles.subtitle"));
                         return;
@@ -117,7 +111,7 @@ public class Runner {
     }
 
     public static void checkFail(Main plugin, Player p, List<String> command) {
-        Bukkit.getServer().getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             for (String c : command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
             }

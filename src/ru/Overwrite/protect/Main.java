@@ -188,6 +188,15 @@ public final class Main extends JavaPlugin {
         return data.contains("data." + nick);
     }
 
+    public void logAction(String key, Player player, Date date) {
+        logToFile(
+                message.getString(key, "ERROR")
+                        .replace("%player%", player.getName())
+                        .replace("%ip%", Utils.getIp(player))
+                        .replace("%date%", DATE_FORMAT.format(date))
+        );
+    }
+
     public void logToFile(String message) {
         try {
             File dataFolder = getDataFolder();

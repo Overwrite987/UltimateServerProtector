@@ -16,8 +16,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.Overwrite.protect.Main.DATE_FORMAT;
-
 public class CommandClass implements CommandExecutor {
 
     public final Map<Player, Integer> attempts = new HashMap<>();
@@ -30,7 +28,6 @@ public class CommandClass implements CommandExecutor {
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         FileConfiguration config = plugin.getConfig();
         FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
-        FileConfiguration message = Config.getFile("message.yml");
         if (cmd.getName().equalsIgnoreCase(config.getString("main-settings.pas-command"))) {
             if (!(sender instanceof Player)) {
                 Bukkit.getLogger().info(Main.getMessageFull("msg.playeronly"));
@@ -150,7 +147,6 @@ public class CommandClass implements CommandExecutor {
     private void onFail(Player p) {
         Date date = new Date();
         FileConfiguration config = plugin.getConfig();
-        FileConfiguration message = Config.getFile("message.yml");
         if (!attempts.containsKey(p)) {
             attempts.put(p, 1);
         } else {
@@ -161,8 +157,7 @@ public class CommandClass implements CommandExecutor {
                     (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
         }
         if (config.getBoolean("logging-settings.logging-pas")) {
-            plugin.logToFile((message.getString("log-format.failed").replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p))
-                    .replace("%date%", DATE_FORMAT.format(date))));
+            plugin.logAction("log-format.failed", p, date);
         }
         String msg = Main.getMessageFull("broadcast.failed", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
@@ -190,7 +185,6 @@ public class CommandClass implements CommandExecutor {
 
     public void correctPassword(Player p) {
         Date date = new Date();
-        FileConfiguration message = Config.getFile("message.yml");
         FileConfiguration config = plugin.getConfig();
         plugin.login.remove(p, 0);
         p.sendMessage(Main.getMessageFull("msg.correct"));
@@ -207,8 +201,7 @@ public class CommandClass implements CommandExecutor {
             plugin.ips.put(p.getName()+Utils.getIp(p), "focku");
         }
         if (config.getBoolean("logging-settings.logging-pas")) {
-            plugin.logToFile(message.getString("log-format.passed").replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p))
-                    .replace("%date%", DATE_FORMAT.format(date)));
+            plugin.logAction("log-format.passed", p, date);
         }
         if (config.getBoolean("session-settings.session-time-enabled")) {
             plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {

@@ -19,15 +19,12 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static ru.Overwrite.protect.Main.DATE_FORMAT;
-
 public class ChatListener implements Listener {
 
     private static final Map<Player, Integer> attempts = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {
-        FileConfiguration message = Config.getFile("message.yml");
         FileConfiguration config = Main.getInstance().getConfig();
         FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
         Player p = e.getPlayer();
@@ -49,7 +46,7 @@ public class ChatListener implements Listener {
     }
 
     private static void failedPass(Main plugin, Player p) {
-        Bukkit.getServer().getScheduler().runTask(plugin, () -> {
+        Bukkit.getScheduler().runTask(plugin, () -> {
             FileConfiguration config = Main.getInstance().getConfig();
             for (String c : config.getStringList("commands.failed-pass")) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
@@ -60,15 +57,13 @@ public class ChatListener implements Listener {
     private void onFail(Player p) {
         Date date = new Date();
         FileConfiguration config = Main.getInstance().getConfig();
-        FileConfiguration message = Config.getFile("message.yml");
         attempts.put(p, attempts.getOrDefault(p, 0) + 1);
         if (config.getBoolean("sound-settings.enable-sounds")) {
             p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-pas-fail")),
                     (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
         }
         if (config.getBoolean("logging-settings.logging-pas")) {
-            Main.getInstance().logToFile((message.getString("log-format.failed").replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p))
-                    .replace("%date%", DATE_FORMAT.format(date))));
+            Main.getInstance().logAction("log-format.failed", p, date);
         }
         String msg = Main.getMessageFull("broadcasts.failed", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
@@ -89,9 +84,8 @@ public class ChatListener implements Listener {
 
     public void correctPassword(Player p) {
         Date date = new Date();
-        FileConfiguration message = Config.getFile("message.yml");
         FileConfiguration config = Main.getInstance().getConfig();
-        Bukkit.getServer().getScheduler().runTask(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTask(Main.getInstance(), () -> {
             Main.getInstance().login.remove(p, 0);
             p.sendMessage(Main.getMessageFull("msg.correct"));
             if (config.getBoolean("sound-settings.enable-sounds")) {
@@ -107,8 +101,7 @@ public class ChatListener implements Listener {
                 Main.getInstance().ips.put(p.getName()+Utils.getIp(p), "focku");
             }
             if (config.getBoolean("logging-settings.logging-pas")) {
-                Main.getInstance().logToFile(message.getString("log-format.passed").replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p))
-                        .replace("%date%", DATE_FORMAT.format(date)));
+                Main.getInstance().logAction("log-format.passed", p, date);
             }
             if (config.getBoolean("session-settings.session-time-enabled")) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
