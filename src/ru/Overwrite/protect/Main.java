@@ -122,18 +122,20 @@ public final class Main extends JavaPlugin {
             new Metrics(this, 13347);
         }
         if (getConfig().getBoolean("main-settings.update-checker")) {
-        	if (UpdateChecker.checkVersionByURL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/main/version", this.getDescription().getVersion())) {
-        		getLogger().info("§6========================================");
-                getLogger().info("§aВы используете последнюю версию плагина!");
-                getLogger().info("§6========================================");
-            } else {
-            	getLogger().info("§6========================================");
-                getLogger().info("§aВы используете устаревшую версию плагина!");
-                getLogger().info("§aВы можете загрузить новую версию по ссылке ниже");
-                getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
-                getLogger().info("§6========================================");
-            }
-        }
+	      new UpdateChecker(this, 105237).getVersion(version -> {
+	        if (this.getDescription().getVersion().equals(version)) {
+	           getLogger().info("§6========================================");
+	           getLogger().info("§aYou are using latest version of the plugin!");
+	           getLogger().info("§6========================================");
+	       } else {
+	           getLogger().info("§6========================================");
+	           getLogger().info("§aYou are using outdated version of the plugin!");
+	           getLogger().info("§aYou can download new version here:");
+	           getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
+	           getLogger().info("§6========================================");
+	            }
+	          });
+	        }
         long endTime = System.currentTimeMillis();
         getLogger().info("Плагин включен за " + (endTime - startTime) + " милисекунд(ы)");
     }
