@@ -238,7 +238,6 @@ public class CommandClass implements CommandExecutor {
             Main.getInstance().getServer().getScheduler().scheduleAsyncDelayedTask(Main.getInstance(), new Runnable() {
                 public void run() {
                     if (!Main.getInstance().login.containsKey(p))
-                    if (!Main.getInstance().login.containsKey(p));
                     Main.getInstance().ips.remove(p.getName()+p.getAddress().getAddress().getHostAddress());
                 }
             }, config.getInt("session-settings.session-time")*20);
