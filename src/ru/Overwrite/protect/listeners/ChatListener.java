@@ -16,7 +16,7 @@ import ru.Overwrite.protect.utils.Utils;
 
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 public class ChatListener implements Listener {
@@ -123,18 +123,25 @@ public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
-        if (Main.getInstance().login.containsKey(p)) {
-            e.setCancelled(true);
-        }
+        if (!Main.getInstance().login.containsKey(p)) return;
+        e.setCancelled(true);
         FileConfiguration config = Main.getInstance().getConfig();
-        List<String> list = config.getStringList("allowed-commands");
         if (config.getBoolean("main-settings.use-command")) {
-            for (String command : list) {
-                if ((e.getMessage().equalsIgnoreCase("/" + config.getString("main-settings.pas-command")) || e.getMessage().toLowerCase().startsWith("/"+ config.getString("main-settings.pas-command") + " "))
-                        || (e.getMessage().toLowerCase().startsWith(command + " ") || e.getMessage().equalsIgnoreCase(command)))
+            String message = e.getMessage();
+            String label = cutCommand(message).toLowerCase(Locale.ROOT);
+            if (label.equals("/" + config.getString("main-settings.pas-command"))) {
+                e.setCancelled(false);
+            } else for (String command : config.getStringList("allowed-commands")) {
+                if (label.equals(command) || message.equalsIgnoreCase(command)) {
                     e.setCancelled(false);
+                    break;
+                }
             }
         }
     }
 
+    private static String cutCommand(String str) {
+        int index = str.indexOf(' ');
+        return index == -1 ? str : str.substring(0, index);
+    }
 }
