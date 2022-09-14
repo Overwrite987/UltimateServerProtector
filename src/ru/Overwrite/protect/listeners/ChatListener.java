@@ -105,8 +105,9 @@ public class ChatListener implements Listener {
             }
             if (config.getBoolean("session-settings.session-time-enabled")) {
                 Bukkit.getScheduler().runTaskLaterAsynchronously(Main.getInstance(), () -> {
-                    if (!Main.getInstance().login.containsKey(p))
-                    Main.getInstance().ips.remove(p.getName()+Utils.getIp(p));
+                    if (!Main.getInstance().login.containsKey(p)) {
+                        Main.getInstance().ips.remove(p.getName() + Utils.getIp(p));
+                    }
                 }, config.getInt("session-settings.session-time") * 20L);
             }
             String msg = Main.getMessageFull("broadcasts.passed", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));

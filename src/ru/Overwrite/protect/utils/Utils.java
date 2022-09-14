@@ -3,7 +3,13 @@ package ru.Overwrite.protect.utils;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.URL;
+import java.util.Scanner;
+import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -41,5 +47,18 @@ public final class Utils {
             message = matcher.appendTail(builder).toString();
         }
         return ChatColor.translateAlternateColorCodes('&', message);
+    }
+
+    public static void checkUpdates(Plugin plugin, int id, Consumer<String> consumer) {
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + id).openStream();
+                 Scanner scanner = new Scanner(inputStream)) {
+                if (scanner.hasNext()) {
+                    consumer.accept(scanner.next());
+                }
+            } catch (IOException exception) {
+                plugin.getLogger().info("Can't check for updates: " + exception.getMessage());
+            }
+        });
     }
 }

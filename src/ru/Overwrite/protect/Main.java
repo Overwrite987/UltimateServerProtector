@@ -31,8 +31,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 import java.util.function.UnaryOperator;
-import java.io.InputStream;
-import java.net.URL;
 
 public final class Main extends JavaPlugin {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
@@ -58,7 +56,7 @@ public final class Main extends JavaPlugin {
 
 
     public void onEnable() {
-        if (getServer().getName().equals("CraftBukkit") || getServer().getName().equals("Spigot")) {
+        if (getServer().getName().equals("CraftBukkit")) {
             getLogger().info("§6============= §6! WARNING ! §c=============");
             getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
             getLogger().info("§eСкачать Paper для новых версий: §ahttps://papermc.io/downloads");
@@ -130,22 +128,22 @@ public final class Main extends JavaPlugin {
             new Metrics(this, 13347);
         }
         if (getConfig().getBoolean("main-settings.update-checker")) {
-	      new UpdateChecker(this, 105237).getVersion(version -> {
-	        if (this.getDescription().getVersion().equals(version)) {
-	           getLogger().info("§6========================================");
-	           getLogger().info("§aYou are using latest version of the plugin!");
-	           getLogger().info("§6========================================");
-	       } else {
-	           getLogger().info("§6========================================");
-	           getLogger().info("§aYou are using outdated version of the plugin!");
-	           getLogger().info("§aYou can download new version here:");
-	           getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
-	           getLogger().info("§6========================================");
-	            }
-	          });
-	        }
+        Utils.checkUpdates(this, 105237, version -> {
+            if (this.getDescription().getVersion().equals(version)) {
+                 getLogger().info("§6========================================");
+                 getLogger().info("§aYou are using latest version of the plugin!");
+                 getLogger().info("§6========================================");
+            } else {
+                 getLogger().info("§6========================================");
+                 getLogger().info("§aYou are using outdated version of the plugin!");
+                 getLogger().info("§aYou can download new version here:");
+                 getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
+                 getLogger().info("§6========================================");
+            }
+        });
+        }
         long endTime = System.currentTimeMillis();
-        getLogger().info("Плагин включен за " + (endTime - startTime) + " милисекунд(ы)");
+        getLogger().info("Plugin started in " + (endTime - startTime) + " ms");
     }
 
     @Override

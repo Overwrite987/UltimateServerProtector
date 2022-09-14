@@ -205,8 +205,9 @@ public class CommandClass implements CommandExecutor {
         }
         if (config.getBoolean("session-settings.session-time-enabled")) {
             plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                if (!plugin.login.containsKey(p))
-                plugin.ips.remove(p.getName() + Utils.getIp(p));
+                if (!plugin.login.containsKey(p)) {
+                    plugin.ips.remove(p.getName() + Utils.getIp(p));
+                }
             }, config.getInt("session-settings.session-time") * 20L);
         }
         String msg = Main.getMessageFull("broadcasts.passed", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
