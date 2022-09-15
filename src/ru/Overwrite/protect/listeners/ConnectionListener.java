@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.Overwrite.protect.Main;
@@ -15,7 +16,7 @@ import ru.Overwrite.protect.utils.Utils;
 import java.util.Date;
 import java.util.List;
 
-public class JoinListener implements Listener {
+public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent e) {
@@ -25,7 +26,7 @@ public class JoinListener implements Listener {
         Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
             if (!(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName()))) {
                 if (Main.getInstance().isPermissions(p)) {
-                    if (!Main.getInstance().ips.containsKey(p.getName()+Utils.getIp(p)) && config.getBoolean("session-settings.session")) {
+                    if (!Main.getInstance().ips.contains(p.getName()+Utils.getIp(p)) && config.getBoolean("session-settings.session")) {
                         Main.getInstance().login.put(p, 0);
                         if (config.getBoolean("effect-settings.enable-effects")) {
                             giveEffect(Main.getInstance(), p);
@@ -47,6 +48,13 @@ public class JoinListener implements Listener {
                 }
             }
         });
+    }
+
+    @EventHandler(priority = EventPriority.HIGHEST)
+    public void onLeave(PlayerQuitEvent event) {
+        Player player = event.getPlayer();
+        Main.getInstance().login.remove(player);
+        Main.getInstance().time.remove(player);
     }
 
     private static void checkFail(Main plugin, Player p, List<String> command) {

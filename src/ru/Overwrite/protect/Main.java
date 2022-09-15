@@ -6,15 +6,15 @@ import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import ru.Overwrite.protect.listeners.AdditionalListener;
 import ru.Overwrite.protect.listeners.ChatListener;
-import ru.Overwrite.protect.listeners.JoinListener;
-import ru.Overwrite.protect.listeners.LeaveListener;
-import ru.Overwrite.protect.listeners.MainListener;
+import ru.Overwrite.protect.listeners.ConnectionListener;
+import ru.Overwrite.protect.listeners.InteractionsListener;
 import ru.Overwrite.protect.utils.Config;
 import ru.Overwrite.protect.utils.Utils;
 
@@ -27,24 +27,21 @@ import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.List;
+import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
+import java.util.Set;
 import java.util.function.UnaryOperator;
 
 public final class Main extends JavaPlugin {
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
+    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
 
     private static FileConfiguration message;
     private static String prefix;
 
-    public final Map<String, String> ips = new HashMap<>();
-
+    public final Set<String> ips = new HashSet<>();
     public final Map<Player, Integer> login = new HashMap<>();
-
     public final Map<Player, Integer> time = new HashMap<>();
-
-    public List<String> permissions;
 
     private static Main instance;
 
@@ -54,7 +51,13 @@ public final class Main extends JavaPlugin {
 
     private CommandClass commands;
 
+    public static void handleInteraction(Player player, Cancellable event) {
+        if (getInstance().login.containsKey(player)) {
+            event.setCancelled(true);
+        }
+    }
 
+    @Override
     public void onEnable() {
         if (getServer().getName().equals("CraftBukkit")) {
             getLogger().info("§6============= §6! WARNING ! §c=============");
@@ -71,9 +74,8 @@ public final class Main extends JavaPlugin {
         saveDefaultConfig();
         PluginManager pluginManager = Bukkit.getPluginManager();
         pluginManager.registerEvents(new ChatListener(), this);
-        pluginManager.registerEvents(new JoinListener(), this);
-        pluginManager.registerEvents(new LeaveListener(), this);
-        pluginManager.registerEvents(new MainListener(), this);
+        pluginManager.registerEvents(new ConnectionListener(), this);
+        pluginManager.registerEvents(new InteractionsListener(), this);
         pluginManager.registerEvents(new AdditionalListener(), this);
         FileConfiguration data = Config.getFile(getConfig().getString("main-settings.data-file"));
         Config.save(data, getConfig().getString("main-settings.data-file"));
@@ -97,13 +99,13 @@ public final class Main extends JavaPlugin {
                 command.setExecutor(commands);
             } catch (Exception e) {
                 getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
+                e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
             getLogger().info("Для ввода пароля используется чат!");
         }
         Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(commands);
-        permissions = getConfig().getStringList("permissions");
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, Runner::run, 20L, 40L);
         Runner.startMSG();
         if (getConfig().getBoolean("main-settings.enable-metrics")) {
@@ -149,6 +151,7 @@ public final class Main extends JavaPlugin {
     @Override
     public void reloadConfig() {
         super.reloadConfig();
+
         message = Config.getFile("message.yml");
         prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
     }
@@ -175,7 +178,7 @@ public final class Main extends JavaPlugin {
 
     public boolean isPermissions(Player p) {
         if (p.isOp() || p.hasPermission("serverprotector.protect")) return true;
-        for (String s : Main.getInstance().permissions) {
+        for (String s : getConfig().getStringList("permissions")) {
             if (p.hasPermission(s)) return true;
         }
         return false;
@@ -215,6 +218,7 @@ public final class Main extends JavaPlugin {
         }
     }
 
+    @Override
     public void onDisable() {
         Date date = new Date();
         FileConfiguration message = Config.getFile("message.yml");
@@ -222,7 +226,6 @@ public final class Main extends JavaPlugin {
         login.clear();
         ips.clear();
         time.clear();
-        permissions.clear();
         commands.attempts.clear();
         if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
             logToFile(message.getString("log-format.disabled").replace("%date%", DATE_FORMAT.format(date)));

@@ -98,7 +98,7 @@ public class ChatListener implements Listener {
                 }
             }
             if (config.getBoolean("session-settings.session")) {
-                Main.getInstance().ips.put(p.getName()+Utils.getIp(p), "focku");
+                Main.getInstance().ips.add(p.getName()+Utils.getIp(p));
             }
             if (config.getBoolean("logging-settings.logging-pas")) {
                 Main.getInstance().logAction("log-format.passed", p, date);

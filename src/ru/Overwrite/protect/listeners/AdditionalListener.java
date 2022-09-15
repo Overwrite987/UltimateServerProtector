@@ -15,49 +15,41 @@ import ru.Overwrite.protect.Main;
 
 public class AdditionalListener implements Listener {
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent e) {
         FileConfiguration config = Main.getInstance().getConfig();
         Player p = e.getPlayer();
         if (config.getBoolean("blocking-settings.block-item-drop")) {
-            if (Main.getInstance().login.containsKey(p)) {
-                e.setCancelled(true);
-            }
+            Main.handleInteraction(p, e);
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemPickup(PlayerPickupItemEvent e) {
         FileConfiguration config = Main.getInstance().getConfig();
         Player p = e.getPlayer();
         if (config.getBoolean("blocking-settings.block-item-pickup")) {
-            if (Main.getInstance().login.containsKey(p)) {
-                e.setCancelled(true);
-            }
+            Main.handleInteraction(p, e);
         }
     }
 
-    @EventHandler(priority = EventPriority.LOWEST)
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
         FileConfiguration config = Main.getInstance().getConfig();
         Player p = (Player)e.getEntity();
         if (config.getBoolean("blocking-settings.block-damage")) {
-            if (Main.getInstance().login.containsKey(p)) {
-                e.setCancelled(true);
-            }
+            Main.handleInteraction(p, e);
         }
     }
 
-    @EventHandler
+    @EventHandler(ignoreCancelled = true)
     public void onTabComplete(AsyncTabCompleteEvent e) {
         if (!(e.getSender() instanceof Player)) return;
         FileConfiguration config = Main.getInstance().getConfig();
         Player p = (Player)e.getSender();
         if (config.getBoolean("blocking-settings.block-tab-complete")) {
-            if (Main.getInstance().login.containsKey(p)) {
-                e.setCancelled(true);
-            }
+            Main.handleInteraction(p, e);
         }
     }
 
@@ -65,11 +57,10 @@ public class AdditionalListener implements Listener {
     public void onTarget(EntityTargetEvent e) {
         if (!(e.getTarget() instanceof Player)) return;
         FileConfiguration config = Main.getInstance().getConfig();
-        Player p = (Player)e.getTarget();
-        if (config.getBoolean("blocking-settings.block-mobs-targeting")) {
-            if (Main.getInstance().login.containsKey(p) &&
-                    (e.getReason() == TargetReason.CLOSEST_PLAYER || e.getReason() == TargetReason.RANDOM_TARGET))
-                e.setCancelled(true);
+        Player p = (Player) e.getTarget();
+        if (config.getBoolean("blocking-settings.block-mobs-targeting") &&
+                    (e.getReason() == TargetReason.CLOSEST_PLAYER || e.getReason() == TargetReason.RANDOM_TARGET)) {
+            Main.handleInteraction(p, e);
         }
     }
 }

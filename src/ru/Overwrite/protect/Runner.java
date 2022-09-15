@@ -17,28 +17,29 @@ public class Runner {
         FileConfiguration config = Main.getInstance().getConfig();
         for (Player p : Bukkit.getOnlinePlayers()) {
             Date date = new Date();
-            if (!Main.getInstance().login.containsKey(p)) {
-                if (Main.getInstance().isPermissions(p) &&
-                        !(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName())) &&
-                        !Main.getInstance().ips.containsKey(p.getName()+Utils.getIp(p))) {
-                    Main.getInstance().login.put(p, 0);
-                    if (config.getBoolean("sound-settings.enable-sounds")) {
-                        p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-capture")),
-                                (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
-                    }
-                    if (config.getBoolean("effect-settings.enable-effects")) {
-                        giveEffect(Main.getInstance(), p);
-                    }
-                    if (config.getBoolean("logging-settings.logging-pas")) {
-                        Main.getInstance().logAction("log-format.captured", p, date);
-                    }
-                    String msg = Main.getMessageFull("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
-                    if (config.getBoolean("message-settings.enable-broadcasts")) {
-                        Bukkit.broadcast(msg, "serverprotector.admin");
-                    }
-                    if (config.getBoolean("message-settings.enable-console-broadcasts")) {
-                        Bukkit.getConsoleSender().sendMessage(msg);
-                    }
+            if (Main.getInstance().login.containsKey(p)) {
+                continue;
+            }
+            if (Main.getInstance().isPermissions(p) &&
+                    !(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName())) &&
+                    !Main.getInstance().ips.contains(p.getName()+Utils.getIp(p))) {
+                Main.getInstance().login.put(p, 0);
+                if (config.getBoolean("sound-settings.enable-sounds")) {
+                    p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-capture")),
+                            (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
+                }
+                if (config.getBoolean("effect-settings.enable-effects")) {
+                    giveEffect(Main.getInstance(), p);
+                }
+                if (config.getBoolean("logging-settings.logging-pas")) {
+                    Main.getInstance().logAction("log-format.captured", p, date);
+                }
+                String msg = Main.getMessageFull("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
+                if (config.getBoolean("message-settings.enable-broadcasts")) {
+                    Bukkit.broadcast(msg, "serverprotector.admin");
+                }
+                if (config.getBoolean("message-settings.enable-console-broadcasts")) {
+                    Bukkit.getConsoleSender().sendMessage(msg);
                 }
             }
         }

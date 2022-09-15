@@ -198,7 +198,7 @@ public class CommandClass implements CommandExecutor {
             }
         }
         if (config.getBoolean("session-settings.session")) {
-            plugin.ips.put(p.getName()+Utils.getIp(p), "focku");
+            plugin.ips.add(p.getName()+Utils.getIp(p));
         }
         if (config.getBoolean("logging-settings.logging-pas")) {
             plugin.logAction("log-format.passed", p, date);
