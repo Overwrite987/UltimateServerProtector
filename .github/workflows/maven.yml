@@ -32,4 +32,4 @@ jobs:
       - uses: actions/upload-artifact@main
         with:
           name: UltimateServerProtect
-          path: target/UltimateServerProtect-*.jar
+          path: target/UltimateServerProtector-*.jar
