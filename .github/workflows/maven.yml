@@ -29,7 +29,12 @@ jobs:
         run: mvn -B package --file pom.xml
       - name: Build with Maven | RU
         run: mvn -B -P ru package --file pom.xml
+
       - uses: actions/upload-artifact@main
         with:
-          name: UltimateServerProtect
-          path: target/UltimateServerProtector-*.jar
+          name: UltimateServerProtect (English)
+          path: target/UltimateServerProtector-en.jar
+      - uses: actions/upload-artifact@main
+        with:
+          name: UltimateServerProtect (Russian)
+          path: target/UltimateServerProtector-ru.jar
