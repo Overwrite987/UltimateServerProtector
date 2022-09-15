@@ -38,7 +38,7 @@ public class ConnectionListener implements Listener {
                     if (config.getBoolean("logging-settings.logging-join")) {
                         Main.getInstance().logAction("log-format.joined", p, date);
                     }
-                    String msg = Main.getMessageFull("broadcasts.joined", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
+                    String msg = Main.getMessagePrefixed("broadcasts.joined", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                     if (config.getBoolean("message-settings.enable-console-broadcasts")) {
                         Bukkit.getConsoleSender().sendMessage(msg);
                     }

@@ -130,17 +130,15 @@ public final class Main extends JavaPlugin {
         }
         if (getConfig().getBoolean("main-settings.update-checker")) {
         Utils.checkUpdates(this, 105237, version -> {
+            getLogger().info("§6========================================");
             if (this.getDescription().getVersion().equals(version)) {
-                 getLogger().info("§6========================================");
                  getLogger().info("§aYou are using latest version of the plugin!");
-                 getLogger().info("§6========================================");
             } else {
-                 getLogger().info("§6========================================");
                  getLogger().info("§aYou are using outdated version of the plugin!");
                  getLogger().info("§aYou can download new version here:");
                  getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
-                 getLogger().info("§6========================================");
             }
+            getLogger().info("§6========================================");
         });
         }
         long endTime = System.currentTimeMillis();
@@ -155,11 +153,11 @@ public final class Main extends JavaPlugin {
         prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
     }
 
-    public static String getMessageFull(String key) {
+    public static String getMessagePrefixed(String key) {
         return prefix + getMessage(key);
     }
 
-    public static String getMessageFull(String key, UnaryOperator<String> preprocess) {
+    public static String getMessagePrefixed(String key, UnaryOperator<String> preprocess) {
         return prefix + getMessage(key, preprocess);
     }
 
@@ -230,7 +228,7 @@ public final class Main extends JavaPlugin {
             logToFile(message.getString("log-format.disabled").replace("%date%", DATE_FORMAT.format(date)));
         }
         if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(Main.getMessageFull("broadcasts.disabled"), "serverprotector.admin");
+            Bukkit.broadcast(Main.getMessagePrefixed("broadcasts.disabled"), "serverprotector.admin");
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
             Bukkit.shutdown();

@@ -22,19 +22,19 @@ public class CommandClass implements CommandExecutor {
         FileConfiguration config = plugin.getConfig();
         if (cmd.getName().equalsIgnoreCase(config.getString("main-settings.pas-command"))) {
             if (!(sender instanceof Player)) {
-                Bukkit.getLogger().info(Main.getMessageFull("msg.playeronly"));
+                Bukkit.getLogger().info(Main.getMessagePrefixed("msg.playeronly"));
                 return true;
             }
             Player p = (Player)sender;
             if (plugin.login.containsKey(p.getPlayer())) {
                 if (args.length == 0) {
-                    sender.sendMessage(Main.getMessageFull("msg.cantbenull"));
+                    sender.sendMessage(Main.getMessagePrefixed("msg.cantbenull"));
                 } else {
                     plugin.passwordHandler.checkPassword(p, args[0], false);
                 }
                 return true;
             } else {
-                sender.sendMessage(Main.getMessageFull("msg.noneed"));
+                sender.sendMessage(Main.getMessagePrefixed("msg.noneed"));
             }
             return false;
         }
@@ -53,7 +53,7 @@ public class CommandClass implements CommandExecutor {
                 }
                 if (args[0].equalsIgnoreCase("reload")) {
                     plugin.reloadConfig();
-                    sender.sendMessage(Main.getMessageFull("uspmsg.reloaded"));
+                    sender.sendMessage(Main.getMessagePrefixed("uspmsg.reloaded"));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("reboot")) {
@@ -72,18 +72,18 @@ public class CommandClass implements CommandExecutor {
                     if (config.getBoolean("secure-settings.enable-op-whitelist")) {
                         Runner.startOpCheck();
                     }
-                    sender.sendMessage(Main.getMessageFull("uspmsg.rebooted"));
+                    sender.sendMessage(Main.getMessagePrefixed("uspmsg.rebooted"));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("setpass") && config.getBoolean("secure-settings.enable-admin-commands")) {
                     String nickname = args[1];
                     if (plugin.isAdmin(nickname)) {
-                        sender.sendMessage(Main.getMessageFull("uspmsg.alreadyinconfig"));
+                        sender.sendMessage(Main.getMessagePrefixed("uspmsg.alreadyinconfig"));
                         return true;
                     }
                     if (args.length < 4) {
                         addAdmin(nickname, args[2]);
-                        sender.sendMessage(Main.getMessageFull("uspmsg.playeradded", s -> s.replace("%nick%", nickname)));
+                        sender.sendMessage(Main.getMessagePrefixed("uspmsg.playeradded", s -> s.replace("%nick%", nickname)));
                         return true;
                     }
                     sender.sendMessage(Main.getPrefix() + Utils.colorize("§f/usp setpass (ник) (пароль)"));

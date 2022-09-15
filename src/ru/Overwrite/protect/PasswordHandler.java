@@ -27,7 +27,7 @@ public class PasswordHandler {
         if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
             correctPassword(player);
         } else {
-            player.sendMessage(Main.getMessageFull("msg.incorrect"));
+            player.sendMessage(Main.getMessagePrefixed("msg.incorrect"));
             failedPassword(player);
             if (!isAttemptsMax(player) && config.getBoolean("punish-settings.enable-attemps")) {
                 if (resync) {
@@ -66,7 +66,7 @@ public class PasswordHandler {
         if (config.getBoolean("logging-settings.logging-pas")) {
             plugin.logAction("log-format.failed", player, date);
         }
-        String msg = Main.getMessageFull("broadcast.failed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
+        String msg = Main.getMessagePrefixed("broadcast.failed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
             Bukkit.broadcast(msg, "serverprotector.admin");
         }
@@ -79,7 +79,7 @@ public class PasswordHandler {
         Date date = new Date();
         FileConfiguration config = plugin.getConfig();
         plugin.login.remove(player, 0);
-        player.sendMessage(Main.getMessageFull("msg.correct"));
+        player.sendMessage(Main.getMessagePrefixed("msg.correct"));
         if (config.getBoolean("sound-settings.enable-sounds")) {
             player.playSound(player.getLocation(), Sound.valueOf(config.getString("sound-settings.on-pas-correct")),
                     (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
@@ -102,7 +102,7 @@ public class PasswordHandler {
                 }
             }, config.getInt("session-settings.session-time") * 20L);
         }
-        String msg = Main.getMessageFull("broadcasts.passed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
+        String msg = Main.getMessagePrefixed("broadcasts.passed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
             Bukkit.broadcast(msg, "serverprotector.admin");
         }

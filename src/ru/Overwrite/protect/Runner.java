@@ -34,7 +34,7 @@ public class Runner {
                 if (config.getBoolean("logging-settings.logging-pas")) {
                     Main.getInstance().logAction("log-format.captured", p, date);
                 }
-                String msg = Main.getMessageFull("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
+                String msg = Main.getMessagePrefixed("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                 if (config.getBoolean("message-settings.enable-broadcasts")) {
                     Bukkit.broadcast(msg, "serverprotector.admin");
                 }
