@@ -39,6 +39,7 @@ public final class Main extends JavaPlugin {
     private static FileConfiguration message;
     private static String prefix;
 
+    public final PasswordHandler passwordHandler = new PasswordHandler(this);
     public final Set<String> ips = new HashSet<>();
     public final Map<Player, Integer> login = new HashMap<>();
     public final Map<Player, Integer> time = new HashMap<>();
@@ -48,8 +49,6 @@ public final class Main extends JavaPlugin {
     public static Main getInstance() {
         return instance;
     }
-
-    private CommandClass commands;
 
     public static void handleInteraction(Player player, Cancellable event) {
         if (getInstance().login.containsKey(player)) {
@@ -81,7 +80,7 @@ public final class Main extends JavaPlugin {
         Config.save(data, getConfig().getString("main-settings.data-file"));
         message = Config.getFile("message.yml");
         Config.save(message, "message.yml");
-        commands = new CommandClass(this);
+        CommandClass commands = new CommandClass(this);
         if (getConfig().getBoolean("main-settings.use-command")) {
             try {
                 PluginCommand command;
@@ -226,7 +225,7 @@ public final class Main extends JavaPlugin {
         login.clear();
         ips.clear();
         time.clear();
-        commands.attempts.clear();
+        passwordHandler.clearAttempts();
         if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
             logToFile(message.getString("log-format.disabled").replace("%date%", DATE_FORMAT.format(date)));
         }

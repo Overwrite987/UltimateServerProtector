@@ -1,24 +1,17 @@
 package ru.Overwrite.protect;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 import ru.Overwrite.protect.utils.Config;
 import ru.Overwrite.protect.utils.Utils;
 
-import java.util.Date;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class CommandClass implements CommandExecutor {
-
-    public final Map<Player, Integer> attempts = new HashMap<>();
     private final Main plugin;
 
     public CommandClass(Main plugin) {
@@ -27,7 +20,6 @@ public class CommandClass implements CommandExecutor {
 
     public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
         FileConfiguration config = plugin.getConfig();
-        FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
         if (cmd.getName().equalsIgnoreCase(config.getString("main-settings.pas-command"))) {
             if (!(sender instanceof Player)) {
                 Bukkit.getLogger().info(Main.getMessageFull("msg.playeronly"));
@@ -37,16 +29,8 @@ public class CommandClass implements CommandExecutor {
             if (plugin.login.containsKey(p.getPlayer())) {
                 if (args.length == 0) {
                     sender.sendMessage(Main.getMessageFull("msg.cantbenull"));
-                } else if (args[0].equals(data.getString("data." + sender.getName() + ".pass"))) {
-                    correctPassword(p);
                 } else {
-                    sender.sendMessage(Main.getMessageFull("msg.incorrect"));
-                    onFail(p);
-                    if (!attemptsMax(p) && config.getBoolean("punish-settings.enable-attemps")) {
-                        for (String c : config.getStringList("commands.failed-pass")) {
-                            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), (c.replace("%player%", p.getName())));
-                        }
-                    }
+                    plugin.passwordHandler.checkPassword(p, args[0], false);
                 }
                 return true;
             } else {
@@ -144,79 +128,11 @@ public class CommandClass implements CommandExecutor {
         return true;
     }
 
-    private void onFail(Player p) {
-        Date date = new Date();
-        FileConfiguration config = plugin.getConfig();
-        if (!attempts.containsKey(p)) {
-            attempts.put(p, 1);
-        } else {
-            attempts.put(p, attempts.get(p) + 1);
-        }
-        if (config.getBoolean("sound-settings.enable-sounds")) {
-            p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-pas-fail")),
-                    (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
-        }
-        if (config.getBoolean("logging-settings.logging-pas")) {
-            plugin.logAction("log-format.failed", p, date);
-        }
-        String msg = Main.getMessageFull("broadcast.failed", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
-        if (config.getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(msg, "serverprotector.admin");
-        }
-        if (config.getBoolean("message-settings.enable-console-broadcasts")) {
-            Bukkit.getConsoleSender().sendMessage(msg);
-        }
-    }
-
-
-    public boolean attemptsMax(Player p) {
-        if (!attempts.containsKey(p))
-            return true;
-        FileConfiguration config = plugin.getConfig();
-        return (attempts.get(p) < config.getInt("punish-settings.max-attempts"));
-    }
-
     public void addAdmin(String nick, String pas) {
         FileConfiguration config = plugin.getConfig();
         FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
         data.set("data." + nick + ".pass", pas);
         Config.save(data, config.getString("main-settings.data-file"));
-    }
-
-    public void correctPassword(Player p) {
-        Date date = new Date();
-        FileConfiguration config = plugin.getConfig();
-        plugin.login.remove(p, 0);
-        p.sendMessage(Main.getMessageFull("msg.correct"));
-        if (config.getBoolean("sound-settings.enable-sounds")) {
-            p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-pas-correct")),
-                    (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
-        }
-        if (config.getBoolean("effect-settings.enable-effects")) {
-            for (PotionEffect s : p.getActivePotionEffects()) {
-                p.removePotionEffect(s.getType());
-            }
-        }
-        if (config.getBoolean("session-settings.session")) {
-            plugin.ips.add(p.getName()+Utils.getIp(p));
-        }
-        if (config.getBoolean("logging-settings.logging-pas")) {
-            plugin.logAction("log-format.passed", p, date);
-        }
-        if (config.getBoolean("session-settings.session-time-enabled")) {
-            plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                if (!plugin.login.containsKey(p)) {
-                    plugin.ips.remove(p.getName() + Utils.getIp(p));
-                }
-            }, config.getInt("session-settings.session-time") * 20L);
-        }
-        String msg = Main.getMessageFull("broadcasts.passed", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
-        if (config.getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(msg, "serverprotector.admin");
-        }
-        if (config.getBoolean("message-settings.enable-console-broadcasts")) {
-            Bukkit.getConsoleSender().sendMessage(msg);
-        }
     }
 }
 
