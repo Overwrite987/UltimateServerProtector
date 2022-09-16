@@ -9,23 +9,23 @@ import java.io.IOException;
 
 public class Config {
 
-    public static FileConfiguration getFile(String s) {
-        File file = new File(Main.getInstance().getDataFolder(), s);
-        if (Main.getInstance().getResource(s) == null) {
-            return save((FileConfiguration)YamlConfiguration.loadConfiguration(file), s);
+    public static FileConfiguration getFile(String fileName) {
+        File file = new File(Main.getInstance().getDataFolder(), fileName);
+        if (Main.getInstance().getResource(fileName) == null) {
+            return save(YamlConfiguration.loadConfiguration(file), fileName);
         }
         if (!file.exists()) {
-            Main.getInstance().saveResource(s, false);
+            Main.getInstance().saveResource(fileName, false);
         }
-        return (FileConfiguration)YamlConfiguration.loadConfiguration(file);
+        return YamlConfiguration.loadConfiguration(file);
     }
 
-    public static FileConfiguration save(FileConfiguration fileConfiguration, String s) {
+    public static FileConfiguration save(FileConfiguration config, String fileName) {
         try {
-            fileConfiguration.save(new File(Main.getInstance().getDataFolder(), s));
+            config.save(new File(Main.getInstance().getDataFolder(), fileName));
         } catch (IOException ex) {
             ex.printStackTrace();
         }
-        return fileConfiguration;
+        return config;
     }
 }
