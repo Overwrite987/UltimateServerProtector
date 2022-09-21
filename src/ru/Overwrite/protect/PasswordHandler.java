@@ -25,7 +25,10 @@ public class PasswordHandler {
         FileConfiguration config = plugin.getConfig();
         FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
         if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
-            correctPassword(player);
+            if (resync)
+                Bukkit.getScheduler().runTask(plugin, () -> correctPassword(player));
+            else
+                correctPassword(player);
         } else {
             player.sendMessage(Main.getMessagePrefixed("msg.incorrect"));
             failedPassword(player);
