@@ -107,9 +107,6 @@ public final class Main extends JavaPlugin {
         Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(commands);
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, Runner::run, 20L, 40L);
         Runner.startMSG();
-        if (getConfig().getBoolean("main-settings.enable-metrics")) {
-            new Metrics(this, 13347);
-        }
         if (getConfig().getBoolean("punish-settings.enable-time")) {
             Runner.startTimer();
         }
