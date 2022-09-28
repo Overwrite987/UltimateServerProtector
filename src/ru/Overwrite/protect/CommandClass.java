@@ -41,13 +41,13 @@ public class CommandClass implements CommandExecutor {
         if (cmd.getName().equalsIgnoreCase("ultimateserverprotector")) {
             if (sender.hasPermission("serverprotector.admin")) {
                 if (args.length == 0) {
-                    sender.sendMessage("§7§l> §7Использование:");
-                    sender.sendMessage("§6§o/usp reload§7 - перезагрузить конфиг");
-                    sender.sendMessage("§6§o/usp reboot§7 - перезапустить плагин");
+                	sender.sendMessage("§6§lUsage:");
+          	        sender.sendMessage("§6§o/usp reload§7 - reload config");
+          	        sender.sendMessage("§6§o/usp reboot§7 - reload plugin");
                     if (config.getBoolean("secure-settings.enable-admin-commands")) {
-                        sender.sendMessage("§6§o/usp setpass (ник) (пароль) §7- установить пароль игроку");
-                        sender.sendMessage("§6§o/usp addop (ник) §7- добавить игрока в op-whitelist");
-                        sender.sendMessage("§6§o/usp addip (ip) §7- добавить ip в ip-whitelist");
+                    	sender.sendMessage("§6§o/usp setpass (nick) (password) §7- add password to player");
+              	        sender.sendMessage("§6§o/usp addop (nick) §7- add player in op-whitelist");
+              	        sender.sendMessage("§6§o/usp addip (ip) §7- add player in ip-whitelist");
                     }
                     return true;
                 }
@@ -112,13 +112,13 @@ public class CommandClass implements CommandExecutor {
                     sender.sendMessage(Main.getPrefix() + Utils.colorize("§f/usp addip (ip)"));
                     return true;
                 }
-                sender.sendMessage("§7§l> §7Использование:");
-                sender.sendMessage("§6§o/usp reload§7 - перезагрузить конфиг");
-                sender.sendMessage("§6§o/usp reboot§7 - перезапустить плагин");
+                sender.sendMessage("§6§lUsage:");
+      	        sender.sendMessage("§6§o/usp reload§7 - reload config");
+      	        sender.sendMessage("§6§o/usp reboot§7 - reload plugin");
                 if (config.getBoolean("secure-settings.enable-admin-commands")) {
-                    sender.sendMessage("§6§o/usp setpass (ник) (пароль) §7- установить пароль игроку");
-                    sender.sendMessage("§6§o/usp addop (ник) §7- добавить игрока в op-whitelist");
-                    sender.sendMessage("§6§o/usp addip (ip) §7- добавить ip в ip-whitelist");
+                	sender.sendMessage("§6§o/usp setpass (nick) (password) §7- add password to player");
+          	        sender.sendMessage("§6§o/usp addop (nick) §7- add player in op-whitelist");
+          	        sender.sendMessage("§6§o/usp addip (ip) §7- add player in ip-whitelist");
                 }
                 return true;
             } else {
