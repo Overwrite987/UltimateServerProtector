@@ -19,7 +19,7 @@ public class ChatListener implements Listener {
         String msg = e.getMessage();
         if (Main.getInstance().login.containsKey(p)) {
             e.setCancelled(true);
-            e.setMessage(null);
+            e.setMessage("");
             if (!config.getBoolean("main-settings.use-command")) {
                 Main.getInstance().passwordHandler.checkPassword(p, msg, true);
             }

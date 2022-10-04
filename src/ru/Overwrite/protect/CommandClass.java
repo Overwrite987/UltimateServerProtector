@@ -127,12 +127,16 @@ public class CommandClass implements CommandExecutor {
         }
         return true;
     }
-
+	
     public void addAdmin(String nick, String pas) {
         FileConfiguration config = plugin.getConfig();
         FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
         data.set("data." + nick + ".pass", pas);
-        Config.save(data, config.getString("main-settings.data-file"));
+        if (Main.fullpath) {
+            Config.saveFullPath(data, config.getString("main-settings.data-file"));
+        } else {
+        	Config.save(data, config.getString("main-settings.data-file"));	
+        }
     }
 }
 

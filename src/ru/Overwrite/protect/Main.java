@@ -43,8 +43,9 @@ public final class Main extends JavaPlugin {
     public final Set<String> ips = new HashSet<>();
     public final Map<Player, Integer> login = new HashMap<>();
     public final Map<Player, Integer> time = new HashMap<>();
-
     private static Main instance;
+    
+    public static boolean fullpath = false;
 
     public static Main getInstance() {
         return instance;
@@ -59,11 +60,12 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         if (getServer().getName().equals("CraftBukkit")) {
-        	getLogger().info("§6=============§6! WARNING ! §c=============");
-  		    getLogger().info("§eYou are using an unstable core for your MC server! It's recomended to use Paper");
-  		    getLogger().info("§eDownload Paper for newest versions: §ahttps://papermc.io/downloads");
-  		    getLogger().info("§eDownload Paper for older versions: §ahttps://papermc.io/legacy");
-  		    getLogger().info("§6=============§6! WARNING ! §c=============");
+            getLogger().info("§6============= §6! WARNING ! §c=============");
+            getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
+            getLogger().info("§eСкачать Paper для новых версий: §ahttps://papermc.io/downloads");
+            getLogger().info("§eСкачать Paper для старых версий: §ahttps://papermc.io/legacy §7((в тесте выбирайте 2 вариант ответа))");
+            getLogger().info("§6============= §6! WARNING ! §c=============");
+            setEnabled(false);
             return;
         }
         long startTime = System.currentTimeMillis();
@@ -96,12 +98,15 @@ public final class Main extends JavaPlugin {
                     map.register(getDescription().getName(), command);
                 command.setExecutor(commands);
             } catch (Exception e) {
-                getLogger().info("Can't register command.");
+                getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
                 e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
-            getLogger().info("For entering admin-password you need to write it into the chat!");
+            getLogger().info("Для ввода пароля используется чат!");
+        }
+        if (getConfig().getBoolean("file-settings.use-full-path")) {
+        	fullpath = true;
         }
         Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(commands);
         Bukkit.getScheduler().runTaskTimerAsynchronously(instance, Runner::run, 20L, 40L);
@@ -128,11 +133,11 @@ public final class Main extends JavaPlugin {
         Utils.checkUpdates(this, 105237, version -> {
             getLogger().info("§6========================================");
             if (this.getDescription().getVersion().equals(version)) {
-                 getLogger().info("§aYou are using latest version of the plugin!");
+                 getLogger().info("§aВы используете последнюю версию плагина!");
             } else {
-            	 getLogger().info("§aYou are using outdated version of the plugin!");
- 	             getLogger().info("§aYou can download new version here:");
- 	             getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
+                 getLogger().info("§aВы используете старую версию плагина!");
+                 getLogger().info("§aВы можете загрузить новую версию по ссылке ниже:");
+                 getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
             }
             getLogger().info("§6========================================");
         });
@@ -178,7 +183,12 @@ public final class Main extends JavaPlugin {
     }
 
     public boolean isAdmin(String nick) {
-        FileConfiguration data = Config.getFile(getConfig().getString("main-settings.data-file"));
+    	FileConfiguration data;
+    	if (Main.fullpath) {
+            data = Config.getFileFullPath(getConfig().getString("main-settings.data-file"));
+        } else {
+        	data = Config.getFile(getConfig().getString("main-settings.data-file"));
+        }
         return data.contains("data." + nick);
     }
 
@@ -197,7 +207,12 @@ public final class Main extends JavaPlugin {
             if (!dataFolder.exists()) {
                 dataFolder.mkdir();
             }
-            File saveTo = new File(getDataFolder(), "log.yml");
+            File saveTo; 
+            if (fullpath) {
+            	saveTo = new File(getConfig().getString("file-settings.log-file-path"), "log.yml");
+            } else {
+            	saveTo = new File(getDataFolder(), "log.yml");
+            }
             if (!saveTo.exists()) {
                 saveTo.createNewFile();
             }

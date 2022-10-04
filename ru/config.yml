@@ -10,13 +10,25 @@ main-settings:
   use-command: true
   # Команда ввода пароля. (указывается без / в начале) (по умолчанию - pas)
   pas-command: 'pas'
-  # Имя файла с данными игроков. (по умолчанию - data.yml)
-  data-file: 'data.yml'
   # Отправлять ли анонимную статистику (советую не отключать)
   enable-metrics: true
   # Проверять ли на наличие обновлений (советую не отключать)
   update-checker: true
 
+# Настройки файлов
+file-settings:
+  # Имя файла с данными игроков. (по умолчанию - data.yml)
+  data-file: 'data.yml'
+  # Имя файла с логами. (по умолчанию - log.yml)
+  log-file: 'log.yml'
+  # Если эта настройка включена, то вам нужно будет указать полный путь до файла
+  # Пример: root/server/plugins/UltimateServerProtector/data.yml
+  use-full-path: false
+  # Путь к файлу data.yml
+  data-file-path: '/root/server/plugins/UltimateServerProtector/'
+  # Путь к файлу log.yml
+  log-file-path: '/root/server/plugins/UltimateServerProtector/'
+  
 # Настройки дополнительных блокировок
 blocking-settings:
   # Блокировать ли выбрасывание предметов

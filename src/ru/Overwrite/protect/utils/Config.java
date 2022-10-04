@@ -19,10 +19,30 @@ public class Config {
         }
         return YamlConfiguration.loadConfiguration(file);
     }
+    
+    public static FileConfiguration getFileFullPath(String fileName) {
+        File file = new File(Main.getInstance().getConfig().getString("file-settings.data-file-path"), fileName);
+        if (Main.getInstance().getResource(fileName) == null) {
+            return save(YamlConfiguration.loadConfiguration(file), fileName);
+        }
+        if (!file.exists()) {
+            Main.getInstance().saveResource(fileName, false);
+        }
+        return YamlConfiguration.loadConfiguration(file);
+    }
 
     public static FileConfiguration save(FileConfiguration config, String fileName) {
         try {
             config.save(new File(Main.getInstance().getDataFolder(), fileName));
+        } catch (IOException ex) {
+            ex.printStackTrace();
+        }
+        return config;
+    }
+    
+    public static FileConfiguration saveFullPath(FileConfiguration config, String fileName) {
+        try {
+            config.save(new File(Main.getInstance().getConfig().getString("file-settings.data-file-path"), fileName));
         } catch (IOException ex) {
             ex.printStackTrace();
         }

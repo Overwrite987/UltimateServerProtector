@@ -10,12 +10,24 @@ main-settings:
   use-command: true
   # Password command. (specified without / at the beginning) (by default - pas)
   pas-command: 'pas'
-  # The name of the user data file. (by default - data.yml)
-  data-file: 'data.yml'
   # Please don't disable
   enable-metrics: true
   update-checker: true
 
+# File configuration settings
+file-settings:
+  # The name of the player data file. (default is data.yml)
+  data-file: 'data.yml'
+  # The name of the log file. (by default - log.yml)
+  log-file: 'log.yml'
+  # If this setting is enabled, then you will need to specify the full path to the file
+  # Example: root/server/plugins/UltimateServerProtector/data.yml
+  use-full-path: false
+  # data.yml path
+  data-file-path: '/root/server/plugins/UltimateServerProtector/'
+  # log.yml path
+  log-file-path: '/root/server/plugins/UltimateServerProtector/'
+  
 # Additional lock settings
 blocking-settings:
   # Whether to block item drop

@@ -23,18 +23,25 @@ public class PasswordHandler {
 
     public void checkPassword(Player player, String input, boolean resync) {
         FileConfiguration config = plugin.getConfig();
-        FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
+        FileConfiguration data;
+        if (Main.fullpath) {
+            data = Config.getFileFullPath(config.getString("main-settings.data-file"));
+        } else {
+        	data = Config.getFile(config.getString("main-settings.data-file"));
+        }
         if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
-            if (resync)
+            if (resync) {
                 Bukkit.getScheduler().runTask(plugin, () -> correctPassword(player));
-            else
+            } else {
                 correctPassword(player);
+            }
         } else {
             player.sendMessage(Main.getMessagePrefixed("msg.incorrect"));
             failedPassword(player);
             if (!isAttemptsMax(player) && config.getBoolean("punish-settings.enable-attemps")) {
                 if (resync) {
                     Bukkit.getScheduler().runTask(plugin, () -> failedPasswordCommands(player));
+                    Main.getInstance().login.remove(player);
                 } else {
                     failedPasswordCommands(player);
                 }
@@ -69,7 +76,7 @@ public class PasswordHandler {
         if (config.getBoolean("logging-settings.logging-pas")) {
             plugin.logAction("log-format.failed", player, date);
         }
-        String msg = Main.getMessagePrefixed("broadcast.failed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
+        String msg = Main.getMessagePrefixed("broadcasts.failed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
             Bukkit.broadcast(msg, "serverprotector.admin");
         }
