@@ -6,7 +6,7 @@
 
     <groupId>ru.Overwrite.protect</groupId>
     <artifactId>UltimateServerProtector</artifactId>
-    <version>16.0</version>
+    <version>17.0</version>
     <packaging>jar</packaging>
 
     <properties>
