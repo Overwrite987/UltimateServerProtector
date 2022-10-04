@@ -60,11 +60,11 @@ public final class Main extends JavaPlugin {
     @Override
     public void onEnable() {
         if (getServer().getName().equals("CraftBukkit")) {
-            getLogger().info("§6============= §6! WARNING ! §c=============");
-            getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
-            getLogger().info("§eСкачать Paper для новых версий: §ahttps://papermc.io/downloads");
-            getLogger().info("§eСкачать Paper для старых версий: §ahttps://papermc.io/legacy §7((в тесте выбирайте 2 вариант ответа))");
-            getLogger().info("§6============= §6! WARNING ! §c=============");
+        	getLogger().info("§6=============§6! WARNING ! §c=============");
+  		    getLogger().info("§eYou are using an unstable core for your MC server! It's recomended to use Paper");
+  		    getLogger().info("§eDownload Paper for newest versions: §ahttps://papermc.io/downloads");
+  		    getLogger().info("§eDownload Paper for older versions: §ahttps://papermc.io/legacy");
+  		    getLogger().info("§6=============§6! WARNING ! §c=============");
             setEnabled(false);
             return;
         }
@@ -98,12 +98,12 @@ public final class Main extends JavaPlugin {
                     map.register(getDescription().getName(), command);
                 command.setExecutor(commands);
             } catch (Exception e) {
-                getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
+                getLogger().info("Can't register command.");
                 e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
-            getLogger().info("Для ввода пароля используется чат!");
+            getLogger().info("For entering admin-password you need to write it into the chat!");
         }
         if (getConfig().getBoolean("file-settings.use-full-path")) {
         	fullpath = true;
@@ -133,11 +133,11 @@ public final class Main extends JavaPlugin {
         Utils.checkUpdates(this, 105237, version -> {
             getLogger().info("§6========================================");
             if (this.getDescription().getVersion().equals(version)) {
-                 getLogger().info("§aВы используете последнюю версию плагина!");
+                 getLogger().info("§aYou are using latest version of the plugin!");
             } else {
-                 getLogger().info("§aВы используете старую версию плагина!");
-                 getLogger().info("§aВы можете загрузить новую версию по ссылке ниже:");
-                 getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
+            	 getLogger().info("§aYou are using outdated version of the plugin!");
+	             getLogger().info("§aYou can download new version here:");
+	             getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
             }
             getLogger().info("§6========================================");
         });
