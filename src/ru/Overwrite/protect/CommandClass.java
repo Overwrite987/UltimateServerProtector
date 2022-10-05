@@ -130,12 +130,15 @@ public class CommandClass implements CommandExecutor {
 	
     public void addAdmin(String nick, String pas) {
         FileConfiguration config = plugin.getConfig();
-        FileConfiguration data = Config.getFile(config.getString("main-settings.data-file"));
-        data.set("data." + nick + ".pass", pas);
+        FileConfiguration data;
         if (Main.fullpath) {
-            Config.saveFullPath(data, config.getString("main-settings.data-file"));
+        	data = Config.getFileFullPath(config.getString("file-settings.data-file"));
+        	data.set("data." + nick + ".pass", pas);
+        	Config.saveFullPath(data, config.getString("file-settings.data-file"));
         } else {
-        	Config.save(data, config.getString("main-settings.data-file"));	
+        	data = Config.getFile(config.getString("file-settings.data-file"));
+        	data.set("data." + nick + ".pass", pas);
+        	Config.save(data, config.getString("file-settings.data-file"));
         }
     }
 }

@@ -77,8 +77,13 @@ public final class Main extends JavaPlugin {
         pluginManager.registerEvents(new ConnectionListener(), this);
         pluginManager.registerEvents(new InteractionsListener(), this);
         pluginManager.registerEvents(new AdditionalListener(), this);
-        FileConfiguration data = Config.getFile(getConfig().getString("main-settings.data-file"));
-        Config.save(data, getConfig().getString("main-settings.data-file"));
+        if (fullpath) {
+        	FileConfiguration data = Config.getFileFullPath(getConfig().getString("file-settings.data-file"));
+        	Config.saveFullPath(data, getConfig().getString("file-settings.data-file"));
+        } else {
+        	FileConfiguration data = Config.getFile(getConfig().getString("file-settings.data-file"));
+        	Config.save(data, getConfig().getString("file-settings.data-file"));
+        }
         message = Config.getFile("message.yml");
         Config.save(message, "message.yml");
         CommandClass commands = new CommandClass(this);
@@ -185,9 +190,9 @@ public final class Main extends JavaPlugin {
     public boolean isAdmin(String nick) {
     	FileConfiguration data;
     	if (Main.fullpath) {
-            data = Config.getFileFullPath(getConfig().getString("main-settings.data-file"));
+            data = Config.getFileFullPath(getConfig().getString("file-settings.data-file"));
         } else {
-        	data = Config.getFile(getConfig().getString("main-settings.data-file"));
+        	data = Config.getFile(getConfig().getString("file-settings.data-file"));
         }
         return data.contains("data." + nick);
     }

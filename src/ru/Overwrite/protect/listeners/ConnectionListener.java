@@ -33,9 +33,11 @@ public class ConnectionListener implements Listener {
                             giveEffect(Main.getInstance(), p);
                         }
                     }
-                    if (!config.getStringList("ip-whitelist").contains(Utils.getIp(p)) && config.getBoolean("secure-settings.enable-ip-whitelist")) {
-                        checkFail(Main.getInstance(), p, config.getStringList("commands.not-admin-ip"));
-                    }
+                    for (String s : config.getStringList("ip-whitelist")) {
+                        if (config.getBoolean("secure-settings.enable-ip-whitelist") && !Utils.getIp(p).startsWith(s)) {
+                            checkFail(Main.getInstance(), p, config.getStringList("commands.not-admin-ip"));
+                        }
+                      }
                     if (config.getBoolean("logging-settings.logging-join")) {
                         Main.getInstance().logAction("log-format.joined", p, date);
                     }
