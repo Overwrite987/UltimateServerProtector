@@ -1,22 +1,4 @@
-package ru.Overwrite.protect;
-
-import org.bukkit.Bukkit;
-import org.bukkit.command.CommandMap;
-import org.bukkit.command.PluginCommand;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
-import org.bukkit.plugin.Plugin;
-import org.bukkit.plugin.PluginManager;
-import org.bukkit.plugin.SimplePluginManager;
-import org.bukkit.plugin.java.JavaPlugin;
-import ru.Overwrite.protect.listeners.AdditionalListener;
-import ru.Overwrite.protect.listeners.ChatListener;
-import ru.Overwrite.protect.listeners.ConnectionListener;
-import ru.Overwrite.protect.listeners.InteractionsListener;
-import ru.Overwrite.protect.utils.Config;
-import ru.Overwrite.protect.utils.Utils;
-import ru.Overwrite.protect.utils.Metrics;
+package ru.overwrite.protect;
 
 import java.io.File;
 import java.io.FileWriter;
@@ -33,50 +15,54 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 
-public final class Main extends JavaPlugin {
-    private static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
+import org.bukkit.Bukkit;
+import org.bukkit.command.CommandMap;
+import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.event.Cancellable;
+import org.bukkit.plugin.Plugin;
+import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.SimplePluginManager;
+import org.bukkit.plugin.java.JavaPlugin;
 
-    private static FileConfiguration message;
-    private static String prefix;
+import ru.overwrite.protect.listeners.AdditionalListener;
+import ru.overwrite.protect.listeners.ChatListener;
+import ru.overwrite.protect.listeners.ConnectionListener;
+import ru.overwrite.protect.listeners.InteractionsListener;
+import ru.overwrite.protect.utils.Config;
+import ru.overwrite.protect.utils.Utils;
 
-    public final PasswordHandler passwordHandler = new PasswordHandler(this);
+public class ServerProtectorManager extends JavaPlugin {
+    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
+	
+	public static FileConfiguration message;
+    public static String prefix;
+
     public final Set<String> ips = new HashSet<>();
     public final Map<Player, Integer> login = new HashMap<>();
     public final Map<Player, Integer> time = new HashMap<>();
-    private static Main instance;
     
     public static boolean fullpath = false;
-
-    public static Main getInstance() {
-        return instance;
-    }
-
-    public static void handleInteraction(Player player, Cancellable event) {
-        if (getInstance().login.containsKey(player)) {
-            event.setCancelled(true);
-        }
-    }
-
-    @Override
-    public void onEnable() {
-        if (getServer().getName().equals("CraftBukkit")) {
-        	getLogger().info("§6=============§6! WARNING ! §c=============");
-  		    getLogger().info("§eYou are using an unstable core for your MC server! It's recomended to use Paper");
-  		    getLogger().info("§eDownload Paper for newest versions: §ahttps://papermc.io/downloads");
+    
+    PluginManager pluginManager = Bukkit.getPluginManager();
+    
+    public void checkPaper() {
+    	if (getServer().getName().equals("CraftBukkit")) {
+        	getLogger().info("§6=============§c! WARNING ! §c=============");
+  		    getLogger().info("§eYou are using an unstable core for your MC server! It's recomended to use §aPaper");
+  		    getLogger().info("§eDownload Paper for newest version: §ahttps://papermc.io/downloads");
   		    getLogger().info("§eDownload Paper for older versions: §ahttps://papermc.io/legacy");
-  		    getLogger().info("§6=============§6! WARNING ! §c=============");
-            setEnabled(false);
+  		    getLogger().info("§6=============§c! WARNING ! §c=============");
             return;
+        }    	
+    }
+    
+    public void saveConfigs() {
+    	saveDefaultConfig();
+        if (getConfig().getBoolean("file-settings.use-full-path")) {
+        	fullpath = true;
         }
-        long startTime = System.currentTimeMillis();
-        Date date = new Date(startTime);
-        instance = this;
-        saveDefaultConfig();
-        PluginManager pluginManager = Bukkit.getPluginManager();
-        pluginManager.registerEvents(new ChatListener(), this);
-        pluginManager.registerEvents(new ConnectionListener(), this);
-        pluginManager.registerEvents(new InteractionsListener(), this);
-        pluginManager.registerEvents(new AdditionalListener(), this);
         if (fullpath) {
         	FileConfiguration data = Config.getFileFullPath(getConfig().getString("file-settings.data-file"));
         	Config.saveFullPath(data, getConfig().getString("file-settings.data-file"));
@@ -86,7 +72,18 @@ public final class Main extends JavaPlugin {
         }
         message = Config.getFile("message.yml");
         Config.save(message, "message.yml");
-        CommandClass commands = new CommandClass(this);
+        prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
+    }
+    
+    public void registerListeners() {
+    	pluginManager.registerEvents(new ChatListener(), this);
+        pluginManager.registerEvents(new ConnectionListener(), this);
+        pluginManager.registerEvents(new InteractionsListener(), this);
+        pluginManager.registerEvents(new AdditionalListener(), this);
+    }
+    
+    public void registerCommands(ServerProtector plugin) {
+    	CommandClass commands = new CommandClass(plugin);
         if (getConfig().getBoolean("main-settings.use-command")) {
             try {
                 PluginCommand command;
@@ -110,55 +107,60 @@ public final class Main extends JavaPlugin {
         } else {
             getLogger().info("For entering admin-password you need to write it into the chat!");
         }
-        if (getConfig().getBoolean("file-settings.use-full-path")) {
-        	fullpath = true;
-        }
         Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(commands);
-        Bukkit.getScheduler().runTaskTimerAsynchronously(instance, Runner::run, 20L, 40L);
-        Runner.startMSG();
+    }
+    
+    public void startRunners() {
+    	Runner runner = new Runner();
+    	runner.runTaskTimerAsynchronously((Plugin)this, 20L, 40L);
+    	runner.startMSG();
         if (getConfig().getBoolean("punish-settings.enable-time")) {
-            Runner.startTimer();
+        	runner.startTimer();
         }
         if (getConfig().getBoolean("punish-settings.notadmin-punish")) {
-            Runner.adminCheck();
+        	runner.adminCheck();
         }
         if (getConfig().getBoolean("secure-settings.enable-op-whitelist")) {
-            Runner.startOpCheck();
+        	runner.startOpCheck();
         }
         if (getConfig().getBoolean("secure-settings.enable-permission-blacklist")) {
-            Runner.startPermsCheck();
+        	runner.startPermsCheck();
         }
-        if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
-            logToFile(message.getString("log-format.enabled").replace("%date%", DATE_FORMAT.format(date)));
-        }
-        if (getConfig().getBoolean("main-settings.enable-metrics")) {
-            new Metrics(this, 13347);
-        }
-        if (getConfig().getBoolean("main-settings.update-checker")) {
-        Utils.checkUpdates(this, 105237, version -> {
-            getLogger().info("§6========================================");
-            if (this.getDescription().getVersion().equals(version)) {
+    }
+    
+    public void checkForUpdates() {
+       if (getConfig().getBoolean("main-settings.update-checker")) {
+           Utils.checkUpdates(this, 105237, version -> {
+        	   getLogger().info("§6========================================");
+               if (this.getDescription().getVersion().equals(version)) {
                  getLogger().info("§aYou are using latest version of the plugin!");
-            } else {
-            	 getLogger().info("§aYou are using outdated version of the plugin!");
-	             getLogger().info("§aYou can download new version here:");
-	             getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
-            }
-            getLogger().info("§6========================================");
-        });
+               } else {
+               	 getLogger().info("§aYou are using outdated version of the plugin!");
+   	             getLogger().info("§aYou can download new version here:");
+   	             getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
+               }
+               getLogger().info("§6========================================");
+           });
         }
-        long endTime = System.currentTimeMillis();
-        getLogger().info("Plugin started in " + (endTime - startTime) + " ms");
     }
-
-    @Override
-    public void reloadConfig() {
-        super.reloadConfig();
-
+    
+    public void logEnableDisable(String msg, Date date) {
+    	if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
+        	logToFile(message.getString("log-format.disabled").replace("%date%", DATE_FORMAT.format(date)));
+        }	
+    }
+    
+    public void reloadConfigs() {
+		reloadConfig();
         message = Config.getFile("message.yml");
-        prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
     }
-
+    
+    public void handleInteraction(Player player, Cancellable event) {
+        if (login.containsKey(player)) {
+            event.setCancelled(true);
+        }
+    }
+    
     public static String getMessagePrefixed(String key) {
         return prefix + getMessage(key);
     }
@@ -189,15 +191,15 @@ public final class Main extends JavaPlugin {
 
     public boolean isAdmin(String nick) {
     	FileConfiguration data;
-    	if (Main.fullpath) {
+    	if (fullpath) {
             data = Config.getFileFullPath(getConfig().getString("file-settings.data-file"));
         } else {
         	data = Config.getFile(getConfig().getString("file-settings.data-file"));
         }
         return data.contains("data." + nick);
     }
-
-    public void logAction(String key, Player player, Date date) {
+	
+	public void logAction(String key, Player player, Date date) {
         logToFile(
                 message.getString(key, "ERROR")
                         .replace("%player%", player.getName())
@@ -205,8 +207,8 @@ public final class Main extends JavaPlugin {
                         .replace("%date%", DATE_FORMAT.format(date))
         );
     }
-
-    public void logToFile(String message) {
+	
+	public void logToFile(String message) {
         try {
             File dataFolder = getDataFolder();
             if (!dataFolder.exists()) {
@@ -230,25 +232,4 @@ public final class Main extends JavaPlugin {
             e.printStackTrace();
         }
     }
-
-    @Override
-    public void onDisable() {
-        Date date = new Date();
-        FileConfiguration message = Config.getFile("message.yml");
-        Bukkit.getScheduler().cancelTasks(this);
-        login.clear();
-        ips.clear();
-        time.clear();
-        passwordHandler.clearAttempts();
-        if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
-            logToFile(message.getString("log-format.disabled").replace("%date%", DATE_FORMAT.format(date)));
-        }
-        if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(Main.getMessagePrefixed("broadcasts.disabled"), "serverprotector.admin");
-        }
-        if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
-            Bukkit.shutdown();
-        }
-    }
 }
-  

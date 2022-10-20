@@ -1,4 +1,4 @@
-package ru.Overwrite.protect.listeners;
+package ru.overwrite.protect.listeners;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -7,21 +7,21 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import ru.Overwrite.protect.Main;
+import ru.overwrite.protect.ServerProtector;
 
 import java.util.Locale;
 
 public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {
-        FileConfiguration config = Main.getInstance().getConfig();
+        FileConfiguration config = ServerProtector.getInstance().getConfig();
         Player p = e.getPlayer();
         String msg = e.getMessage();
-        if (Main.getInstance().login.containsKey(p)) {
+        if (ServerProtector.getInstance().login.containsKey(p)) {
             e.setCancelled(true);
             e.setMessage("");
             if (!config.getBoolean("main-settings.use-command")) {
-                Main.getInstance().passwordHandler.checkPassword(p, msg, true);
+            	ServerProtector.getInstance().passwordHandler.checkPassword(p, msg, true);
             }
         }
     }
@@ -29,9 +29,9 @@ public class ChatListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent e) {
         Player p = e.getPlayer();
-        if (!Main.getInstance().login.containsKey(p)) return;
+        if (!ServerProtector.getInstance().login.containsKey(p)) return;
         e.setCancelled(true);
-        FileConfiguration config = Main.getInstance().getConfig();
+        FileConfiguration config = ServerProtector.getInstance().getConfig();
         if (config.getBoolean("main-settings.use-command")) {
             String message = e.getMessage();
             String label = cutCommand(message).toLowerCase(Locale.ROOT);

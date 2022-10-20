@@ -1,4 +1,4 @@
-package ru.Overwrite.protect.listeners;
+package ru.overwrite.protect.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,9 +10,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import org.json.simple.JSONObject;
-import ru.Overwrite.protect.Main;
-import ru.Overwrite.protect.utils.Utils;
+import ru.overwrite.protect.ServerProtector;
+import ru.overwrite.protect.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
@@ -22,26 +21,26 @@ public class ConnectionListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent e) {
         Date date = new Date();
-        FileConfiguration config = Main.getInstance().getConfig();
+        FileConfiguration config = ServerProtector.getInstance().getConfig();
         Player p = e.getPlayer();
-        Bukkit.getScheduler().runTaskAsynchronously(Main.getInstance(), () -> {
+        Bukkit.getScheduler().runTaskAsynchronously(ServerProtector.getInstance(), () -> {
             if (!(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName()))) {
-                if (Main.getInstance().isPermissions(p)) {
-                    if (!Main.getInstance().ips.contains(p.getName()+Utils.getIp(p)) && config.getBoolean("session-settings.session")) {
-                        Main.getInstance().login.put(p, 0);
+                if (ServerProtector.getInstance().isPermissions(p)) {
+                    if (!ServerProtector.getInstance().ips.contains(p.getName()+Utils.getIp(p)) && config.getBoolean("session-settings.session")) {
+                    	ServerProtector.getInstance().login.put(p, 0);
                         if (config.getBoolean("effect-settings.enable-effects")) {
-                            giveEffect(Main.getInstance(), p);
+                            giveEffect(ServerProtector.getInstance(), p);
                         }
                     }
                     for (String s : config.getStringList("ip-whitelist")) {
-                        if (config.getBoolean("secure-settings.enable-ip-whitelist") && !Utils.getIp(p).startsWith(s)) {
-                            checkFail(Main.getInstance(), p, config.getStringList("commands.not-admin-ip"));
-                        }
+                      if (config.getBoolean("secure-settings.enable-ip-whitelist") && !Utils.getIp(p).startsWith(s)) {
+                          checkFail(ServerProtector.getInstance(), p, config.getStringList("commands.not-admin-ip"));
                       }
-                    if (config.getBoolean("logging-settings.logging-join")) {
-                        Main.getInstance().logAction("log-format.joined", p, date);
                     }
-                    String msg = Main.getMessagePrefixed("broadcasts.joined", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
+                    if (config.getBoolean("logging-settings.logging-join")) {
+                    	ServerProtector.getInstance().logAction("log-format.joined", p, date);
+                    }
+                    String msg = ServerProtector.getMessagePrefixed("broadcasts.joined", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                     if (config.getBoolean("message-settings.enable-console-broadcasts")) {
                         Bukkit.getConsoleSender().sendMessage(msg);
                     }
@@ -56,11 +55,11 @@ public class ConnectionListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        Main.getInstance().login.remove(player);
-        Main.getInstance().time.remove(player);
+        ServerProtector.getInstance().login.remove(player);
+        ServerProtector.getInstance().time.remove(player);
     }
 
-    private static void checkFail(Main plugin, Player p, List<String> command) {
+    private static void checkFail(ServerProtector plugin, Player p, List<String> command) {
         Bukkit.getScheduler().runTask(plugin, () -> {
             for (String c : command) {
                 Bukkit.dispatchCommand(Bukkit.getConsoleSender(), c.replace("%player%", p.getName()));
@@ -68,8 +67,8 @@ public class ConnectionListener implements Listener {
         });
     }
 
-    private static void giveEffect(Main plugin, Player p) {
-        FileConfiguration config = Main.getInstance().getConfig();
+    private static void giveEffect(ServerProtector plugin, Player p) {
+        FileConfiguration config = ServerProtector.getInstance().getConfig();
         Bukkit.getScheduler().runTask(plugin, () -> {
             for (String s : config.getStringList("effect-settings.effects")) {
                 PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
