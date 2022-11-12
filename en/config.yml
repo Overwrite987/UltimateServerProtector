@@ -196,9 +196,11 @@ op-whitelist:
  - test99999
 
 # Which IP is admin-ip
+# You can specify only part of the IP address to allow people with a dynamic IP to log in. For example 1.2.3.4 - 1.2.3.
 ip-whitelist:
  - '127.0.0.1'
  - '0.0.0.0'
+ # - 1.2.3
 
 # Permissions that no one except the players from the excluded-players section will be able to have (by default - disabled)
 blacklisted-perms: 
