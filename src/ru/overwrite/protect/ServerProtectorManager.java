@@ -146,7 +146,7 @@ public class ServerProtectorManager extends JavaPlugin {
     
     public void logEnableDisable(String msg, Date date) {
     	if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
-        	logToFile(message.getString("log-format.disabled").replace("%date%", DATE_FORMAT.format(date)));
+        	logToFile(msg.replace("%date%", DATE_FORMAT.format(date)));
         }	
     }
     
