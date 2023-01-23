@@ -1,8 +1,8 @@
-package ru.overwrite.protect.utils;
+package ru.overwrite.protect.bukkit.utils;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ru.overwrite.protect.ServerProtector;
+import ru.overwrite.protect.bukkit.ServerProtector;
 
 import java.io.File;
 import java.io.IOException;

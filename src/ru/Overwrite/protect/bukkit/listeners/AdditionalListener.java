@@ -1,4 +1,4 @@
-package ru.overwrite.protect.listeners;
+package ru.overwrite.protect.bukkit.listeners;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -6,12 +6,12 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerDropItemEvent;
-import org.bukkit.event.player.PlayerPickupItemEvent;
-import ru.overwrite.protect.ServerProtector;
+import ru.overwrite.protect.bukkit.ServerProtector;
 
 public class AdditionalListener implements Listener {
 	
@@ -26,8 +26,9 @@ public class AdditionalListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onItemPickup(PlayerPickupItemEvent e) {
-        Player p = e.getPlayer();
+    public void onItemPickup(EntityPickupItemEvent e) {
+    	if (!(e.getEntity() instanceof Player)) return;
+    	Player p = (Player)e.getEntity();
         if (config.getBoolean("blocking-settings.block-item-pickup")) {
         	ServerProtector.getInstance().handleInteraction(p, e);
         }

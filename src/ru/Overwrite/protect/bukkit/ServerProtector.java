@@ -1,12 +1,10 @@
-package ru.overwrite.protect;
+package ru.overwrite.protect.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
-import ru.overwrite.protect.utils.Config;
-import ru.overwrite.protect.utils.Utils;
-import ru.overwrite.protect.utils.Metrics;
+import ru.overwrite.protect.bukkit.utils.Config;
+import ru.overwrite.protect.bukkit.utils.Metrics;
 
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 public final class ServerProtector extends ServerProtectorManager {
@@ -50,7 +48,7 @@ public final class ServerProtector extends ServerProtectorManager {
         passwordHandler.clearAttempts();
         logEnableDisable(message.getString("log-format.disabled"), date);
         if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(getMessagePrefixed("broadcasts.disabled"), "serverprotector.admin");
+            Bukkit.broadcast(getMessage("broadcasts.disabled"), "serverprotector.admin");
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
             Bukkit.shutdown();

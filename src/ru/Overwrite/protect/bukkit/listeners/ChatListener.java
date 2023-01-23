@@ -1,4 +1,4 @@
-package ru.overwrite.protect.listeners;
+package ru.overwrite.protect.bukkit.listeners;
 
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -7,7 +7,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import ru.overwrite.protect.ServerProtector;
+import ru.overwrite.protect.bukkit.ServerProtector;
 
 import java.util.Locale;
 

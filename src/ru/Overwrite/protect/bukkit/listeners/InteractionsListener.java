@@ -1,4 +1,4 @@
-package ru.overwrite.protect.listeners;
+package ru.overwrite.protect.bukkit.listeners;
 
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -7,7 +7,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import ru.overwrite.protect.ServerProtector;
+import ru.overwrite.protect.bukkit.ServerProtector;
 
 public class InteractionsListener implements Listener {
 

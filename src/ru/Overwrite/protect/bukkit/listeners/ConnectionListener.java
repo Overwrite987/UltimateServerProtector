@@ -1,4 +1,4 @@
-package ru.overwrite.protect.listeners;
+package ru.overwrite.protect.bukkit.listeners;
 
 import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -10,8 +10,8 @@ import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-import ru.overwrite.protect.ServerProtector;
-import ru.overwrite.protect.utils.Utils;
+import ru.overwrite.protect.bukkit.ServerProtector;
+import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
@@ -40,7 +40,7 @@ public class ConnectionListener implements Listener {
                     if (config.getBoolean("logging-settings.logging-join")) {
                     	ServerProtector.getInstance().logAction("log-format.joined", p, date);
                     }
-                    String msg = ServerProtector.getMessagePrefixed("broadcasts.joined", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
+                    String msg = ServerProtector.getMessage("broadcasts.joined", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                     if (config.getBoolean("message-settings.enable-console-broadcasts")) {
                         Bukkit.getConsoleSender().sendMessage(msg);
                     }

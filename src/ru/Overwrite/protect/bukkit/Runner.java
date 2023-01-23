@@ -1,4 +1,4 @@
-package ru.overwrite.protect;
+package ru.overwrite.protect.bukkit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -7,12 +7,18 @@ import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import org.bukkit.scheduler.BukkitRunnable;
-import ru.overwrite.protect.utils.Utils;
+import org.bukkit.boss.BossBar;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
 import java.util.List;
 
 public class Runner extends BukkitRunnable {
+	
+	public static BossBar bossbar;
+	
     public void run() {
         FileConfiguration config = ServerProtector.getInstance().getConfig();
         for (Player p : Bukkit.getOnlinePlayers()) {
@@ -34,7 +40,7 @@ public class Runner extends BukkitRunnable {
                 if (config.getBoolean("logging-settings.logging-pas")) {
                 	ServerProtector.getInstance().logAction("log-format.captured", p, date);
                 }
-                String msg = ServerProtector.getMessagePrefixed("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
+                String msg = ServerProtector.getMessage("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                 if (config.getBoolean("message-settings.enable-broadcasts")) {
                     Bukkit.broadcast(msg, "serverprotector.admin");
                 }
@@ -121,19 +127,34 @@ public class Runner extends BukkitRunnable {
             }
         });
     }
-
+    
     public void startTimer() {
         FileConfiguration config = ServerProtector.getInstance().getConfig();
         (new BukkitRunnable() {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
+                	
                     if (ServerProtector.getInstance().login.containsKey(p) && !ServerProtector.getInstance().time.containsKey(p)) {
-                    	ServerProtector.getInstance().time.put(p, 1);
+                    	ServerProtector.getInstance().time.put(p, 0);
+                    	if (config.getBoolean("bossbar-settings.enable-bossbar")) {
+                    		bossbar = Bukkit.createBossBar(ServerProtector.getMessage("bossbar.message").replace("%time%", config.getString("punish-settings.time")), 
+                    			BarColor.valueOf(config.getString("bossbar-settings.bar-color")), 
+                    			BarStyle.valueOf(config.getString("bossbar-settings.bar-style")));
+                    		bossbar.addPlayer(p);
+                    	}
                     } else if (ServerProtector.getInstance().login.containsKey(p)) {
                     	ServerProtector.getInstance().time.put(p, ServerProtector.getInstance().time.get(p) + 1);
+                    	if (config.getBoolean("bossbar-settings.enable-bossbar")) {
+                    		bossbar.setTitle(ServerProtector.getMessage("bossbar.message").replace("%time%",
+                    	    	Integer.toString(config.getInt("punish-settings.time") - ServerProtector.getInstance().time.get(p))));
+                    		double percents = (config.getInt("punish-settings.time")-ServerProtector.getInstance().time.get(p))/config.getDouble("punish-settings.time");
+                    		bossbar.setProgress(percents);
+                    		bossbar.addPlayer(p);
+                    	}
                     }
                     if (!noTimeLeft(p) && config.getBoolean("punish-settings.enable-time")) {
                         checkFail(ServerProtector.getInstance(), p, config.getStringList("commands.failed-time"));
+                        bossbar.removePlayer(p);
                     }
                 }
             }
@@ -142,8 +163,9 @@ public class Runner extends BukkitRunnable {
 
     public static boolean noTimeLeft(Player p) {
         FileConfiguration config = ServerProtector.getInstance().getConfig();
-        if (!ServerProtector.getInstance().time.containsKey(p))
+        if (!ServerProtector.getInstance().time.containsKey(p)) {
             return true;
+        }
         return (ServerProtector.getInstance().time.get(p) < config.getInt("punish-settings.time"));
     }
 }

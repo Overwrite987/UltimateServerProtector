@@ -1,4 +1,4 @@
-package ru.overwrite.protect.utils;
+package ru.overwrite.protect.bukkit.utils;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
