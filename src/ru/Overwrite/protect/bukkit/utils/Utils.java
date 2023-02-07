@@ -16,7 +16,7 @@ import java.util.regex.Pattern;
 import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 public final class Utils {
-    private static final int SUB_VERSION = Integer.parseInt(
+	private static final int SUB_VERSION = Integer.parseInt(
             Bukkit.getServer().getClass().getPackage().getName()
                     .replace(".", ",")
                     .split(",")[3]
@@ -49,9 +49,9 @@ public final class Utils {
         return ChatColor.translateAlternateColorCodes('&', message);
     }
 
-    public static void checkUpdates(Plugin plugin, int id, Consumer<String> consumer) {
+    public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            try (InputStream inputStream = new URL("https://api.spigotmc.org/legacy/update.php?resource=" + id).openStream();
+            try (InputStream inputStream = new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION").openStream();
                  Scanner scanner = new Scanner(inputStream)) {
                 if (scanner.hasNext()) {
                     consumer.accept(scanner.next());

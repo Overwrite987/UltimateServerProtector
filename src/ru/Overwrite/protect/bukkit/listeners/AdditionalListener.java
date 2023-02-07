@@ -7,6 +7,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
+import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
@@ -15,50 +16,65 @@ import ru.overwrite.protect.bukkit.ServerProtector;
 
 public class AdditionalListener implements Listener {
 	
-	FileConfiguration config = ServerProtector.getInstance().getConfig();
+	private final ServerProtector instance = ServerProtector.getInstance();
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent e) {
+    	FileConfiguration config = instance.getConfig();
         Player p = e.getPlayer();
         if (config.getBoolean("blocking-settings.block-item-drop")) {
-        	ServerProtector.getInstance().handleInteraction(p, e);
+        	instance.handleInteraction(p, e);
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemPickup(EntityPickupItemEvent e) {
     	if (!(e.getEntity() instanceof Player)) return;
+    	FileConfiguration config = instance.getConfig();
     	Player p = (Player)e.getEntity();
         if (config.getBoolean("blocking-settings.block-item-pickup")) {
-        	ServerProtector.getInstance().handleInteraction(p, e);
+        	instance.handleInteraction(p, e);
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent e) {
         if (!(e.getEntity() instanceof Player)) return;
+        FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getEntity();
         if (config.getBoolean("blocking-settings.block-damage")) {
-        	ServerProtector.getInstance().handleInteraction(p, e);
+        	instance.handleInteraction(p, e);
+        }
+    }
+    
+    @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+    public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
+    	if (!(e.getDamager() instanceof Player)) return;
+    	FileConfiguration config = instance.getConfig();
+    	Player p = (Player)e.getDamager();
+    	if (config.getBoolean("blocking-settings.block-damaging-entity")) {
+        	instance.handleInteraction(p, e);
         }
     }
 
     @EventHandler(ignoreCancelled = true)
     public void onTabComplete(AsyncTabCompleteEvent e) {
         if (!(e.getSender() instanceof Player)) return;
+        FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getSender();
         if (config.getBoolean("blocking-settings.block-tab-complete")) {
-        	ServerProtector.getInstance().handleInteraction(p, e);
+        	instance.handleInteraction(p, e);
         }
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onTarget(EntityTargetEvent e) {
         if (!(e.getTarget() instanceof Player)) return;
-        Player p = (Player) e.getTarget();
+        FileConfiguration config = instance.getConfig();
+        Player p = (Player)e.getTarget();
         if (config.getBoolean("blocking-settings.block-mobs-targeting") &&
                     (e.getReason() == TargetReason.CLOSEST_PLAYER || e.getReason() == TargetReason.RANDOM_TARGET)) {
-        	ServerProtector.getInstance().handleInteraction(p, e);
+        	instance.handleInteraction(p, e);
         }
     }
 }

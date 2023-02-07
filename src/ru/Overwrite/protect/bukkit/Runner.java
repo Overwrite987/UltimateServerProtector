@@ -18,27 +18,28 @@ import java.util.List;
 public class Runner extends BukkitRunnable {
 	
 	public static BossBar bossbar;
+	private final ServerProtector instance = ServerProtector.getInstance();
 	
     public void run() {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
         for (Player p : Bukkit.getOnlinePlayers()) {
             Date date = new Date();
-            if (ServerProtector.getInstance().login.containsKey(p)) {
+            if (instance.login.containsKey(p)) {
                 continue;
             }
-            if (ServerProtector.getInstance().isPermissions(p) &&
+            FileConfiguration config = instance.getConfig();
+            if (instance.isPermissions(p) &&
                     !(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName())) &&
-                    !ServerProtector.getInstance().ips.contains(p.getName()+Utils.getIp(p))) {
-            	ServerProtector.getInstance().login.put(p, 0);
+                    !instance.ips.contains(p.getName()+Utils.getIp(p))) {
+            	instance.login.put(p, 0);
                 if (config.getBoolean("sound-settings.enable-sounds")) {
                     p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-capture")),
                             (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
                 }
                 if (config.getBoolean("effect-settings.enable-effects")) {
-                    giveEffect(ServerProtector.getInstance(), p);
+                    giveEffect(instance, p);
                 }
                 if (config.getBoolean("logging-settings.logging-pas")) {
-                	ServerProtector.getInstance().logAction("log-format.captured", p, date);
+                	instance.logAction("log-format.captured", p, date);
                 }
                 String msg = ServerProtector.getMessage("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                 if (config.getBoolean("message-settings.enable-broadcasts")) {
@@ -51,9 +52,9 @@ public class Runner extends BukkitRunnable {
         }
     }
 
-    private static void giveEffect(ServerProtector plugin, Player p) {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
+    private void giveEffect(ServerProtector plugin, Player p) {
         Bukkit.getScheduler().runTask(plugin, () -> {
+        	FileConfiguration config = instance.getConfig();
             for (String s : config.getStringList("effect-settings.effects")) {
                 PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
                 int level = Integer.parseInt(s.split(":")[1]) - 1;
@@ -63,24 +64,25 @@ public class Runner extends BukkitRunnable {
     }
 
     public void adminCheck() {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
         (new BukkitRunnable() {
             public void run() {
+            	FileConfiguration config = instance.getConfig();
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (ServerProtector.getInstance().login.containsKey(p) && !ServerProtector.getInstance().isAdmin(p.getName())) {
-                        checkFail(ServerProtector.getInstance(), p, config.getStringList("commands.not-in-config"));
+                    if (instance.login.containsKey(p) && !instance.isAdmin(p.getName())) {
+                        checkFail(instance, p, config.getStringList("commands.not-in-config"));
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(ServerProtector.getInstance(), 0L, 20L);
+        }).runTaskTimerAsynchronously(instance, 0L, 20L);
     }
 
     public void startMSG() {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
+        FileConfiguration config = instance.getConfig();
         (new BukkitRunnable() {
             public void run() {
+            	FileConfiguration config = instance.getConfig();
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                    if (ServerProtector.getInstance().login.containsKey(p)) {
+                    if (instance.login.containsKey(p)) {
                         p.sendMessage(ServerProtector.getMessage("msg.message"));
                         if (config.getBoolean("message-settings.send-titles")) {
                             p.sendTitle(ServerProtector.getMessage("titles.title"), ServerProtector.getMessage("titles.subtitle"));
@@ -89,35 +91,35 @@ public class Runner extends BukkitRunnable {
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(ServerProtector.getInstance(), 0L, config.getInt("message-settings.delay") * 20L);
+        }).runTaskTimerAsynchronously(instance, 0L, config.getInt("message-settings.delay") * 20L);
     }
 
     public void startOpCheck() {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
+        FileConfiguration config = instance.getConfig();
         (new BukkitRunnable() {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (p.isOp() && !config.getStringList("op-whitelist").contains(p.getName())) {
-                        checkFail(ServerProtector.getInstance(), p, config.getStringList("commands.not-in-opwhitelist"));
+                        checkFail(instance, p, config.getStringList("commands.not-in-opwhitelist"));
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(ServerProtector.getInstance(), 0L, 20L);
+        }).runTaskTimerAsynchronously(instance, 0L, 20L);
     }
 
     public void startPermsCheck() {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
+        FileConfiguration config = instance.getConfig();
         (new BukkitRunnable() {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     for (String badperms : config.getStringList("blacklisted-perms")) {
                         if (p.hasPermission(badperms) && !config.getStringList("excluded-players").contains(p.getName())) {
-                            checkFail(ServerProtector.getInstance(), p, config.getStringList("commands.have-blacklisted-perm"));
+                            checkFail(instance, p, config.getStringList("commands.have-blacklisted-perm"));
                         }
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(ServerProtector.getInstance(), 0L, 20L);
+        }).runTaskTimerAsynchronously(instance, 0L, 20L);
     }
 
     public static void checkFail(ServerProtector plugin, Player p, List<String> command) {
@@ -129,43 +131,42 @@ public class Runner extends BukkitRunnable {
     }
     
     public void startTimer() {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
+        FileConfiguration config = instance.getConfig();
         (new BukkitRunnable() {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
-                	
-                    if (ServerProtector.getInstance().login.containsKey(p) && !ServerProtector.getInstance().time.containsKey(p)) {
-                    	ServerProtector.getInstance().time.put(p, 0);
+                    if (instance.login.containsKey(p) && !instance.time.containsKey(p)) {
+                    	instance.time.put(p, 0);
                     	if (config.getBoolean("bossbar-settings.enable-bossbar")) {
                     		bossbar = Bukkit.createBossBar(ServerProtector.getMessage("bossbar.message").replace("%time%", config.getString("punish-settings.time")), 
                     			BarColor.valueOf(config.getString("bossbar-settings.bar-color")), 
                     			BarStyle.valueOf(config.getString("bossbar-settings.bar-style")));
                     		bossbar.addPlayer(p);
                     	}
-                    } else if (ServerProtector.getInstance().login.containsKey(p)) {
-                    	ServerProtector.getInstance().time.put(p, ServerProtector.getInstance().time.get(p) + 1);
+                    } else if (instance.login.containsKey(p)) {
+                    	instance.time.put(p, instance.time.get(p) + 1);
                     	if (config.getBoolean("bossbar-settings.enable-bossbar")) {
                     		bossbar.setTitle(ServerProtector.getMessage("bossbar.message").replace("%time%",
-                    	    	Integer.toString(config.getInt("punish-settings.time") - ServerProtector.getInstance().time.get(p))));
-                    		double percents = (config.getInt("punish-settings.time")-ServerProtector.getInstance().time.get(p))/config.getDouble("punish-settings.time");
+                    	    	Integer.toString(config.getInt("punish-settings.time") - instance.time.get(p))));
+                    		double percents = (config.getInt("punish-settings.time")-instance.time.get(p))/config.getDouble("punish-settings.time");
                     		bossbar.setProgress(percents);
                     		bossbar.addPlayer(p);
                     	}
                     }
                     if (!noTimeLeft(p) && config.getBoolean("punish-settings.enable-time")) {
-                        checkFail(ServerProtector.getInstance(), p, config.getStringList("commands.failed-time"));
+                        checkFail(instance, p, config.getStringList("commands.failed-time"));
                         bossbar.removePlayer(p);
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(ServerProtector.getInstance(), 0L, 20L);
+        }).runTaskTimerAsynchronously(instance, 0L, 20L);
     }
 
-    public static boolean noTimeLeft(Player p) {
-        FileConfiguration config = ServerProtector.getInstance().getConfig();
-        if (!ServerProtector.getInstance().time.containsKey(p)) {
+    private boolean noTimeLeft(Player p) {
+        FileConfiguration config = instance.getConfig();
+        if (!instance.time.containsKey(p)) {
             return true;
         }
-        return (ServerProtector.getInstance().time.get(p) < config.getInt("punish-settings.time"));
+        return (instance.time.get(p) < config.getInt("punish-settings.time"));
     }
 }

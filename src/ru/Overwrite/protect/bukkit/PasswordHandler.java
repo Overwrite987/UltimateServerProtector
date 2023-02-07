@@ -74,7 +74,7 @@ public class PasswordHandler {
                     (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
         }
         if (config.getBoolean("logging-settings.logging-pas")) {
-        	ServerProtector.getInstance().logAction("log-format.failed", player, date);
+        	plugin.logAction("log-format.failed", player, date);
         }
         String msg = ServerProtectorManager.getMessage("broadcasts.failed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
@@ -106,10 +106,15 @@ public class PasswordHandler {
         	plugin.ips.add(player.getName()+Utils.getIp(player));
         }
         if (config.getBoolean("logging-settings.logging-pas")) {
-        	ServerProtector.getInstance().logAction("log-format.passed", player, date);
+        	plugin.logAction("log-format.passed", player, date);
         }
         if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-    		Runner.bossbar.removePlayer(player);
+        	if (Runner.bossbar == null) {
+        		return;
+        	}
+        	if (Runner.bossbar.getPlayers().contains(player)) {
+        		Runner.bossbar.removePlayer(player);
+        	}
     	}
         if (config.getBoolean("session-settings.session-time-enabled")) {
             plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {

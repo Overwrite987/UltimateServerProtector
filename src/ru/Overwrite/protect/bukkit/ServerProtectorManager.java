@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.io.BufferedWriter;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
 import java.text.SimpleDateFormat;
@@ -30,6 +31,8 @@ import ru.overwrite.protect.bukkit.listeners.AdditionalListener;
 import ru.overwrite.protect.bukkit.listeners.ChatListener;
 import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
 import ru.overwrite.protect.bukkit.listeners.InteractionsListener;
+import ru.overwrite.protect.bukkit.commands.UspCommand;
+import ru.overwrite.protect.bukkit.commands.PasCommand;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
@@ -53,6 +56,7 @@ public class ServerProtectorManager extends JavaPlugin {
     	if (getServer().getName().equals("CraftBukkit")) {
             getLogger().info("§6============= §6! WARNING ! §c=============");
             getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
+            getLogger().info("§eАвтор плагина §cкатегорически §eвыступает за отказ от использования устаревшего и уязвимого софта!");
             getLogger().info("§eСкачать Paper для новых версий: §ahttps://papermc.io/downloads");
             getLogger().info("§eСкачать Paper для старых версий: §ahttps://papermc.io/legacy §7((в тесте выбирайте 2 вариант ответа))");
             getLogger().info("§6============= §6! WARNING ! §c=============");
@@ -87,7 +91,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
     
     public void registerCommands(ServerProtector plugin) {
-    	CommandClass commands = new CommandClass(plugin);
+    	PasCommand pascommand = new PasCommand();
         if (getConfig().getBoolean("main-settings.use-command")) {
             try {
                 PluginCommand command;
@@ -102,7 +106,7 @@ public class ServerProtectorManager extends JavaPlugin {
                 }
                 if (map != null)
                     map.register(getDescription().getName(), command);
-                command.setExecutor(commands);
+                command.setExecutor(pascommand);
             } catch (Exception e) {
                 getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
                 e.printStackTrace();
@@ -111,7 +115,8 @@ public class ServerProtectorManager extends JavaPlugin {
         } else {
             getLogger().info("Для ввода пароля используется чат!");
         }
-        Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(commands);
+        UspCommand uspcommand = new UspCommand();
+        Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(uspcommand);
     }
     
     public void startRunners() {
@@ -133,19 +138,21 @@ public class ServerProtectorManager extends JavaPlugin {
     }
     
     public void checkForUpdates() {
-       if (getConfig().getBoolean("main-settings.update-checker")) {
-           Utils.checkUpdates(this, 105237, version -> {
-               getLogger().info("§6========================================");
-               if (this.getDescription().getVersion().equals(version)) {
-                    getLogger().info("§aВы используете последнюю версию плагина!");
-               } else {
-                    getLogger().info("§aВы используете старую версию плагина!");
-                    getLogger().info("§aВы можете загрузить новую версию по ссылке ниже:");
-                    getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
-               }
-               getLogger().info("§6========================================");
-           });
+        if (!getConfig().getBoolean("main-settings.update-checker")) {
+            return;
         }
+
+        Utils.checkUpdates(this, version -> {
+            getLogger().info("§6========================================");
+            if (getDescription().getVersion().equals(version)) {
+                getLogger().info("§aВы используете последнюю версию плагина!");
+            } else {
+                getLogger().info("§aВы используете устаревшую или некорректную версию плагина!");
+                getLogger().info("§aВы можете загрузить последнюю версию плагина здесь:");
+                getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
+            }
+            getLogger().info("§6========================================");
+        });
     }
     
     public void logEnableDisable(String msg, Date date) {
@@ -206,27 +213,16 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 	
 	public void logToFile(String message) {
-        try {
-            File dataFolder = getDataFolder();
-            if (!dataFolder.exists()) {
-                dataFolder.mkdir();
-            }
-            File saveTo; 
-            if (fullpath) {
-            	saveTo = new File(getConfig().getString("file-settings.log-file-path"), "log.yml");
-            } else {
-            	saveTo = new File(getDataFolder(), "log.yml");
-            }
-            if (!saveTo.exists()) {
-                saveTo.createNewFile();
-            }
-            FileWriter fw = new FileWriter(saveTo, true);
-            PrintWriter pw = new PrintWriter(fw);
-            pw.println(message);
-            pw.flush();
-            pw.close();
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+	    File dataFolder = getDataFolder();
+	    if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+	        throw new RuntimeException("Unable to create data folder");
+	    }
+	    File saveTo = fullpath ? new File(getConfig().getString("file-settings.log-file-path"), "log.yml")
+	                           : new File(dataFolder, "log.yml");
+	    try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(saveTo, true)))) {
+	        pw.println(message);
+	    } catch (IOException e) {
+	        e.printStackTrace();
+	    }
+	}
 }

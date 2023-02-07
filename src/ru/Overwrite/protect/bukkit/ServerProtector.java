@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.file.FileConfiguration;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Metrics;
@@ -39,8 +38,8 @@ public final class ServerProtector extends ServerProtectorManager {
     @Override
     public void onDisable() {
         Date date = new Date();
-        FileConfiguration message = Config.getFile("message.yml");
-        Bukkit.getScheduler().cancelTasks(this);
+        FileConfiguration message = Config.getFile("message.yml");;
+        getServer().getScheduler().cancelTasks(this);
         instance = null;
         login.clear();
         ips.clear();
@@ -48,10 +47,10 @@ public final class ServerProtector extends ServerProtectorManager {
         passwordHandler.clearAttempts();
         logEnableDisable(message.getString("log-format.disabled"), date);
         if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(getMessage("broadcasts.disabled"), "serverprotector.admin");
+        	getServer().broadcast(getMessage("broadcasts.disabled"), "serverprotector.admin");
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
-            Bukkit.shutdown();
+        	getServer().shutdown();
         }
     }
 }
