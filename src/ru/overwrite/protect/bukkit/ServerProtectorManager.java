@@ -16,7 +16,6 @@ import java.util.Objects;
 import java.util.Set;
 import java.util.function.UnaryOperator;
 
-import org.bukkit.Bukkit;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -50,7 +49,7 @@ public class ServerProtectorManager extends JavaPlugin {
     
     public static boolean fullpath = false;
     
-    PluginManager pluginManager = Bukkit.getPluginManager();
+    PluginManager pluginManager = getServer().getPluginManager();
     
     public void checkPaper() {
     	if (getServer().getName().equals("CraftBukkit")) {

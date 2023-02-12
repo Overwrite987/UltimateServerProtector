@@ -26,7 +26,7 @@ public class InteractionsListener implements Listener {
     }
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-    public void onPlayerInteract(PlayerInteractEntityEvent e) {
+    public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
     	Player p = e.getPlayer();
     	instance.handleInteraction(p, e);
     }
