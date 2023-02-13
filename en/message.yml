@@ -1,19 +1,19 @@
 # Messages that will be displayed to people when entering a command
 msg:
-  message: '&fAdmin permissiond detected! You should enter admin-password!'
-  incorrect: '&cWrong password!'
-  correct: '&aCorrect password. Have a nice day ;)'
-  noneed: '&fYou do not need to enter the admin password or it has already been entered.'
-  cantbenull: '&fPassword cannot be empty.'
-  playeronly: '&fOnly for players'
+  message: '%prefix% &fAdmin permissiond detected! You should enter admin-password!'
+  incorrect: '%prefix% &cWrong password!'
+  correct: '%prefix% &aCorrect password. Have a nice day ;)'
+  noneed: '%prefix% &fYou do not need to enter the admin password or it has already been entered.'
+  cantbenull: '%prefix% &fPassword cannot be empty.'
+  playeronly: '%prefix% &fOnly for players'
 
 # Admin broadcasts (%player% = player's nick / %ip% = player's IP)
 broadcasts:
-  failed: '&fAdmin &3%player% &fentered the password &cwrongly! &fIP: &c%ip%'
-  passed: '&fAdmin &3%player% &fentered the password &acorrectly! &fIP: &c%ip%'
-  joined: '&fAdmin &3%player% &fjoined the game! &fIP: &c%ip%'
-  captured: '&fPlayer &3%player% &fwas detected with admin-permissions! &fIP: &c%ip%'
-  disabled: '&6&lWARNING! &fPlugin has been disabled!'
+  failed: '%prefix% &fAdmin &3%player% &fentered the password &cwrongly! &fIP: &c%ip%'
+  passed: '%prefix% &fAdmin &3%player% &fentered the password &acorrectly! &fIP: &c%ip%'
+  joined: '%prefix% &fAdmin &3%player% &fjoined the game! &fIP: &c%ip%'
+  captured: '%prefix% &fPlayer &3%player% &fwas detected with admin-permissions! &fIP: &c%ip%'
+  disabled: '%prefix% &6&lWARNING! &fPlugin has been disabled!'
   
 # Log format 
 log-format:
@@ -28,11 +28,26 @@ log-format:
 titles:
   title: '&e&l⚠ &c&lProtection &e&l⚠'
   subtitle: '&fAdmin permissions detected! You should enter admin-password!'
-  
+
+# Message in boss bar
+bossbar:
+  message: '&fRemained: &c%time% seconds'
+
 # Command messages
 uspmsg:
-  reloaded: '&aPlugin reloaded'
+  consoleonly: '&cThis command can only be executed from the console!'
+  reloaded: '&aConfigurations reloaded'
   rebooted: '&aPlugin rebooted'
-  alreadyinconfig: '&aThis accout is already in config'
-  playeradded: '&aPlayer %nick% sucsessfully added'
-  ipadded: '&aIP %ip% sucsessfully added'
+  playernotfound: '&cAccount %nick% was not found in the system!'
+  alreadyinconfig: '&aThis account is already in the config'
+  playeradded: '&aPlayer %nick% successfully added'
+  ipadded: '&aIP %ip% successfully added'
+  setpassusage: '&f/%cmd% setpass (nick) (password)'
+  addopusage: '&f/%cmd% addop (nick)'
+  addip: '&f/%cmd% addip (ip)'
+  usage: '&7&l> &7Usage:'
+  usage-reload: '&6/%cmd% reload&7 - reload config'
+  usage-reboot: '&6/%cmd% reboot&7 - reboot plugin'
+  usage-setpass: '&6/%cmd% setpass (nick) (password) &7- set password to the player'
+  usage-addop: '&6/%cmd% addop (nick) &7- add player to the op-whitelist'
+  usage-addip: '&6/%cmd% addip (ip) &7- add player to the ip-whitelist'

@@ -13,14 +13,12 @@ import org.bukkit.configuration.file.FileConfiguration;
 import ru.overwrite.protect.bukkit.Runner;
 import ru.overwrite.protect.bukkit.ServerProtector;
 import ru.overwrite.protect.bukkit.utils.Config;
-import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class UspCommand implements CommandExecutor {
 	
 	private final ServerProtector instance = ServerProtector.getInstance();
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        if (cmd.getName().equalsIgnoreCase("ultimateserverprotector")) {
         	 FileConfiguration config = instance.getConfig();
              if (sender.hasPermission("serverprotector.admin")) {
             	 
@@ -29,7 +27,7 @@ public class UspCommand implements CommandExecutor {
         	    	return false;
         	    }
                 if (args.length == 0) {
-                    sendHelp(sender);
+                    sendHelp(sender, label);
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("reload")) {
@@ -76,7 +74,7 @@ public class UspCommand implements CommandExecutor {
                         sender.sendMessage(ServerProtector.getMessage("uspmsg.playeradded", s -> s.replace("%nick%", nickname)));
                         return true;
                     }
-                    sender.sendMessage(ServerProtector.getPrefix() + Utils.colorize("§f/usp setpass (ник) (пароль)"));
+                    sender.sendMessage(ServerProtector.getMessage("uspmsg.setpassusage", s -> s.replace("%cmd%", label)));
                     return true;
                 }
                 if (args[0].equalsIgnoreCase("addop")) {
@@ -94,10 +92,10 @@ public class UspCommand implements CommandExecutor {
                         sender.sendMessage(ServerProtector.getMessage("uspmsg.playeradded", s -> s.replace("%nick%", nickname)));
                         return true;
                     }
-                    sender.sendMessage(ServerProtector.getPrefix() + Utils.colorize("§f/usp addop (ник)"));
+                    sender.sendMessage(ServerProtector.getMessage("uspmsg.addopusage", s -> s.replace("%cmd%", label)));
                     return true;
                 }
-                if (args[0].equalsIgnoreCase("addip") && sender.hasPermission("serverprotector.admin")) {
+                if (args[0].equalsIgnoreCase("addip")) {
                     if (args.length > 1 && args[1] != null) {
                         List<String> ipwl = config.getStringList("ip-whitelist");
                         ipwl.add(args[1]);
@@ -105,33 +103,32 @@ public class UspCommand implements CommandExecutor {
                         sender.sendMessage(ServerProtector.getMessage("uspmsg.ipadded", s -> s.replace("%nick%", args[1])));
                         return true;
                     }
-                    sender.sendMessage(ServerProtector.getPrefix() + Utils.colorize("§f/usp addip (ip)"));
+                    sender.sendMessage(ServerProtector.getMessage("uspmsg.addip", s -> s.replace("%cmd%", label)));
                     return true;
                 }
             }
-              sendHelp(sender);
+              sendHelp(sender, label);
               return true;
             } else {
                 sender.sendMessage("§7This server is using §cUltimateServerProtector §7- the most powerful security plugin made by §5Overwrite");
             }
-        }
         return true;
     }
     
-    private void sendHelp(CommandSender sender) {
-    	FileConfiguration config = instance.getConfig();
-    	sender.sendMessage("§7§l> §7Использование:");
-        sender.sendMessage("§6§o/usp reload§7 - перезагрузить конфиг");
-        sender.sendMessage("§6§o/usp reboot§7 - перезапустить плагин");
-        if (!config.getBoolean("main-settings.enable-admin-commands")) {
-        	sender.sendMessage("§7Прочие команды отключены.");
-        	sender.sendMessage("§7Для их включения выставьте §6enable-admin-commands: §atrue");
-        } else {
-            sender.sendMessage("§6§o/usp setpass (ник) (пароль) §7- установить пароль игроку");
-            sender.sendMessage("§6§o/usp addop (ник) §7- добавить игрока в op-whitelist");
-            sender.sendMessage("§6§o/usp addip (ip) §7- добавить ip в ip-whitelist");
-        }
-    }
+	private void sendHelp(CommandSender sender, String label) {
+		FileConfiguration config = instance.getConfig();
+		sender.sendMessage(ServerProtector.getMessage("uspmsg.usage", s -> s.replace("%cmd%", label)));
+		sender.sendMessage(ServerProtector.getMessage("uspmsg.usage-reload", s -> s.replace("%cmd%", label)));
+		sender.sendMessage(ServerProtector.getMessage("uspmsg.usage-reboot", s -> s.replace("%cmd%", label)));
+		if (!config.getBoolean("main-settings.enable-admin-commands")) {
+			sender.sendMessage("§7Other commands are disabled.");
+			sender.sendMessage("§7To enable them, set §6enable-admin-commands: §atrue");
+		} else {
+			sender.sendMessage(ServerProtector.getMessage("uspmsg.usage-setpass", s -> s.replace("%cmd%", label)));
+			sender.sendMessage(ServerProtector.getMessage("uspmsg.usage-addop", s -> s.replace("%cmd%", label)));
+			sender.sendMessage(ServerProtector.getMessage("uspmsg.usage-addip", s -> s.replace("%cmd%", label)));
+		}
+	}
 
     public void addAdmin(String nick, String pas) {
         FileConfiguration data;

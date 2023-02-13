@@ -53,13 +53,11 @@ public class ServerProtectorManager extends JavaPlugin {
     
     public void checkPaper() {
     	if (getServer().getName().equals("CraftBukkit")) {
-            getLogger().info("§6============= §6! WARNING ! §c=============");
-            getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
-            getLogger().info("§eАвтор плагина §cкатегорически §eвыступает за отказ от использования устаревшего и уязвимого софта!");
-            getLogger().info("§eСкачать Paper для новых версий: §ahttps://papermc.io/downloads");
-            getLogger().info("§eСкачать Paper для старых версий: §ahttps://papermc.io/legacy §7((в тесте выбирайте 2 вариант ответа))");
-            getLogger().info("§6============= §6! WARNING ! §c=============");
-            setEnabled(false);
+    		getLogger().info("§6============= §c! WARNING ! §c=============");
+  		    getLogger().info("§eYou are using an unstable core for your MC server! It's recomended to use §aPaper");
+  		    getLogger().info("§eDownload Paper for newest version: §ahttps://papermc.io/downloads");
+  		    getLogger().info("§eDownload Paper for older versions: §ahttps://papermc.io/legacy");
+  		    getLogger().info("§6============= §c! WARNING ! §c=============");
             return;
         }    	
     }
@@ -107,12 +105,12 @@ public class ServerProtectorManager extends JavaPlugin {
                     map.register(getDescription().getName(), command);
                 command.setExecutor(pascommand);
             } catch (Exception e) {
-                getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
+                getLogger().info("Can't register command.");
                 e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
-            getLogger().info("Для ввода пароля используется чат!");
+            getLogger().info("For entering admin-password you need to write it into the chat!");
         }
         UspCommand uspcommand = new UspCommand();
         Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(uspcommand);
@@ -144,11 +142,11 @@ public class ServerProtectorManager extends JavaPlugin {
         Utils.checkUpdates(this, version -> {
             getLogger().info("§6========================================");
             if (getDescription().getVersion().equals(version)) {
-                getLogger().info("§aВы используете последнюю версию плагина!");
+                getLogger().info("§aYou are using latest version of the plugin!");
             } else {
-                getLogger().info("§aВы используете устаревшую или некорректную версию плагина!");
-                getLogger().info("§aВы можете загрузить последнюю версию плагина здесь:");
-                getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
+            	getLogger().info("§aYou are using outdated version of the plugin!");
+  	            getLogger().info("§aYou can download new version here:");
+  	            getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
             }
             getLogger().info("§6========================================");
         });

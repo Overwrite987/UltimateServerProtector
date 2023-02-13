@@ -1,6 +1,10 @@
-# =================================== #
-# ＵｌｔｉｍａｔｅＳｅｒｖｅｒＰｒｏｔｅｃｔｏｒ by Overwrite
-# =================================== #
+#
+#▀██▀  ▀█▀ ▀██    ▄    ██                       ▄            ▄█▀▀▀▄█                                           ▀██▀▀█▄                    ▄                     ▄                   
+# ██    █   ██  ▄██▄  ▄▄▄  ▄▄ ▄▄ ▄▄    ▄▄▄▄   ▄██▄    ▄▄▄▄   ██▄▄  ▀    ▄▄▄▄  ▄▄▄ ▄▄  ▄▄▄▄ ▄▄▄   ▄▄▄▄  ▄▄▄ ▄▄   ██   ██ ▄▄▄ ▄▄    ▄▄▄   ▄██▄    ▄▄▄▄    ▄▄▄▄  ▄██▄    ▄▄▄   ▄▄▄ ▄▄  
+# ██    █   ██   ██    ██   ██ ██ ██  ▀▀ ▄██   ██   ▄█▄▄▄██   ▀▀███▄  ▄█▄▄▄██  ██▀ ▀▀  ▀█▄  █  ▄█▄▄▄██  ██▀ ▀▀  ██▄▄▄█▀  ██▀ ▀▀ ▄█  ▀█▄  ██   ▄█▄▄▄██ ▄█   ▀▀  ██   ▄█  ▀█▄  ██▀ ▀▀ 
+# ██    █   ██   ██    ██   ██ ██ ██  ▄█▀ ██   ██   ██      ▄     ▀██ ██       ██       ▀█▄█   ██       ██      ██       ██     ██   ██  ██   ██      ██       ██   ██   ██  ██     
+#  ▀█▄▄▀   ▄██▄  ▀█▄▀ ▄██▄ ▄██ ██ ██▄ ▀█▄▄▀█▀  ▀█▄▀  ▀█▄▄▄▀ █▀▄▄▄▄█▀   ▀█▄▄▄▀ ▄██▄       ▀█     ▀█▄▄▄▀ ▄██▄    ▄██▄     ▄██▄     ▀█▄▄█▀  ▀█▄▀  ▀█▄▄▄▀  ▀█▄▄▄▀  ▀█▄▀  ▀█▄▄█▀ ▄██▄    
+# 
 
 # Main settings
 main-settings:
@@ -10,6 +14,8 @@ main-settings:
   use-command: true
   # Password command. (specified without / at the beginning) (by default - pas)
   pas-command: 'pas'
+  # Whether to include commands for adding new players in the config
+  enable-admin-commands: false
   # Please don't disable
   enable-metrics: true
   update-checker: true
@@ -38,6 +44,8 @@ blocking-settings:
   block-tab-complete: true
   # Whether to make the player immortal while entering the password
   block-damage: true
+  # Блокировать ли возможность наносить вред мобам и игрокам во время ввода пароля
+  block-damaging-entity: true
   # Whether to block the mob trigger on the player while entering the password
   block-mobs-targeting: true
   
@@ -62,13 +70,20 @@ punish-settings:
   enable-time: true
   # The time for which the player will have to enter the admin password in seconds
   time: 60
+  
+# Setting of the boss bar (works only if the login time is enabled)
+bossbar-settings:
+  # Whether to turn on the bossbar
+  enable-bossbar: true
+  # Boss bar color (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
+  bar-color: RED
+  # Boss bar type (PROGRESS, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
+  bar-style: SEGMENTED_12
  
 # Secure Settings
 secure-settings:
   # Should punishments be applied to operators that are not on the list
   enable-op-whitelist: true
-  # Whether to enable commands for adding new players to the config
-  enable-admin-commands: false
   # Should punishments be applied to people who have prohibited permissions (default - false)
   enable-permission-blacklist: false
   # Whether to enable IPWhitelist for admins (default - false)
