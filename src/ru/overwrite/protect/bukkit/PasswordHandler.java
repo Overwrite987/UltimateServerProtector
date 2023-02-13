@@ -105,6 +105,13 @@ public class PasswordHandler {
         if (config.getBoolean("session-settings.session")) {
         	plugin.ips.add(player.getName()+Utils.getIp(player));
         }
+        if (config.getBoolean("session-settings.session-time-enabled")) {
+            plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
+                if (!plugin.login.containsKey(player)) {
+                	plugin.ips.remove(player.getName() + Utils.getIp(player));
+                }
+            }, config.getInt("session-settings.session-time") * 20L);
+        }
         if (config.getBoolean("logging-settings.logging-pas")) {
         	plugin.logAction("log-format.passed", player, date);
         }
@@ -116,13 +123,6 @@ public class PasswordHandler {
         		Runner.bossbar.removePlayer(player);
         	}
     	}
-        if (config.getBoolean("session-settings.session-time-enabled")) {
-            plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                if (!plugin.login.containsKey(player)) {
-                	plugin.ips.remove(player.getName() + Utils.getIp(player));
-                }
-            }, config.getInt("session-settings.session-time") * 20L);
-        }
         String msg = ServerProtectorManager.getMessage("broadcasts.passed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
             Bukkit.broadcast(msg, "serverprotector.admin");

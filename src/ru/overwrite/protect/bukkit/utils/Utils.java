@@ -6,7 +6,6 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.net.URL;
 import java.util.Scanner;
 import java.util.function.Consumer;
@@ -51,8 +50,7 @@ public final class Utils {
 
     public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            try (InputStream inputStream = new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION").openStream();
-                 Scanner scanner = new Scanner(inputStream)) {
+            try (Scanner scanner = new Scanner(new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION").openStream())) {
                 if (scanner.hasNext()) {
                     consumer.accept(scanner.next());
                 }
