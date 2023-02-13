@@ -44,7 +44,7 @@ blocking-settings:
   block-tab-complete: true
   # Whether to make the player immortal while entering the password
   block-damage: true
-  # Блокировать ли возможность наносить вред мобам и игрокам во время ввода пароля
+  # Block or not the ability to harm mobs and players while entering a password
   block-damaging-entity: true
   # Whether to block the mob trigger on the player while entering the password
   block-mobs-targeting: true
