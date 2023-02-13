@@ -37,5 +37,5 @@ Admin commands that can be included in the config:
 <br><a href="https://modrinth.com/plugin/ultimateserverprotector">**Modrinth.com**</a>
 <br>**ru:**
 <br><a href="https://rubukkit.org/threads/admin-sec-ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.177400/">**RuBukkit.org**</a>
-<br><a href="https://black-minecraft.com/plugins/2161-ultimateserverprotectors-unikalnyj-admin-pass-dlja-igrokov-vashego-servera.html">**SpigotMC.ru**</a>
-<br><a href="https://black-minecraft.com/plugins/2161-ultimateserverprotectors-unikalnyj-admin-pass-dlja-igrokov-vashego-servera.html">**Black-Minecraft.com**</a>
+<br><a href="https://spigotmc.ru/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.737/">**SpigotMC.ru**</a>
+<br><a href="https://black-minecraft.com/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.2160/">**Black-Minecraft.com**</a>
