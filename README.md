@@ -32,7 +32,7 @@ Admin commands that can be included in the config:
 
 **• Downloads**
 <br>**en:**
-<br><a href="https://www.spigotmc.org/resources/ultimateserverprotector-admin-accounts-op-security-plugin-full-async.105237/">**SpigotMc.org**</a>
+<br><a href="https://www.spigotmc.org/resources/ultimateserverprotector-admins-operators-security-plugin-lightweight-and-async.105237/">**SpigotMc.org**</a>
 <br><a href="https://forums.papermc.io/threads/ultimateserverprotector-best-security-plugin-full-async.500/">**PaperMc.io**</a>
 <br><a href="https://modrinth.com/plugin/ultimateserverprotector">**Modrinth.com**</a>
 <br>**ru:**
