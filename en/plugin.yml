@@ -1,7 +1,7 @@
 name: UltimateServerProtector
 version: 18.0
 author: Overwrite
-main: ru.overwrite.protect.bukkit.Main
+main: ru.overwrite.protect.bukkit.ServerProtector
 api-version: 1.13
 commands:
    ultimateserverprotector:
