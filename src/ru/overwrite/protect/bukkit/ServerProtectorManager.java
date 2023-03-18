@@ -30,8 +30,7 @@ import ru.overwrite.protect.bukkit.listeners.AdditionalListener;
 import ru.overwrite.protect.bukkit.listeners.ChatListener;
 import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
 import ru.overwrite.protect.bukkit.listeners.InteractionsListener;
-import ru.overwrite.protect.bukkit.commands.UspCommand;
-import ru.overwrite.protect.bukkit.commands.PasCommand;
+import ru.overwrite.protect.bukkit.commands.*;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
@@ -63,21 +62,14 @@ public class ServerProtectorManager extends JavaPlugin {
     }
     
     public void saveConfigs() {
-    	saveDefaultConfig();
-        if (getConfig().getBoolean("file-settings.use-full-path")) {
-        	fullpath = true;
-        }
-        if (fullpath) {
-            data = Config.getFileFullPath(getConfig().getString("file-settings.data-file"));
-        	Config.saveFullPath(data, getConfig().getString("file-settings.data-file"));
-        } else {
-        	data = Config.getFile(getConfig().getString("file-settings.data-file"));
-        	Config.save(data, getConfig().getString("file-settings.data-file"));
-        }
+        saveDefaultConfig();
+        fullpath = getConfig().getBoolean("file-settings.use-full-path");
+        data = fullpath ? Config.getFileFullPath(getConfig().getString("file-settings.data-file")) : Config.getFile(getConfig().getString("file-settings.data-file"));
+        Config.save(data, getConfig().getString("file-settings.data-file"));
         message = Config.getFile("message.yml");
         Config.save(message, "message.yml");
         prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
-        perms = new HashSet<String>(getConfig().getStringList("permissions"));
+        perms = new HashSet<>(getConfig().getStringList("permissions"));
     }
     
     public void registerListeners() {
@@ -88,7 +80,6 @@ public class ServerProtectorManager extends JavaPlugin {
     }
     
     public void registerCommands(ServerProtector plugin) {
-    	PasCommand pascommand = new PasCommand();
         if (getConfig().getBoolean("main-settings.use-command")) {
             try {
                 PluginCommand command;
@@ -103,22 +94,22 @@ public class ServerProtectorManager extends JavaPlugin {
                 }
                 if (map != null)
                     map.register(getDescription().getName(), command);
-                command.setExecutor(pascommand);
+                command.setExecutor(new PasCommand());
             } catch (Exception e) {
-                getLogger().info("Can't register command.");
+                getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
                 e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
-            getLogger().info("For entering admin-password you need to write it into the chat!");
+            getLogger().info("Для ввода пароля используется чат!");
         }
-        UspCommand uspcommand = new UspCommand();
-        Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(uspcommand);
+        Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(new UspCommand());
+        Objects.requireNonNull(getCommand("ultimateserverprotector")).setTabCompleter(new UspTabCompleter());
     }
     
     public void startRunners() {
     	Runner runner = new Runner();
-    	runner.runTaskTimerAsynchronously((Plugin)this, 5L, 40L);
+    	runner.runTaskTimerAsynchronously(this, 5L, 40L);
     	runner.startMSG();
         if (getConfig().getBoolean("punish-settings.enable-time")) {
         	runner.startTimer();
@@ -192,11 +183,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public boolean isAdmin(String nick) {
-    	if (fullpath) {
-            data = Config.getFileFullPath(getConfig().getString("file-settings.data-file"));
-        } else {
-        	data = Config.getFile(getConfig().getString("file-settings.data-file"));
-        }
+    	data = fullpath ? Config.getFileFullPath(getConfig().getString("file-settings.data-file")) : Config.getFile(getConfig().getString("file-settings.data-file"));
         return data.contains("data." + nick);
     }
 	

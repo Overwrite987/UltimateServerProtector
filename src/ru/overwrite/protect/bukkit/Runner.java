@@ -43,7 +43,9 @@ public class Runner extends BukkitRunnable {
                 }
                 String msg = ServerProtector.getMessage("broadcasts.captured", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
                 if (config.getBoolean("message-settings.enable-broadcasts")) {
-                    Bukkit.broadcast(msg, "serverprotector.admin");
+                	if (p.hasPermission("serverprotector.admin")) {
+                		p.sendMessage(msg);
+                	}
                 }
                 if (config.getBoolean("message-settings.enable-console-broadcasts")) {
                     Bukkit.getConsoleSender().sendMessage(msg);
@@ -85,7 +87,7 @@ public class Runner extends BukkitRunnable {
                     if (instance.login.containsKey(p)) {
                         p.sendMessage(ServerProtector.getMessage("msg.message"));
                         if (config.getBoolean("message-settings.send-titles")) {
-                            p.sendTitle(ServerProtector.getMessage("titles.title"), ServerProtector.getMessage("titles.subtitle"));
+                            p.sendTitle(ServerProtector.getMessage("titles.title"), ServerProtector.getMessage("titles.subtitle"), 10, 70, 20);
                             return;
                         }
                     }

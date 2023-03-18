@@ -78,7 +78,11 @@ public class PasswordHandler {
         }
         String msg = ServerProtectorManager.getMessage("broadcasts.failed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(msg, "serverprotector.admin");
+        	for (Player p : Bukkit.getOnlinePlayers()) {
+        		if (p.hasPermission("serverprotector.admin")) {
+        			p.sendMessage(msg);
+        		}
+        	}
         }
         if (config.getBoolean("message-settings.enable-console-broadcasts")) {
             Bukkit.getConsoleSender().sendMessage(msg);
@@ -125,7 +129,11 @@ public class PasswordHandler {
     	}
         String msg = ServerProtectorManager.getMessage("broadcasts.passed", s -> s.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player)));
         if (config.getBoolean("message-settings.enable-broadcasts")) {
-            Bukkit.broadcast(msg, "serverprotector.admin");
+        	for (Player p : Bukkit.getOnlinePlayers()) {
+        		if (p.hasPermission("serverprotector.admin")) {
+        			p.sendMessage(msg);
+        		}
+        	}
         }
         if (config.getBoolean("message-settings.enable-console-broadcasts")) {
             Bukkit.getConsoleSender().sendMessage(msg);
