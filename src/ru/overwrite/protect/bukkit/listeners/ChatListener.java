@@ -17,9 +17,10 @@ public class ChatListener implements Listener {
 	
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {
+    	if (!instance.login.isEmpty()) return;
         Player p = e.getPlayer();
         String msg = e.getMessage();
-        if (instance.login.containsKey(p)) {
+        if (instance.login.contains(p.getName())) {
         	FileConfiguration config = instance.getConfig();
             e.setCancelled(true);
             e.setMessage("");
@@ -31,8 +32,9 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent e) {
+    	if (!instance.login.isEmpty()) return;
         Player p = e.getPlayer();
-        if (!instance.login.containsKey(p)) return;
+        if (!instance.login.contains(p.getName())) return;
         e.setCancelled(true);
         FileConfiguration config = instance.getConfig();
         if (config.getBoolean("main-settings.use-command")) {

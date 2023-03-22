@@ -15,18 +15,21 @@ public class InteractionsListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {
+    	if (instance.login.isEmpty()) return;
     	Player p = e.getPlayer();
     	instance.handleInteraction(p, e);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent e) {
+    	if (instance.login.isEmpty()) return;
     	Player p = e.getPlayer();
     	instance.handleInteraction(p, e);
     }
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
+    	if (instance.login.isEmpty()) return;
     	Player p = e.getPlayer();
     	instance.handleInteraction(p, e);
     }

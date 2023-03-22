@@ -7,7 +7,8 @@ import org.bukkit.plugin.Plugin;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.Scanner;
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -49,14 +50,15 @@ public final class Utils {
     }
 
     public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-            try (Scanner scanner = new Scanner(new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION").openStream())) {
-                if (scanner.hasNext()) {
-                    consumer.accept(scanner.next());
-                }
-            } catch (IOException exception) {
-                plugin.getLogger().info("Can't check for updates: " + exception.getMessage());
-            }
-        });
-    }
+	    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Overwrite987/UniversalBlocker/master/VERSION").openStream()))) {
+	            String version = reader.readLine();
+	            if (version != null) {
+	                consumer.accept(version.trim());
+	            }
+	        } catch (IOException exception) {
+	            plugin.getLogger().info("Can't check for updates: " + exception.getMessage());
+	        }
+	    });
+	}
 }

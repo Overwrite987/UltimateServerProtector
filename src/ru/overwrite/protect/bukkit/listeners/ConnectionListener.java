@@ -11,6 +11,7 @@ import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.overwrite.protect.bukkit.ServerProtector;
+import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
@@ -29,7 +30,7 @@ public class ConnectionListener implements Listener {
             if (!(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName()))) {
                 if (instance.isPermissions(p)) {
                     if (!instance.ips.contains(p.getName()+Utils.getIp(p)) && config.getBoolean("session-settings.session")) {
-                    	instance.login.put(p, 0);
+                    	instance.login.add(p.getName());
                         if (config.getBoolean("effect-settings.enable-effects")) {
                             giveEffect(instance, p);
                         }
@@ -42,7 +43,7 @@ public class ConnectionListener implements Listener {
                     if (config.getBoolean("logging-settings.logging-join")) {
                     	instance.logAction("log-format.joined", p, date);
                     }
-                    String msg = ServerProtector.getMessage("broadcasts.joined", s -> s.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p)));
+                    String msg = Config.broadcasts_joined.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
                     if (config.getBoolean("message-settings.enable-console-broadcasts")) {
                         Bukkit.getConsoleSender().sendMessage(msg);
                     }
@@ -59,7 +60,7 @@ public class ConnectionListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        instance.login.remove(player);
+        instance.login.remove(player.getName());
         instance.time.remove(player);
     }
 

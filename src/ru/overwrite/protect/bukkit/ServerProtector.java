@@ -24,7 +24,7 @@ public final class ServerProtector extends ServerProtectorManager {
         saveConfigs();
         reloadConfigs();
         registerListeners();
-        registerCommands(this);
+        registerCommands();
         startRunners();
         logEnableDisable(message.getString("log-format.enabled"), date);
         if (getConfig().getBoolean("main-settings.enable-metrics")) {

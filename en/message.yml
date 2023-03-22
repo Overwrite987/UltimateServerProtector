@@ -44,7 +44,7 @@ uspmsg:
   ipadded: '&aIP %ip% successfully added'
   setpassusage: '&f/%cmd% setpass (nick) (password)'
   addopusage: '&f/%cmd% addop (nick)'
-  addip: '&f/%cmd% addip (ip)'
+  addipusage: '&f/%cmd% addip (ip)'
   usage: '&7&l> &7Usage:'
   usage-reload: '&6/%cmd% reload&7 - reload config'
   usage-reboot: '&6/%cmd% reboot&7 - reboot plugin'

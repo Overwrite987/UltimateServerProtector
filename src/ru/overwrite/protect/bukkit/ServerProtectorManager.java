@@ -39,24 +39,25 @@ public class ServerProtectorManager extends JavaPlugin {
 	
 	public static FileConfiguration message;
 	public static FileConfiguration data;
-    public static String prefix;
+	public static String prefix;
     
     public Set<String> perms;
-    public final Set<String> ips = new HashSet<>();
-    public final Map<Player, Integer> login = new HashMap<>();
-    public final Map<Player, Integer> time = new HashMap<>();
+    public Set<String> ips = new HashSet<>();
+    public Set<String> login = new HashSet<>();
+    public Map<Player, Integer> time = new HashMap<>();
     
     public static boolean fullpath = false;
     
-    PluginManager pluginManager = getServer().getPluginManager();
+    private final PluginManager pluginManager = getServer().getPluginManager();
     
     public void checkPaper() {
     	if (getServer().getName().equals("CraftBukkit")) {
-    		getLogger().info("§6============= §c! WARNING ! §c=============");
-  		    getLogger().info("§eYou are using an unstable core for your MC server! It's recomended to use §aPaper");
-  		    getLogger().info("§eDownload Paper for newest version: §ahttps://papermc.io/downloads");
-  		    getLogger().info("§eDownload Paper for older versions: §ahttps://papermc.io/legacy");
-  		    getLogger().info("§6============= §c! WARNING ! §c=============");
+            getLogger().info("§6============= §6! WARNING ! §c=============");
+            getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
+            getLogger().info("§eАвтор плагина §cкатегорически §eвыступает за отказ от использования устаревшего и уязвимого софта!");
+            getLogger().info("§eСкачать Paper: §ahttps://papermc.io/downloads/all");
+            getLogger().info("§6============= §6! WARNING ! §c=============");
+            setEnabled(false);
             return;
         }    	
     }
@@ -70,6 +71,36 @@ public class ServerProtectorManager extends JavaPlugin {
         Config.save(message, "message.yml");
         prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
         perms = new HashSet<>(getConfig().getStringList("permissions"));
+        Config.loadMsgMessages();
+        if (getConfig().getBoolean("message-settings.send-titles")) {
+        	Config.loadTitleMessages();
+        }
+        if (getConfig().getBoolean("bossbar-settings.enable-bossbar")) {
+        	Config.loadBossbarMessages();
+        }
+        if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
+        	Config.loadBroadcastMessages();
+        }
+        Config.loadUspMessages();
+    }
+    
+    public void reloadConfigs() {
+		reloadConfig();
+        message = Config.getFile("message.yml");
+        data = fullpath ? Config.getFileFullPath(getConfig().getString("file-settings.data-file")) : Config.getFile(getConfig().getString("file-settings.data-file"));
+        prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
+        perms = new HashSet<>(getConfig().getStringList("permissions"));
+        Config.loadMsgMessages();
+        if (getConfig().getBoolean("message-settings.send-broadcasts")) {
+        	Config.loadTitleMessages();
+        }
+        if (getConfig().getBoolean("bossbar-settings.enable-bossbar")) {
+        	Config.loadBossbarMessages();
+        }
+        if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
+        	Config.loadBroadcastMessages();
+        }
+        Config.loadUspMessages();
     }
     
     public void registerListeners() {
@@ -79,7 +110,7 @@ public class ServerProtectorManager extends JavaPlugin {
         pluginManager.registerEvents(new AdditionalListener(), this);
     }
     
-    public void registerCommands(ServerProtector plugin) {
+    public void registerCommands() {
         if (getConfig().getBoolean("main-settings.use-command")) {
             try {
                 PluginCommand command;
@@ -133,11 +164,11 @@ public class ServerProtectorManager extends JavaPlugin {
         Utils.checkUpdates(this, version -> {
             getLogger().info("§6========================================");
             if (getDescription().getVersion().equals(version)) {
-                getLogger().info("§aYou are using latest version of the plugin!");
+                getLogger().info("§aВы используете последнюю версию плагина!");
             } else {
-            	getLogger().info("§aYou are using outdated version of the plugin!");
-  	            getLogger().info("§aYou can download new version here:");
-  	            getLogger().info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
+                getLogger().info("§aВы используете устаревшую или некорректную версию плагина!");
+                getLogger().info("§aВы можете загрузить последнюю версию плагина здесь:");
+                getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
             }
             getLogger().info("§6========================================");
         });
@@ -149,17 +180,12 @@ public class ServerProtectorManager extends JavaPlugin {
         }	
     }
     
-    public void reloadConfigs() {
-		reloadConfig();
-        message = Config.getFile("message.yml");
-    }
-    
     public void handleInteraction(Player player, Cancellable event) {
-        if (login.containsKey(player)) {
+        if (login.contains(player.getName())) {
             event.setCancelled(true);
         }
     }
-
+    
     public static String getMessage(String key) {
         return Utils.colorize(message.getString(key, "&4&lERROR&r").replace("%prefix%", prefix));
     }
@@ -175,7 +201,7 @@ public class ServerProtectorManager extends JavaPlugin {
     public boolean isPermissions(Player p) {
         if (p.isOp() || p.hasPermission("serverprotector.protect")) return true;
         for (String s : perms) {
-            if (p.hasPermission(s)) { 
+            if (p.hasPermission(s)) {
             	return true;
             }
         }

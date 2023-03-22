@@ -20,6 +20,7 @@ public class AdditionalListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent e) {
+    	if (instance.login.isEmpty()) return;
     	FileConfiguration config = instance.getConfig();
         Player p = e.getPlayer();
         if (config.getBoolean("blocking-settings.block-item-drop")) {
@@ -29,6 +30,7 @@ public class AdditionalListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemPickup(EntityPickupItemEvent e) {
+    	if (instance.login.isEmpty()) return;
     	if (!(e.getEntity() instanceof Player)) return;
     	FileConfiguration config = instance.getConfig();
     	Player p = (Player)e.getEntity();
@@ -39,6 +41,7 @@ public class AdditionalListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent e) {
+    	if (instance.login.isEmpty()) return;
         if (!(e.getEntity() instanceof Player)) return;
         FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getEntity();
@@ -49,6 +52,7 @@ public class AdditionalListener implements Listener {
     
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
+    	if (instance.login.isEmpty()) return;
     	if (!(e.getDamager() instanceof Player)) return;
     	FileConfiguration config = instance.getConfig();
     	Player p = (Player)e.getDamager();
@@ -59,6 +63,7 @@ public class AdditionalListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onTabComplete(AsyncTabCompleteEvent e) {
+    	if (instance.login.isEmpty()) return;
         if (!(e.getSender() instanceof Player)) return;
         FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getSender();
@@ -69,6 +74,7 @@ public class AdditionalListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onTarget(EntityTargetEvent e) {
+    	if (instance.login.isEmpty()) return;
         if (!(e.getTarget() instanceof Player)) return;
         FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getTarget();

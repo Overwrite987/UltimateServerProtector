@@ -6,7 +6,7 @@
 
     <groupId>ru.overwrite.protect.bukkit</groupId>
     <artifactId>UltimateServerProtector</artifactId>
-    <version>17.7</version>
+    <version>19.0-dev</version>
     <packaging>jar</packaging>
 
     <properties>
@@ -41,7 +41,7 @@
         <dependency>
             <groupId>org.bstats</groupId>
             <artifactId>bstats-bukkit</artifactId>
-            <version>3.0.0</version>
+            <version>3.0.1</version>
             <scope>compile</scope>
         </dependency>
     </dependencies>

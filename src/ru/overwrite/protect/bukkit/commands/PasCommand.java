@@ -7,6 +7,7 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ru.overwrite.protect.bukkit.ServerProtector;
+import ru.overwrite.protect.bukkit.utils.Config;
 
 public class PasCommand implements CommandExecutor {
 	
@@ -14,18 +15,18 @@ public class PasCommand implements CommandExecutor {
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			Bukkit.getLogger().info(ServerProtector.getMessage("msg.playeronly"));
+			Bukkit.getLogger().info(Config.msg_playeronly);
 			return true;
 		}
 		
 		Player p = (Player)sender;
-		if (!instance.login.containsKey(p.getPlayer())) {
-			sender.sendMessage(ServerProtector.getMessage("msg.noneed"));
+		if (!instance.login.contains(p.getName())) {
+			sender.sendMessage(Config.msg_noneed);
 			return true;
 		}
 		
 		if (args.length == 0) {
-			sender.sendMessage(ServerProtector.getMessage("msg.cantbenull"));
+			sender.sendMessage(Config.msg_cantbenull);
 			return true;
 		}
 		
