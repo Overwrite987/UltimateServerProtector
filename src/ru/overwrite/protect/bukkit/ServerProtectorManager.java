@@ -14,6 +14,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
+import java.util.logging.Logger;
 import java.util.function.UnaryOperator;
 
 import org.bukkit.command.CommandMap;
@@ -39,24 +40,25 @@ public class ServerProtectorManager extends JavaPlugin {
 	
 	public static FileConfiguration message;
 	public static FileConfiguration data;
-	public static String prefix;
     
     public Set<String> perms;
     public Set<String> ips = new HashSet<>();
     public Set<String> login = new HashSet<>();
+    public Set<String> saved = new HashSet<>();
     public Map<Player, Integer> time = new HashMap<>();
     
     public static boolean fullpath = false;
     
     private final PluginManager pluginManager = getServer().getPluginManager();
     
+    public final Logger logger = getLogger();
+    
     public void checkPaper() {
     	if (getServer().getName().equals("CraftBukkit")) {
-            getLogger().info("§6============= §6! WARNING ! §c=============");
-            getLogger().info("§eЭтот плагин работает только на Paper и его форках!");
-            getLogger().info("§eАвтор плагина §cкатегорически §eвыступает за отказ от использования устаревшего и уязвимого софта!");
-            getLogger().info("§eСкачать Paper: §ahttps://papermc.io/downloads/all");
-            getLogger().info("§6============= §6! WARNING ! §c=============");
+    		logger.info("§6============= §c! WARNING ! §c=============");
+    		logger.info("§eYou are using an unstable core for your MC server! It's recomended to use §aPaper");
+    		logger.info("§eDownload Paper: §ahttps://papermc.io/downloads/all");
+    		logger.info("§6============= §c! WARNING ! §c=============");
             setEnabled(false);
             return;
         }    	
@@ -64,40 +66,58 @@ public class ServerProtectorManager extends JavaPlugin {
     
     public void saveConfigs() {
         saveDefaultConfig();
-        fullpath = getConfig().getBoolean("file-settings.use-full-path");
-        data = fullpath ? Config.getFileFullPath(getConfig().getString("file-settings.data-file")) : Config.getFile(getConfig().getString("file-settings.data-file"));
-        Config.save(data, getConfig().getString("file-settings.data-file"));
+        FileConfiguration config = getConfig();
+        fullpath = config.getBoolean("file-settings.use-full-path");
+        data = fullpath ? Config.getFileFullPath(config.getString("file-settings.data-file")) : Config.getFile(config.getString("file-settings.data-file"));
+        Config.save(data, config.getString("file-settings.data-file"));
         message = Config.getFile("message.yml");
         Config.save(message, "message.yml");
-        prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
-        perms = new HashSet<>(getConfig().getStringList("permissions"));
+        perms = new HashSet<>(config.getStringList("permissions"));
+        Config.loadMainSettings(config);
+        Config.loadSecureSettings(config);
+        Config.loadAdditionalChecks(config);
+        Config.loadAttempts(config);
+        Config.loadTime(config);
+        Config.loadSessionSettings(config);
+        Config.loadMessageSettings(config);
+        Config.loadSoundSettings(config);
+        Config.loadEffects(config);
         Config.loadMsgMessages();
-        if (getConfig().getBoolean("message-settings.send-titles")) {
+        if (config.getBoolean("message-settings.send-titles")) {
         	Config.loadTitleMessages();
         }
-        if (getConfig().getBoolean("bossbar-settings.enable-bossbar")) {
-        	Config.loadBossbarMessages();
+        if (config.getBoolean("bossbar-settings.enable-bossbar")) {
+        	Config.loadBossbar(config);
         }
-        if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
+        if (config.getBoolean("message-settings.enable-broadcasts")) {
         	Config.loadBroadcastMessages();
         }
         Config.loadUspMessages();
     }
     
     public void reloadConfigs() {
-		reloadConfig();
+    	reloadConfig();
+		FileConfiguration config = getConfig();
         message = Config.getFile("message.yml");
-        data = fullpath ? Config.getFileFullPath(getConfig().getString("file-settings.data-file")) : Config.getFile(getConfig().getString("file-settings.data-file"));
-        prefix = Utils.colorize(getConfig().getString("main-settings.prefix"));
-        perms = new HashSet<>(getConfig().getStringList("permissions"));
+        data = fullpath ? Config.getFileFullPath(config.getString("file-settings.data-file")) : Config.getFile(config.getString("file-settings.data-file"));
+        perms = new HashSet<>(config.getStringList("permissions"));
+        Config.loadMainSettings(config);
+        Config.loadSecureSettings(config);
+        Config.loadAdditionalChecks(config);
+        Config.loadAttempts(config);
+        Config.loadTime(config);
+        Config.loadSessionSettings(config);
+        Config.loadMessageSettings(config);
+        Config.loadSoundSettings(config);
+        Config.loadEffects(config);
         Config.loadMsgMessages();
-        if (getConfig().getBoolean("message-settings.send-broadcasts")) {
+        if (config.getBoolean("message-settings.send-broadcasts")) {
         	Config.loadTitleMessages();
         }
-        if (getConfig().getBoolean("bossbar-settings.enable-bossbar")) {
-        	Config.loadBossbarMessages();
+        if (config.getBoolean("bossbar-settings.enable-bossbar")) {
+        	Config.loadBossbar(config);
         }
-        if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
+        if (config.getBoolean("message-settings.enable-broadcasts")) {
         	Config.loadBroadcastMessages();
         }
         Config.loadUspMessages();
@@ -127,12 +147,12 @@ public class ServerProtectorManager extends JavaPlugin {
                     map.register(getDescription().getName(), command);
                 command.setExecutor(new PasCommand());
             } catch (Exception e) {
-                getLogger().info("Невозможно определить команду. Вероятно поле pas-command пусто.");
+                logger.info("Unable to register command!");
                 e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
-            getLogger().info("Для ввода пароля используется чат!");
+            logger.info("Using chat for password entering!");
         }
         Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(new UspCommand());
         Objects.requireNonNull(getCommand("ultimateserverprotector")).setTabCompleter(new UspTabCompleter());
@@ -142,16 +162,17 @@ public class ServerProtectorManager extends JavaPlugin {
     	Runner runner = new Runner();
     	runner.runTaskTimerAsynchronously(this, 5L, 40L);
     	runner.startMSG();
-        if (getConfig().getBoolean("punish-settings.enable-time")) {
+    	FileConfiguration config = getConfig();
+        if (config.getBoolean("punish-settings.enable-time")) {
         	runner.startTimer();
         }
-        if (getConfig().getBoolean("punish-settings.notadmin-punish")) {
+        if (config.getBoolean("punish-settings.notadmin-punish")) {
         	runner.adminCheck();
         }
-        if (getConfig().getBoolean("secure-settings.enable-op-whitelist")) {
+        if (config.getBoolean("secure-settings.enable-op-whitelist")) {
         	runner.startOpCheck();
         }
-        if (getConfig().getBoolean("secure-settings.enable-permission-blacklist")) {
+        if (config.getBoolean("secure-settings.enable-permission-blacklist")) {
         	runner.startPermsCheck();
         }
     }
@@ -162,15 +183,15 @@ public class ServerProtectorManager extends JavaPlugin {
         }
 
         Utils.checkUpdates(this, version -> {
-            getLogger().info("§6========================================");
+            logger.info("§6========================================");
             if (getDescription().getVersion().equals(version)) {
-                getLogger().info("§aВы используете последнюю версию плагина!");
+            	logger.info("§aYou are using latest version of the plugin!");
             } else {
-                getLogger().info("§aВы используете устаревшую или некорректную версию плагина!");
-                getLogger().info("§aВы можете загрузить последнюю версию плагина здесь:");
-                getLogger().info("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
+            	logger.info("§aYou are using outdated version of the plugin!");
+            	logger.info("§aYou can download new version here:");
+            	logger.info("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
             }
-            getLogger().info("§6========================================");
+            logger.info("§6========================================");
         });
     }
     
@@ -187,17 +208,13 @@ public class ServerProtectorManager extends JavaPlugin {
     }
     
     public static String getMessage(String key) {
-        return Utils.colorize(message.getString(key, "&4&lERROR&r").replace("%prefix%", prefix));
+        return Utils.colorize(message.getString(key, "&4&lERROR&r").replace("%prefix%", Config.main_settings_prefix));
     }
 
     public static String getMessage(String key, UnaryOperator<String> preprocess) {
-        return Utils.colorize(preprocess.apply(message.getString(key, "&4&lERROR&r")).replace("%prefix%", prefix));
+        return Utils.colorize(preprocess.apply(message.getString(key, "&4&lERROR&r")).replace("%prefix%", Config.main_settings_prefix));
     }
-
-    public static String getPrefix() {
-        return prefix;
-    }
-
+    
     public boolean isPermissions(Player p) {
         if (p.isOp() || p.hasPermission("serverprotector.protect")) return true;
         for (String s : perms) {
@@ -207,9 +224,14 @@ public class ServerProtectorManager extends JavaPlugin {
         }
         return false;
     }
+    
+    public boolean isExcluded(Player p) {
+    	return Config.secure_settings_enable_excluded_players && getConfig().getStringList("excluded-players").contains(p.getName());
+    }
 
     public boolean isAdmin(String nick) {
-    	data = fullpath ? Config.getFileFullPath(getConfig().getString("file-settings.data-file")) : Config.getFile(getConfig().getString("file-settings.data-file"));
+    	FileConfiguration config = getConfig();
+    	data = fullpath ? Config.getFileFullPath(config.getString("file-settings.data-file")) : Config.getFile(config.getString("file-settings.data-file"));
         return data.contains("data." + nick);
     }
 	

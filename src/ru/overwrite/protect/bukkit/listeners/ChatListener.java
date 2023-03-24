@@ -8,7 +8,7 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import ru.overwrite.protect.bukkit.ServerProtector;
-
+import ru.overwrite.protect.bukkit.utils.Config;
 import java.util.Locale;
 
 public class ChatListener implements Listener {
@@ -21,10 +21,9 @@ public class ChatListener implements Listener {
         Player p = e.getPlayer();
         String msg = e.getMessage();
         if (instance.login.contains(p.getName())) {
-        	FileConfiguration config = instance.getConfig();
             e.setCancelled(true);
             e.setMessage("");
-            if (!config.getBoolean("main-settings.use-command")) {
+            if (!Config.main_settings_use_command) {
             	instance.passwordHandler.checkPassword(p, msg, true);
             }
         }
@@ -36,11 +35,11 @@ public class ChatListener implements Listener {
         Player p = e.getPlayer();
         if (!instance.login.contains(p.getName())) return;
         e.setCancelled(true);
-        FileConfiguration config = instance.getConfig();
-        if (config.getBoolean("main-settings.use-command")) {
+        if (Config.main_settings_use_command) {
             String message = e.getMessage();
             String label = cutCommand(message).toLowerCase(Locale.ROOT);
-            if (label.equals("/" + config.getString("main-settings.pas-command"))) {
+            FileConfiguration config = instance.getConfig();
+            if (label.equals("/" + Config.main_settings_pas_command)) {
                 e.setCancelled(false);
             } else for (String command : config.getStringList("allowed-commands")) {
                 if (label.equals(command) || message.equalsIgnoreCase(command)) {

@@ -60,10 +60,8 @@ session-settings:
 
 # Punishment settings
 punish-settings:
-  # Should punishments be applied to players with admin-permissions who are not in the config
-  notadmin-punish: true
   # Should punishment be applied to a player who did not have time to enter the admin password for the number of attempts allotted to him
-  enable-attemps: true
+  enable-attempts: true
   # Maximum number of attempts to enter the admin password
   max-attempts: 3
   # Should punishment be applied to a player who did not have time to enter the admin password for a certain time
@@ -84,6 +82,8 @@ bossbar-settings:
 secure-settings:
   # Should punishments be applied to operators that are not on the list
   enable-op-whitelist: true
+  # Should punishments be applied to players with admin-permissions who are not in the config
+  enable-notadmin-punish: false
   # Should punishments be applied to people who have prohibited permissions (default - false)
   enable-permission-blacklist: false
   # Whether to enable IPWhitelist for admins (default - false)

@@ -27,27 +27,29 @@ public class ConnectionListener implements Listener {
         Player p = e.getPlayer();
         Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
         	FileConfiguration config = instance.getConfig();
-            if (!(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName()))) {
+            if (!instance.isExcluded(p)) {
                 if (instance.isPermissions(p)) {
-                    if (!instance.ips.contains(p.getName()+Utils.getIp(p)) && config.getBoolean("session-settings.session")) {
+                    if (!instance.ips.contains(p.getName() + Utils.getIp(p)) && Config.session_settings_session) {
                     	instance.login.add(p.getName());
-                        if (config.getBoolean("effect-settings.enable-effects")) {
+                        if (Config.effect_settings_enable_effects) {
                             giveEffect(instance, p);
                         }
                     }
-                    for (String s : config.getStringList("ip-whitelist")) {
-                      if (config.getBoolean("secure-settings.enable-ip-whitelist") && !Utils.getIp(p).startsWith(s)) {
-                          checkFail(instance, p, config.getStringList("commands.not-admin-ip"));
-                      }
+                    if (Config.secure_settings_enable_ip_whitelist) {
+                    	for (String s : config.getStringList("ip-whitelist")) {
+                    		if (!Utils.getIp(p).startsWith(s)) {
+                    			checkFail(instance, p, config.getStringList("commands.not-admin-ip"));
+                    		}
+                    	}
                     }
-                    if (config.getBoolean("logging-settings.logging-join")) {
+                    if (Config.logging_settings_logging_join) {
                     	instance.logAction("log-format.joined", p, date);
                     }
                     String msg = Config.broadcasts_joined.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
-                    if (config.getBoolean("message-settings.enable-console-broadcasts")) {
+                    if (Config.message_settings_enable_console_broadcasts) {
                         Bukkit.getConsoleSender().sendMessage(msg);
                     }
-                    if (config.getBoolean("message-settings.enable-broadcasts")) {
+                    if (Config.message_settings_enable_broadcasts) {
                     	if (p.hasPermission("serverprotector.admin")) {
                     		p.sendMessage(msg);
                     	}
@@ -60,8 +62,9 @@ public class ConnectionListener implements Listener {
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
-        instance.login.remove(player.getName());
         instance.time.remove(player);
+        instance.login.remove(player.getName());
+        instance.saved.remove(player.getName());
     }
 
     private void checkFail(ServerProtector plugin, Player p, List<String> command) {
@@ -74,8 +77,7 @@ public class ConnectionListener implements Listener {
 
     private void giveEffect(ServerProtector plugin, Player p) {
         Bukkit.getScheduler().runTask(plugin, () -> {
-        	FileConfiguration config = instance.getConfig();
-            for (String s : config.getStringList("effect-settings.effects")) {
+            for (String s : Config.effect_settings_effects) {
                 PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
                 int level = Integer.parseInt(s.split(":")[1]) - 1;
                 p.addPotionEffect(new PotionEffect(types, 99999, level));

@@ -23,31 +23,32 @@ public class Runner extends BukkitRunnable {
     public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
             Date date = new Date();
-            if (instance.login.contains(p.getName())) {
+            String playerName = p.getName();
+            if (instance.login.contains(playerName)) {
                 continue;
             }
-            FileConfiguration config = instance.getConfig();
-            if (instance.isPermissions(p) &&
-                    !(config.getBoolean("secure-settings.enable-excluded-players") && config.getStringList("excluded-players").contains(p.getName())) &&
-                    !instance.ips.contains(p.getName()+Utils.getIp(p))) {
+            if (!instance.isExcluded(p) &&
+            	    instance.isPermissions(p) &&
+            	    !(!Config.session_settings_session && instance.saved.contains(playerName)) &&
+            	    !instance.ips.contains(playerName + Utils.getIp(p))) {
             	instance.login.add(p.getName());
-                if (config.getBoolean("sound-settings.enable-sounds")) {
-                    p.playSound(p.getLocation(), Sound.valueOf(config.getString("sound-settings.on-capture")),
-                            (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
+                if (Config.sound_settings_enable_sounds) {
+                    p.playSound(p.getLocation(), Sound.valueOf(Config.sound_settings_on_capture),
+                    		Config.sound_settings_volume, Config.sound_settings_pitch);
                 }
-                if (config.getBoolean("effect-settings.enable-effects")) {
+                if (Config.effect_settings_enable_effects) {
                     giveEffect(instance, p);
                 }
-                if (config.getBoolean("logging-settings.logging-pas")) {
+                if (Config.logging_settings_logging_pas) {
                 	instance.logAction("log-format.captured", p, date);
                 }
-                String msg = Config.broadcasts_captured.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
-                if (config.getBoolean("message-settings.enable-broadcasts")) {
+                String msg = Config.broadcasts_captured.replace("%player%", playerName).replace("%ip%", Utils.getIp(p));
+                if (Config.message_settings_enable_broadcasts) {
                 	if (p.hasPermission("serverprotector.admin")) {
                 		p.sendMessage(msg);
                 	}
                 }
-                if (config.getBoolean("message-settings.enable-console-broadcasts")) {
+                if (Config.message_settings_enable_console_broadcasts) {
                     Bukkit.getConsoleSender().sendMessage(msg);
                 }
             }
@@ -56,8 +57,7 @@ public class Runner extends BukkitRunnable {
 
     private void giveEffect(ServerProtector plugin, Player p) {
         Bukkit.getScheduler().runTask(plugin, () -> {
-        	FileConfiguration config = instance.getConfig();
-            for (String s : config.getStringList("effect-settings.effects")) {
+            for (String s : Config.effect_settings_effects) {
                 PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
                 int level = Integer.parseInt(s.split(":")[1]) - 1;
                 p.addPotionEffect(new PotionEffect(types, 99999, level));
@@ -87,14 +87,14 @@ public class Runner extends BukkitRunnable {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (instance.login.contains(p.getName())) {
                         p.sendMessage(Config.msg_message);
-                        if (config.getBoolean("message-settings.send-titles")) {
+                        if (Config.message_settings_send_title) {
                             p.sendTitle(Config.titles_title, Config.titles_subtitle, 10, 70, 20);
                             return;
                         }
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(instance, 0L, config.getInt("message-settings.delay") * 20L);
+        }).runTaskTimerAsynchronously(instance, 5L, config.getInt("message-settings.delay") * 20L);
     }
 
     public void startOpCheck() {
@@ -107,7 +107,7 @@ public class Runner extends BukkitRunnable {
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(instance, 0L, 20L);
+        }).runTaskTimerAsynchronously(instance, 5L, 20L);
     }
 
     public void startPermsCheck() {
@@ -116,13 +116,13 @@ public class Runner extends BukkitRunnable {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     for (String badperms : config.getStringList("blacklisted-perms")) {
-                        if (p.hasPermission(badperms) && !config.getStringList("excluded-players").contains(p.getName())) {
+                        if (p.hasPermission(badperms) && !instance.isExcluded(p)) {
                             checkFail(instance, p, config.getStringList("commands.have-blacklisted-perm"));
                         }
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(instance, 0L, 20L);
+        }).runTaskTimerAsynchronously(instance, 5L, 20L);
     }
 
     public static void checkFail(ServerProtector plugin, Player p, List<String> command) {
@@ -141,36 +141,35 @@ public class Runner extends BukkitRunnable {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (instance.login.contains(p.getName()) && !instance.time.containsKey(p)) {
                     	instance.time.put(p, 0);
-                    	if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-                    		bossbar = Bukkit.createBossBar(Config.bossbar_message.replace("%time%", config.getString("punish-settings.time")), 
-                    			BarColor.valueOf(config.getString("bossbar-settings.bar-color")), 
-                    			BarStyle.valueOf(config.getString("bossbar-settings.bar-style")));
+                    	if (Config.bossbar_settings_enable_bossbar) {
+                    		bossbar = Bukkit.createBossBar(Config.bossbar_message.replace("%time%", String.valueOf(Config.punish_settings_time)), 
+                    			BarColor.valueOf(Config.bossbar_settings_bar_color), 
+                    			BarStyle.valueOf(Config.bossbar_settings_bar_style));
                     		bossbar.addPlayer(p);
                     	}
                     } else if (instance.login.contains(p.getName())) {
                     	instance.time.put(p, instance.time.get(p) + 1);
-                    	if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-                    		bossbar.setTitle(ServerProtector.getMessage("bossbar.message").replace("%time%",
-                    	    	Integer.toString(config.getInt("punish-settings.time") - instance.time.get(p))));
-                    		double percents = (config.getInt("punish-settings.time") - instance.time.get(p))/config.getDouble("punish-settings.time");
+                    	if (Config.bossbar_settings_enable_bossbar) {
+                    		bossbar.setTitle(Config.bossbar_message.replace("%time%",
+                    	    	Integer.toString(Config.punish_settings_time - instance.time.get(p))));
+                    		double percents = (Config.punish_settings_time - instance.time.get(p))/Double.valueOf(Config.punish_settings_time);
                     		bossbar.setProgress(percents);
                     		bossbar.addPlayer(p);
                     	}
                     }
-                    if (!noTimeLeft(p) && config.getBoolean("punish-settings.enable-time")) {
+                    if (!noTimeLeft(p) && Config.punish_settings_enable_time) {
                         checkFail(instance, p, config.getStringList("commands.failed-time"));
                         bossbar.removePlayer(p);
                     }
                 }
             }
-        }).runTaskTimerAsynchronously(instance, 0L, 20L);
+        }).runTaskTimerAsynchronously(instance, 5L, 20L);
     }
 
     private boolean noTimeLeft(Player p) {
-        FileConfiguration config = instance.getConfig();
         if (!instance.time.containsKey(p)) {
             return true;
         }
-        return (instance.time.get(p) < config.getInt("punish-settings.time"));
+        return (instance.time.get(p) < Config.punish_settings_time);
     }
 }

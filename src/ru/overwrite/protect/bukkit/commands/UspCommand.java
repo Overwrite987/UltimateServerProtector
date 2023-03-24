@@ -12,6 +12,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 
 import ru.overwrite.protect.bukkit.Runner;
 import ru.overwrite.protect.bukkit.ServerProtector;
+import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.Config;
 
 public class UspCommand implements CommandExecutor {
@@ -19,10 +20,9 @@ public class UspCommand implements CommandExecutor {
 	private final ServerProtector instance = ServerProtector.getInstance();
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
-        	 FileConfiguration config = instance.getConfig();
-             if (sender.hasPermission("serverprotector.admin")) {
-            	 
-        	    if (config.getBoolean("secure-settings.only-console-usp") && !(sender instanceof ConsoleCommandSender)) {
+		if (sender.hasPermission("serverprotector.admin")) {
+            	FileConfiguration config = instance.getConfig();
+        	    if (Config.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
         	    	sender.sendMessage(Config.uspmsg_consoleonly);
         	    	return false;
         	    }
@@ -43,23 +43,26 @@ public class UspCommand implements CommandExecutor {
                     Runner runner = new Runner();
                     runner.runTaskTimerAsynchronously(instance, 5L, 40L);
                     runner.startMSG();
-                    if (config.getBoolean("punish-settings.enable-time")) {
+                    if (Config.punish_settings_enable_time) {
                     	runner.startTimer();
                     }
-                    if (config.getBoolean("punish-settings.notadmin-punish")) {
+                    if (Config.secure_settings_enable_notadmin_punish) {
                     	runner.adminCheck();
                     }
-                    if (config.getBoolean("secure-settings.enable-op-whitelist")) {
+                    if (Config.secure_settings_enable_op_whitelist) {
                     	runner.startOpCheck();
+                    }
+                    if (Config.secure_settings_enable_permission_blacklist) {
+                    	runner.startPermsCheck();
                     }
                     instance.checkForUpdates();
                     sender.sendMessage(Config.uspmsg_rebooted);
                     return true;
                 }
-            if (config.getBoolean("main-settings.enable-admin-commands")) {
+            if (Config.main_settings_enable_admin_commands) {
             	
                 if (args[0].equalsIgnoreCase("setpass")) {
-                	Player targetPlayer = Bukkit.getServer().getPlayer(args[1]);
+                	Player targetPlayer = Bukkit.getPlayerExact(args[1]);
                 	if (targetPlayer == null) {
                 		sender.sendMessage(Config.uspmsg_playernotfound.replace("%nick%", args[1]));
                 		return true;
@@ -79,7 +82,7 @@ public class UspCommand implements CommandExecutor {
                 }
                 if (args[0].equalsIgnoreCase("addop")) {
                     if (args.length > 1) {
-                    	Player targetPlayer = Bukkit.getServer().getPlayer(args[1]);
+                    	Player targetPlayer = Bukkit.getPlayerExact(args[1]);
                     	if (targetPlayer == null) {
                     		sender.sendMessage(Config.uspmsg_playernotfound.replace("%nick%", args[1]));
                     		return true;
@@ -110,19 +113,18 @@ public class UspCommand implements CommandExecutor {
               sendHelp(sender, label);
               return true;
             } else {
-                sender.sendMessage("§7This server is using §c§lUltimateServerProtector v19 §7- the most powerful security plugin made by §5§lOverwriteMC");
+                sender.sendMessage("§6❖ §7Running §c§lUltimateServerProtector v19§7 by §5OverwriteMC");
             }
         return true;
     }
     
 	private void sendHelp(CommandSender sender, String label) {
-		FileConfiguration config = instance.getConfig();
 		sender.sendMessage(Config.uspmsg_usage.replace("%cmd%", label));
 		sender.sendMessage(Config.uspmsg_usage_reload.replace("%cmd%", label));
 		sender.sendMessage(Config.uspmsg_usage_reboot.replace("%cmd%", label));
-		if (!config.getBoolean("main-settings.enable-admin-commands")) {
-			sender.sendMessage("§7Прочие команды отключены.");
-			sender.sendMessage("§7Для их включения выставьте §6enable-admin-commands: §atrue");
+		if (!Config.main_settings_enable_admin_commands) {
+			sender.sendMessage("§7Other commands are disabled.");
+			sender.sendMessage("§7To enable it - set §6enable-admin-commands: §atrue");
 		} else {
 			sender.sendMessage(Config.uspmsg_usage_setpass.replace("%cmd%", label));
 			sender.sendMessage(Config.uspmsg_usage_addop.replace("%cmd%", label));
@@ -142,6 +144,7 @@ public class UspCommand implements CommandExecutor {
         	data.set("data." + nick + ".pass", pas);
         	Config.save(data, config.getString("file-settings.data-file"));
         }
+        ServerProtectorManager.data = data;
     }
 
 }

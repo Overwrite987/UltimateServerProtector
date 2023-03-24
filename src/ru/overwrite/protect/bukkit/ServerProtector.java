@@ -1,6 +1,6 @@
 package ru.overwrite.protect.bukkit;
 
-import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Metrics;
 
@@ -22,7 +22,6 @@ public final class ServerProtector extends ServerProtectorManager {
         Date date = new Date(startTime);
         instance = this;
         saveConfigs();
-        reloadConfigs();
         registerListeners();
         registerCommands();
         startRunners();
@@ -32,13 +31,12 @@ public final class ServerProtector extends ServerProtectorManager {
         }
         checkForUpdates();
         long endTime = System.currentTimeMillis();
-        getLogger().info("Plugin started in " + (endTime - startTime) + " ms");
+        logger.info("Plugin started in " + (endTime - startTime) + " ms");
     }
 
     @Override
     public void onDisable() {
         Date date = new Date();
-        FileConfiguration message = Config.getFile("message.yml");;
         getServer().getScheduler().cancelTasks(this);
         instance = null;
         login.clear();
@@ -46,8 +44,12 @@ public final class ServerProtector extends ServerProtectorManager {
         time.clear();
         passwordHandler.clearAttempts();
         logEnableDisable(message.getString("log-format.disabled"), date);
-        if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
-        	getServer().broadcast(getMessage("broadcasts.disabled"), "serverprotector.admin");
+        if (Config.message_settings_enable_broadcasts) {
+        	for (Player p : getServer().getOnlinePlayers()) {
+        		if (p.hasPermission("serverprotector.admin")) {
+            		p.sendMessage(getMessage("broadcasts.disabled"));
+            	}
+        	}
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
         	getServer().shutdown();

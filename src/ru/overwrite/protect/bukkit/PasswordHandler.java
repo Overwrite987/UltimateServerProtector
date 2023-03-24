@@ -22,7 +22,6 @@ public class PasswordHandler {
     }
 
     public void checkPassword(Player player, String input, boolean resync) {
-        FileConfiguration config = plugin.getConfig();
         FileConfiguration data = ServerProtectorManager.data;
         if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
             if (resync) {
@@ -33,7 +32,7 @@ public class PasswordHandler {
         } else {
             player.sendMessage(Config.msg_incorrect);
             failedPassword(player);
-            if (!isAttemptsMax(player) && config.getBoolean("punish-settings.enable-attemps")) {
+            if (!isAttemptsMax(player) && Config.punish_settings_enable_attempts) {
                 if (resync) {
                     Bukkit.getScheduler().runTask(plugin, () -> failedPasswordCommands(player));
                     plugin.login.remove(player.getName());
@@ -50,8 +49,7 @@ public class PasswordHandler {
 
     private boolean isAttemptsMax(Player player) {
         if (!attempts.containsKey(player)) return true;
-        FileConfiguration config = plugin.getConfig();
-        return (attempts.get(player) < config.getInt("punish-settings.max-attempts"));
+        return (attempts.get(player) < Config.punish_settings_max_attempts);
     }
 
     private void failedPasswordCommands(Player player) {
@@ -62,59 +60,61 @@ public class PasswordHandler {
 
     private void failedPassword(Player player) {
         Date date = new Date();
-        FileConfiguration config = plugin.getConfig();
-        attempts.put(player, attempts.getOrDefault(player, 0) + 1);
-        if (config.getBoolean("sound-settings.enable-sounds")) {
-            player.playSound(player.getLocation(), Sound.valueOf(config.getString("sound-settings.on-pas-fail")),
-                    (float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
+        if (Config.punish_settings_enable_attempts) {
+        	attempts.put(player, attempts.getOrDefault(player, 0) + 1);
         }
-        if (config.getBoolean("logging-settings.logging-pas")) {
+        if (Config.sound_settings_enable_sounds) {
+            player.playSound(player.getLocation(), Sound.valueOf(Config.sound_settings_on_pas_fail),
+            		Config.sound_settings_volume, Config.sound_settings_pitch);
+        }
+        if (Config.logging_settings_logging_pas) {
         	plugin.logAction("log-format.failed", player, date);
         }
         String msg = Config.broadcasts_failed.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
-        if (config.getBoolean("message-settings.enable-broadcasts")) {
+        if (Config.message_settings_enable_broadcasts) {
         	for (Player p : Bukkit.getOnlinePlayers()) {
         		if (p.hasPermission("serverprotector.admin")) {
         			p.sendMessage(msg);
         		}
         	}
         }
-        if (config.getBoolean("message-settings.enable-console-broadcasts")) {
+        if (Config.message_settings_enable_console_broadcasts) {
             Bukkit.getConsoleSender().sendMessage(msg);
         }
     }
 
     private void correctPassword(Player player) {
         Date date = new Date();
-        FileConfiguration config = plugin.getConfig();
-        plugin.login.remove(player.getName());
+        String playerName = player.getName();
+        plugin.login.remove(playerName);
+        if (!Config.session_settings_session) {
+        	plugin.saved.add(playerName);
+        }
         player.sendMessage(Config.msg_correct);
-        if (config.getBoolean("session-settings.session")) {
-        	plugin.time.remove(player);
+        plugin.time.remove(player);
+        if (Config.sound_settings_enable_sounds) {
+            player.playSound(player.getLocation(), Sound.valueOf(Config.sound_settings_on_pas_correct),
+            		Config.sound_settings_volume, Config.sound_settings_pitch);
         }
-        if (config.getBoolean("sound-settings.enable-sounds")) {
-            player.playSound(player.getLocation(), Sound.valueOf(config.getString("sound-settings.on-pas-correct")),
-                    	(float)config.getDouble("sound-settings.volume"), (float)config.getDouble("sound-settings.pitch"));
-        }
-        if (config.getBoolean("effect-settings.enable-effects")) {
+        if (Config.effect_settings_enable_effects) {
             for (PotionEffect s : player.getActivePotionEffects()) {
                 player.removePotionEffect(s.getType());
             }
         }
-        if (config.getBoolean("session-settings.session")) {
-        	plugin.ips.add(player.getName() + Utils.getIp(player));
+        if (Config.session_settings_session) {
+        	plugin.ips.add(playerName + Utils.getIp(player));
         }
-        if (config.getBoolean("session-settings.session-time-enabled")) {
+        if (Config.session_settings_session_time_enabled) {
             plugin.getServer().getScheduler().runTaskLaterAsynchronously(plugin, () -> {
-                if (!plugin.login.contains(player.getName())) {
-                	plugin.ips.remove(player.getName() + Utils.getIp(player));
+                if (!plugin.login.contains(playerName)) {
+                	plugin.ips.remove(playerName + Utils.getIp(player));
                 }
-            }, config.getInt("session-settings.session-time") * 20L);
+            }, Config.session_settings_session_time * 20L);
         }
-        if (config.getBoolean("logging-settings.logging-pas")) {
+        if (Config.logging_settings_logging_pas) {
         	plugin.logAction("log-format.passed", player, date);
         }
-        if (config.getBoolean("bossbar-settings.enable-bossbar")) {
+        if (Config.bossbar_settings_enable_bossbar) {
         	if (Runner.bossbar == null) {
         		return;
         	}
@@ -122,15 +122,15 @@ public class PasswordHandler {
         		Runner.bossbar.removePlayer(player);
         	}
     	}
-        String msg = Config.broadcasts_passed.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
-        if (config.getBoolean("message-settings.enable-broadcasts")) {
+        String msg = Config.broadcasts_passed.replace("%player%", playerName).replace("%ip%", Utils.getIp(player));
+        if (Config.message_settings_enable_broadcasts) {
         	for (Player p : Bukkit.getOnlinePlayers()) {
         		if (p.hasPermission("serverprotector.admin")) {
         			p.sendMessage(msg);
         		}
         	}
         }
-        if (config.getBoolean("message-settings.enable-console-broadcasts")) {
+        if (Config.message_settings_enable_console_broadcasts) {
             Bukkit.getConsoleSender().sendMessage(msg);
         }
     }

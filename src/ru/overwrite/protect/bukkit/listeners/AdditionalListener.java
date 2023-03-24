@@ -1,7 +1,6 @@
 package ru.overwrite.protect.bukkit.listeners;
 
 import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -13,6 +12,7 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import ru.overwrite.protect.bukkit.ServerProtector;
+import ru.overwrite.protect.bukkit.utils.Config;
 
 public class AdditionalListener implements Listener {
 	
@@ -21,9 +21,8 @@ public class AdditionalListener implements Listener {
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent e) {
     	if (instance.login.isEmpty()) return;
-    	FileConfiguration config = instance.getConfig();
         Player p = e.getPlayer();
-        if (config.getBoolean("blocking-settings.block-item-drop")) {
+        if (Config.blocking_settings_block_item_drop) {
         	instance.handleInteraction(p, e);
         }
     }
@@ -32,9 +31,8 @@ public class AdditionalListener implements Listener {
     public void onItemPickup(EntityPickupItemEvent e) {
     	if (instance.login.isEmpty()) return;
     	if (!(e.getEntity() instanceof Player)) return;
-    	FileConfiguration config = instance.getConfig();
     	Player p = (Player)e.getEntity();
-        if (config.getBoolean("blocking-settings.block-item-pickup")) {
+        if (Config.blocking_settings_block_item_pickup) {
         	instance.handleInteraction(p, e);
         }
     }
@@ -43,9 +41,8 @@ public class AdditionalListener implements Listener {
     public void onPlayerDamage(EntityDamageEvent e) {
     	if (instance.login.isEmpty()) return;
         if (!(e.getEntity() instanceof Player)) return;
-        FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getEntity();
-        if (config.getBoolean("blocking-settings.block-damage")) {
+        if (Config.blocking_settings_block_damage) {
         	instance.handleInteraction(p, e);
         }
     }
@@ -54,9 +51,8 @@ public class AdditionalListener implements Listener {
     public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
     	if (instance.login.isEmpty()) return;
     	if (!(e.getDamager() instanceof Player)) return;
-    	FileConfiguration config = instance.getConfig();
     	Player p = (Player)e.getDamager();
-    	if (config.getBoolean("blocking-settings.block-damaging-entity")) {
+    	if (Config.blocking_settings_damaging_entity) {
         	instance.handleInteraction(p, e);
         }
     }
@@ -65,9 +61,8 @@ public class AdditionalListener implements Listener {
     public void onTabComplete(AsyncTabCompleteEvent e) {
     	if (instance.login.isEmpty()) return;
         if (!(e.getSender() instanceof Player)) return;
-        FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getSender();
-        if (config.getBoolean("blocking-settings.block-tab-complete")) {
+        if (Config.blocking_settings_block_tab_complete) {
         	instance.handleInteraction(p, e);
         }
     }
@@ -76,9 +71,8 @@ public class AdditionalListener implements Listener {
     public void onTarget(EntityTargetEvent e) {
     	if (instance.login.isEmpty()) return;
         if (!(e.getTarget() instanceof Player)) return;
-        FileConfiguration config = instance.getConfig();
         Player p = (Player)e.getTarget();
-        if (config.getBoolean("blocking-settings.block-mobs-targeting") &&
+        if (Config.blocking_settings_mobs_targeting &&
                     (e.getReason() == TargetReason.CLOSEST_PLAYER || e.getReason() == TargetReason.RANDOM_TARGET)) {
         	instance.handleInteraction(p, e);
         }

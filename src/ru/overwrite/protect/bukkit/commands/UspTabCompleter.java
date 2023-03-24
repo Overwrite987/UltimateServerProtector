@@ -7,28 +7,24 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.configuration.file.FileConfiguration;
 
-import ru.overwrite.protect.bukkit.ServerProtector;
+import ru.overwrite.protect.bukkit.utils.Config;
 
 public class UspTabCompleter implements TabCompleter {
-	
-	private final ServerProtector instance = ServerProtector.getInstance();
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
 		if (!sender.hasPermission("serverprotector.admin")) {
 	        return Collections.emptyList();
 	    }
-		FileConfiguration config = instance.getConfig();
-		if (config.getBoolean("secure-settings.only-console-usp") && !(sender instanceof ConsoleCommandSender)) {
+		if (Config.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
 	    	return Collections.emptyList();
 	    }
 	    List<String> completions = new ArrayList<>();
 	    if (args.length == 1) {
 	        completions.add("reload");
 	        completions.add("reboot");
-	        if (config.getBoolean("main-settings.enable-admin-commands")) {
+	        if (Config.main_settings_enable_admin_commands) {
 	            completions.add("setpass");
 	            completions.add("addop");
 	            completions.add("addip");
