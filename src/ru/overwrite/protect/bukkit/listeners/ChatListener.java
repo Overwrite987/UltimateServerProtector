@@ -31,7 +31,7 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onCommand(PlayerCommandPreprocessEvent e) {
-    	if (!instance.login.isEmpty()) return;
+    	if (instance.login.isEmpty()) return;
         Player p = e.getPlayer();
         if (!instance.login.contains(p.getName())) return;
         e.setCancelled(true);
