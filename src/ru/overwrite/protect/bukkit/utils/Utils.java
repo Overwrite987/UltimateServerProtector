@@ -51,7 +51,7 @@ public final class Utils {
 
     public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {
 	    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Overwrite987/UniversalBlocker/master/VERSION").openStream()))) {
+	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION").openStream()))) {
 	            String version = reader.readLine();
 	            if (version != null) {
 	                consumer.accept(version.trim());

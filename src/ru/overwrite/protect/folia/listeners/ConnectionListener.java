@@ -76,12 +76,12 @@ public class ConnectionListener implements Listener {
     }
 
     private void giveEffect(ServerProtector plugin, Player p) {
-    	Bukkit.getGlobalRegionScheduler().run(plugin, (ge) -> {
+    	p.getScheduler().run(plugin, (ge) -> {
             for (String s : Config.effect_settings_effects) {
                 PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
                 int level = Integer.parseInt(s.split(":")[1]) - 1;
                 p.addPotionEffect(new PotionEffect(types, 99999, level));
             }
-        });
+        }, null);
     }
 }

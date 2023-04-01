@@ -17,7 +17,7 @@ public class ChatListener implements Listener {
 	
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {
-    	if (!instance.login.isEmpty()) return;
+    	if (instance.login.isEmpty()) return;
         Player p = e.getPlayer();
         String msg = e.getMessage();
         if (instance.login.contains(p.getName())) {

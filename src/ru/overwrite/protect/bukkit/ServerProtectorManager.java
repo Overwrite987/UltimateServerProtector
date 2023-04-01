@@ -82,6 +82,7 @@ public class ServerProtectorManager extends JavaPlugin {
         Config.loadMessageSettings(config);
         Config.loadSoundSettings(config);
         Config.loadEffects(config);
+        Config.loadLoggingSettings(config);
         Config.loadMsgMessages();
         if (config.getBoolean("message-settings.send-titles")) {
         	Config.loadTitleMessages();
@@ -110,6 +111,7 @@ public class ServerProtectorManager extends JavaPlugin {
         Config.loadMessageSettings(config);
         Config.loadSoundSettings(config);
         Config.loadEffects(config);
+        Config.loadLoggingSettings(config);
         Config.loadMsgMessages();
         if (config.getBoolean("message-settings.send-broadcasts")) {
         	Config.loadTitleMessages();

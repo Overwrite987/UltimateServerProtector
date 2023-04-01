@@ -201,7 +201,7 @@ public class Config {
 		effect_settings_effects = config.getStringList("effect-settings.effects");
 	}
 	
-	public static void loadLiggingSettings(FileConfiguration config) {
+	public static void loadLoggingSettings(FileConfiguration config) {
 		logging_settings_logging_pas = config.getBoolean("logging-settings.logging-pas");
 		logging_settings_logging_join = config.getBoolean("logging-settings.logging-join");
 		logging_settings_logging_enable_disable = config.getBoolean("logging-settings.logging-enable-disable");
