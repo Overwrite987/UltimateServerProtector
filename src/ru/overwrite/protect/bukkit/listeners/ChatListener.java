@@ -7,13 +7,23 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.AsyncPlayerChatEvent;
 import org.bukkit.event.player.PlayerCommandPreprocessEvent;
-import ru.overwrite.protect.bukkit.ServerProtector;
+
+import ru.overwrite.protect.bukkit.PasswordHandler;
+import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.Config;
 import java.util.Locale;
 
 public class ChatListener implements Listener {
 	
-	private final ServerProtector instance = ServerProtector.getInstance();
+	private final ServerProtectorManager instance;
+	private final PasswordHandler passwordHandler;
+	private final Config pluginConfig;
+	
+	public ChatListener(ServerProtectorManager plugin) {
+        this.instance = plugin;
+        pluginConfig = plugin.getPluginConfig();
+        passwordHandler = new PasswordHandler(plugin);
+    }
 	
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onChat(AsyncPlayerChatEvent e) {
@@ -23,8 +33,8 @@ public class ChatListener implements Listener {
         if (instance.login.contains(p.getName())) {
             e.setCancelled(true);
             e.setMessage("");
-            if (!Config.main_settings_use_command) {
-            	instance.passwordHandler.checkPassword(p, msg, true);
+            if (!pluginConfig.main_settings_use_command) {
+            	passwordHandler.checkPassword(p, msg, true);
             }
         }
     }
@@ -35,13 +45,12 @@ public class ChatListener implements Listener {
         Player p = e.getPlayer();
         if (!instance.login.contains(p.getName())) return;
         e.setCancelled(true);
-        if (Config.main_settings_use_command) {
+        if (pluginConfig.main_settings_use_command) {
             String message = e.getMessage();
             String label = cutCommand(message).toLowerCase(Locale.ROOT);
-            FileConfiguration config = instance.getConfig();
-            if (label.equals("/" + Config.main_settings_pas_command)) {
+            if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
                 e.setCancelled(false);
-            } else for (String command : config.getStringList("allowed-commands")) {
+            } else for (String command : pluginConfig.allowed_commands) {
                 if (label.equals(command) || message.equalsIgnoreCase(command)) {
                     e.setCancelled(false);
                     break;

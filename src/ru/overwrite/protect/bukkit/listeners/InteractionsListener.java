@@ -7,11 +7,15 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerInteractEntityEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
-import ru.overwrite.protect.bukkit.ServerProtector;
+import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 public class InteractionsListener implements Listener {
 	
-	private final ServerProtector instance = ServerProtector.getInstance();
+	private final ServerProtectorManager instance;
+	
+	public InteractionsListener(ServerProtectorManager plugin) {
+        this.instance = plugin;
+    }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {

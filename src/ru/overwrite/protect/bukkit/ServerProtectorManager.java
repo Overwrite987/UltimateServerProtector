@@ -12,7 +12,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
-import java.util.Objects;
 import java.util.Set;
 import java.util.logging.Logger;
 import java.util.function.UnaryOperator;
@@ -36,20 +35,22 @@ import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class ServerProtectorManager extends JavaPlugin {
+	
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
 	
-	public static FileConfiguration message;
-	public static FileConfiguration data;
+	public FileConfiguration message;
+	public FileConfiguration data;
     
-    public Set<String> perms;
     public Set<String> ips = new HashSet<>();
     public Set<String> login = new HashSet<>();
     public Set<String> saved = new HashSet<>();
     public Map<Player, Integer> time = new HashMap<>();
     
-    public static boolean fullpath = false;
+    public boolean fullpath = false;
     
     private final PluginManager pluginManager = getServer().getPluginManager();
+    
+    private final Config pluginConfig = new Config(this);
     
     public final Logger logger = getLogger();
     
@@ -68,68 +69,70 @@ public class ServerProtectorManager extends JavaPlugin {
         saveDefaultConfig();
         FileConfiguration config = getConfig();
         fullpath = config.getBoolean("file-settings.use-full-path");
-        data = fullpath ? Config.getFileFullPath(config.getString("file-settings.data-file")) : Config.getFile(config.getString("file-settings.data-file"));
-        Config.save(data, config.getString("file-settings.data-file"));
-        message = Config.getFile("message.yml");
-        Config.save(message, "message.yml");
-        perms = new HashSet<>(config.getStringList("permissions"));
-        Config.loadMainSettings(config);
-        Config.loadSecureSettings(config);
-        Config.loadAdditionalChecks(config);
-        Config.loadAttempts(config);
-        Config.loadTime(config);
-        Config.loadSessionSettings(config);
-        Config.loadMessageSettings(config);
-        Config.loadSoundSettings(config);
-        Config.loadEffects(config);
-        Config.loadLoggingSettings(config);
-        Config.loadMsgMessages();
+        data = fullpath ? pluginConfig.getFileFullPath(config.getString("file-settings.data-file")) : pluginConfig.getFile(config.getString("file-settings.data-file"));
+        pluginConfig.save(data, config.getString("file-settings.data-file"));
+        message = pluginConfig.getFile("message.yml");
+        pluginConfig.save(message, "message.yml");
+        pluginConfig.loadPerms(config);
+        pluginConfig.loadLists(config);
+        pluginConfig.loadMainSettings(config);
+        pluginConfig.loadSecureSettings(config);
+        pluginConfig.loadAdditionalChecks(config);
+        pluginConfig.loadAttempts(config);
+        pluginConfig.loadTime(config);
+        pluginConfig.loadSessionSettings(config);
+        pluginConfig.loadMessageSettings(config);
+        pluginConfig.loadSoundSettings(config);
+        pluginConfig.loadEffects(config);
+        pluginConfig.loadLoggingSettings(config);
+        pluginConfig.loadMsgMessages();
         if (config.getBoolean("message-settings.send-titles")) {
-        	Config.loadTitleMessages();
+        	pluginConfig.loadTitleMessages();
         }
         if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-        	Config.loadBossbar(config);
+        	pluginConfig.loadBossbar(config);
         }
         if (config.getBoolean("message-settings.enable-broadcasts")) {
-        	Config.loadBroadcastMessages();
+        	pluginConfig.loadBroadcastMessages();
         }
-        Config.loadUspMessages();
+        pluginConfig.loadUspMessages();
     }
     
     public void reloadConfigs() {
     	reloadConfig();
 		FileConfiguration config = getConfig();
-        message = Config.getFile("message.yml");
-        data = fullpath ? Config.getFileFullPath(config.getString("file-settings.data-file")) : Config.getFile(config.getString("file-settings.data-file"));
-        perms = new HashSet<>(config.getStringList("permissions"));
-        Config.loadMainSettings(config);
-        Config.loadSecureSettings(config);
-        Config.loadAdditionalChecks(config);
-        Config.loadAttempts(config);
-        Config.loadTime(config);
-        Config.loadSessionSettings(config);
-        Config.loadMessageSettings(config);
-        Config.loadSoundSettings(config);
-        Config.loadEffects(config);
-        Config.loadLoggingSettings(config);
-        Config.loadMsgMessages();
-        if (config.getBoolean("message-settings.send-broadcasts")) {
-        	Config.loadTitleMessages();
+        message = pluginConfig.getFile("message.yml");
+        data = fullpath ? pluginConfig.getFileFullPath(config.getString("file-settings.data-file")) : pluginConfig.getFile(config.getString("file-settings.data-file"));
+        pluginConfig.loadPerms(config);
+        pluginConfig.loadLists(config);
+        pluginConfig.loadMainSettings(config);
+        pluginConfig.loadSecureSettings(config);
+        pluginConfig.loadAdditionalChecks(config);
+        pluginConfig.loadAttempts(config);
+        pluginConfig.loadTime(config);
+        pluginConfig.loadSessionSettings(config);
+        pluginConfig.loadMessageSettings(config);
+        pluginConfig.loadSoundSettings(config);
+        pluginConfig.loadEffects(config);
+        pluginConfig.loadLoggingSettings(config);
+        pluginConfig.loadMsgMessages();
+        if (config.getBoolean("message-settings.send-titles")) {
+        	pluginConfig.loadTitleMessages();
         }
         if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-        	Config.loadBossbar(config);
+        	pluginConfig.loadBossbar(config);
         }
         if (config.getBoolean("message-settings.enable-broadcasts")) {
-        	Config.loadBroadcastMessages();
+        	pluginConfig.loadBroadcastMessages();
         }
-        Config.loadUspMessages();
+        pluginConfig.loadUspMessages();
     }
     
     public void registerListeners() {
-    	pluginManager.registerEvents(new ChatListener(), this);
-        pluginManager.registerEvents(new ConnectionListener(), this);
-        pluginManager.registerEvents(new InteractionsListener(), this);
-        pluginManager.registerEvents(new AdditionalListener(), this);
+    	pluginManager.registerEvents(new ChatListener(this), this);
+        pluginManager.registerEvents(new ConnectionListener(this), this);
+        pluginManager.registerEvents(new InteractionsListener(this), this);
+        pluginManager.registerEvents(new AdditionalListener(this), this);
     }
     
     public void registerCommands() {
@@ -147,21 +150,21 @@ public class ServerProtectorManager extends JavaPlugin {
                 }
                 if (map != null)
                     map.register(getDescription().getName(), command);
-                command.setExecutor(new PasCommand());
+                command.setExecutor(new PasCommand(this));
             } catch (Exception e) {
-                logger.info("Unable to register command!");
+            	logger.info("Unable to register command!");
                 e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
-            logger.info("Using chat for password entering!");
+        	logger.info("Using chat for password entering!");
         }
-        Objects.requireNonNull(getCommand("ultimateserverprotector")).setExecutor(new UspCommand());
-        Objects.requireNonNull(getCommand("ultimateserverprotector")).setTabCompleter(new UspTabCompleter());
+        getCommand("ultimateserverprotector").setExecutor(new UspCommand(this));
+        getCommand("ultimateserverprotector").setTabCompleter(new UspTabCompleter(this));
     }
     
     public void startRunners() {
-    	Runner runner = new Runner();
+    	Runner runner = new Runner(this);
     	runner.runTaskTimerAsynchronously(this, 5L, 40L);
     	runner.startMSG();
     	FileConfiguration config = getConfig();
@@ -209,17 +212,21 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
     
-    public static String getMessage(String key) {
-        return Utils.colorize(message.getString(key, "&4&lERROR&r").replace("%prefix%", Config.main_settings_prefix));
+    public Config getPluginConfig() {
+    	return pluginConfig;
+    }
+    
+    public String getMessage(String key) {
+        return Utils.colorize(message.getString(key, "&4&lERROR&r").replace("%prefix%", getPluginConfig().main_settings_prefix));
     }
 
-    public static String getMessage(String key, UnaryOperator<String> preprocess) {
-        return Utils.colorize(preprocess.apply(message.getString(key, "&4&lERROR&r")).replace("%prefix%", Config.main_settings_prefix));
+    public String getMessage(String key, UnaryOperator<String> preprocess) {
+        return Utils.colorize(preprocess.apply(message.getString(key, "&4&lERROR&r")).replace("%prefix%", getPluginConfig().main_settings_prefix));
     }
     
     public boolean isPermissions(Player p) {
         if (p.isOp() || p.hasPermission("serverprotector.protect")) return true;
-        for (String s : perms) {
+        for (String s : pluginConfig.perms) {
             if (p.hasPermission(s)) {
             	return true;
             }
@@ -228,12 +235,10 @@ public class ServerProtectorManager extends JavaPlugin {
     }
     
     public boolean isExcluded(Player p) {
-    	return Config.secure_settings_enable_excluded_players && getConfig().getStringList("excluded-players").contains(p.getName());
+    	return pluginConfig.secure_settings_enable_excluded_players && pluginConfig.excluded_players.contains(p.getName());
     }
 
     public boolean isAdmin(String nick) {
-    	FileConfiguration config = getConfig();
-    	data = fullpath ? Config.getFileFullPath(config.getString("file-settings.data-file")) : Config.getFile(config.getString("file-settings.data-file"));
         return data.contains("data." + nick);
     }
 	

@@ -4,7 +4,6 @@ import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
-
 import java.io.IOException;
 import java.net.URL;
 import java.io.BufferedReader;
@@ -16,6 +15,7 @@ import java.util.regex.Pattern;
 import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 public final class Utils {
+	
 	private static final int SUB_VERSION = Integer.parseInt(
             Bukkit.getServer().getClass().getPackage().getName()
                     .replace(".", ",")
@@ -25,8 +25,6 @@ public final class Utils {
                     .replace("v", "")
     );
     private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F\\d]{6})");
-
-    private Utils() {}
 
     public static String getIp(Player player) {
         return player.getAddress().getAddress().getHostAddress();
