@@ -1,6 +1,9 @@
 package ru.overwrite.protect.bukkit;
 
+import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+
 import ru.overwrite.protect.bukkit.utils.Metrics;
 
 import java.util.Date;
@@ -10,17 +13,20 @@ public final class ServerProtector extends ServerProtectorManager {
     @Override
     public void onEnable() {
     	long startTime = System.currentTimeMillis();
-        checkPaper();
+        checkPaper(logger);
+        saveDefaultConfig();
+        FileConfiguration config = getConfig();
+        loadConfigs(config);
+        PluginManager pluginManager = server.getPluginManager();
+        registerListeners(pluginManager);
+        registerCommands(pluginManager, config);
+        startRunners(config);
         Date date = new Date(startTime);
-        saveConfigs();
-        registerListeners();
-        registerCommands();
-        startRunners();
         logEnableDisable(message.getString("log-format.enabled"), date);
-        if (getConfig().getBoolean("main-settings.enable-metrics")) {
+        if (config.getBoolean("main-settings.enable-metrics")) {
             new Metrics(this, 13347);
         }
-        checkForUpdates();
+        checkForUpdates(logger);
         long endTime = System.currentTimeMillis();
         logger.info("Plugin started in " + (endTime - startTime) + " ms");
     }
@@ -30,15 +36,14 @@ public final class ServerProtector extends ServerProtectorManager {
         Date date = new Date();
         logEnableDisable(message.getString("log-format.disabled"), date);
         if (getPluginConfig().message_settings_enable_broadcasts) {
-        	for (Player p : getServer().getOnlinePlayers()) {
+        	for (Player p : server.getOnlinePlayers()) {
         		if (p.hasPermission("serverprotector.admin")) {
-            		p.sendMessage(getMessage("broadcasts.disabled"));
+            		p.sendMessage(getPluginConfig().broadcasts_disabled);
             	}
         	}
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
-        	getServer().shutdown();
+        	server.shutdown();
         }
     }
 }
-  

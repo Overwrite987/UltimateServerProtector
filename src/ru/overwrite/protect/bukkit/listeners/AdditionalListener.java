@@ -12,15 +12,18 @@ import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.utils.Config;
 
 public class AdditionalListener implements Listener {
 	
 	private final ServerProtectorManager instance;
+	private final ServerProtectorAPI api;
 	private final Config pluginConfig;
 	
 	public AdditionalListener(ServerProtectorManager plugin) {
-        this.instance = plugin;
+        instance = plugin;
+        api = plugin.getPluginAPI();
         pluginConfig = plugin.getPluginConfig();
     }
 
@@ -29,7 +32,7 @@ public class AdditionalListener implements Listener {
     	if (instance.login.isEmpty()) return;
         Player p = e.getPlayer();
         if (pluginConfig.blocking_settings_block_item_drop) {
-        	instance.handleInteraction(p, e);
+        	api.handleInteraction(p, e);
         }
     }
 
@@ -39,7 +42,7 @@ public class AdditionalListener implements Listener {
     	if (!(e.getEntity() instanceof Player)) return;
     	Player p = (Player)e.getEntity();
         if (pluginConfig.blocking_settings_block_item_pickup) {
-        	instance.handleInteraction(p, e);
+        	api.handleInteraction(p, e);
         }
     }
 
@@ -49,7 +52,7 @@ public class AdditionalListener implements Listener {
         if (!(e.getEntity() instanceof Player)) return;
         Player p = (Player)e.getEntity();
         if (pluginConfig.blocking_settings_block_damage) {
-        	instance.handleInteraction(p, e);
+        	api.handleInteraction(p, e);
         }
     }
     
@@ -59,7 +62,7 @@ public class AdditionalListener implements Listener {
     	if (!(e.getDamager() instanceof Player)) return;
     	Player p = (Player)e.getDamager();
     	if (pluginConfig.blocking_settings_damaging_entity) {
-        	instance.handleInteraction(p, e);
+        	api.handleInteraction(p, e);
         }
     }
 
@@ -69,7 +72,7 @@ public class AdditionalListener implements Listener {
         if (!(e.getSender() instanceof Player)) return;
         Player p = (Player)e.getSender();
         if (pluginConfig.blocking_settings_block_tab_complete) {
-        	instance.handleInteraction(p, e);
+        	api.handleInteraction(p, e);
         }
     }
 
@@ -80,7 +83,7 @@ public class AdditionalListener implements Listener {
         Player p = (Player)e.getTarget();
         if (pluginConfig.blocking_settings_mobs_targeting &&
                     (e.getReason() == TargetReason.CLOSEST_PLAYER || e.getReason() == TargetReason.RANDOM_TARGET)) {
-        	instance.handleInteraction(p, e);
+        	api.handleInteraction(p, e);
         }
     }
 }

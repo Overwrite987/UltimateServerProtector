@@ -6,19 +6,22 @@ import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.utils.Config;
 
 public class PasCommand implements CommandExecutor {
 	
 	private final ServerProtectorManager instance;
+	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 	
 	public PasCommand(ServerProtectorManager plugin) {
-        this.instance = plugin;
-        passwordHandler = new PasswordHandler(plugin);
+        instance = plugin;
         pluginConfig = plugin.getPluginConfig();
+        passwordHandler = plugin.getPasswordHandler();
+        api = plugin.getPluginAPI();
     }
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
@@ -27,7 +30,7 @@ public class PasCommand implements CommandExecutor {
 			return true;
 		}
 		Player p = (Player)sender;
-		if (!instance.login.contains(p.getName())) {
+		if (!api.isCaptured(p)) {
 			sender.sendMessage(pluginConfig.msg_noneed);
 			return true;
 		}

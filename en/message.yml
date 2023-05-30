@@ -33,7 +33,7 @@ titles:
 bossbar:
   message: '&fRemained: &c%time% seconds'
 
-# Сообщение при вводе команды /usp (админ-команд)
+# Message for /usp command (admin-commands)
 uspmsg:
   consoleonly: '&cThis command can only be executed from the console!'
   reloaded: '&aPlugin reloaded'

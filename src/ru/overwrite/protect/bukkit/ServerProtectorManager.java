@@ -1,36 +1,40 @@
 package ru.overwrite.protect.bukkit;
 
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
 import java.io.BufferedWriter;
+import java.io.File;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.Field;
+import java.nio.file.Files;
+import java.nio.file.StandardOpenOption;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Logger;
 import java.util.function.UnaryOperator;
+import java.util.logging.Logger;
 
+import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Cancellable;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.SimplePluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 
-import ru.overwrite.protect.bukkit.listeners.AdditionalListener;
-import ru.overwrite.protect.bukkit.listeners.ChatListener;
-import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
-import ru.overwrite.protect.bukkit.listeners.InteractionsListener;
+import ru.overwrite.protect.bukkit.api.*;
 import ru.overwrite.protect.bukkit.commands.*;
+import ru.overwrite.protect.bukkit.listeners.*;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
@@ -48,14 +52,16 @@ public class ServerProtectorManager extends JavaPlugin {
     
     public boolean fullpath = false;
     
-    private final PluginManager pluginManager = getServer().getPluginManager();
-    
     private final Config pluginConfig = new Config(this);
+    private final ServerProtectorAPI api = new ServerProtectorAPI(this);
+    private final PasswordHandler passwordHandler = new PasswordHandler(this);
+    
+    public final Server server = getServer();
     
     public final Logger logger = getLogger();
     
-    public void checkPaper() {
-    	if (getServer().getName().equals("CraftBukkit")) {
+    public void checkPaper(Logger logger) {
+    	if (server.getName().equals("CraftBukkit")) {
     		logger.info("§6============= §c! WARNING ! §c=============");
     		logger.info("§eYou are using an unstable core for your MC server! It's recomended to use §aPaper");
     		logger.info("§eDownload Paper: §ahttps://papermc.io/downloads/all");
@@ -65,9 +71,7 @@ public class ServerProtectorManager extends JavaPlugin {
         }    	
     }
     
-    public void saveConfigs() {
-        saveDefaultConfig();
-        FileConfiguration config = getConfig();
+    public void loadConfigs(FileConfiguration config) {
         fullpath = config.getBoolean("file-settings.use-full-path");
         data = fullpath ? pluginConfig.getFileFullPath(config.getString("file-settings.data-file")) : pluginConfig.getFile(config.getString("file-settings.data-file"));
         pluginConfig.save(data, config.getString("file-settings.data-file"));
@@ -85,22 +89,21 @@ public class ServerProtectorManager extends JavaPlugin {
         pluginConfig.loadSoundSettings(config);
         pluginConfig.loadEffects(config);
         pluginConfig.loadLoggingSettings(config);
-        pluginConfig.loadMsgMessages();
+        pluginConfig.loadMsgMessages(message);
         if (config.getBoolean("message-settings.send-titles")) {
-        	pluginConfig.loadTitleMessages();
+        	pluginConfig.loadTitleMessages(message);
         }
         if (config.getBoolean("bossbar-settings.enable-bossbar")) {
         	pluginConfig.loadBossbar(config);
         }
         if (config.getBoolean("message-settings.enable-broadcasts")) {
-        	pluginConfig.loadBroadcastMessages();
+        	pluginConfig.loadBroadcastMessages(message);
         }
-        pluginConfig.loadUspMessages();
+        pluginConfig.loadUspMessages(message);
     }
     
-    public void reloadConfigs() {
+    public void reloadConfigs(FileConfiguration config) {
     	reloadConfig();
-		FileConfiguration config = getConfig();
         message = pluginConfig.getFile("message.yml");
         data = fullpath ? pluginConfig.getFileFullPath(config.getString("file-settings.data-file")) : pluginConfig.getFile(config.getString("file-settings.data-file"));
         pluginConfig.loadPerms(config);
@@ -115,80 +118,80 @@ public class ServerProtectorManager extends JavaPlugin {
         pluginConfig.loadSoundSettings(config);
         pluginConfig.loadEffects(config);
         pluginConfig.loadLoggingSettings(config);
-        pluginConfig.loadMsgMessages();
+        pluginConfig.loadMsgMessages(message);
         if (config.getBoolean("message-settings.send-titles")) {
-        	pluginConfig.loadTitleMessages();
+        	pluginConfig.loadTitleMessages(message);
         }
         if (config.getBoolean("bossbar-settings.enable-bossbar")) {
         	pluginConfig.loadBossbar(config);
         }
         if (config.getBoolean("message-settings.enable-broadcasts")) {
-        	pluginConfig.loadBroadcastMessages();
+        	pluginConfig.loadBroadcastMessages(message);
         }
-        pluginConfig.loadUspMessages();
+        pluginConfig.loadUspMessages(message);
     }
     
-    public void registerListeners() {
+    public void registerListeners(PluginManager pluginManager) {
     	pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new ConnectionListener(this), this);
         pluginManager.registerEvents(new InteractionsListener(this), this);
         pluginManager.registerEvents(new AdditionalListener(this), this);
     }
     
-    public void registerCommands() {
-        if (getConfig().getBoolean("main-settings.use-command")) {
+    public void registerCommands(PluginManager pluginManager, FileConfiguration config) {
+        if (config.getBoolean("main-settings.use-command")) {
             try {
                 PluginCommand command;
                 CommandMap map = null;
                 Constructor<PluginCommand> c = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 c.setAccessible(true);
-                command = c.newInstance(getConfig().getString("main-settings.pas-command"), this);
+                command = c.newInstance(config.getString("main-settings.pas-command"), this);
                 if (pluginManager instanceof SimplePluginManager) {
                     Field f = SimplePluginManager.class.getDeclaredField("commandMap");
                     f.setAccessible(true);
                     map = (CommandMap)f.get(pluginManager);
                 }
-                if (map != null)
+                if (map != null) {
                     map.register(getDescription().getName(), command);
+                }
                 command.setExecutor(new PasCommand(this));
             } catch (Exception e) {
-            	logger.info("Unable to register command!");
+                logger.info("Unable to register password command!");
                 e.printStackTrace();
                 pluginManager.disablePlugin(this);
             }
         } else {
-        	logger.info("Using chat for password entering!");
+            logger.info("Using chat for password entering!");
         }
-        getCommand("ultimateserverprotector").setExecutor(new UspCommand(this));
-        getCommand("ultimateserverprotector").setTabCompleter(new UspTabCompleter(this));
+        PluginCommand uspCommand = getCommand("ultimateserverprotector");
+        uspCommand.setExecutor(new UspCommand(this));
+        uspCommand.setTabCompleter(new UspCommand(this));
     }
     
-    public void startRunners() {
+    public void startRunners(FileConfiguration config) {
     	Runner runner = new Runner(this);
     	runner.runTaskTimerAsynchronously(this, 5L, 40L);
-    	runner.startMSG();
-    	FileConfiguration config = getConfig();
-        if (config.getBoolean("punish-settings.enable-time")) {
-        	runner.startTimer();
-        }
-        if (config.getBoolean("punish-settings.notadmin-punish")) {
-        	runner.adminCheck();
-        }
-        if (config.getBoolean("secure-settings.enable-op-whitelist")) {
-        	runner.startOpCheck();
-        }
-        if (config.getBoolean("secure-settings.enable-permission-blacklist")) {
-        	runner.startPermsCheck();
-        }
+    	runner.startMSG(config);
+    	if (pluginConfig.punish_settings_enable_time) {
+    		runner.startTimer(config);
+    	}
+    	if (pluginConfig.secure_settings_enable_notadmin_punish) {
+    		runner.adminCheck(config);
+    	}
+    	if (pluginConfig.secure_settings_enable_op_whitelist) {
+    		runner.startOpCheck(config);
+    	}
+    	if (pluginConfig.secure_settings_enable_permission_blacklist) {
+    		runner.startPermsCheck(config);
+    	}
     }
     
-    public void checkForUpdates() {
+    public void checkForUpdates(Logger logger) {
         if (!getConfig().getBoolean("main-settings.update-checker")) {
             return;
         }
-
         Utils.checkUpdates(this, version -> {
-            logger.info("§6========================================");
+        	logger.info("§6========================================");
             if (getDescription().getVersion().equals(version)) {
             	logger.info("§aYou are using latest version of the plugin!");
             } else {
@@ -200,28 +203,48 @@ public class ServerProtectorManager extends JavaPlugin {
         });
     }
     
+    public void checkFail(ServerProtectorManager plugin, Player p, List<String> command) {
+    	server.getScheduler().runTask(plugin, () -> {
+            for (String c : command) {
+            	server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", p.getName()));
+            }
+        });
+    }
+    
+    public void giveEffect(ServerProtectorManager plugin, Player p) {
+    	server.getScheduler().runTask(plugin, () -> {
+            for (String s : pluginConfig.effect_settings_effects) {
+                PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
+                int level = Integer.parseInt(s.split(":")[1]) - 1;
+                p.addPotionEffect(new PotionEffect(types, 99999, level));
+            }
+        });
+    }
+    
     public void logEnableDisable(String msg, Date date) {
     	if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
         	logToFile(msg.replace("%date%", DATE_FORMAT.format(date)));
         }	
     }
     
-    public void handleInteraction(Player player, Cancellable event) {
-        if (login.contains(player.getName())) {
-            event.setCancelled(true);
-        }
-    }
-    
     public Config getPluginConfig() {
     	return pluginConfig;
     }
     
-    public String getMessage(String key) {
-        return Utils.colorize(message.getString(key, "&4&lERROR&r").replace("%prefix%", getPluginConfig().main_settings_prefix));
+    public ServerProtectorAPI getPluginAPI() {
+    	return api;
+    }
+    
+    public PasswordHandler getPasswordHandler() {
+    	return passwordHandler;
+    }
+    
+    public String getMessage(ConfigurationSection selection, String key) {
+        return Utils.colorize(selection.getString(key, "&4&lERROR&r").replace("%prefix%", pluginConfig.main_settings_prefix));
     }
 
-    public String getMessage(String key, UnaryOperator<String> preprocess) {
-        return Utils.colorize(preprocess.apply(message.getString(key, "&4&lERROR&r")).replace("%prefix%", getPluginConfig().main_settings_prefix));
+    public String getMessage(ConfigurationSection selection, String key, UnaryOperator<String> preprocess) {
+        return Utils.colorize(preprocess.apply(selection.getString(key, "&4&lERROR&r")).replace("%prefix%", pluginConfig.main_settings_prefix));
     }
     
     public boolean isPermissions(Player p) {
@@ -252,14 +275,17 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 	
 	public void logToFile(String message) {
-	    File dataFolder = getDataFolder();
-	    if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-	        throw new RuntimeException("Unable to create data folder");
-	    }
-	    File saveTo = fullpath ? new File(getConfig().getString("file-settings.log-file-path"), "log.yml")
-	                           : new File(dataFolder, "log.yml");
-	    try (PrintWriter pw = new PrintWriter(new BufferedWriter(new FileWriter(saveTo, true)))) {
-	        pw.println(message);
+	    try {
+	        File dataFolder = getDataFolder();
+	        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+	            throw new RuntimeException("Unable to create data folder");
+	        }
+	        String logFilePath = fullpath ? getConfig().getString("file-settings.log-file-path") : dataFolder.getPath();
+	        Path saveTo = Paths.get(logFilePath, "log.yml");
+	        try (BufferedWriter writer = Files.newBufferedWriter(saveTo, StandardOpenOption.CREATE, StandardOpenOption.APPEND)) {
+	            writer.write(message);
+	            writer.newLine();
+	        }
 	    } catch (IOException e) {
 	        e.printStackTrace();
 	    }

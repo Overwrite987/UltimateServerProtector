@@ -9,21 +9,33 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
+import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordSuccessEvent;
+import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
+import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordEnterEvent;
+import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordFailEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class PasswordHandler {
+	
     private final ServerProtectorManager instance;
+    private final ServerProtectorAPI api;
     private final Config pluginConfig;
-    private final Map<Player, Integer> attempts;
+    public final Map<Player, Integer> attempts;
 
     public PasswordHandler(ServerProtectorManager plugin) {
-        this.instance = plugin;
+        instance = plugin;
         pluginConfig = plugin.getPluginConfig();
+        api = plugin.getPluginAPI();
         attempts = new HashMap<>();
     }
 
     public void checkPassword(Player player, String input, boolean resync) {
+    	ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(player, input);
+    	enterEvent.callEvent();
+    	if (enterEvent.isCancelled()) {
+    		return;
+    	}
         FileConfiguration data = instance.data;
         if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
             if (resync) {
@@ -45,10 +57,6 @@ public class PasswordHandler {
         }
     }
 
-    public void clearAttempts() {
-        attempts.clear();
-    }
-
     private boolean isAttemptsMax(Player player) {
         if (!attempts.containsKey(player)) return true;
         return (attempts.get(player) < pluginConfig.punish_settings_max_attempts);
@@ -56,21 +64,25 @@ public class PasswordHandler {
 
     private void failedPasswordCommands(Player player) {
         for (String command : instance.getConfig().getStringList("commands.failed-pass")) {
-            Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
+        	Bukkit.dispatchCommand(Bukkit.getConsoleSender(), command.replace("%player%", player.getName()));
         }
     }
 
     private void failedPassword(Player player) {
-        Date date = new Date();
         if (pluginConfig.punish_settings_enable_attempts) {
         	attempts.put(player, attempts.getOrDefault(player, 0) + 1);
         }
+        ServerProtectorPasswordFailEvent failEvent = new ServerProtectorPasswordFailEvent(player, attempts.get(player));
+        failEvent.callEvent();
+    	if (failEvent.isCancelled()) {
+    		return;
+    	}
         if (pluginConfig.sound_settings_enable_sounds) {
             player.playSound(player.getLocation(), Sound.valueOf(pluginConfig.sound_settings_on_pas_fail),
             		pluginConfig.sound_settings_volume, pluginConfig.sound_settings_pitch);
         }
         if (pluginConfig.logging_settings_logging_pas) {
-        	instance.logAction("log-format.failed", player, date);
+        	instance.logAction("log-format.failed", player, new Date());
         }
         String msg = pluginConfig.broadcasts_failed.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
         if (pluginConfig.message_settings_enable_broadcasts) {
@@ -81,14 +93,18 @@ public class PasswordHandler {
         	}
         }
         if (pluginConfig.message_settings_enable_console_broadcasts) {
-            Bukkit.getConsoleSender().sendMessage(msg);
+        	Bukkit.getConsoleSender().sendMessage(msg);
         }
     }
 
     private void correctPassword(Player player) {
-        Date date = new Date();
+        ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(player);
+        successEvent.callEvent();
+    	if (successEvent.isCancelled()) {
+    		return;
+    	}
+        api.uncapturePlayer(player);
         String playerName = player.getName();
-        instance.login.remove(playerName);
         if (!pluginConfig.session_settings_session) {
         	instance.saved.add(playerName);
         }
@@ -107,14 +123,14 @@ public class PasswordHandler {
         	instance.ips.add(playerName + Utils.getIp(player));
         }
         if (pluginConfig.session_settings_session_time_enabled) {
-            instance.getServer().getScheduler().runTaskLaterAsynchronously(instance, () -> {
+            Bukkit.getScheduler().runTaskLaterAsynchronously(instance, () -> {
                 if (!instance.login.contains(playerName)) {
                 	instance.ips.remove(playerName + Utils.getIp(player));
                 }
             }, pluginConfig.session_settings_session_time * 20L);
         }
         if (pluginConfig.logging_settings_logging_pas) {
-        	instance.logAction("log-format.passed", player, date);
+        	instance.logAction("log-format.passed", player, new Date());
         }
         if (pluginConfig.bossbar_settings_enable_bossbar) {
         	if (Runner.bossbar == null) {
@@ -133,7 +149,7 @@ public class PasswordHandler {
         	}
         }
         if (pluginConfig.message_settings_enable_console_broadcasts) {
-            Bukkit.getConsoleSender().sendMessage(msg);
+        	Bukkit.getConsoleSender().sendMessage(msg);
         }
     }
 }

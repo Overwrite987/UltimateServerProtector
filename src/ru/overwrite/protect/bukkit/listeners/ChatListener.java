@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit.listeners;
 
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -10,19 +9,22 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.utils.Config;
 import java.util.Locale;
 
 public class ChatListener implements Listener {
 	
 	private final ServerProtectorManager instance;
+	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 	
 	public ChatListener(ServerProtectorManager plugin) {
-        this.instance = plugin;
+        instance = plugin;
         pluginConfig = plugin.getPluginConfig();
         passwordHandler = new PasswordHandler(plugin);
+        api = plugin.getPluginAPI();
     }
 	
     @EventHandler(priority = EventPriority.HIGHEST)
@@ -30,7 +32,7 @@ public class ChatListener implements Listener {
     	if (instance.login.isEmpty()) return;
         Player p = e.getPlayer();
         String msg = e.getMessage();
-        if (instance.login.contains(p.getName())) {
+        if (api.isCaptured(p)) {
             e.setCancelled(true);
             e.setMessage("");
             if (!pluginConfig.main_settings_use_command) {
@@ -43,7 +45,7 @@ public class ChatListener implements Listener {
     public void onCommand(PlayerCommandPreprocessEvent e) {
     	if (instance.login.isEmpty()) return;
         Player p = e.getPlayer();
-        if (!instance.login.contains(p.getName())) return;
+        if (!api.isCaptured(p)) return;
         e.setCancelled(true);
         if (pluginConfig.main_settings_use_command) {
             String message = e.getMessage();

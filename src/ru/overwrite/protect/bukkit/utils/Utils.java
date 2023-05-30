@@ -48,15 +48,12 @@ public final class Utils {
     }
 
     public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {
-	    Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
-	        try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION").openStream()))) {
-	            String version = reader.readLine();
-	            if (version != null) {
-	                consumer.accept(version.trim());
-	            }
-	        } catch (IOException exception) {
-	            plugin.getLogger().info("Can't check for updates: " + exception.getMessage());
-	        }
-	    });
-	}
+        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> {
+            try (BufferedReader reader = new BufferedReader(new InputStreamReader(new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION").openStream()))) {
+                consumer.accept(reader.readLine().trim());
+            } catch (IOException exception) {
+                plugin.getLogger().info("Can't check for updates: " + exception.getMessage());
+            }
+        });
+    }
 }

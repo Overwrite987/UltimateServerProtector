@@ -8,6 +8,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.bukkit.Bukkit;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
 
@@ -66,6 +67,7 @@ public class Config {
 	broadcasts_passed,
 	broadcasts_joined,
 	broadcasts_captured,
+	broadcasts_disabled,
 	titles_title,
 	titles_subtitle,
 	bossbar_message,
@@ -118,127 +120,144 @@ public class Config {
 	sound_settings_volume,
 	sound_settings_pitch;
 	
-	public void loadUspMessages() {
-		uspmsg_consoleonly = instance.getMessage("uspmsg.consoleonly");
-		uspmsg_reloaded = instance.getMessage("uspmsg.reloaded");
-		uspmsg_rebooted = instance.getMessage("uspmsg.rebooted");
-		uspmsg_playernotfound = instance.getMessage("uspmsg.playernotfound");
-		uspmsg_alreadyinconfig = instance.getMessage("uspmsg.alreadyinconfig");
-		uspmsg_notinconfig = instance.getMessage("uspmsg.notinconfig");
-		uspmsg_playeradded = instance.getMessage("uspmsg.playeradded");
-		uspmsg_playerremoved = instance.getMessage("uspmsg.playerremoved");
-		uspmsg_ipadded = instance.getMessage("uspmsg.ipadded");
-		uspmsg_setpassusage = instance.getMessage("uspmsg.setpassusage");
-		uspmsg_addopusage = instance.getMessage("uspmsg.addopusage");
-		uspmsg_addipusage = instance.getMessage("uspmsg.addipusage");
-		uspmsg_rempassusage = instance.getMessage("uspmsg.rempassusage");
-		uspmsg_remopusage = instance.getMessage("uspmsg.remopusage");
-		uspmsg_ipremoved = instance.getMessage("uspmsg.ipremoved");
-		uspmsg_remipusage = instance.getMessage("uspmsg.remipusage");
-		uspmsg_usage = instance.getMessage("uspmsg.usage");
-		uspmsg_usage_reload = instance.getMessage("uspmsg.usage-reload");
-		uspmsg_usage_reboot = instance.getMessage("uspmsg.usage-reboot");
-		uspmsg_usage_setpass = instance.getMessage("uspmsg.usage-setpass");
-		uspmsg_usage_rempass = instance.getMessage("uspmsg.usage-rempass");
-		uspmsg_usage_addop = instance.getMessage("uspmsg.usage-addop");
-		uspmsg_usage_remop = instance.getMessage("uspmsg.usage-remop");
-		uspmsg_usage_addip = instance.getMessage("uspmsg.usage-addip");
-		uspmsg_usage_remip = instance.getMessage("uspmsg.usage-remip");
+	public void loadUspMessages(FileConfiguration message) {
+		ConfigurationSection uspmsg = message.getConfigurationSection("uspmsg");
+		uspmsg_consoleonly = instance.getMessage(uspmsg, "consoleonly");
+		uspmsg_reloaded = instance.getMessage(uspmsg, "reloaded");
+		uspmsg_rebooted = instance.getMessage(uspmsg, "rebooted");
+		uspmsg_playernotfound = instance.getMessage(uspmsg, "playernotfound");
+		uspmsg_alreadyinconfig = instance.getMessage(uspmsg, "alreadyinconfig");
+		uspmsg_notinconfig = instance.getMessage(uspmsg, "notinconfig");
+		uspmsg_playeradded = instance.getMessage(uspmsg, "playeradded");
+		uspmsg_playerremoved = instance.getMessage(uspmsg, "playerremoved");
+		uspmsg_ipadded = instance.getMessage(uspmsg, "ipadded");
+		uspmsg_setpassusage = instance.getMessage(uspmsg, "setpassusage");
+		uspmsg_addopusage = instance.getMessage(uspmsg, "addopusage");
+		uspmsg_addipusage = instance.getMessage(uspmsg, "addipusage");
+		uspmsg_rempassusage = instance.getMessage(uspmsg, "rempassusage");
+		uspmsg_remopusage = instance.getMessage(uspmsg, "remopusage");
+		uspmsg_ipremoved = instance.getMessage(uspmsg, "ipremoved");
+		uspmsg_remipusage = instance.getMessage(uspmsg, "remipusage");
+		uspmsg_usage = instance.getMessage(uspmsg, "usage");
+		uspmsg_usage_reload = instance.getMessage(uspmsg, "usage-reload");
+		uspmsg_usage_reboot = instance.getMessage(uspmsg, "usage-reboot");
+		uspmsg_usage_setpass = instance.getMessage(uspmsg, "usage-setpass");
+		uspmsg_usage_rempass = instance.getMessage(uspmsg, "usage-rempass");
+		uspmsg_usage_addop = instance.getMessage(uspmsg, "usage-addop");
+		uspmsg_usage_remop = instance.getMessage(uspmsg, "usage-remop");
+		uspmsg_usage_addip = instance.getMessage(uspmsg, "usage-addip");
+		uspmsg_usage_remip = instance.getMessage(uspmsg, "usage-remip");
 	}
 	
-	public void loadMsgMessages() {
-		msg_message = instance.getMessage("msg.message");
-		msg_incorrect = instance.getMessage("msg.incorrect");
-		msg_correct = instance.getMessage("msg.correct");
-		msg_noneed = instance.getMessage("msg.noneed");
-		msg_cantbenull = instance.getMessage("msg.cantbenull");
-		msg_playeronly = instance.getMessage("msg.playeronly");	
+	public void loadMsgMessages(FileConfiguration message) {
+		ConfigurationSection msg = message.getConfigurationSection("msg");
+		msg_message = instance.getMessage(msg, "message");
+		msg_incorrect = instance.getMessage(msg, "incorrect");
+		msg_correct = instance.getMessage(msg, "correct");
+		msg_noneed = instance.getMessage(msg, "noneed");
+		msg_cantbenull = instance.getMessage(msg, "cantbenull");
+		msg_playeronly = instance.getMessage(msg, "playeronly");	
 	}
 	
-	public void loadBroadcastMessages() {
-		broadcasts_failed = instance.getMessage("broadcasts.failed");
-		broadcasts_passed = instance.getMessage("broadcasts.passed");
-		broadcasts_joined = instance.getMessage("broadcasts.joined");
-		broadcasts_captured = instance.getMessage("broadcasts.captured");
+	public void loadBroadcastMessages(FileConfiguration message) {
+		ConfigurationSection broadcasts = message.getConfigurationSection("broadcasts");
+		broadcasts_failed = instance.getMessage(broadcasts, "failed");
+		broadcasts_passed = instance.getMessage(broadcasts,  "passed");
+		broadcasts_joined = instance.getMessage(broadcasts, "joined");
+		broadcasts_captured = instance.getMessage(broadcasts, "captured");
+		broadcasts_disabled = instance.getMessage(broadcasts, "disabled");
 	}
 	
-	public void loadTitleMessages() {
-		titles_title = instance.getMessage("titles.title");
-		titles_subtitle = instance.getMessage("titles.subtitle");
+	public void loadTitleMessages(FileConfiguration message) {
+		ConfigurationSection titles = message.getConfigurationSection("titles");
+		titles_title = instance.getMessage(titles, "title");
+		titles_subtitle = instance.getMessage(titles, "subtitle");
 	}
 	
 	public void loadBossbar(FileConfiguration config) {
-		bossbar_settings_enable_bossbar = config.getBoolean("bossbar-settings.enable-bossbar");
-		bossbar_settings_bar_color = config.getString("bossbar-settings.bar-color");
-		bossbar_settings_bar_style = config.getString("bossbar-settings.bar-style");
-		bossbar_message = instance.getMessage("bossbar.message");
+		ConfigurationSection bossbar_settings = config.getConfigurationSection("bossbar-settings");
+		bossbar_settings_enable_bossbar = bossbar_settings.getBoolean("enable-bossbar");
+		bossbar_settings_bar_color = bossbar_settings.getString("bar-color");
+		bossbar_settings_bar_style = bossbar_settings.getString("bar-style");
+		ConfigurationSection bossbar = instance.message.getConfigurationSection("bossbar");
+		bossbar_message = instance.getMessage(bossbar, "message");
 	}
 	
 	public void loadMainSettings(FileConfiguration config) {
-		main_settings_prefix = Utils.colorize(config.getString("main-settings.prefix"));
-		main_settings_pas_command = config.getString("main-settings.pas-command");
-		main_settings_use_command = config.getBoolean("main-settings.use-command");
-		main_settings_enable_admin_commands = config.getBoolean("main-settings.enable-admin-commands");
+		ConfigurationSection main_settings = config.getConfigurationSection("main-settings");
+		main_settings_prefix = Utils.colorize(main_settings.getString("prefix"));
+		main_settings_pas_command = main_settings.getString("pas-command");
+		main_settings_use_command = main_settings.getBoolean("use-command");
+		main_settings_enable_admin_commands = main_settings.getBoolean("enable-admin-commands");
 	}
 	
 	public void loadSecureSettings(FileConfiguration config) {
-		secure_settings_enable_op_whitelist = config.getBoolean("secure-settings.enable-op-whitelist");
-		secure_settings_enable_notadmin_punish = config.getBoolean("secure-settings.enable-notadmin-punish");
-		secure_settings_enable_permission_blacklist = config.getBoolean("secure-settings.enable-permission-blacklist");
-		secure_settings_enable_ip_whitelist = config.getBoolean("secure-settings.enable-ip-whitelist");
-		secure_settings_only_console_usp = config.getBoolean("secure-settings.only-console-usp");
-		secure_settings_enable_excluded_players = config.getBoolean("secure-settings.enable-excluded-players");
+		ConfigurationSection secure_settings = config.getConfigurationSection("secure-settings");
+		secure_settings_enable_op_whitelist = secure_settings.getBoolean("enable-op-whitelist");
+		secure_settings_enable_notadmin_punish = secure_settings.getBoolean("enable-notadmin-punish");
+		secure_settings_enable_permission_blacklist = secure_settings.getBoolean("enable-permission-blacklist");
+		secure_settings_enable_ip_whitelist = secure_settings.getBoolean("enable-ip-whitelist");
+		secure_settings_only_console_usp = secure_settings.getBoolean("only-console-usp");
+		secure_settings_enable_excluded_players = secure_settings.getBoolean("enable-excluded-players");
 	}
 	
 	public void loadAdditionalChecks(FileConfiguration config) {
-		blocking_settings_block_item_drop = config.getBoolean("blocking-settings.block-item-drop");
-		blocking_settings_block_item_pickup = config.getBoolean("blocking-settings.block-item-pickup");
-		blocking_settings_block_tab_complete = config.getBoolean("blocking-settings.block-tab-complete");
-		blocking_settings_block_damage = config.getBoolean("blocking-settings.block-damage");
-		blocking_settings_damaging_entity = config.getBoolean("blocking-settings.block-damaging-entity");
-		blocking_settings_mobs_targeting = config.getBoolean("blocking-settings.block-mobs-targeting");
+		ConfigurationSection blocking_settings = config.getConfigurationSection("blocking-settings");
+		blocking_settings_block_item_drop = blocking_settings.getBoolean("block-item-drop");
+		blocking_settings_block_item_pickup = blocking_settings.getBoolean("block-item-pickup");
+		blocking_settings_block_tab_complete = blocking_settings.getBoolean("block-tab-complete");
+		blocking_settings_block_damage = blocking_settings.getBoolean("block-damage");
+		blocking_settings_damaging_entity = blocking_settings.getBoolean("block-damaging-entity");
+		blocking_settings_mobs_targeting = blocking_settings.getBoolean("block-mobs-targeting");
 	}
 	
 	public void loadAttempts(FileConfiguration config) {
-		punish_settings_enable_attempts = config.getBoolean("punish-settings.enable-attempts");
-		punish_settings_max_attempts = config.getInt("punish-settings.max-attempts");
+		ConfigurationSection punish_settings = config.getConfigurationSection("punish-settings");
+		punish_settings_enable_attempts = punish_settings.getBoolean("enable-attempts");
+		punish_settings_max_attempts = punish_settings.getInt("max-attempts");
 	}
 	
 	public void loadTime(FileConfiguration config) {
-		punish_settings_enable_time = config.getBoolean("punish-settings.enable-time");
-		punish_settings_time = config.getInt("punish-settings.time");
+		ConfigurationSection punish_settings = config.getConfigurationSection("punish-settings");
+		punish_settings_enable_time = punish_settings.getBoolean("enable-time");
+		punish_settings_time = punish_settings.getInt("time");
 	}
 	
 	public void loadSessionSettings(FileConfiguration config) {
-		session_settings_session = config.getBoolean("session-settings.session");
-		session_settings_session_time_enabled = config.getBoolean("session-settings.session-time-enabled");
-		session_settings_session_time = config.getInt("session-settings.session-time");
+		ConfigurationSection session_settings = config.getConfigurationSection("session-settings");
+		session_settings_session = session_settings.getBoolean("session");
+		session_settings_session_time_enabled = session_settings.getBoolean("session-time-enabled");
+		session_settings_session_time = session_settings.getInt("session-time");
 	}
 	
 	public void loadMessageSettings(FileConfiguration config) {
-		message_settings_send_title = config.getBoolean("message-settings.send-titles");
-		message_settings_enable_broadcasts = config.getBoolean("message-settings.enable-broadcasts");
-		message_settings_enable_console_broadcasts= config.getBoolean("message-settings.enable-console-broadcasts");
+		ConfigurationSection message_settings = config.getConfigurationSection("message-settings");
+		message_settings_send_title = message_settings.getBoolean("send-titles");
+		message_settings_enable_broadcasts = message_settings.getBoolean("enable-broadcasts");
+		message_settings_enable_console_broadcasts= message_settings.getBoolean("enable-console-broadcasts");
 	}
 	
 	public void loadSoundSettings(FileConfiguration config) {
-		sound_settings_enable_sounds = config.getBoolean("sound-settings.enable-sounds");
-		sound_settings_on_capture = config.getString("sound-settings.on-capture");
-		sound_settings_on_pas_fail = config.getString("sound-settings.on-pas-fail");
-		sound_settings_on_pas_correct = config.getString("sound-settings.on-pas-correct");
-		sound_settings_volume = (float)config.getDouble("sound-settings.volume");
-		sound_settings_pitch = (float)config.getDouble("sound-settings.pitch");
+		ConfigurationSection sound_settings = config.getConfigurationSection("sound-settings");
+		sound_settings_enable_sounds = sound_settings.getBoolean("enable-sounds");
+		sound_settings_on_capture = sound_settings.getString("on-capture");
+		sound_settings_on_pas_fail = sound_settings.getString("on-pas-fail");
+		sound_settings_on_pas_correct = sound_settings.getString("on-pas-correct");
+		sound_settings_volume = (float)sound_settings.getDouble("volume");
+		sound_settings_pitch = (float)sound_settings.getDouble("pitch");
 	}
 	
 	public void loadEffects(FileConfiguration config) {
-		effect_settings_enable_effects = config.getBoolean("effect-settings.enable-effects");
-		effect_settings_effects = config.getStringList("effect-settings.effects");
+		ConfigurationSection effect_settings = config.getConfigurationSection("effect-settings");
+		effect_settings_enable_effects = effect_settings.getBoolean("enable-effects");
+		effect_settings_effects = effect_settings.getStringList("effects");
 	}
 	
 	public void loadLoggingSettings(FileConfiguration config) {
-		logging_settings_logging_pas = config.getBoolean("logging-settings.logging-pas");
-		logging_settings_logging_join = config.getBoolean("logging-settings.logging-join");
-		logging_settings_logging_enable_disable = config.getBoolean("logging-settings.logging-enable-disable");
+		ConfigurationSection logging_settings = config.getConfigurationSection("logging-settings");
+		logging_settings_logging_pas = logging_settings.getBoolean("logging-pas");
+		logging_settings_logging_join = logging_settings.getBoolean("logging-join");
+		logging_settings_logging_enable_disable = logging_settings.getBoolean("logging-enable-disable");
 	}
 	
 	public void loadPerms(FileConfiguration config) {
@@ -247,19 +266,22 @@ public class Config {
 	
 	public void loadLists(FileConfiguration config) {
 		allowed_commands = new ArrayList<>(config.getStringList("allowed-commands"));
-		if (config.getBoolean("secure-settings.enable-op-whitelist")) {
+		ConfigurationSection secure_settings = config.getConfigurationSection("secure-settings");
+		if (secure_settings.getBoolean("enable-op-whitelist")) {
 			op_whitelist = new ArrayList<>(config.getStringList("op-whitelist"));
 		}
-		if (config.getBoolean("secure-settings.enable-permission-blacklist")) {
+		if (secure_settings.getBoolean("enable-permission-blacklist")) {
 			blacklisted_perms = new ArrayList<>(config.getStringList("blacklisted-perms"));
 		}
-		if (config.getBoolean("secure-settings.enable-excluded-players")) {
+		if (secure_settings.getBoolean("enable-excluded-players")) {
 			excluded_players = new ArrayList<>(config.getStringList("excluded-players"));
 		}
-		if (config.getBoolean("secure-settings.enable-ip-whitelist")) {
+		if (secure_settings.getBoolean("enable-ip-whitelist")) {
 			ip_whitelist = new ArrayList<>(config.getStringList("ip-whitelist"));
 		}
 	}
+	
+	// TODO: Try to re-do this mess...
 
 	public FileConfiguration getFile(String fileName) {
 	    File file = new File(instance.getDataFolder(), fileName);
