@@ -19,8 +19,6 @@ main-settings:
   # Please don't disable
   enable-metrics: true
   update-checker: true
-  # Enable this if somehing isnt working
-  debug: false
 
 # File configuration settings
 file-settings:
