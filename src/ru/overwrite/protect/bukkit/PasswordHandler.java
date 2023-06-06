@@ -32,7 +32,11 @@ public class PasswordHandler {
 
     public void checkPassword(Player player, String input, boolean resync) {
     	ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(player, input);
-    	enterEvent.callEvent();
+    	if (resync) {
+            Bukkit.getScheduler().runTask(instance, () -> enterEvent.callEvent());
+        } else {
+        	enterEvent.callEvent();
+        }
     	if (enterEvent.isCancelled()) {
     		return;
     	}

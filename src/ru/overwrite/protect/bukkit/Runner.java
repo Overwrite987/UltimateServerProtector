@@ -27,15 +27,15 @@ public class Runner extends BukkitRunnable {
         pluginConfig = plugin.getPluginConfig();
     }
 	
-    public void run() {
+	public void run() {
         for (Player p : Bukkit.getOnlinePlayers()) {
-            String playerName = p.getName();
-            if (api.isCaptured(p)) {
-                continue;
-            }
             if (instance.isExcluded(p)) {
             	return;
             }
+            if (api.isCaptured(p)) {
+                return;
+            }
+            String playerName = p.getName();
             if (instance.isPermissions(p) &&
             	    !(!pluginConfig.session_settings_session && instance.saved.contains(playerName)) &&
             	    !instance.ips.contains(playerName + Utils.getIp(p))) {
