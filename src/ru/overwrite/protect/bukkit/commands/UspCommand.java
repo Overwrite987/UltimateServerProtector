@@ -14,9 +14,9 @@ import org.bukkit.entity.Player;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import ru.overwrite.protect.bukkit.PasswordHandler;
-import ru.overwrite.protect.bukkit.Runner;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.Config;
+import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class UspCommand implements CommandExecutor, TabCompleter {
 	
@@ -50,17 +50,21 @@ public class UspCommand implements CommandExecutor, TabCompleter {
             	}
             	case ("reboot"): {
             		instance.reloadConfigs(config);
-            		Bukkit.getScheduler().cancelTasks(instance);
+            		if (Utils.FOLIA) {
+            			Bukkit.getAsyncScheduler().cancelTasks(instance);
+            		} else {
+            			Bukkit.getScheduler().cancelTasks(instance);
+            		}
             		instance.time.clear();
             		instance.login.clear();
             		instance.ips.clear();
             		instance.saved.clear();
-            		if (Runner.bossbar != null) {
-            			Runner.bossbar.removeAll();
+            		if (Utils.bossbar != null) {
+            			Utils.bossbar.removeAll();
             		}
             		passwordHandler.attempts.clear();
             		instance.startRunners(config);
-                	instance.checkForUpdates(instance.logger);
+                	instance.checkForUpdates(config, instance.logger);
                 	sender.sendMessage(pluginConfig.uspmsg_rebooted);
                 	return true;
             	}
@@ -110,6 +114,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
             				List<String> ipwl = pluginConfig.ip_whitelist;
             				ipwl.add(args[1]);
             				config.set("ip-whitelist", ipwl);
+            				instance.saveConfig();
             				sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]));
             				return true;
             			}
@@ -153,6 +158,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
             				List<String> ipwl = pluginConfig.ip_whitelist;
             				ipwl.remove(args[1]);
             				config.set("ip-whitelist", ipwl);
+            				instance.saveConfig();
                         	sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]));
                         	return true;
             			}
@@ -164,7 +170,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
               sendHelp(sender, label);
               return true;
             } else {
-                sender.sendMessage("§6❖ §7Running §c§lUltimateServerProtector v19§7 by §5OverwriteMC");
+                sender.sendMessage("§6❖ §7Running §c§lUltimateServerProtector " + instance.getDescription().getVersion() + " §7 by §5OverwriteMC");
             }
         return true;
     }
@@ -174,8 +180,8 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reload, label);
 		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reboot, label);
 		if (!pluginConfig.main_settings_enable_admin_commands) {
-			sender.sendMessage("§7Прочие команды отключены.");
-			sender.sendMessage("§7Для их включения выставьте §6enable-admin-commands: §atrue");
+			sender.sendMessage("§7Other commands are disabled.");
+			sender.sendMessage("§7To enable them, set §6enable-admin-commands: §atrue");
 		} else {
 			sendCmdMessage(sender, pluginConfig.uspmsg_usage_setpass, label);
 			sendCmdMessage(sender, pluginConfig.uspmsg_usage_rempass, label);
@@ -193,32 +199,21 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	public void addAdmin(FileConfiguration config, String nick, String pas) {
         FileConfiguration data;
         String datafile = config.getString("file-settings.data-file");
-        if (instance.fullpath) {
-        	data = pluginConfig.getFileFullPath(datafile);
-        	data.set("data." + nick + ".pass", pas);
-        	pluginConfig.saveFullPath(data, datafile);
-        } else {
-        	data = pluginConfig.getFile(datafile);
-        	data.set("data." + nick + ".pass", pas);
-        	pluginConfig.save(data, datafile);
-        }
+        String path = instance.path;
+        data = pluginConfig.getFile(path, datafile);
+        data.set("data." + nick + ".pass", pas);
+        pluginConfig.save(path, data, datafile);
         instance.data = data;
     }
 	
 	public void removeAdmin(FileConfiguration config, String nick) {
 		FileConfiguration data;
 		String datafile = config.getString("file-settings.data-file");
-        if (instance.fullpath) {
-        	data = pluginConfig.getFileFullPath(datafile);
-        	data.set("data." + nick + ".pass", null);
-        	data.set("data." + nick, null);
-        	pluginConfig.saveFullPath(data, datafile);
-        } else {
-        	data = pluginConfig.getFile(datafile);
-        	data.set("data." + nick + ".pass", null);
-        	data.set("data." + nick, null);
-        	pluginConfig.save(data, datafile);
-        }
+        String path = instance.path;
+        data = pluginConfig.getFile(path, datafile);
+        data.set("data." + nick + ".pass", null);
+        data.set("data." + nick, null);
+        pluginConfig.save(path, data, datafile);
         instance.data = data;
     }
 	

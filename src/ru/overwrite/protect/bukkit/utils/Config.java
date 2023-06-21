@@ -7,7 +7,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
-import org.bukkit.Bukkit;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -185,7 +184,7 @@ public class Config {
 	
 	public void loadMainSettings(FileConfiguration config) {
 		ConfigurationSection main_settings = config.getConfigurationSection("main-settings");
-		main_settings_prefix = Utils.colorize(main_settings.getString("prefix"));
+		main_settings_prefix = main_settings.getString("prefix");
 		main_settings_pas_command = main_settings.getString("pas-command");
 		main_settings_use_command = main_settings.getBoolean("use-command");
 		main_settings_enable_admin_commands = main_settings.getBoolean("enable-admin-commands");
@@ -280,42 +279,23 @@ public class Config {
 			ip_whitelist = new ArrayList<>(config.getStringList("ip-whitelist"));
 		}
 	}
-	
-	// TODO: Try to re-do this mess...
 
-	public FileConfiguration getFile(String fileName) {
-	    File file = new File(instance.getDataFolder(), fileName);
+	public FileConfiguration getFile(String path, String fileName) {
+	    File file = new File(path, fileName);
 	    if (!file.exists()) {
 	    	instance.saveResource(fileName, false);
 	    }
 	    return YamlConfiguration.loadConfiguration(file);
 	}
-    
-    public FileConfiguration getFileFullPath(String fileName) {
-        File file = new File(instance.getConfig().getString("file-settings.data-file-path"), fileName);
-        if (!file.exists()) {
-        	instance.saveResource(fileName, false);
-        }
-        return YamlConfiguration.loadConfiguration(file);
-    }
 
-    public void save(FileConfiguration config, String fileName) {
-        Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-            try {
-                config.save(new File(instance.getDataFolder(), fileName));
+    public void save(String path, FileConfiguration config, String fileName) {
+    	Runnable run = () -> {
+    		try {
+                config.save(new File(path, fileName));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-    	});
-    }
-    
-    public void saveFullPath(FileConfiguration config, String fileName) {
-        Bukkit.getScheduler().runTaskAsynchronously(instance, () -> {
-            try {
-            	config.save(new File(instance.getConfig().getString("file-settings.data-file-path"), fileName));
-            } catch (IOException ex) {
-            	ex.printStackTrace();
-            }
-        });
+    	};
+    	instance.runAsyncTask(run);
     }
 }

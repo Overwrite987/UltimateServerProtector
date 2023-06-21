@@ -1,61 +1,61 @@
 # Messages that will be displayed to people when entering a command
 msg:
-  message: '%prefix% &fAdmin permissiond detected! You should enter admin-password!'
-  incorrect: '%prefix% &cWrong password!'
-  correct: '%prefix% &aCorrect password. Have a nice day ;)'
-  noneed: '%prefix% &fYou do not need to enter the admin password or it has already been entered.'
-  cantbenull: '%prefix% &fPassword cannot be empty.'
-  playeronly: '%prefix% &fOnly for players'
+  message: "%prefix% &fAdmin permissiond detected! You should enter admin-password!"
+  incorrect: "%prefix% &cWrong password!"
+  correct: "%prefix% &aCorrect password. Have a nice day ;)"
+  noneed: "%prefix% &fYou do not need to enter the admin password or it has already been entered."
+  cantbenull: "%prefix% &fPassword cannot be empty."
+  playeronly: "%prefix% &fOnly for players"
 
-# Admin broadcasts (%player% = player's nick / %ip% = player's IP)
+# Admin broadcasts (%player% = player"s nick / %ip% = player"s IP)
 broadcasts:
-  failed: '%prefix% &fAdmin &3%player% &fentered the password &cwrongly! &fIP: &c%ip%'
-  passed: '%prefix% &fAdmin &3%player% &fentered the password &acorrectly! &fIP: &c%ip%'
-  joined: '%prefix% &fAdmin &3%player% &fjoined the game! &fIP: &c%ip%'
-  captured: '%prefix% &fPlayer &3%player% &fwas detected with admin-permissions! &fIP: &c%ip%'
-  disabled: '%prefix% &6&lWARNING! &fPlugin has been disabled!'
+  failed: "%prefix% &fAdmin &3%player% &fentered the password &cwrongly! &fIP: &c%ip%"
+  passed: "%prefix% &fAdmin &3%player% &fentered the password &acorrectly! &fIP: &c%ip%"
+  joined: "%prefix% &fAdmin &3%player% &fjoined the game! &fIP: &c%ip%"
+  captured: "%prefix% &fPlayer &3%player% &fwas detected with admin-permissions! &fIP: &c%ip%"
+  disabled: "%prefix% &6&lWARNING! &fPlugin has been disabled!"
   
 # Log format 
 log-format:
-  enabled: '%date% [UltimateServerProtector - plugin enabled]'
-  disabled: '%date% [UltimateServerProtector - plugin disabled]'
-  failed: '%date% Admin %player% entered admin password incorrectly! IP: %ip%'
-  passed: '%date% Admin %player% sucsessfully logged in! IP: %ip%'
-  joined: '%date% Admin %player% joined the game. IP: %ip%'
-  captured: '%date% Player %player% was detected with admin-permissions! IP: %ip%'
+  enabled: "%date% [UltimateServerProtector - plugin enabled]"
+  disabled: "%date% [UltimateServerProtector - plugin disabled]"
+  failed: "%date% Admin %player% entered admin password incorrectly! IP: %ip%"
+  passed: "%date% Admin %player% sucsessfully logged in! IP: %ip%"
+  joined: "%date% Admin %player% joined the game. IP: %ip%"
+  captured: "%date% Player %player% was detected with admin-permissions! IP: %ip%"
  
 # Titles
 titles:
-  title: '&e&l⚠ &c&lProtection &e&l⚠'
-  subtitle: '&fAdmin permissions detected! You should enter admin-password!'
+  title: "&e&l⚠ &c&lProtection &e&l⚠"
+  subtitle: "&fAdmin permissions detected! You should enter admin-password!"
 
 # Message in boss bar
 bossbar:
-  message: '&fRemained: &c%time% seconds'
+  message: "&fRemained: &c%time% seconds"
 
 # Message for /usp command (admin-commands)
 uspmsg:
-  consoleonly: '&cThis command can only be executed from the console!'
-  reloaded: '&aPlugin reloaded'
-  rebooted: '&aPlugin rebooted'
-  playernotfound: '&cAccount %nick% isn't online!'
-  alreadyinconfig: '&aThis account is already in the config'
-  notinconfig: '&cThis account is not in the config'
-  playeradded: '&aPlayer %nick% successfully added'
-  playerremoved: '&aPlayer successfully removed'
-  ipadded: '&aIP %ip% successfully added'
-  setpassusage: '&f/%cmd% setpass (nick) (password)'
-  addopusage: '&f/%cmd% addop (nick)'
-  addipusage: '&f/%cmd% addip (ip)'
-  rempassusage: '&f/%cmd% rempass (nick)'
-  remopusage: '&f/%cmd% remop (nick)'
-  remipusage: '&f/%cmd% rempip (ip)'
-  usage: '&7&l> &7Использование:'
-  usage-reload: '&6/%cmd% reload&7 - reload config'
-  usage-reboot: '&6/%cmd% reboot&7 - reboot plugin'
-  usage-setpass: '&6/%cmd% setpass (nick) (password) &7- set password to the player'
-  usage-rempass: '&6/%cmd% rempass (nick) &7- remove player's password'
-  usage-addop: '&6/%cmd% addop (nick) &7- add player to op-whitelist'
-  usage-remop: '&6/%cmd% remop (nick) &7- remove player from op-whitelist'
-  usage-addip: '&6/%cmd% addip (ip) &7- add player to ip-whitelist'
-  usage-remip: '&6/%cmd% remip (ip) &7- remove player from ip-whitelist'
+  consoleonly: "&cThis command can only be executed from the console!"
+  reloaded: "&aPlugin reloaded"
+  rebooted: "&aPlugin rebooted"
+  playernotfound: "&cAccount %nick% isn't online!"
+  alreadyinconfig: "&aThis account is already in the config"
+  notinconfig: "&cThis account is not in the config"
+  playeradded: "&aPlayer %nick% successfully added"
+  playerremoved: "&aPlayer successfully removed"
+  ipadded: "&aIP %ip% successfully added"
+  setpassusage: "&f/%cmd% setpass (nick) (password)"
+  addopusage: "&f/%cmd% addop (nick)"
+  addipusage: "&f/%cmd% addip (ip)"
+  rempassusage: "&f/%cmd% rempass (nick)"
+  remopusage: "&f/%cmd% remop (nick)"
+  remipusage: "&f/%cmd% rempip (ip)"
+  usage: "&7&l> &7Использование:"
+  usage-reload: "&6/%cmd% reload&7 - reload config"
+  usage-reboot: "&6/%cmd% reboot&7 - reboot plugin"
+  usage-setpass: "&6/%cmd% setpass (nick) (password) &7- set password to the player"
+  usage-rempass: "&6/%cmd% rempass (nick) &7- remove player's password"
+  usage-addop: "&6/%cmd% addop (nick) &7- add player to op-whitelist"
+  usage-remop: "&6/%cmd% remop (nick) &7- remove player from op-whitelist"
+  usage-addip: "&6/%cmd% addip (ip) &7- add player to ip-whitelist"
+  usage-remip: "&6/%cmd% remip (ip) &7- remove player from ip-whitelist"

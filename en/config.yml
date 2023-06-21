@@ -8,6 +8,10 @@
 
 # Main settings
 main-settings:
+  # Available serializers:
+  # LEGACY - "&c&lExample &c&9Text".
+  # MINIMESSAGE - "<bold><red>Example</red> <blue>Text</blue></bold>". (https://webui.adventure.kyori.net/)
+  serialiser: LEGACY
   # Plugin prefix (hex - &#colorID)
   prefix: '&f&l[&c&lProtection&f&l] '
   # If false is specified, then you will need to write a password to the chat to enter the password
@@ -75,7 +79,7 @@ bossbar-settings:
   enable-bossbar: true
   # Boss bar color (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
   bar-color: RED
-  # Boss bar type (PROGRESS, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
+  # Boss bar type (SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
   bar-style: SEGMENTED_12
  
 # Secure Settings
@@ -88,6 +92,8 @@ secure-settings:
   enable-permission-blacklist: false
   # Whether to enable IPWhitelist for admins (default - false)
   enable-ip-whitelist: false
+  # Whether to enable the ability to use the /usp command only from the console
+  only-console-usp: false
   # Should plugin turn off the server if the plugin is disabled (default - false)
   shutdown-on-disable: false
   # Whether to allow a specific players to join the game without an admin password and notifications (disabled by default and unsafe!)

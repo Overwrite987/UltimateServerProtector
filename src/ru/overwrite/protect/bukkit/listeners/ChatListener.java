@@ -49,7 +49,7 @@ public class ChatListener implements Listener {
         e.setCancelled(true);
         if (pluginConfig.main_settings_use_command) {
             String message = e.getMessage();
-            String label = cutCommand(message).toLowerCase(Locale.ROOT);
+            String label = cutCommand(message).toLowerCase();
             if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
                 e.setCancelled(false);
             } else for (String command : pluginConfig.allowed_commands) {

@@ -21,20 +21,19 @@ public final class ServerProtector extends ServerProtectorManager {
         registerListeners(pluginManager);
         registerCommands(pluginManager, config);
         startRunners(config);
-        Date date = new Date(startTime);
-        logEnableDisable(message.getString("log-format.enabled"), date);
+        setupLogger(config);
+        logEnableDisable(message.getString("log-format.enabled"), new Date(startTime));
         if (config.getBoolean("main-settings.enable-metrics")) {
             new Metrics(this, 13347);
         }
-        checkForUpdates(logger);
+        checkForUpdates(config, logger);
         long endTime = System.currentTimeMillis();
         logger.info("Plugin started in " + (endTime - startTime) + " ms");
     }
 
     @Override
     public void onDisable() {
-        Date date = new Date();
-        logEnableDisable(message.getString("log-format.disabled"), date);
+        logEnableDisable(message.getString("log-format.disabled"), new Date());
         if (getPluginConfig().message_settings_enable_broadcasts) {
         	for (Player p : server.getOnlinePlayers()) {
         		if (p.hasPermission("serverprotector.admin")) {

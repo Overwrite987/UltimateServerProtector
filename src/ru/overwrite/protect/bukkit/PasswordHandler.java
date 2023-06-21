@@ -3,6 +3,8 @@ package ru.overwrite.protect.bukkit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.TimeUnit;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -31,34 +33,29 @@ public class PasswordHandler {
     }
 
     public void checkPassword(Player player, String input, boolean resync) {
-    	ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(player, input);
-    	if (resync) {
-            Bukkit.getScheduler().runTask(instance, () -> enterEvent.callEvent());
-        } else {
-        	enterEvent.callEvent();
-        }
-    	if (enterEvent.isCancelled()) {
-    		return;
-    	}
-        FileConfiguration data = instance.data;
-        if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
-            if (resync) {
-                Bukkit.getScheduler().runTask(instance, () -> correctPassword(player));
+    	Runnable run = () -> {
+    		ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(player, input);
+            enterEvent.callEvent();
+        	if (enterEvent.isCancelled()) {
+        		return;
+        	}
+            FileConfiguration data = instance.data;
+            if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
+            	correctPassword(player);
             } else {
-                correctPassword(player);
-            }
-        } else {
-            player.sendMessage(pluginConfig.msg_incorrect);
-            failedPassword(player);
-            if (!isAttemptsMax(player) && pluginConfig.punish_settings_enable_attempts) {
-                if (resync) {
-                    Bukkit.getScheduler().runTask(instance, () -> failedPasswordCommands(player));
-                    instance.login.remove(player.getName());
-                } else {
-                    failedPasswordCommands(player);
+                player.sendMessage(pluginConfig.msg_incorrect);
+                failedPassword(player);
+                if (!isAttemptsMax(player) && pluginConfig.punish_settings_enable_attempts) {
+                	failedPasswordCommands(player);
                 }
             }
-        }
+    	};
+    	if (resync) {
+    		instance.runSyncTask(run);
+    		return;
+    	} else {
+    		run.run();
+    	}
     }
 
     private boolean isAttemptsMax(Player player) {
@@ -127,21 +124,22 @@ public class PasswordHandler {
         	instance.ips.add(playerName + Utils.getIp(player));
         }
         if (pluginConfig.session_settings_session_time_enabled) {
-            Bukkit.getScheduler().runTaskLaterAsynchronously(instance, () -> {
-                if (!instance.login.contains(playerName)) {
+        	Runnable run = () -> {
+        		if (!instance.login.contains(playerName)) {
                 	instance.ips.remove(playerName + Utils.getIp(player));
                 }
-            }, pluginConfig.session_settings_session_time * 20L);
+        	};
+        	instance.runAsyncDelayedTask(run);
         }
         if (pluginConfig.logging_settings_logging_pas) {
         	instance.logAction("log-format.passed", player, new Date());
         }
         if (pluginConfig.bossbar_settings_enable_bossbar) {
-        	if (Runner.bossbar == null) {
+        	if (Utils.bossbar == null) {
         		return;
         	}
-        	if (Runner.bossbar.getPlayers().contains(player)) {
-        		Runner.bossbar.removePlayer(player);
+        	if (Utils.bossbar.getPlayers().contains(player)) {
+        		Utils.bossbar.removePlayer(player);
         	}
     	}
         String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%", Utils.getIp(player));
