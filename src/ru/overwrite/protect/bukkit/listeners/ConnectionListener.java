@@ -75,9 +75,6 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
-        if (instance.login.isEmpty()) { 
-        	return; 
-        }
         Player player = event.getPlayer();
         instance.time.remove(player);
         instance.login.remove(player.getName());
