@@ -70,10 +70,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
             	}
             }
             if (pluginConfig.main_settings_enable_admin_commands) {
-            	Player targetPlayer = Bukkit.getPlayerExact(args[1]);
             	switch (args[0].toLowerCase()) {
             		case ("setpass"): {
             			if (args.length > 1) {
+            				Player targetPlayer = Bukkit.getPlayerExact(args[1]);
             				if (targetPlayer == null) {
             					sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
             					return true;
@@ -94,6 +94,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
             		}
             		case ("addop"): {
             			if (args.length > 1) {
+            				Player targetPlayer = Bukkit.getPlayerExact(args[1]);
             				if (targetPlayer == null) {
             					sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
             					return true;
@@ -138,6 +139,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
             		}
             		case ("remop"): {
             			if (args.length > 1) {
+            				Player targetPlayer = Bukkit.getPlayerExact(args[1]);
             				if (targetPlayer == null) {
             					sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
             					return true;
