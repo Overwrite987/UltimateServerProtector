@@ -5,6 +5,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import ru.overwrite.protect.bukkit.utils.Metrics;
+import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
 
@@ -34,6 +35,9 @@ public final class ServerProtector extends ServerProtectorManager {
     @Override
     public void onDisable() {
         logEnableDisable(message.getString("log-format.disabled"), new Date());
+        if (Utils.bossbar != null) {
+			Utils.bossbar.removeAll();
+		}
         if (getPluginConfig().message_settings_enable_broadcasts) {
         	for (Player p : server.getOnlinePlayers()) {
         		if (p.hasPermission("serverprotector.admin")) {

@@ -95,7 +95,7 @@ public class PaperRunner implements Runner {
     				}
     			}
     		}
-    	}, 0L, 20L * 50L, TimeUnit.MILLISECONDS);
+    	}, 0L, config.getInt("message-settings.delay") * 20L * 50L, TimeUnit.MILLISECONDS);
     }
 
     public void startOpCheck(FileConfiguration config) {
