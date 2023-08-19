@@ -3,7 +3,6 @@ package ru.overwrite.protect.bukkit;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.concurrent.TimeUnit;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
@@ -85,13 +84,9 @@ public class PasswordHandler {
         if (pluginConfig.logging_settings_logging_pas) {
         	instance.logAction("log-format.failed", player, new Date());
         }
-        String msg = pluginConfig.broadcasts_failed.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
+        String msg = pluginConfig.broadcasts_passed.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
         if (pluginConfig.message_settings_enable_broadcasts) {
-        	for (Player p : Bukkit.getOnlinePlayers()) {
-        		if (p.hasPermission("serverprotector.admin")) {
-        			p.sendMessage(msg);
-        		}
-        	}
+        	instance.sendAlert(player, msg);
         }
         if (pluginConfig.message_settings_enable_console_broadcasts) {
         	Bukkit.getConsoleSender().sendMessage(msg);
@@ -106,9 +101,6 @@ public class PasswordHandler {
     	}
         api.uncapturePlayer(player);
         String playerName = player.getName();
-        if (!pluginConfig.session_settings_session) {
-        	instance.saved.add(playerName);
-        }
         player.sendMessage(pluginConfig.msg_correct);
         instance.time.remove(player);
         if (pluginConfig.sound_settings_enable_sounds) {
@@ -122,6 +114,8 @@ public class PasswordHandler {
         }
         if (pluginConfig.session_settings_session) {
         	instance.ips.add(playerName + Utils.getIp(player));
+        } else {
+        	instance.saved.add(playerName);
         }
         if (pluginConfig.session_settings_session_time_enabled) {
         	Runnable run = () -> {
@@ -144,11 +138,7 @@ public class PasswordHandler {
     	}
         String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%", Utils.getIp(player));
         if (pluginConfig.message_settings_enable_broadcasts) {
-        	for (Player p : Bukkit.getOnlinePlayers()) {
-        		if (p.hasPermission("serverprotector.admin")) {
-        			p.sendMessage(msg);
-        		}
-        	}
+        	instance.sendAlert(player, msg);
         }
         if (pluginConfig.message_settings_enable_console_broadcasts) {
         	Bukkit.getConsoleSender().sendMessage(msg);

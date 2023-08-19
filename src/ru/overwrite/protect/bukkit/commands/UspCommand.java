@@ -172,7 +172,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
               sendHelp(sender, label);
               return true;
             } else {
-                sender.sendMessage("§6❖ §7Running §c§lUltimateServerProtector " + instance.getDescription().getVersion() + " §7 by §5OverwriteMC");
+                sender.sendMessage("§6❖ §7Running §c§lUltimateServerProtector " + instance.getDescription().getVersion() + "§7 by §5OverwriteMC");
             }
         return true;
     }

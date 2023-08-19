@@ -12,6 +12,8 @@ main-settings:
   # LEGACY - "&c&lExample &c&9Text".
   # MINIMESSAGE - "<bold><red>Example</red> <blue>Text</blue></bold>". (https://webui.adventure.kyori.net/)
   serialiser: LEGACY
+  # If true - messages will be sent across the entire network of servers that are on the proxy.
+  proxy: false
   # Plugin prefix (hex - &#colorID)
   prefix: '&f&l[&c&lProtection&f&l] '
   # If false is specified, then you will need to write a password to the chat to enter the password

@@ -59,9 +59,7 @@ public class ConnectionListener implements Listener {
             		Bukkit.getConsoleSender().sendMessage(msg);
             	}
             	if (pluginConfig.message_settings_enable_broadcasts) {
-            		if (p.hasPermission("serverprotector.admin")) {
-            			p.sendMessage(msg);
-            		}
+            		instance.sendAlert(p, msg);
             	}
             }
     	};

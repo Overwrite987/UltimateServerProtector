@@ -32,20 +32,20 @@ public class BukkitRunner implements Runner {
             public void run() {
             	for (Player p : Bukkit.getOnlinePlayers()) {
             		if (instance.isExcluded(p)) {
-            			return;
+            			continue;
             		}
             		if (api.isCaptured(p)) {
-            			return;
+            			continue;
             		}
             		if (!instance.isPermissions(p)) {
-            			return;
+            			continue;
             		}
             		String playerName = p.getName();
             		if (!instance.ips.contains(playerName + Utils.getIp(p)) && !instance.isAuthorised(p)) {
             			ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
             			captureEvent.callEvent();
             			if (captureEvent.isCancelled()) {
-            				return;
+            				continue;
             			}
             			api.capturePlayer(p);
             			if (pluginConfig.sound_settings_enable_sounds) {
@@ -60,9 +60,7 @@ public class BukkitRunner implements Runner {
             			}
             			String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%", Utils.getIp(p));
             			if (pluginConfig.message_settings_enable_broadcasts) {
-            				if (p.hasPermission("serverprotector.admin")) {
-            					p.sendMessage(msg);
-            				}
+            				instance.sendAlert(p, msg);
             			}
             			if (pluginConfig.message_settings_enable_console_broadcasts) {
             				Bukkit.getConsoleSender().sendMessage(msg);

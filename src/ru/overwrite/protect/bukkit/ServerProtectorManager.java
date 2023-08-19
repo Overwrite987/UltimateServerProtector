@@ -40,6 +40,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
     public static String serialiser;
+    public boolean proxy = false;
 	
 	public FileConfiguration message;
 	public FileConfiguration data;
@@ -55,6 +56,7 @@ public class ServerProtectorManager extends JavaPlugin {
     private final Config pluginConfig = new Config(this);
     private final ServerProtectorAPI api = new ServerProtectorAPI(this);
     private final PasswordHandler passwordHandler = new PasswordHandler(this);
+    private PluginMessage pluginMessage;
     
     public final Server server = getServer();
     
@@ -71,6 +73,15 @@ public class ServerProtectorManager extends JavaPlugin {
             setEnabled(false);
             return;
         }    	
+    }
+    
+    public void setupProxy(FileConfiguration config) {
+    	if (config.getBoolean("main-settings.proxy")) {
+    		server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+    		pluginMessage = new PluginMessage(this);
+    		server.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pluginMessage);
+    		proxy = true;
+    	}
     }
     
     public void loadConfigs(FileConfiguration config) {
@@ -195,7 +206,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			}
 			Boolean fullpath = config.getBoolean("file-settings.use-full-path");
 			String logFilePath = fullpath ? config.getString("file-settings.log-file-path") : dataFolder.getPath();
-			File logFile = new File(logFilePath, "log.yml");
+			File logFile = new File(logFilePath, config.getString("file-settings.log-file"));
 			FileWriter fileWriter = new FileWriter(logFile, true);
 			bufferedWriter = new BufferedWriter(fileWriter);
 		} catch (IOException e) {
@@ -267,8 +278,10 @@ public class ServerProtectorManager extends JavaPlugin {
     public void runAsyncDelayedTask(Runnable run) {
     	if (Utils.FOLIA) {
     		Bukkit.getAsyncScheduler().runDelayed(this, (s) -> run.run(), pluginConfig.session_settings_session_time * 20L * 50L, TimeUnit.MILLISECONDS);
+    		return;
     	} else {
     		Bukkit.getScheduler().runTaskLaterAsynchronously(this, run, pluginConfig.session_settings_session_time * 20L);
+    		return;
     	}
     }
     
@@ -288,6 +301,10 @@ public class ServerProtectorManager extends JavaPlugin {
     
     public PasswordHandler getPasswordHandler() {
     	return passwordHandler;
+    }
+    
+    public PluginMessage getPluginMessage() {
+    	return pluginMessage;
     }
     
     public String getMessage(ConfigurationSection selection, String key) {
@@ -318,6 +335,17 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public boolean isAdmin(String nick) {
         return data.contains("data." + nick);
+    }
+    
+    public void sendAlert(Player p, String msg) {
+    	for (Player ps : server.getOnlinePlayers()) {
+    		if (ps.hasPermission("serverprotector.admin")) {
+    			ps.sendMessage(msg);
+    		}
+    	}
+    	if (proxy) {
+    		pluginMessage.sendCrossProxy(p, msg);
+    	}
     }
 	
 	public void logAction(String key, Player player, Date date) {

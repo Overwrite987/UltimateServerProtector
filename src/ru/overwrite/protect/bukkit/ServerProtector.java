@@ -17,6 +17,7 @@ public final class ServerProtector extends ServerProtectorManager {
         checkPaper(logger);
         saveDefaultConfig();
         FileConfiguration config = getConfig();
+        setupProxy(config);
         loadConfigs(config);
         PluginManager pluginManager = server.getPluginManager();
         registerListeners(pluginManager);
@@ -39,11 +40,15 @@ public final class ServerProtector extends ServerProtectorManager {
 			Utils.bossbar.removeAll();
 		}
         if (getPluginConfig().message_settings_enable_broadcasts) {
-        	for (Player p : server.getOnlinePlayers()) {
-        		if (p.hasPermission("serverprotector.admin")) {
-            		p.sendMessage(getPluginConfig().broadcasts_disabled);
-            	}
-        	}
+        	for (Player ps : server.getOnlinePlayers()) {
+    			if (ps.hasPermission("serverprotector.admin")) {
+    				ps.sendMessage(getPluginConfig().broadcasts_disabled);
+    			}
+    		}
+        }
+        if (proxy) {
+        	server.getMessenger().unregisterOutgoingPluginChannel(this);
+        	server.getMessenger().unregisterIncomingPluginChannel(this);
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
         	server.shutdown();
