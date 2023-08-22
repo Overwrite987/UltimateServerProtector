@@ -35,17 +35,6 @@ public class ConnectionListener implements Listener {
             	return;
             }
             if (instance.isPermissions(p)) {
-            	if (!instance.ips.contains(p.getName() + Utils.getIp(p)) && pluginConfig.session_settings_session) {
-            		ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
-            		captureEvent.callEvent();
-            		if (captureEvent.isCancelled()) {
-            			return;
-            		}
-            		api.capturePlayer(p);
-            		if (pluginConfig.effect_settings_enable_effects) {
-            			instance.giveEffect(instance, p);
-            		}
-            	}
             	if (pluginConfig.secure_settings_enable_ip_whitelist) {
             		if (!isIPAllowed(Utils.getIp(p))) {
             			instance.checkFail(p, instance.getConfig().getStringList("commands.not-admin-ip"));
@@ -60,6 +49,17 @@ public class ConnectionListener implements Listener {
             	}
             	if (pluginConfig.message_settings_enable_broadcasts) {
             		instance.sendAlert(p, msg);
+            	}
+            	if (!instance.ips.contains(p.getName() + Utils.getIp(p)) && pluginConfig.session_settings_session) {
+            		ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
+            		captureEvent.callEvent();
+            		if (captureEvent.isCancelled()) {
+            			return;
+            		}
+            		api.capturePlayer(p);
+            		if (pluginConfig.effect_settings_enable_effects) {
+            			instance.giveEffect(instance, p);
+            		}
             	}
             }
     	};
