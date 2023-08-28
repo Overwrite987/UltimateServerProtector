@@ -11,6 +11,7 @@ It is worth saying that if a player is not recorded in the config, but has admin
 1) Plugin regularly checks players for admin's permissions. Not just for OP and not just on join.
 2) Large and fully customizable functionality that is not available in any other plugin
 3) Asynchrony and multithreading, which ensure high performance. Plugin does not load the server at all.
+4) Support for multiple servers
 
 **• Permissions**
 <br>*serverprotector.protect* - if available, asks the player to enter the admin password. Inserted into the plugin so that you don't have to specify an extra permission in the config. 
