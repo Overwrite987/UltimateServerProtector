@@ -231,10 +231,10 @@ public class ServerProtectorManager extends JavaPlugin {
         });
     }
     
-    public void checkFail(Player p, List<String> command) {
+    public void checkFail(String pName, List<String> command) {
     	Runnable run = () -> {
     		for (String c : command) {
-				server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", p.getName()));
+				server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", pName));
 			}
     	};
     	runSyncTask(run);

@@ -22,7 +22,7 @@ public class PluginMessage implements PluginMessageListener {
 	    if (subchannel.equalsIgnoreCase("serverprotector")) {
 	    	for (Player ps : Bukkit.getOnlinePlayers()) {
     			if (ps.hasPermission("serverprotector.admin")) {
-    				ps.sendMessage(ps.getUniqueId() , input.readUTF());
+    				ps.sendMessage(input.readUTF());
     			}
 	    	}
 	    }

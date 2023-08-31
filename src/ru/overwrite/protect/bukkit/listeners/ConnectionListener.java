@@ -5,8 +5,11 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.player.PlayerLoginEvent;
+import org.bukkit.event.player.PlayerLoginEvent.Result;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
@@ -25,9 +28,36 @@ public class ConnectionListener implements Listener {
         instance = plugin;
         api = plugin.getPluginAPI();
         pluginConfig = plugin.getPluginConfig();
+	}
+	
+	@EventHandler(priority = EventPriority.LOWEST)
+    public void onLogin(PlayerLoginEvent e) {
+    	Player p = e.getPlayer();
+    	if (instance.isExcluded(p)) {
+    		return;
+    	}
+    	if (instance.isPermissions(p)) {
+    		String ip = e.getAddress().getHostAddress();
+    		if (pluginConfig.secure_settings_enable_ip_whitelist) {
+    			if (!isIPAllowed(ip)) {
+    				instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.not-admin-ip"));
+    			}
+    		}
+    		if (!instance.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
+    			ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
+    			instance.runAsyncTask(() -> captureEvent.callEvent());
+    			if (captureEvent.isCancelled()) {
+    				return;
+    			}
+    			api.capturePlayer(p);
+    			if (pluginConfig.effect_settings_enable_effects) {
+    				instance.giveEffect(instance, p);
+    			}
+    		}
+    	}
     }
-
-    @EventHandler(priority = EventPriority.LOWEST)
+	
+	@EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent e) {
     	Runnable run = () -> {
     		Player p = e.getPlayer();
@@ -35,11 +65,6 @@ public class ConnectionListener implements Listener {
             	return;
             }
             if (instance.isPermissions(p)) {
-            	if (pluginConfig.secure_settings_enable_ip_whitelist) {
-            		if (!isIPAllowed(Utils.getIp(p))) {
-            			instance.checkFail(p, instance.getConfig().getStringList("commands.not-admin-ip"));
-            		}
-            	}
             	if (pluginConfig.logging_settings_logging_join) {
             		instance.logAction("log-format.joined", p, new Date());
             	}
@@ -50,17 +75,6 @@ public class ConnectionListener implements Listener {
             	if (pluginConfig.message_settings_enable_broadcasts) {
             		instance.sendAlert(p, msg);
             	}
-            	if (!instance.ips.contains(p.getName() + Utils.getIp(p)) && pluginConfig.session_settings_session) {
-            		ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
-            		captureEvent.callEvent();
-            		if (captureEvent.isCancelled()) {
-            			return;
-            		}
-            		api.capturePlayer(p);
-            		if (pluginConfig.effect_settings_enable_effects) {
-            			instance.giveEffect(instance, p);
-            		}
-            	}
             }
     	};
     	instance.runAsyncTask(run);
@@ -68,14 +82,19 @@ public class ConnectionListener implements Listener {
     
     private boolean isIPAllowed(String ip) {
     	return pluginConfig.ip_whitelist.stream()
-        		.anyMatch(allowedIP -> allowedIP.endsWith("*") ? ip.startsWith(allowedIP.substring(0, allowedIP.length() - 1)) : allowedIP.equals(ip));
-    }
-
+		.anyMatch(allowedIP -> allowedIP.endsWith("*") ? ip.startsWith(allowedIP.substring(0, allowedIP.length() - 1)) : allowedIP.equals(ip));
+	}
+	
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
         instance.time.remove(player);
         instance.login.remove(player.getName());
         instance.saved.remove(player.getName());
-    }
+        if (api.isCaptured(player)) {
+        	for (PotionEffect s : player.getActivePotionEffects()) {
+                player.removePotionEffect(s.getType());
+			}
+		}
+	}
 }

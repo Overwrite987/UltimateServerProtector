@@ -75,7 +75,7 @@ public class PaperRunner implements Runner {
     		if (instance.login.isEmpty()) return;
     		for (Player p : Bukkit.getOnlinePlayers()) {
     			if (api.isCaptured(p) && !instance.isAdmin(p.getName())) {
-                    instance.checkFail(p, config.getStringList("commands.not-in-config"));
+                    instance.checkFail(p.getName(), config.getStringList("commands.not-in-config"));
                 }
     		}
         }, 0L, 20L * 50L, TimeUnit.MILLISECONDS);
@@ -100,7 +100,7 @@ public class PaperRunner implements Runner {
     	Bukkit.getAsyncScheduler().runAtFixedRate(instance, (tt) -> {
     		for (Player p : Bukkit.getOnlinePlayers()) {
     			if (p.isOp() && !pluginConfig.op_whitelist.contains(p.getName())) {
-    				instance.checkFail(p, config.getStringList("commands.not-in-opwhitelist"));
+    				instance.checkFail(p.getName(), config.getStringList("commands.not-in-opwhitelist"));
     			}
     		}
     	}, 0L, 20L * 50L, TimeUnit.MILLISECONDS);
@@ -111,7 +111,7 @@ public class PaperRunner implements Runner {
     		for (Player p : Bukkit.getOnlinePlayers()) {
     			for (String badperms : pluginConfig.blacklisted_perms) {
     				if (p.hasPermission(badperms) && !instance.isExcluded(p)) {
-    					instance.checkFail(p, config.getStringList("commands.have-blacklisted-perm"));
+    					instance.checkFail(p.getName(), config.getStringList("commands.have-blacklisted-perm"));
     				}
     			}
     		}
@@ -142,7 +142,7 @@ public class PaperRunner implements Runner {
     					}
     				}
     				if (!noTimeLeft(p) && pluginConfig.punish_settings_enable_time) {
-    					instance.checkFail(p, config.getStringList("commands.failed-time"));
+    					instance.checkFail(p.getName(), config.getStringList("commands.failed-time"));
     					Utils.bossbar.removePlayer(p);
     				}
     			}

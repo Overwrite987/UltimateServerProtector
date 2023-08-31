@@ -77,7 +77,7 @@ public class BukkitRunner implements Runner {
             	if (instance.login.isEmpty()) return;
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (api.isCaptured(p) && !instance.isAdmin(p.getName())) {
-                        instance.checkFail(p, config.getStringList("commands.not-in-config"));
+                        instance.checkFail(p.getName(), config.getStringList("commands.not-in-config"));
                     }
                 }
             }
@@ -106,7 +106,7 @@ public class BukkitRunner implements Runner {
             public void run() {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     if (p.isOp() && !pluginConfig.op_whitelist.contains(p.getName())) {
-                        instance.checkFail(p, config.getStringList("commands.not-in-opwhitelist"));
+                        instance.checkFail(p.getName(), config.getStringList("commands.not-in-opwhitelist"));
                     }
                 }
             }
@@ -119,7 +119,7 @@ public class BukkitRunner implements Runner {
                 for (Player p : Bukkit.getOnlinePlayers()) {
                     for (String badperms : pluginConfig.blacklisted_perms) {
                         if (p.hasPermission(badperms) && !instance.isExcluded(p)) {
-                            instance.checkFail(p, config.getStringList("commands.have-blacklisted-perm"));
+                            instance.checkFail(p.getName(), config.getStringList("commands.have-blacklisted-perm"));
                         }
                     }
                 }
@@ -152,7 +152,7 @@ public class BukkitRunner implements Runner {
                 			}
                 		}
                 		if (!noTimeLeft(p) && pluginConfig.punish_settings_enable_time) {
-                			instance.checkFail(p, config.getStringList("commands.failed-time"));
+                			instance.checkFail(p.getName(), config.getStringList("commands.failed-time"));
                             Utils.bossbar.removePlayer(p);
                 		}
                 	}

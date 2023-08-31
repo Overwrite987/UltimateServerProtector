@@ -39,17 +39,17 @@ public final class ServerProtector extends ServerProtectorManager {
         if (Utils.bossbar != null) {
 			Utils.bossbar.removeAll();
 		}
-        if (Utils.FOLIA) {
-        	server.getAsyncScheduler().cancelTasks(this);
-        } else {
-        	server.getScheduler().cancelTasks(this);
-        }
         if (getPluginConfig().message_settings_enable_broadcasts) {
         	for (Player ps : server.getOnlinePlayers()) {
     			if (ps.hasPermission("serverprotector.admin")) {
     				ps.sendMessage(getPluginConfig().broadcasts_disabled);
     			}
     		}
+        }
+		if (Utils.FOLIA) {
+        	server.getAsyncScheduler().cancelTasks(this);
+        } else {
+        	server.getScheduler().cancelTasks(this);
         }
         if (proxy) {
         	server.getMessenger().unregisterOutgoingPluginChannel(this);
