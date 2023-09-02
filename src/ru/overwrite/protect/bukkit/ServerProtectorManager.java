@@ -29,6 +29,9 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
+
 import ru.overwrite.protect.bukkit.api.*;
 import ru.overwrite.protect.bukkit.commands.*;
 import ru.overwrite.protect.bukkit.checker.*;
@@ -345,6 +348,14 @@ public class ServerProtectorManager extends JavaPlugin {
     	}
     	if (proxy) {
     		pluginMessage.sendCrossProxy(p, msg);
+    	}
+    }
+    
+    public void loggerInfo(String logMessage) {
+    	if (Utils.FOLIA) {
+    		getComponentLogger().info(LegacyComponentSerializer.legacySection().deserialize(logMessage));
+    	} else {
+    		getLogger().info(logMessage);
     	}
     }
 	
