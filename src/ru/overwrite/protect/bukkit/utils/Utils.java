@@ -28,9 +28,6 @@ public final class Utils {
 			.parseInt(Bukkit.getServer().getClass().getPackage().getName().replace(".", ",").split(",")[3]
 					.replace("1_", "").replaceAll("_R\\d", "").replace("v", ""));
 	private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F\\d]{6})");
-	
-	private static final MiniMessage MINI_MESSAGE = MiniMessage.miniMessage();
-	private static final LegacyComponentSerializer LEGACY_COMPONENT_SERIALIZER = LegacyComponentSerializer.legacySection();
 
 	public static final boolean FOLIA;
 
@@ -69,8 +66,8 @@ public final class Utils {
 				return msg;
 			}
 			case "MINIMESSAGE": {
-				Component component = MINI_MESSAGE.deserialize(message);
-				msg = LEGACY_COMPONENT_SERIALIZER.serialize(component);
+				Component component = MiniMessage.miniMessage().deserialize(message);
+				msg = LegacyComponentSerializer.legacySection().serialize(component);
 			}
 		}
 		return msg;
