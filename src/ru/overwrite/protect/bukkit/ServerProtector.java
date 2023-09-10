@@ -11,52 +11,52 @@ import java.util.Date;
 
 public final class ServerProtector extends ServerProtectorManager {
 
-    @Override
-    public void onEnable() {
-    	long startTime = System.currentTimeMillis();
-        checkPaper(logger);
-        saveDefaultConfig();
-        FileConfiguration config = getConfig();
-        setupProxy(config);
-        loadConfigs(config);
-        PluginManager pluginManager = server.getPluginManager();
-        registerListeners(pluginManager);
-        registerCommands(pluginManager, config);
-        startRunners(config);
-        setupLogger(config);
-        logEnableDisable(message.getString("log-format.enabled"), new Date(startTime));
-        if (config.getBoolean("main-settings.enable-metrics")) {
-            new Metrics(this, 13347);
-        }
-        checkForUpdates(config, logger);
-        long endTime = System.currentTimeMillis();
-        logger.info("Plugin started in " + (endTime - startTime) + " ms");
-    }
+	@Override
+	public void onEnable() {
+		long startTime = System.currentTimeMillis();
+		checkPaper();
+		saveDefaultConfig();
+		FileConfiguration config = getConfig();
+		setupProxy(config);
+		loadConfigs(config);
+		PluginManager pluginManager = server.getPluginManager();
+		registerListeners(pluginManager);
+		registerCommands(pluginManager, config);
+		startRunners(config);
+		setupLogger(config);
+		logEnableDisable(message.getString("log-format.enabled"), new Date(startTime));
+		if (config.getBoolean("main-settings.enable-metrics")) {
+			new Metrics(this, 13347);
+		}
+		checkForUpdates(config);
+		long endTime = System.currentTimeMillis();
+		loggerInfo("Plugin started in " + (endTime - startTime) + " ms");
+	}
 
-    @Override
-    public void onDisable() {
-        logEnableDisable(message.getString("log-format.disabled"), new Date());
-        if (Utils.bossbar != null) {
+	@Override
+	public void onDisable() {
+		logEnableDisable(message.getString("log-format.disabled"), new Date());
+		if (Utils.bossbar != null) {
 			Utils.bossbar.removeAll();
 		}
-        if (getPluginConfig().message_settings_enable_broadcasts) {
-        	for (Player ps : server.getOnlinePlayers()) {
-    			if (ps.hasPermission("serverprotector.admin")) {
-    				ps.sendMessage(getPluginConfig().broadcasts_disabled);
-    			}
-    		}
-        }
+		if (getPluginConfig().message_settings_enable_broadcasts) {
+			for (Player ps : server.getOnlinePlayers()) {
+				if (ps.hasPermission("serverprotector.admin")) {
+					ps.sendMessage(getPluginConfig().broadcasts_disabled);
+				}
+			}
+		}
 		if (Utils.FOLIA) {
-        	server.getAsyncScheduler().cancelTasks(this);
-        } else {
-        	server.getScheduler().cancelTasks(this);
-        }
-        if (proxy) {
-        	server.getMessenger().unregisterOutgoingPluginChannel(this);
-        	server.getMessenger().unregisterIncomingPluginChannel(this);
-        }
-        if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
-        	server.shutdown();
-        }
-    }
+			server.getAsyncScheduler().cancelTasks(this);
+		} else {
+			server.getScheduler().cancelTasks(this);
+		}
+		if (proxy) {
+			server.getMessenger().unregisterOutgoingPluginChannel(this);
+			server.getMessenger().unregisterIncomingPluginChannel(this);
+		}
+		if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
+			server.shutdown();
+		}
+	}
 }

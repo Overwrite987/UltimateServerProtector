@@ -11,25 +11,25 @@ import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.utils.Config;
 
 public class PasCommand implements CommandExecutor {
-	
+
 	private final ServerProtectorManager instance;
 	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
-	
+
 	public PasCommand(ServerProtectorManager plugin) {
-        instance = plugin;
-        pluginConfig = plugin.getPluginConfig();
-        passwordHandler = plugin.getPasswordHandler();
-        api = plugin.getPluginAPI();
-    }
-	
+		instance = plugin;
+		pluginConfig = plugin.getPluginConfig();
+		passwordHandler = plugin.getPasswordHandler();
+		api = plugin.getPluginAPI();
+	}
+
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			instance.logger.info(pluginConfig.msg_playeronly);
+			instance.loggerInfo(pluginConfig.msg_playeronly);
 			return true;
 		}
-		Player p = (Player)sender;
+		Player p = (Player) sender;
 		if (!api.isCaptured(p)) {
 			sender.sendMessage(pluginConfig.msg_noneed);
 			return true;
