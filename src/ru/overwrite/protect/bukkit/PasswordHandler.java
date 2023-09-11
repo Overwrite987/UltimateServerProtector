@@ -85,7 +85,7 @@ public class PasswordHandler {
 		if (pluginConfig.logging_settings_logging_pas) {
 			instance.logAction("log-format.failed", player, new Date());
 		}
-		String msg = pluginConfig.broadcasts_passed.replace("%player%", player.getName()).replace("%ip%",
+		String msg = pluginConfig.broadcasts_failed.replace("%player%", player.getName()).replace("%ip%",
 				Utils.getIp(player));
 		if (pluginConfig.message_settings_enable_broadcasts) {
 			instance.sendAlert(player, msg);
