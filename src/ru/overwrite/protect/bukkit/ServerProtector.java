@@ -1,13 +1,13 @@
 package ru.overwrite.protect.bukkit;
 
+import java.util.Date;
+
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import ru.overwrite.protect.bukkit.utils.Metrics;
 import ru.overwrite.protect.bukkit.utils.Utils;
-
-import java.util.Date;
 
 public final class ServerProtector extends ServerProtectorManager {
 

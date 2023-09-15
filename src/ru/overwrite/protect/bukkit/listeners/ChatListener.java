@@ -54,13 +54,14 @@ public class ChatListener implements Listener {
 			String label = cutCommand(message).toLowerCase();
 			if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
 				e.setCancelled(false);
-			} else
+			} else {
 				for (String command : pluginConfig.allowed_commands) {
 					if (label.equals(command) || message.equalsIgnoreCase(command)) {
 						e.setCancelled(false);
 						break;
 					}
 				}
+			}
 		}
 	}
 

@@ -43,130 +43,130 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			}
 			FileConfiguration config = instance.getConfig();
 			switch (args[0].toLowerCase()) {
-			case ("reload"): {
-				instance.reloadConfigs(config);
-				sender.sendMessage(pluginConfig.uspmsg_reloaded);
-				return true;
-			}
-			case ("reboot"): {
-				instance.reloadConfigs(config);
-				if (Utils.FOLIA) {
-					Bukkit.getAsyncScheduler().cancelTasks(instance);
-				} else {
-					Bukkit.getScheduler().cancelTasks(instance);
+				case ("reload"): {
+					instance.reloadConfigs(config);
+					sender.sendMessage(pluginConfig.uspmsg_reloaded);
+					return true;
 				}
-				instance.time.clear();
-				instance.login.clear();
-				instance.ips.clear();
-				instance.saved.clear();
-				if (Utils.bossbar != null) {
-					Utils.bossbar.removeAll();
+				case ("reboot"): {
+					instance.reloadConfigs(config);
+					if (Utils.FOLIA) {
+						Bukkit.getAsyncScheduler().cancelTasks(instance);
+					} else {
+						Bukkit.getScheduler().cancelTasks(instance);
+					}
+					instance.time.clear();
+					instance.login.clear();
+					instance.ips.clear();
+					instance.saved.clear();
+					if (Utils.bossbar != null) {
+						Utils.bossbar.removeAll();
+					}
+					passwordHandler.attempts.clear();
+					instance.startRunners(config);
+					instance.checkForUpdates(config);
+					sender.sendMessage(pluginConfig.uspmsg_rebooted);
+					return true;
 				}
-				passwordHandler.attempts.clear();
-				instance.startRunners(config);
-				instance.checkForUpdates(config);
-				sender.sendMessage(pluginConfig.uspmsg_rebooted);
-				return true;
-			}
 			}
 			if (pluginConfig.main_settings_enable_admin_commands) {
 				switch (args[0].toLowerCase()) {
-				case ("setpass"): {
-					if (args.length > 1) {
-						Player targetPlayer = Bukkit.getPlayerExact(args[1]);
-						if (targetPlayer == null) {
-							sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
-							return true;
+					case ("setpass"): {
+						if (args.length > 1) {
+							Player targetPlayer = Bukkit.getPlayerExact(args[1]);
+							if (targetPlayer == null) {
+								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
+								return true;
+							}
+							String nickname = targetPlayer.getName();
+							if (instance.isAdmin(nickname)) {
+								sender.sendMessage(pluginConfig.uspmsg_alreadyinconfig);
+								return true;
+							}
+							if (args.length < 4) {
+								instance.addAdmin(config, nickname, args[2]);
+								sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
+								return true;
+							}
 						}
-						String nickname = targetPlayer.getName();
-						if (instance.isAdmin(nickname)) {
-							sender.sendMessage(pluginConfig.uspmsg_alreadyinconfig);
-							return true;
-						}
-						if (args.length < 4) {
-							instance.addAdmin(config, nickname, args[2]);
+						sendCmdMessage(sender, pluginConfig.uspmsg_setpassusage, label);
+						return true;
+					}
+					case ("addop"): {
+						if (args.length > 1) {
+							Player targetPlayer = Bukkit.getPlayerExact(args[1]);
+							if (targetPlayer == null) {
+								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
+								return true;
+							}
+							String nickname = targetPlayer.getName();
+							List<String> wl = pluginConfig.op_whitelist;
+							wl.add(nickname);
+							config.set("op-whitelist", wl);
+							instance.saveConfig();
 							sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
 							return true;
 						}
-					}
-					sendCmdMessage(sender, pluginConfig.uspmsg_setpassusage, label);
-					return true;
-				}
-				case ("addop"): {
-					if (args.length > 1) {
-						Player targetPlayer = Bukkit.getPlayerExact(args[1]);
-						if (targetPlayer == null) {
-							sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
-							return true;
-						}
-						String nickname = targetPlayer.getName();
-						List<String> wl = pluginConfig.op_whitelist;
-						wl.add(nickname);
-						config.set("op-whitelist", wl);
-						instance.saveConfig();
-						sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
+						sendCmdMessage(sender, pluginConfig.uspmsg_addopusage, label);
 						return true;
 					}
-					sendCmdMessage(sender, pluginConfig.uspmsg_addopusage, label);
-					return true;
-				}
-				case ("addip"): {
-					if (args.length > 1 && args[1] != null) {
-						List<String> ipwl = pluginConfig.ip_whitelist;
-						ipwl.add(args[1]);
-						config.set("ip-whitelist", ipwl);
-						instance.saveConfig();
-						sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]));
-						return true;
-					}
-					sendCmdMessage(sender, pluginConfig.uspmsg_addipusage, label);
-					return true;
-				}
-				case ("rempass"): {
-					if (args.length > 1) {
-						if (!instance.isAdmin(args[1])) {
-							sender.sendMessage(pluginConfig.uspmsg_notinconfig);
+					case ("addip"): {
+						if (args.length > 1 && args[1] != null) {
+							List<String> ipwl = pluginConfig.ip_whitelist;
+							ipwl.add(args[1]);
+							config.set("ip-whitelist", ipwl);
+							instance.saveConfig();
+							sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]));
 							return true;
 						}
-						if (args.length < 3) {
-							instance.removeAdmin(config, args[1]);
-							sender.sendMessage(pluginConfig.uspmsg_playerremoved);
-							return true;
-						}
-					}
-					sendCmdMessage(sender, pluginConfig.uspmsg_rempassusage, label);
-					return true;
-				}
-				case ("remop"): {
-					if (args.length > 1) {
-						Player targetPlayer = Bukkit.getPlayerExact(args[1]);
-						if (targetPlayer == null) {
-							sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
-							return true;
-						}
-						String nickname = targetPlayer.getName();
-						List<String> wl = pluginConfig.op_whitelist;
-						wl.remove(nickname);
-						config.set("op-whitelist", wl);
-						instance.saveConfig();
-						sender.sendMessage(pluginConfig.uspmsg_playerremoved.replace("%nick%", nickname));
+						sendCmdMessage(sender, pluginConfig.uspmsg_addipusage, label);
 						return true;
 					}
-					sendCmdMessage(sender, pluginConfig.uspmsg_remopusage, label);
-					return true;
-				}
-				case ("remip"): {
-					if (args.length > 1 && args[1] != null) {
-						List<String> ipwl = pluginConfig.ip_whitelist;
-						ipwl.remove(args[1]);
-						config.set("ip-whitelist", ipwl);
-						instance.saveConfig();
-						sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]));
+					case ("rempass"): {
+						if (args.length > 1) {
+							if (!instance.isAdmin(args[1])) {
+								sender.sendMessage(pluginConfig.uspmsg_notinconfig);
+								return true;
+							}
+							if (args.length < 3) {
+								instance.removeAdmin(config, args[1]);
+								sender.sendMessage(pluginConfig.uspmsg_playerremoved);
+								return true;
+							}
+						}
+						sendCmdMessage(sender, pluginConfig.uspmsg_rempassusage, label);
 						return true;
 					}
-					sendCmdMessage(sender, pluginConfig.uspmsg_remipusage, label);
-					return true;
-				}
+					case ("remop"): {
+						if (args.length > 1) {
+							Player targetPlayer = Bukkit.getPlayerExact(args[1]);
+							if (targetPlayer == null) {
+								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
+								return true;
+							}
+							String nickname = targetPlayer.getName();
+							List<String> wl = pluginConfig.op_whitelist;
+							wl.remove(nickname);
+							config.set("op-whitelist", wl);
+							instance.saveConfig();
+							sender.sendMessage(pluginConfig.uspmsg_playerremoved.replace("%nick%", nickname));
+							return true;
+						}
+						sendCmdMessage(sender, pluginConfig.uspmsg_remopusage, label);
+						return true;
+					}
+					case ("remip"): {
+						if (args.length > 1 && args[1] != null) {
+							List<String> ipwl = pluginConfig.ip_whitelist;
+							ipwl.remove(args[1]);
+							config.set("ip-whitelist", ipwl);
+							instance.saveConfig();
+							sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]));
+							return true;
+						}
+						sendCmdMessage(sender, pluginConfig.uspmsg_remipusage, label);
+						return true;
+					}
 				}
 			}
 			sendHelp(sender, label);

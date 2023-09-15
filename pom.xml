@@ -6,7 +6,7 @@
 
     <groupId>ru.overwrite.protect.bukkit</groupId>
     <artifactId>UltimateServerProtector</artifactId>
-    <version>22.1</version>
+    <version>23.0</version>
     <packaging>jar</packaging>
 
     <properties>

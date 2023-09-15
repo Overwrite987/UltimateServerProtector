@@ -9,6 +9,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.Runner;
 import ru.overwrite.protect.bukkit.utils.Config;
@@ -140,18 +141,21 @@ public class PaperRunner implements Runner {
 							Utils.bossbar.addPlayer(p);
 						}
 					} else {
-						instance.time.put(playerName, instance.time.get(playerName) + 1);
+						int currentTime = instance.time.get(playerName);
+						instance.time.put(playerName, currentTime + 1);
+						int newTime = instance.time.get(playerName);
 						if (pluginConfig.bossbar_settings_enable_bossbar && Utils.bossbar != null) {
-							Utils.bossbar.setTitle(pluginConfig.bossbar_message.replace("%time%", Integer
-									.toString(pluginConfig.punish_settings_time - instance.time.get(playerName))));
-							double percents = (pluginConfig.punish_settings_time - instance.time.get(playerName))
+							Utils.bossbar.setTitle(pluginConfig.bossbar_message.replace("%time%",
+									Integer.toString(pluginConfig.punish_settings_time - newTime)));
+							double percents = (pluginConfig.punish_settings_time - newTime)
 									/ Double.valueOf(pluginConfig.punish_settings_time);
 							if (percents > 0) {
 								Utils.bossbar.setProgress(percents);
 								Utils.bossbar.addPlayer(p);
 							} else {
-								Utils.bossbar.setProgress(1 - percents * -1);
-								Utils.bossbar.addPlayer(p);
+								instance.loggerInfo(String.valueOf(currentTime));
+								instance.loggerInfo(String.valueOf(pluginConfig.punish_settings_time));
+								instance.loggerInfo(String.valueOf(newTime));
 							}
 						}
 					}

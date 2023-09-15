@@ -27,8 +27,6 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
 import ru.overwrite.protect.bukkit.api.*;
 import ru.overwrite.protect.bukkit.commands.*;
 import ru.overwrite.protect.bukkit.checker.*;
@@ -36,6 +34,8 @@ import ru.overwrite.protect.bukkit.listeners.*;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.PluginMessage;
 import ru.overwrite.protect.bukkit.utils.Utils;
+import ru.overwrite.protect.bukkit.utils.logging.BukkitLogger;
+import ru.overwrite.protect.bukkit.utils.logging.PaperLogger;
 
 public class ServerProtectorManager extends JavaPlugin {
 
@@ -57,11 +57,12 @@ public class ServerProtectorManager extends JavaPlugin {
 	private final Config pluginConfig = new Config(this);
 	private final ServerProtectorAPI api = new ServerProtectorAPI(this);
 	private final PasswordHandler passwordHandler = new PasswordHandler(this);
+	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 	private PluginMessage pluginMessage;
+	
+	File logFile;
 
 	public final Server server = getServer();
-
-	private BufferedWriter bufferedWriter;
 
 	public void checkPaper() {
 		if (server.getName().equals("CraftBukkit")) {
@@ -85,9 +86,10 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public void loadConfigs(FileConfiguration config) {
 		serialiser = config.getString("main-settings.serialiser");
-		Boolean fullpath = config.getBoolean("file-settings.use-full-path");
-		path = fullpath ? config.getString("file-settings.data-file-path") : getDataFolder().getAbsolutePath();
-		data = pluginConfig.getFile(path, config.getString("file-settings.data-file"));
+		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
+		Boolean fullpath = file_settings.getBoolean("use-full-path");
+		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+		data = pluginConfig.getFile(path, file_settings.getString("data-file"));
 		pluginConfig.save(path, data, config.getString("file-settings.data-file"));
 		message = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		pluginConfig.save(getDataFolder().getAbsolutePath(), message, "message.yml");
@@ -120,9 +122,10 @@ public class ServerProtectorManager extends JavaPlugin {
 		serialiser = config.getString("main-settings.serialiser");
 		reloadConfig();
 		message = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
-		Boolean fullpath = config.getBoolean("file-settings.use-full-path");
-		String path = fullpath ? config.getString("file-settings.data-file-path") : getDataFolder().getAbsolutePath();
-		data = pluginConfig.getFile(path, config.getString("file-settings.data-file"));
+		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
+		Boolean fullpath = file_settings.getBoolean("use-full-path");
+		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+		data = pluginConfig.getFile(path, file_settings.getString("data-file"));
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
 		pluginConfig.loadMainSettings(config);
@@ -198,21 +201,16 @@ public class ServerProtectorManager extends JavaPlugin {
 			runner.startPermsCheck(config);
 		}
 	}
-
+	
 	public void setupLogger(FileConfiguration config) {
-		try {
-			File dataFolder = getDataFolder();
-			if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-				throw new RuntimeException("Unable to create data folder");
-			}
-			Boolean fullpath = config.getBoolean("file-settings.use-full-path");
-			String logFilePath = fullpath ? config.getString("file-settings.log-file-path") : dataFolder.getPath();
-			File logFile = new File(logFilePath, config.getString("file-settings.log-file"));
-			FileWriter fileWriter = new FileWriter(logFile, true);
-			bufferedWriter = new BufferedWriter(fileWriter);
-		} catch (IOException e) {
-			e.printStackTrace();
+		File dataFolder = getDataFolder();
+		if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+			throw new RuntimeException("Unable to create data folder");
 		}
+		ConfigurationSection file_settings = getConfig().getConfigurationSection("file-settings");
+		Boolean fullpath = file_settings.getBoolean("use-full-path");
+		String logFilePath = fullpath ? file_settings.getString("log-file-path") : dataFolder.getPath();
+		logFile = new File(logFilePath, file_settings.getString("log-file"));
 	}
 
 	public void checkForUpdates(FileConfiguration config) {
@@ -251,28 +249,26 @@ public class ServerProtectorManager extends JavaPlugin {
 		};
 		if (Utils.FOLIA) {
 			p.getScheduler().run(plugin, (r) -> run.run(), null);
+			return;
 		} else {
 			server.getScheduler().runTask(plugin, run);
+			return;
 		}
 	}
 
 	public void runSyncTask(Runnable run) {
 		if (Utils.FOLIA) {
 			server.getGlobalRegionScheduler().run(this, (sp) -> run.run());
-			return;
 		} else {
 			server.getScheduler().runTask(this, run);
-			return;
 		}
 	}
 
 	public void runAsyncTask(Runnable run) {
 		if (Utils.FOLIA) {
 			server.getAsyncScheduler().runNow(this, (sp) -> run.run());
-			return;
 		} else {
 			server.getScheduler().runTaskAsynchronously(this, run);
-			return;
 		}
 	}
 
@@ -280,11 +276,9 @@ public class ServerProtectorManager extends JavaPlugin {
 		if (Utils.FOLIA) {
 			server.getAsyncScheduler().runDelayed(this, (s) -> run.run(),
 					pluginConfig.session_settings_session_time * 20L * 50L, TimeUnit.MILLISECONDS);
-			return;
 		} else {
 			server.getScheduler().runTaskLaterAsynchronously(this, run,
 					pluginConfig.session_settings_session_time * 20L);
-			return;
 		}
 	}
 
@@ -375,13 +369,9 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.save(path, data, datafile);
 		data = this.data;
 	}
-
+	
 	public void loggerInfo(String logMessage) {
-		if (Utils.FOLIA) {
-			getComponentLogger().info(LegacyComponentSerializer.legacySection().deserialize(logMessage));
-		} else {
-			getLogger().info(logMessage);
-		}
+		logger.info(logMessage);
 	}
 
 	public void logAction(String key, Player player, Date date) {
@@ -390,11 +380,18 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void logToFile(String message) {
-		try {
-			bufferedWriter.write(message);
-			bufferedWriter.newLine();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
+		Runnable run = () -> {
+			try {
+				FileWriter fileWriter = new FileWriter(logFile, true);
+				BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+				bufferedWriter.write(message);
+				bufferedWriter.newLine();
+				bufferedWriter.flush();
+				bufferedWriter.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+		};
+		runAsyncTask(run);
 	}
 }
