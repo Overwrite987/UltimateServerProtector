@@ -375,23 +375,23 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void logAction(String key, Player player, Date date) {
+		Runnable run = () -> {
 		logToFile(message.getString(key, "ERROR").replace("%player%", player.getName())
 				.replace("%ip%", Utils.getIp(player)).replace("%date%", DATE_FORMAT.format(date)));
+		};
+		runAsyncTask(run);
 	}
 
 	public void logToFile(String message) {
-		Runnable run = () -> {
-			try {
-				FileWriter fileWriter = new FileWriter(logFile, true);
-				BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
-				bufferedWriter.write(message);
-				bufferedWriter.newLine();
-				bufferedWriter.flush();
-				bufferedWriter.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
-		};
-		runAsyncTask(run);
+		try {
+			FileWriter fileWriter = new FileWriter(logFile, true);
+			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+			bufferedWriter.write(message);
+			bufferedWriter.newLine();
+			bufferedWriter.flush();
+			bufferedWriter.close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 }
