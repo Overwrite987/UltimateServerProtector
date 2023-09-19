@@ -1,9 +1,10 @@
 name: UltimateServerProtector
-version: 22.1
+version: 23.1
 author: Overwrite
 main: ru.overwrite.protect.bukkit.ServerProtector
 api-version: 1.13
 folia-supported: true
+load-priority: STARTUP
 commands:
    ultimateserverprotector:
       aliases: [usp, serverprotector]
