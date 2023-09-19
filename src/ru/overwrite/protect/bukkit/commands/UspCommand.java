@@ -84,7 +84,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 								return true;
 							}
 							if (args.length < 4) {
-								instance.addAdmin(config, nickname, args[2]);
+								addAdmin(config, nickname, args[2]);
 								sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
 								return true;
 							}
@@ -129,7 +129,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 								return true;
 							}
 							if (args.length < 3) {
-								instance.removeAdmin(config, args[1]);
+								removeAdmin(config, args[1]);
 								sender.sendMessage(pluginConfig.uspmsg_playerremoved);
 								return true;
 							}
@@ -177,6 +177,28 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		}
 		return true;
 	}
+	
+	
+	private void addAdmin(FileConfiguration config, String nick, String pas) {
+		FileConfiguration data;
+		String datafile = config.getString("file-settings.data-file");
+		String path = instance.path;
+		data = pluginConfig.getFile(path, datafile);
+		data.set("data." + nick + ".pass", pas);
+		pluginConfig.save(path, data, datafile);
+		data = instance.data;
+	}
+
+	private void removeAdmin(FileConfiguration config, String nick) {
+		FileConfiguration data;
+		String datafile = config.getString("file-settings.data-file");
+		String path = instance.path;
+		data = pluginConfig.getFile(path, datafile);
+		data.set("data." + nick + ".pass", null);
+		data.set("data." + nick, null);
+		pluginConfig.save(path, data, datafile);
+		data = instance.data;
+	}
 
 	private void sendHelp(CommandSender sender, String label) {
 		sendCmdMessage(sender, pluginConfig.uspmsg_usage, label);
@@ -218,6 +240,11 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				completions.add("rempass");
 			}
 		}
-		return completions;
+		List<String> result = new ArrayList<>();
+		for (String c : completions) {
+			if (c.toLowerCase().startsWith(args[0].toLowerCase()))
+				result.add(c); 
+		}
+		return result;
 	}
 }

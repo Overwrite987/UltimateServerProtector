@@ -24,9 +24,10 @@ public class PluginMessage implements PluginMessageListener {
 		ByteArrayDataInput input = ByteStreams.newDataInput(message);
 		String subchannel = input.readUTF();
 		if (subchannel.equalsIgnoreCase("serverprotector")) {
+			String msg = input.readUTF();
 			for (Player ps : Bukkit.getOnlinePlayers()) {
 				if (ps.hasPermission("serverprotector.admin")) {
-					ps.sendMessage(input.readUTF());
+					ps.sendMessage(msg);
 				}
 			}
 		}

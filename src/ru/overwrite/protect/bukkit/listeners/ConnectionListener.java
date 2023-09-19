@@ -93,14 +93,14 @@ public class ConnectionListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLeave(PlayerQuitEvent event) {
 		Player player = event.getPlayer();
-		String playerName = player.getName();
-		instance.time.remove(playerName);
-		instance.login.remove(playerName);
-		instance.saved.remove(playerName);
 		if (api.isCaptured(player)) {
 			for (PotionEffect s : player.getActivePotionEffects()) {
 				player.removePotionEffect(s.getType());
 			}
 		}
+		String playerName = player.getName();
+		instance.time.remove(playerName);
+		instance.login.remove(playerName);
+		instance.saved.remove(playerName);
 	}
 }

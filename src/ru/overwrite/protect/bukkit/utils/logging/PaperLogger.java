@@ -6,7 +6,7 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 public class PaperLogger implements Logger {
 	
-private final ServerProtectorManager instance;
+	private final ServerProtectorManager instance;
 	
 	public PaperLogger(ServerProtectorManager plugin) {
 		instance = plugin;

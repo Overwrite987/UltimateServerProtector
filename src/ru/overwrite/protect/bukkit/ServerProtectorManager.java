@@ -11,9 +11,10 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.concurrent.TimeUnit;
 import java.util.function.UnaryOperator;
+
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
@@ -60,7 +61,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 	private PluginMessage pluginMessage;
 	
-	File logFile;
+	private File logFile;
 
 	public final Server server = getServer();
 
@@ -119,8 +120,8 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void reloadConfigs(FileConfiguration config) {
-		serialiser = config.getString("main-settings.serialiser");
 		reloadConfig();
+		serialiser = config.getString("main-settings.serialiser");
 		message = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
 		Boolean fullpath = file_settings.getBoolean("use-full-path");
@@ -188,7 +189,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		runner.mainCheck();
 		runner.startMSG(config);
 		if (pluginConfig.punish_settings_enable_time) {
-			time = new ConcurrentHashMap<>();
+			time = new Object2ObjectOpenHashMap<>();
 			runner.startTimer(config);
 		}
 		if (pluginConfig.secure_settings_enable_notadmin_punish) {
@@ -303,7 +304,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	public PluginMessage getPluginMessage() {
 		return pluginMessage;
 	}
-
+	
 	public String getMessage(ConfigurationSection selection, String key) {
 		return Utils.colorize(
 				selection.getString(key, "&4&lERROR&r").replace("%prefix%", pluginConfig.main_settings_prefix));
@@ -347,27 +348,6 @@ public class ServerProtectorManager extends JavaPlugin {
 		if (proxy) {
 			pluginMessage.sendCrossProxy(p, msg);
 		}
-	}
-
-	public void addAdmin(FileConfiguration config, String nick, String pas) {
-		FileConfiguration data;
-		String datafile = config.getString("file-settings.data-file");
-		String path = this.path;
-		data = pluginConfig.getFile(path, datafile);
-		data.set("data." + nick + ".pass", pas);
-		pluginConfig.save(path, data, datafile);
-		data = this.data;
-	}
-
-	public void removeAdmin(FileConfiguration config, String nick) {
-		FileConfiguration data;
-		String datafile = config.getString("file-settings.data-file");
-		String path = this.path;
-		data = pluginConfig.getFile(path, datafile);
-		data.set("data." + nick + ".pass", null);
-		data.set("data." + nick, null);
-		pluginConfig.save(path, data, datafile);
-		data = this.data;
 	}
 	
 	public void loggerInfo(String logMessage) {
