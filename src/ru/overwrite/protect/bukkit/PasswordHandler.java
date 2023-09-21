@@ -6,7 +6,6 @@ import java.util.Map;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
@@ -38,8 +37,7 @@ public class PasswordHandler {
 			if (enterEvent.isCancelled()) {
 				return;
 			}
-			FileConfiguration data = instance.data;
-			if (input.equals(data.getString("data." + player.getName() + ".pass"))) {
+			if (input.equals(instance.data.getString("data." + player.getName() + ".pass"))) {
 				correctPassword(player);
 			} else {
 				player.sendMessage(pluginConfig.msg_incorrect);

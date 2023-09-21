@@ -135,7 +135,7 @@ public class PaperRunner implements Runner {
 						if (pluginConfig.bossbar_settings_enable_bossbar) {
 							Utils.bossbar = Bukkit.createBossBar(
 									pluginConfig.bossbar_message.replace("%time%",
-											String.valueOf(pluginConfig.punish_settings_time)),
+											Integer.toString(pluginConfig.punish_settings_time)),
 									BarColor.valueOf(pluginConfig.bossbar_settings_bar_color),
 									BarStyle.valueOf(pluginConfig.bossbar_settings_bar_style));
 							Utils.bossbar.addPlayer(p);

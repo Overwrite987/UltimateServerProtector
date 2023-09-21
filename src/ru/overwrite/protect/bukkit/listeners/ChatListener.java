@@ -22,7 +22,7 @@ public class ChatListener implements Listener {
 	public ChatListener(ServerProtectorManager plugin) {
 		instance = plugin;
 		pluginConfig = plugin.getPluginConfig();
-		passwordHandler = new PasswordHandler(plugin);
+		passwordHandler = plugin.getPasswordHandler();
 		api = plugin.getPluginAPI();
 	}
 

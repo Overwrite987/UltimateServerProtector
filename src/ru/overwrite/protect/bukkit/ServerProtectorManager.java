@@ -91,7 +91,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		Boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 		data = pluginConfig.getFile(path, file_settings.getString("data-file"));
-		pluginConfig.save(path, data, config.getString("file-settings.data-file"));
+		pluginConfig.save(path, data, file_settings.getString("data-file"));
 		message = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		pluginConfig.save(getDataFolder().getAbsolutePath(), message, "message.yml");
 		pluginConfig.loadPerms(config);
@@ -208,7 +208,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		if (!dataFolder.exists() && !dataFolder.mkdirs()) {
 			throw new RuntimeException("Unable to create data folder");
 		}
-		ConfigurationSection file_settings = getConfig().getConfigurationSection("file-settings");
+		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
 		Boolean fullpath = file_settings.getBoolean("use-full-path");
 		String logFilePath = fullpath ? file_settings.getString("log-file-path") : dataFolder.getPath();
 		logFile = new File(logFilePath, file_settings.getString("log-file"));
