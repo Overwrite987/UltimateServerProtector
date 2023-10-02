@@ -32,7 +32,7 @@ public class PaperRunner implements Runner {
 	public void mainCheck() {
 		Bukkit.getAsyncScheduler().runAtFixedRate(instance, (tt) -> {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				if (instance.isExcluded(p)) {
+				if (instance.isExcluded(p, pluginConfig.excluded_admin_pass)) {
 					continue;
 				}
 				if (api.isCaptured(p)) {
@@ -93,7 +93,8 @@ public class PaperRunner implements Runner {
 				if (api.isCaptured(p)) {
 					p.sendMessage(pluginConfig.msg_message);
 					if (pluginConfig.message_settings_send_title) {
-						p.sendTitle(pluginConfig.titles_title, pluginConfig.titles_subtitle, 10, 70, 20);
+						p.sendTitle(pluginConfig.titles_title, pluginConfig.titles_subtitle, pluginConfig.titles_fadeIn,
+								pluginConfig.titles_stay, pluginConfig.titles_fadeOut);
 						return;
 					}
 				}
@@ -115,7 +116,7 @@ public class PaperRunner implements Runner {
 		Bukkit.getAsyncScheduler().runAtFixedRate(instance, (tt) -> {
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				for (String badperms : pluginConfig.blacklisted_perms) {
-					if (p.hasPermission(badperms) && !instance.isExcluded(p)) {
+					if (p.hasPermission(badperms) && !instance.isExcluded(p, pluginConfig.excluded_blacklisted_perms)) {
 						instance.checkFail(p.getName(), config.getStringList("commands.have-blacklisted-perm"));
 					}
 				}

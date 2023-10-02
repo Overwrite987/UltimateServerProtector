@@ -28,6 +28,9 @@ log-format:
 titles:
   title: "&e&l⚠ &c&lProtection &e&l⚠"
   subtitle: "&fAdmin permissions detected! You should enter admin-password!"
+  fadeIn: 10
+  stay: 60
+  fadeOut: 15
 
 # Message in boss bar
 bossbar:

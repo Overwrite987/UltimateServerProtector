@@ -23,7 +23,8 @@ public class Config {
 
 	public Set<String> perms;
 
-	public List<String> allowed_commands, op_whitelist, blacklisted_perms, excluded_players, ip_whitelist;
+	public List<String> allowed_commands, op_whitelist, blacklisted_perms, excluded_admin_pass, excluded_op_whitelist,
+			excluded_ip_whitelist, excluded_blacklisted_perms, ip_whitelist;
 
 	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig,
 			uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
@@ -31,10 +32,9 @@ public class Config {
 			uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_setpass,
 			uspmsg_usage_rempass, uspmsg_usage_addop, uspmsg_usage_remop, uspmsg_usage_addip, uspmsg_usage_remip,
 			msg_message, msg_incorrect, msg_correct, msg_noneed, msg_cantbenull, msg_playeronly, broadcasts_failed,
-			broadcasts_passed, broadcasts_joined, broadcasts_captured, broadcasts_disabled, titles_title,
-			titles_subtitle, bossbar_message, bossbar_settings_bar_color, bossbar_settings_bar_style,
-			main_settings_prefix, main_settings_pas_command, sound_settings_on_capture, sound_settings_on_pas_fail,
-			sound_settings_on_pas_correct;
+			broadcasts_passed, broadcasts_joined, broadcasts_captured, titles_title, titles_subtitle, bossbar_message,
+			bossbar_settings_bar_color, bossbar_settings_bar_style, main_settings_prefix, main_settings_pas_command,
+			sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
 	public boolean blocking_settings_block_item_drop, blocking_settings_block_item_pickup,
 			blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
@@ -47,7 +47,8 @@ public class Config {
 			message_settings_enable_console_broadcasts, sound_settings_enable_sounds, effect_settings_enable_effects,
 			logging_settings_logging_pas, logging_settings_logging_join, logging_settings_logging_enable_disable;
 
-	public int punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
+	public int punish_settings_max_attempts, punish_settings_time, session_settings_session_time, titles_fadeIn,
+			titles_stay, titles_fadeOut;
 
 	public List<String> effect_settings_effects;
 
@@ -98,13 +99,15 @@ public class Config {
 		broadcasts_passed = instance.getMessage(broadcasts, "passed");
 		broadcasts_joined = instance.getMessage(broadcasts, "joined");
 		broadcasts_captured = instance.getMessage(broadcasts, "captured");
-		broadcasts_disabled = instance.getMessage(broadcasts, "disabled");
 	}
 
 	public void loadTitleMessages(FileConfiguration message) {
 		ConfigurationSection titles = message.getConfigurationSection("titles");
 		titles_title = instance.getMessage(titles, "title");
 		titles_subtitle = instance.getMessage(titles, "subtitle");
+		titles_fadeIn = titles.getInt("fadeIn");
+		titles_stay = titles.getInt("fadeIn");
+		titles_fadeOut = titles.getInt("fadeOut");
 	}
 
 	public void loadBossbar(FileConfiguration config) {
@@ -206,11 +209,18 @@ public class Config {
 		if (secure_settings.getBoolean("enable-permission-blacklist")) {
 			blacklisted_perms = new ArrayList<>(config.getStringList("blacklisted-perms"));
 		}
-		if (secure_settings.getBoolean("enable-excluded-players")) {
-			excluded_players = new ArrayList<>(config.getStringList("excluded-players"));
-		}
 		if (secure_settings.getBoolean("enable-ip-whitelist")) {
 			ip_whitelist = new ArrayList<>(config.getStringList("ip-whitelist"));
+		}
+	}
+
+	public void setupExcluded(FileConfiguration config) {
+		if (config.getBoolean("secure-settings.enable-excluded-players")) {
+			ConfigurationSection excluded_players = config.getConfigurationSection("secure-settings");
+			excluded_admin_pass = new ArrayList<>(excluded_players.getStringList("admin-pass"));
+			excluded_op_whitelist = new ArrayList<>(excluded_players.getStringList("op-whitelist"));
+			excluded_ip_whitelist = new ArrayList<>(excluded_players.getStringList("ip-whitelist"));
+			excluded_blacklisted_perms = new ArrayList<>(excluded_players.getStringList("blacklisted-perms"));
 		}
 	}
 

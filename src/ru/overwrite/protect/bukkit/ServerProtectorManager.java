@@ -96,6 +96,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.save(getDataFolder().getAbsolutePath(), message, "message.yml");
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
+		pluginConfig.setupExcluded(config);
 		pluginConfig.loadMainSettings(config);
 		pluginConfig.loadSecureSettings(config);
 		pluginConfig.loadAdditionalChecks(config);
@@ -129,6 +130,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		data = pluginConfig.getFile(path, file_settings.getString("data-file"));
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
+		pluginConfig.setupExcluded(config);
 		pluginConfig.loadMainSettings(config);
 		pluginConfig.loadSecureSettings(config);
 		pluginConfig.loadAdditionalChecks(config);
@@ -326,9 +328,9 @@ public class ServerProtectorManager extends JavaPlugin {
 		return false;
 	}
 
-	public boolean isExcluded(Player p) {
+	public boolean isExcluded(Player p, List<String> list) {
 		return pluginConfig.secure_settings_enable_excluded_players
-				&& pluginConfig.excluded_players.contains(p.getName());
+				&& list.contains(p.getName());
 	}
 
 	public boolean isAuthorised(Player p) {

@@ -32,30 +32,31 @@ public class ConnectionListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
-		if (instance.isExcluded(p)) {
-			return;
-		}
 		if (instance.isPermissions(p)) {
 			String ip = e.getAddress().getHostAddress();
 			if (pluginConfig.secure_settings_enable_ip_whitelist) {
 				if (!isIPAllowed(ip)) {
-					instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.not-admin-ip"));
+					if (!instance.isExcluded(p, pluginConfig.excluded_ip_whitelist)) {
+						instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.not-admin-ip"));
+					}
 				}
 			}
-			if (!instance.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
-				Runnable run = () -> {
-					ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
-					captureEvent.callEvent();
-					if (captureEvent.isCancelled()) {
-						return;
+			Runnable run = () -> {
+				if (!instance.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
+					if (!instance.isExcluded(p, pluginConfig.excluded_admin_pass)) {
+						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
+						captureEvent.callEvent();
+						if (captureEvent.isCancelled()) {
+							return;
+						}
+						api.capturePlayer(p);
+						if (pluginConfig.effect_settings_enable_effects) {
+							instance.giveEffect(instance, p);
+						}
 					}
-					api.capturePlayer(p);
-					if (pluginConfig.effect_settings_enable_effects) {
-						instance.giveEffect(instance, p);
-					}
-				};
-				instance.runAsyncTask(run);
-			}
+				}
+			};
+			instance.runAsyncTask(run);
 		}
 	}
 
@@ -63,9 +64,6 @@ public class ConnectionListener implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		Runnable run = () -> {
 			Player p = e.getPlayer();
-			if (instance.isExcluded(p)) {
-				return;
-			}
 			if (instance.isPermissions(p)) {
 				if (pluginConfig.logging_settings_logging_join) {
 					instance.logAction("log-format.joined", p, new Date());

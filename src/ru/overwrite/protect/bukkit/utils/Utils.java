@@ -49,7 +49,6 @@ public final class Utils {
 	}
 
 	public static String colorize(String message) {
-		String msg = message;
 		switch (ServerProtectorManager.serialiser) {
 			case "LEGACY": {
 				if (SUB_VERSION >= 16) {
@@ -64,15 +63,16 @@ public final class Utils {
 					}
 					message = matcher.appendTail(builder).toString();
 				}
-				msg = ChatColor.translateAlternateColorCodes('&', message);
-				return msg;
+				return ChatColor.translateAlternateColorCodes('&', message);
 			}
 			case "MINIMESSAGE": {
 				Component component = MiniMessage.miniMessage().deserialize(message);
-				msg = LegacyComponentSerializer.legacySection().serialize(component);
+				return LegacyComponentSerializer.legacySection().serialize(component);
+			}
+			default: {
+				return message;
 			}
 		}
-		return msg;
 	}
 
 	public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {

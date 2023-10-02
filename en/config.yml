@@ -200,6 +200,8 @@ permissions:
  - 'coreprotect.*'
  - 'mycommand.*'
  - 'towny.*'
+ - 'matrix.*'
+ - 'vulcan.*'
  - 'dh.admin'
  - 'ls.admin'
  - 'authme.admin'
@@ -230,7 +232,21 @@ ip-whitelist:
 blacklisted-perms: 
  - '*'
  
-# Players who can join the server, without admin-password
+# Which players will be excluded from checks (each check has its own type)
 excluded-players:
-  - test99999
-  - test123123
+  # Players who do not need to enter an admin password
+  admin-pass:
+    - test99999
+    - test123123
+  # Players who will not be checked for presence in op-whitelist
+  op-whitelist:
+    - test99999
+    - test123123
+  # Players who will not be checked for presence in ip-whitelist
+  ip-whitelist:
+    - test99999
+    - test123123
+  # Players who can have blocked permissions
+  blacklisted-perms:
+    - test99999
+    - test123123

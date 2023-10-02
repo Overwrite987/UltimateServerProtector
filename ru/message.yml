@@ -28,6 +28,9 @@ log-format:
 titles:
   title: '&e&l⚠ &c&lЗащита &e&l⚠'
   subtitle: '&fОбнаружены админ-права! Вводи админ-пароль!'
+  fadeIn: 10
+  stay: 60
+  fadeOut: 15
   
 # Сообщение в босс-баре
 bossbar:
