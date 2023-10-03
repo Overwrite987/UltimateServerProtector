@@ -31,16 +31,18 @@
         </repository>
     </repositories>
 
-    <dependency>
-             <groupId>dev.folia</groupId>
-             <artifactId>folia-api</artifactId>
-             <version>1.20.1-R0.1-SNAPSHOT</version>
-             <scope>provided</scope>
-    </dependency>
+    <dependencies>
+        <dependency>
+            <groupId>dev.folia</groupId>
+            <artifactId>folia-api</artifactId>
+            <version>1.20.1-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+    </dependencies>
 
     <build>
         <defaultGoal>clean package</defaultGoal>
-        <finalName>${project.name}-${lang}</finalName>
+        <finalName>${project.artifactId}-${lang}</finalName>
         <sourceDirectory>src</sourceDirectory>
         <resources>
             <resource>
