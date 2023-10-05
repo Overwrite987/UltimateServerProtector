@@ -60,5 +60,5 @@ uspmsg:
   usage-rempass: '&6/%cmd% rempass (ник) &7- удалить пароль игроку'
   usage-addop: '&6/%cmd% addop (ник) &7- добавить игрока в op-whitelist'
   usage-remop: '&6/%cmd% remop (ник) &7- удалить игрока из op-whitelist'
-  usage-addip: '&6/%cmd% addip (ip) &7- добавить ip в ip-whitelist'
-  usage-remip: '&6/%cmd% remip (ip) &7- удалить ip из ip-whitelist'
+  usage-addip: '&6/%cmd% addip (ник) (ip) &7- добавить игрока и его ip в ip-whitelist'
+  usage-remip: '&6/%cmd% remip (ник) (ip) &7- удалить игрока и его ip из ip-whitelist'

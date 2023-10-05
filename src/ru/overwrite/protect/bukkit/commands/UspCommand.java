@@ -111,12 +111,15 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					case ("addip"): {
-						if (args.length > 1 && args[1] != null) {
-							List<String> ipwl = pluginConfig.ip_whitelist;
-							ipwl.add(args[1]);
-							config.set("ip-whitelist", ipwl);
+						if (args.length > 2 && (args[1] != null && args[2] != null)) {
+							List<String> ipwl = pluginConfig.ip_whitelist.get(args[1]);
+							if (ipwl.isEmpty()) {
+								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
+							}
+							ipwl.add(args[2]);
+							config.set("ip-whitelist." + args[1], ipwl);
 							instance.saveConfig();
-							sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]));
+							sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]).replace("%ip%", args[1]));
 							return true;
 						}
 						sendCmdMessage(sender, pluginConfig.uspmsg_addipusage, label);
@@ -156,12 +159,15 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					case ("remip"): {
-						if (args.length > 1 && args[1] != null) {
-							List<String> ipwl = pluginConfig.ip_whitelist;
-							ipwl.remove(args[1]);
-							config.set("ip-whitelist", ipwl);
+						if (args.length > 2 && (args[1] != null && args[2] != null)) {
+							List<String> ipwl = pluginConfig.ip_whitelist.get(args[1]);
+							if (ipwl.isEmpty()) {
+								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
+							}
+							ipwl.remove(args[2]);
+							config.set("ip-whitelist." + args[1], ipwl);
 							instance.saveConfig();
-							sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]));
+							sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]).replace("%ip%", args[1]));
 							return true;
 						}
 						sendCmdMessage(sender, pluginConfig.uspmsg_remipusage, label);

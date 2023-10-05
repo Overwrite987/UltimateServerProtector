@@ -1,5 +1,8 @@
 package ru.overwrite.protect.bukkit.listeners;
 
+import java.util.Date;
+import java.util.List;
+
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -14,8 +17,6 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
-
-import java.util.Date;
 
 public class ConnectionListener implements Listener {
 
@@ -35,7 +36,7 @@ public class ConnectionListener implements Listener {
 		if (instance.isPermissions(p)) {
 			String ip = e.getAddress().getHostAddress();
 			if (pluginConfig.secure_settings_enable_ip_whitelist) {
-				if (!isIPAllowed(ip)) {
+				if (!isIPAllowed(p.getName(), ip)) {
 					if (!instance.isExcluded(p, pluginConfig.excluded_ip_whitelist)) {
 						instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.not-admin-ip"));
 					}
@@ -81,8 +82,9 @@ public class ConnectionListener implements Listener {
 		instance.runAsyncTask(run);
 	}
 
-	private boolean isIPAllowed(String ip) {
-		return pluginConfig.ip_whitelist.stream()
+	private boolean isIPAllowed(String p, String ip) {
+		List<String> ips = pluginConfig.ip_whitelist.get(p);
+		return ips.stream()
 				.anyMatch(allowedIP -> allowedIP.endsWith("*")
 						? ip.startsWith(allowedIP.substring(0, allowedIP.length() - 1))
 						: allowedIP.equals(ip));

@@ -60,5 +60,5 @@ uspmsg:
   usage-rempass: "&6/%cmd% rempass (nick) &7- remove player's password"
   usage-addop: "&6/%cmd% addop (nick) &7- add player to op-whitelist"
   usage-remop: "&6/%cmd% remop (nick) &7- remove player from op-whitelist"
-  usage-addip: "&6/%cmd% addip (ip) &7- add player to ip-whitelist"
-  usage-remip: "&6/%cmd% remip (ip) &7- remove player from ip-whitelist"
+  usage-addip: "&6/%cmd% addip (nick) (ip) &7- add player to ip-whitelist"
+  usage-remip: "&6/%cmd% remip (nick) (ip) &7- remove player from ip-whitelist"

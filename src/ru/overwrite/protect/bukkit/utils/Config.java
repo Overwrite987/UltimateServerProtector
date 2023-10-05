@@ -6,6 +6,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -21,10 +23,12 @@ public class Config {
 		this.instance = plugin;
 	}
 
-	public Set<String> perms;
+	public Set<String> perms, blacklisted_perms;
+	
+	public Map<String, List<String>> ip_whitelist;
 
-	public List<String> allowed_commands, op_whitelist, blacklisted_perms, excluded_admin_pass, excluded_op_whitelist,
-			excluded_ip_whitelist, excluded_blacklisted_perms, ip_whitelist;
+	public List<String> allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
+			excluded_ip_whitelist, excluded_blacklisted_perms;
 
 	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig,
 			uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
@@ -207,10 +211,14 @@ public class Config {
 			op_whitelist = new ArrayList<>(config.getStringList("op-whitelist"));
 		}
 		if (secure_settings.getBoolean("enable-permission-blacklist")) {
-			blacklisted_perms = new ArrayList<>(config.getStringList("blacklisted-perms"));
+			blacklisted_perms = new HashSet<>(config.getStringList("blacklisted-perms"));
 		}
 		if (secure_settings.getBoolean("enable-ip-whitelist")) {
-			ip_whitelist = new ArrayList<>(config.getStringList("ip-whitelist"));
+			ip_whitelist = new HashMap<>();
+			for (String ipwl_player : config.getConfigurationSection("ip-whitelist").getKeys(false)) {
+				List<String> ips = new ArrayList<>(config.getStringList("ip-whitelist." + ipwl_player));
+				ip_whitelist.put(ipwl_player, ips);
+			}
 		}
 	}
 

@@ -209,44 +209,49 @@ permissions:
  - 'placeholderapi.admin'
  - 'plugman.admin'
 
-# Commands that can be entered before entering the admin password
+# Permissions that nobody except players in the excluded-players section can have (disabled by default).
+blacklisted-perms:
+ - '*'
+
+# Commands that can be executed before entering an admin password (specify with /)
 allowed-commands:
  - '/l'
  - '/login'
  - '/reg'
  - '/register'
+ - '/captcha'
 
-# Which players are allowed to have OP
+# How players are allowed to have OP permissions
 op-whitelist:
  - Overwrite
  - test99999
-
-# Which IP is admin-ip
-# You can specify only part of the IP address to allow people with a dynamic IP to log in. For example 1.2.3.4 - 1.2.3.*
-ip-whitelist:
- - '127.0.0.1'
- - '0.0.0.0'
- # - 1.2.3.*
-
-# Permissions that no one except the players from the excluded-players section will be able to have (by default - disabled)
-blacklisted-perms: 
- - '*'
  
-# Which players will be excluded from checks (each check has its own type)
+# Which IPs and players are allowed to log in with admin rights
+# You can specify only part of the IP address to allow people with dynamic IPs. For example, 1.2.3.4 -> 1.2.3.*
+ip-whitelist:
+    # Player 1
+    test99999:
+      - 127.0.0.1
+      - 0.0.0.0
+    # Player 2
+    test123123:
+      - 228.13.37.*
+ 
+# Players who will be excluded from checks (each check has its own type)
 excluded-players:
-  # Players who do not need to enter an admin password
-  admin-pass:
-    - test99999
-    - test123123
-  # Players who will not be checked for presence in op-whitelist
-  op-whitelist:
-    - test99999
-    - test123123
-  # Players who will not be checked for presence in ip-whitelist
-  ip-whitelist:
-    - test99999
-    - test123123
-  # Players who can have blocked permissions
-  blacklisted-perms:
-    - test99999
-    - test123123
+    # Players who do not need to enter an admin password
+    admin-pass:
+      - test99999
+      - test123123
+    # Players who will not be checked for presence in op-whitelist
+    op-whitelist:
+      - test99999
+      - test123123
+      # Players who will not be checked for presence in ip-whitelist
+    ip-whitelist:
+      - test99999
+      - test123123
+      # Players who can have blocked permissions
+    blacklisted-perms:
+      - test99999
+      - test123123
