@@ -14,7 +14,9 @@ public final class ServerProtector extends ServerProtectorManager {
 	@Override
 	public void onEnable() {
 		long startTime = System.currentTimeMillis();
-		checkPaper();
+		if (!isPaper()) {
+			return;
+		}
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
 		setupProxy(config);

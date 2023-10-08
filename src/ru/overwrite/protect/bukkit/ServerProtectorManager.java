@@ -64,15 +64,16 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public final Server server = getServer();
 
-	public void checkPaper() {
+	public boolean isPaper() {
 		if (server.getName().equals("CraftBukkit")) {
 			loggerInfo("§6============= §c! WARNING ! §c=============");
 			loggerInfo("§eYou are using an unstable core for your MC server! It's recomended to use §aPaper");
 			loggerInfo("§eDownload Paper: §ahttps://papermc.io/downloads/all");
 			loggerInfo("§6============= §c! WARNING ! §c=============");
-			setEnabled(false);
-			return;
+			this.setEnabled(false);
+			return false;
 		}
+		return true;
 	}
 
 	public void setupProxy(FileConfiguration config) {
