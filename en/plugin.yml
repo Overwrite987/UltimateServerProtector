@@ -1,5 +1,5 @@
 name: UltimateServerProtector
-version: 24.0
+version: 24.1
 author: Overwrite
 main: ru.overwrite.protect.bukkit.ServerProtector
 api-version: 1.13

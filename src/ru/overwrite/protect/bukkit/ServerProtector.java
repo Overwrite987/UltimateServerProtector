@@ -24,7 +24,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		registerCommands(pluginManager, config);
 		startRunners(config);
 		setupLogger(config);
-		logEnableDisable(message.getString("log-format.enabled"), new Date(startTime));
+		logEnableDisable(messageFile.getString("log-format.enabled"), new Date(startTime));
 		if (config.getBoolean("main-settings.enable-metrics")) {
 			new Metrics(this, 13347);
 		}
@@ -35,14 +35,18 @@ public final class ServerProtector extends ServerProtectorManager {
 
 	@Override
 	public void onDisable() {
-		logEnableDisable(message.getString("log-format.disabled"), new Date());
+		if (messageFile != null) {
+			logEnableDisable(messageFile.getString("log-format.disabled"), new Date());
+		}
 		if (Utils.bossbar != null) {
 			Utils.bossbar.removeAll();
 		}
 		if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
 			for (Player ps : server.getOnlinePlayers()) {
 				if (ps.hasPermission("serverprotector.admin")) {
-					ps.sendMessage(getMessage(message.getConfigurationSection("broadcasts"), "disabled"));
+					if (messageFile != null) {
+						ps.sendMessage(getPluginConfig().getMessage(messageFile.getConfigurationSection("broadcasts"), "disabled"));
+					}
 				}
 			}
 		}

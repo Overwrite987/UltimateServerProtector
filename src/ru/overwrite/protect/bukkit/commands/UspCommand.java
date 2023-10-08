@@ -192,7 +192,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		data = pluginConfig.getFile(path, datafile);
 		data.set("data." + nick + ".pass", pas);
 		pluginConfig.save(path, data, datafile);
-		data = instance.data;
+		data = instance.dataFile;
 	}
 
 	private void removeAdmin(FileConfiguration config, String nick) {
@@ -203,7 +203,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		data.set("data." + nick + ".pass", null);
 		data.set("data." + nick, null);
 		pluginConfig.save(path, data, datafile);
-		data = instance.data;
+		data = instance.dataFile;
 	}
 
 	private void sendHelp(CommandSender sender, String label) {

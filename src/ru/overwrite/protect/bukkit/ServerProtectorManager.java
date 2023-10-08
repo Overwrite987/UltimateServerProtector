@@ -12,7 +12,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.concurrent.TimeUnit;
-import java.util.function.UnaryOperator;
 
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 
@@ -44,8 +43,8 @@ public class ServerProtectorManager extends JavaPlugin {
 	public static String serialiser;
 	public boolean proxy = false;
 
-	public FileConfiguration message;
-	public FileConfiguration data;
+	public FileConfiguration messageFile;
+	public FileConfiguration dataFile;
 
 	public String path;
 
@@ -60,7 +59,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	private final PasswordHandler passwordHandler = new PasswordHandler(this);
 	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 	private PluginMessage pluginMessage;
-	
+
 	private File logFile;
 
 	public final Server server = getServer();
@@ -90,10 +89,10 @@ public class ServerProtectorManager extends JavaPlugin {
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
 		Boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
-		data = pluginConfig.getFile(path, file_settings.getString("data-file"));
-		pluginConfig.save(path, data, file_settings.getString("data-file"));
-		message = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
-		pluginConfig.save(getDataFolder().getAbsolutePath(), message, "message.yml");
+		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
+		pluginConfig.save(path, dataFile, file_settings.getString("data-file"));
+		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
+		pluginConfig.save(getDataFolder().getAbsolutePath(), messageFile, "message.yml");
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
 		pluginConfig.setupExcluded(config);
@@ -107,27 +106,28 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.loadSoundSettings(config);
 		pluginConfig.loadEffects(config);
 		pluginConfig.loadLoggingSettings(config);
-		pluginConfig.loadMsgMessages(message);
+		pluginConfig.loadMsgMessages(messageFile);
 		if (config.getBoolean("message-settings.send-titles")) {
-			pluginConfig.loadTitleMessages(message);
+			pluginConfig.loadTitleMessages(messageFile);
 		}
 		if (config.getBoolean("bossbar-settings.enable-bossbar")) {
 			pluginConfig.loadBossbar(config);
 		}
-		if (config.getBoolean("message-settings.enable-broadcasts")) {
-			pluginConfig.loadBroadcastMessages(message);
+		if (config.getBoolean("message-settings.enable-broadcasts")
+				|| config.getBoolean("message-settings.enable-console-broadcasts")) {
+			pluginConfig.loadBroadcastMessages(messageFile);
 		}
-		pluginConfig.loadUspMessages(message);
+		pluginConfig.loadUspMessages(messageFile);
 	}
 
 	public void reloadConfigs(FileConfiguration config) {
 		reloadConfig();
 		serialiser = config.getString("main-settings.serialiser");
-		message = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
+		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
 		Boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
-		data = pluginConfig.getFile(path, file_settings.getString("data-file"));
+		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
 		pluginConfig.setupExcluded(config);
@@ -141,17 +141,17 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.loadSoundSettings(config);
 		pluginConfig.loadEffects(config);
 		pluginConfig.loadLoggingSettings(config);
-		pluginConfig.loadMsgMessages(message);
+		pluginConfig.loadMsgMessages(messageFile);
 		if (config.getBoolean("message-settings.send-titles")) {
-			pluginConfig.loadTitleMessages(message);
+			pluginConfig.loadTitleMessages(messageFile);
 		}
 		if (config.getBoolean("bossbar-settings.enable-bossbar")) {
 			pluginConfig.loadBossbar(config);
 		}
 		if (config.getBoolean("message-settings.enable-broadcasts")) {
-			pluginConfig.loadBroadcastMessages(message);
+			pluginConfig.loadBroadcastMessages(messageFile);
 		}
-		pluginConfig.loadUspMessages(message);
+		pluginConfig.loadUspMessages(messageFile);
 	}
 
 	public void registerListeners(PluginManager pluginManager) {
@@ -204,7 +204,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			runner.startPermsCheck(config);
 		}
 	}
-	
+
 	public void setupLogger(FileConfiguration config) {
 		File dataFolder = getDataFolder();
 		if (!dataFolder.exists() && !dataFolder.mkdirs()) {
@@ -306,16 +306,6 @@ public class ServerProtectorManager extends JavaPlugin {
 	public PluginMessage getPluginMessage() {
 		return pluginMessage;
 	}
-	
-	public String getMessage(ConfigurationSection selection, String key) {
-		return Utils.colorize(
-				selection.getString(key, "&4&lERROR&r").replace("%prefix%", pluginConfig.main_settings_prefix));
-	}
-
-	public String getMessage(ConfigurationSection selection, String key, UnaryOperator<String> preprocess) {
-		return Utils.colorize(preprocess.apply(selection.getString(key, "&4&lERROR&r")).replace("%prefix%",
-				pluginConfig.main_settings_prefix));
-	}
 
 	public boolean isPermissions(Player p) {
 		if (p.isOp() || p.hasPermission("serverprotector.protect"))
@@ -329,8 +319,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public boolean isExcluded(Player p, List<String> list) {
-		return pluginConfig.secure_settings_enable_excluded_players
-				&& list.contains(p.getName());
+		return pluginConfig.secure_settings_enable_excluded_players && list.contains(p.getName());
 	}
 
 	public boolean isAuthorised(Player p) {
@@ -338,7 +327,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public boolean isAdmin(String nick) {
-		return data.contains("data." + nick);
+		return dataFile.contains("data." + nick);
 	}
 
 	public void sendAlert(Player p, String msg) {
@@ -351,15 +340,15 @@ public class ServerProtectorManager extends JavaPlugin {
 			pluginMessage.sendCrossProxy(p, msg);
 		}
 	}
-	
+
 	public void loggerInfo(String logMessage) {
 		logger.info(logMessage);
 	}
 
 	public void logAction(String key, Player player, Date date) {
 		Runnable run = () -> {
-		logToFile(message.getString(key, "ERROR").replace("%player%", player.getName())
-				.replace("%ip%", Utils.getIp(player)).replace("%date%", DATE_FORMAT.format(date)));
+			logToFile(messageFile.getString(key, "ERROR").replace("%player%", player.getName())
+					.replace("%ip%", Utils.getIp(player)).replace("%date%", DATE_FORMAT.format(date)));
 		};
 		runAsyncTask(run);
 	}

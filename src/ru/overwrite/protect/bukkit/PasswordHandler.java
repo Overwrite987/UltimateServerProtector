@@ -37,7 +37,7 @@ public class PasswordHandler {
 			if (enterEvent.isCancelled()) {
 				return;
 			}
-			if (input.equals(instance.data.getString("data." + player.getName() + ".pass"))) {
+			if (input.equals(instance.dataFile.getString("data." + player.getName() + ".pass"))) {
 				correctPassword(player);
 			} else {
 				player.sendMessage(pluginConfig.msg_incorrect);
@@ -83,12 +83,14 @@ public class PasswordHandler {
 		if (pluginConfig.logging_settings_logging_pas) {
 			instance.logAction("log-format.failed", player, new Date());
 		}
-		String msg = pluginConfig.broadcasts_failed.replace("%player%", player.getName()).replace("%ip%",
-				Utils.getIp(player));
 		if (pluginConfig.message_settings_enable_broadcasts) {
+			String msg = pluginConfig.broadcasts_failed.replace("%player%", player.getName()).replace("%ip%",
+					Utils.getIp(player));
 			instance.sendAlert(player, msg);
 		}
 		if (pluginConfig.message_settings_enable_console_broadcasts) {
+			String msg = pluginConfig.broadcasts_failed.replace("%player%", player.getName()).replace("%ip%",
+					Utils.getIp(player));
 			Bukkit.getConsoleSender().sendMessage(msg);
 		}
 	}
@@ -136,12 +138,14 @@ public class PasswordHandler {
 				Utils.bossbar.removePlayer(player);
 			}
 		}
-		String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%",
-				Utils.getIp(player));
 		if (pluginConfig.message_settings_enable_broadcasts) {
+			String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%",
+					Utils.getIp(player));
 			instance.sendAlert(player, msg);
 		}
 		if (pluginConfig.message_settings_enable_console_broadcasts) {
+			String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%",
+					Utils.getIp(player));
 			Bukkit.getConsoleSender().sendMessage(msg);
 		}
 	}

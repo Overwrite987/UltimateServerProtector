@@ -59,12 +59,14 @@ public class PaperRunner implements Runner {
 					if (pluginConfig.logging_settings_logging_pas) {
 						instance.logAction("log-format.captured", p, new Date());
 					}
-					String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%",
-							Utils.getIp(p));
 					if (pluginConfig.message_settings_enable_broadcasts) {
+						String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%",
+								Utils.getIp(p));
 						instance.sendAlert(p, msg);
 					}
 					if (pluginConfig.message_settings_enable_console_broadcasts) {
+						String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%",
+								Utils.getIp(p));
 						Bukkit.getConsoleSender().sendMessage(msg);
 					}
 				}

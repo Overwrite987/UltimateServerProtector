@@ -57,58 +57,66 @@ public class Config {
 	public List<String> effect_settings_effects;
 
 	public float sound_settings_volume, sound_settings_pitch;
+	
+	public void loadMainSettings(FileConfiguration config) {
+		ConfigurationSection main_settings = config.getConfigurationSection("main-settings");
+		main_settings_prefix = main_settings.getString("prefix");
+		main_settings_pas_command = main_settings.getString("pas-command");
+		main_settings_use_command = main_settings.getBoolean("use-command");
+		main_settings_enable_admin_commands = main_settings.getBoolean("enable-admin-commands");
+	}
 
 	public void loadUspMessages(FileConfiguration message) {
 		ConfigurationSection uspmsg = message.getConfigurationSection("uspmsg");
-		uspmsg_consoleonly = instance.getMessage(uspmsg, "consoleonly");
-		uspmsg_reloaded = instance.getMessage(uspmsg, "reloaded");
-		uspmsg_rebooted = instance.getMessage(uspmsg, "rebooted");
-		uspmsg_playernotfound = instance.getMessage(uspmsg, "playernotfound");
-		uspmsg_alreadyinconfig = instance.getMessage(uspmsg, "alreadyinconfig");
-		uspmsg_notinconfig = instance.getMessage(uspmsg, "notinconfig");
-		uspmsg_playeradded = instance.getMessage(uspmsg, "playeradded");
-		uspmsg_playerremoved = instance.getMessage(uspmsg, "playerremoved");
-		uspmsg_ipadded = instance.getMessage(uspmsg, "ipadded");
-		uspmsg_setpassusage = instance.getMessage(uspmsg, "setpassusage");
-		uspmsg_addopusage = instance.getMessage(uspmsg, "addopusage");
-		uspmsg_addipusage = instance.getMessage(uspmsg, "addipusage");
-		uspmsg_rempassusage = instance.getMessage(uspmsg, "rempassusage");
-		uspmsg_remopusage = instance.getMessage(uspmsg, "remopusage");
-		uspmsg_ipremoved = instance.getMessage(uspmsg, "ipremoved");
-		uspmsg_remipusage = instance.getMessage(uspmsg, "remipusage");
-		uspmsg_usage = instance.getMessage(uspmsg, "usage");
-		uspmsg_usage_reload = instance.getMessage(uspmsg, "usage-reload");
-		uspmsg_usage_reboot = instance.getMessage(uspmsg, "usage-reboot");
-		uspmsg_usage_setpass = instance.getMessage(uspmsg, "usage-setpass");
-		uspmsg_usage_rempass = instance.getMessage(uspmsg, "usage-rempass");
-		uspmsg_usage_addop = instance.getMessage(uspmsg, "usage-addop");
-		uspmsg_usage_remop = instance.getMessage(uspmsg, "usage-remop");
-		uspmsg_usage_addip = instance.getMessage(uspmsg, "usage-addip");
-		uspmsg_usage_remip = instance.getMessage(uspmsg, "usage-remip");
+		uspmsg_consoleonly = getMessage(uspmsg, "consoleonly");
+		uspmsg_reloaded = getMessage(uspmsg, "reloaded");
+		uspmsg_rebooted = getMessage(uspmsg, "rebooted");
+		uspmsg_playernotfound = getMessage(uspmsg, "playernotfound");
+		uspmsg_alreadyinconfig = getMessage(uspmsg, "alreadyinconfig");
+		uspmsg_notinconfig = getMessage(uspmsg, "notinconfig");
+		uspmsg_playeradded = getMessage(uspmsg, "playeradded");
+		uspmsg_playerremoved = getMessage(uspmsg, "playerremoved");
+		uspmsg_ipadded = getMessage(uspmsg, "ipadded");
+		uspmsg_setpassusage = getMessage(uspmsg, "setpassusage");
+		uspmsg_addopusage = getMessage(uspmsg, "addopusage");
+		uspmsg_addipusage = getMessage(uspmsg, "addipusage");
+		uspmsg_rempassusage = getMessage(uspmsg, "rempassusage");
+		uspmsg_remopusage = getMessage(uspmsg, "remopusage");
+		uspmsg_ipremoved = getMessage(uspmsg, "ipremoved");
+		uspmsg_remipusage = getMessage(uspmsg, "remipusage");
+		uspmsg_usage = getMessage(uspmsg, "usage");
+		uspmsg_usage_reload = getMessage(uspmsg, "usage-reload");
+		uspmsg_usage_reboot = getMessage(uspmsg, "usage-reboot");
+		uspmsg_usage_setpass = getMessage(uspmsg, "usage-setpass");
+		uspmsg_usage_rempass = getMessage(uspmsg, "usage-rempass");
+		uspmsg_usage_addop = getMessage(uspmsg, "usage-addop");
+		uspmsg_usage_remop = getMessage(uspmsg, "usage-remop");
+		uspmsg_usage_addip = getMessage(uspmsg, "usage-addip");
+		uspmsg_usage_remip = getMessage(uspmsg, "usage-remip");
 	}
 
 	public void loadMsgMessages(FileConfiguration message) {
 		ConfigurationSection msg = message.getConfigurationSection("msg");
-		msg_message = instance.getMessage(msg, "message");
-		msg_incorrect = instance.getMessage(msg, "incorrect");
-		msg_correct = instance.getMessage(msg, "correct");
-		msg_noneed = instance.getMessage(msg, "noneed");
-		msg_cantbenull = instance.getMessage(msg, "cantbenull");
-		msg_playeronly = instance.getMessage(msg, "playeronly");
+		msg_message = getMessage(msg, "message");
+		msg_incorrect = getMessage(msg, "incorrect");
+		msg_correct = getMessage(msg, "correct");
+		msg_noneed = getMessage(msg, "noneed");
+		msg_cantbenull = getMessage(msg, "cantbenull");
+		msg_playeronly = getMessage(msg, "playeronly");
 	}
 
 	public void loadBroadcastMessages(FileConfiguration message) {
 		ConfigurationSection broadcasts = message.getConfigurationSection("broadcasts");
-		broadcasts_failed = instance.getMessage(broadcasts, "failed");
-		broadcasts_passed = instance.getMessage(broadcasts, "passed");
-		broadcasts_joined = instance.getMessage(broadcasts, "joined");
-		broadcasts_captured = instance.getMessage(broadcasts, "captured");
+		broadcasts_failed = getMessage(broadcasts, "failed");
+		broadcasts_passed = getMessage(broadcasts, "passed");
+		broadcasts_joined = getMessage(broadcasts, "joined");
+		broadcasts_captured = getMessage(broadcasts, "captured");
 	}
 
 	public void loadTitleMessages(FileConfiguration message) {
 		ConfigurationSection titles = message.getConfigurationSection("titles");
-		titles_title = instance.getMessage(titles, "title");
-		titles_subtitle = instance.getMessage(titles, "subtitle");
+		titles_title = getMessage(titles, "title");
+		titles_subtitle = getMessage(titles, "subtitle");
 		titles_fadeIn = titles.getInt("fadeIn");
 		titles_stay = titles.getInt("fadeIn");
 		titles_fadeOut = titles.getInt("fadeOut");
@@ -119,16 +127,8 @@ public class Config {
 		bossbar_settings_enable_bossbar = bossbar_settings.getBoolean("enable-bossbar");
 		bossbar_settings_bar_color = bossbar_settings.getString("bar-color");
 		bossbar_settings_bar_style = bossbar_settings.getString("bar-style");
-		ConfigurationSection bossbar = instance.message.getConfigurationSection("bossbar");
-		bossbar_message = instance.getMessage(bossbar, "message");
-	}
-
-	public void loadMainSettings(FileConfiguration config) {
-		ConfigurationSection main_settings = config.getConfigurationSection("main-settings");
-		main_settings_prefix = main_settings.getString("prefix");
-		main_settings_pas_command = main_settings.getString("pas-command");
-		main_settings_use_command = main_settings.getBoolean("use-command");
-		main_settings_enable_admin_commands = main_settings.getBoolean("enable-admin-commands");
+		ConfigurationSection bossbar = instance.messageFile.getConfigurationSection("bossbar");
+		bossbar_message = getMessage(bossbar, "message");
 	}
 
 	public void loadSecureSettings(FileConfiguration config) {
@@ -230,6 +230,11 @@ public class Config {
 			excluded_ip_whitelist = new ArrayList<>(excluded_players.getStringList("ip-whitelist"));
 			excluded_blacklisted_perms = new ArrayList<>(excluded_players.getStringList("blacklisted-perms"));
 		}
+	}
+	
+	public String getMessage(ConfigurationSection selection, String key) {
+		return Utils.colorize(
+				selection.getString(key, "&4&lERROR&r").replace("%prefix%", main_settings_prefix));
 	}
 
 	public FileConfiguration getFile(String path, String fileName) {
