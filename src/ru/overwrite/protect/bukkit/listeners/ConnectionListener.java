@@ -51,9 +51,6 @@ public class ConnectionListener implements Listener {
 							return;
 						}
 						api.capturePlayer(p);
-						if (pluginConfig.effect_settings_enable_effects) {
-							instance.giveEffect(instance, p);
-						}
 					}
 				}
 			};
@@ -66,15 +63,22 @@ public class ConnectionListener implements Listener {
 		Runnable run = () -> {
 			Player p = e.getPlayer();
 			if (instance.isPermissions(p)) {
+				if (api.isCaptured(p)) {
+					if (pluginConfig.effect_settings_enable_effects) {
+						instance.giveEffect(instance, p);
+					}
+				}
 				if (pluginConfig.logging_settings_logging_join) {
 					instance.logAction("log-format.joined", p, new Date());
 				}
-				String msg = pluginConfig.broadcasts_joined.replace("%player%", p.getName()).replace("%ip%",
-						Utils.getIp(p));
 				if (pluginConfig.message_settings_enable_console_broadcasts) {
+					String msg = pluginConfig.broadcasts_joined.replace("%player%", p.getName()).replace("%ip%",
+							Utils.getIp(p));
 					Bukkit.getConsoleSender().sendMessage(msg);
 				}
 				if (pluginConfig.message_settings_enable_broadcasts) {
+					String msg = pluginConfig.broadcasts_joined.replace("%player%", p.getName()).replace("%ip%",
+							Utils.getIp(p));
 					instance.sendAlert(p, msg);
 				}
 			}
