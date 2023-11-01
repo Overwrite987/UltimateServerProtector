@@ -14,5 +14,9 @@ public class BukkitLogger implements Logger {
 	public void info(String msg) {
 		instance.getLogger().info(msg);
 	}
+	
+	public void warn(String msg) {
+		instance.getLogger().warning(msg);
+	}
 
 }

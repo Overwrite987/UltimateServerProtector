@@ -52,6 +52,8 @@ blocking-settings:
   block-damage: true
   # Block or not the ability to harm mobs and players while entering a password
   block-damaging-entity: true
+  # Whether to block the ability to open inventory while entering a password (menu, etc.)
+  block-inventory-open: false
   # Whether to block the mob trigger on the player while entering the password
   block-mobs-targeting: true
   

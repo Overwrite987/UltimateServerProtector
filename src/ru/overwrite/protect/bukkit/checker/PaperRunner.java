@@ -42,7 +42,7 @@ public class PaperRunner implements Runner {
 					continue;
 				}
 				String playerName = p.getName();
-				if (!instance.ips.contains(playerName + Utils.getIp(p)) && !instance.isAuthorised(p)) {
+				if (!api.isAuthorised(p)) {
 					ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
 					captureEvent.callEvent();
 					if (captureEvent.isCancelled()) {
@@ -95,9 +95,7 @@ public class PaperRunner implements Runner {
 				if (api.isCaptured(p)) {
 					p.sendMessage(pluginConfig.msg_message);
 					if (pluginConfig.message_settings_send_title) {
-						p.sendTitle(pluginConfig.titles_title, pluginConfig.titles_subtitle, pluginConfig.titles_fadeIn,
-								pluginConfig.titles_stay, pluginConfig.titles_fadeOut);
-						return;
+						Utils.sendTitleMessage(pluginConfig.titles_message, p);
 					}
 				}
 			}

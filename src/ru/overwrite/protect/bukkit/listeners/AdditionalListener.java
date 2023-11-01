@@ -11,6 +11,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityTargetEvent;
 import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerDropItemEvent;
+import org.bukkit.event.inventory.InventoryOpenEvent;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.utils.Config;
@@ -49,6 +50,18 @@ public class AdditionalListener implements Listener {
 		}
 	}
 
+	@EventHandler(ignoreCancelled = true)
+	public void onTabComplete(AsyncTabCompleteEvent e) {
+		if (instance.login.isEmpty())
+			return;
+		if (!(e.getSender() instanceof Player))
+			return;
+		Player p = (Player) e.getSender();
+		if (pluginConfig.blocking_settings_block_tab_complete) {
+			api.handleInteraction(p, e);
+		}
+	}
+
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerDamage(EntityDamageEvent e) {
 		if (instance.login.isEmpty())
@@ -73,14 +86,12 @@ public class AdditionalListener implements Listener {
 		}
 	}
 
-	@EventHandler(ignoreCancelled = true)
-	public void onTabComplete(AsyncTabCompleteEvent e) {
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	public void onInvontoryOpen(InventoryOpenEvent e) {
 		if (instance.login.isEmpty())
 			return;
-		if (!(e.getSender() instanceof Player))
-			return;
-		Player p = (Player) e.getSender();
-		if (pluginConfig.blocking_settings_block_tab_complete) {
+		Player p = (Player) e.getPlayer();
+		if (pluginConfig.blocking_settings_block_inventory_open) {
 			api.handleInteraction(p, e);
 		}
 	}

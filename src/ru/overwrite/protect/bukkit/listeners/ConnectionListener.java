@@ -32,18 +32,19 @@ public class ConnectionListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
-		Player p = e.getPlayer();
-		if (instance.isPermissions(p)) {
-			String ip = e.getAddress().getHostAddress();
-			if (pluginConfig.secure_settings_enable_ip_whitelist) {
-				if (!isIPAllowed(p.getName(), ip)) {
-					if (!instance.isExcluded(p, pluginConfig.excluded_ip_whitelist)) {
-						instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.not-admin-ip"));
+		Runnable run = () -> {
+			Player p = e.getPlayer();
+			if (instance.isPermissions(p)) {
+				String ip = e.getAddress().getHostAddress();
+				if (pluginConfig.secure_settings_enable_ip_whitelist) {
+					if (!isIPAllowed(p.getName(), ip)) {
+						if (!instance.isExcluded(p, pluginConfig.excluded_ip_whitelist)) {
+							instance.checkFail(p.getName(),
+									instance.getConfig().getStringList("commands.not-admin-ip"));
+						}
 					}
 				}
-			}
-			Runnable run = () -> {
-				if (!instance.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
+				if (!api.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
 					if (!instance.isExcluded(p, pluginConfig.excluded_admin_pass)) {
 						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
 						captureEvent.callEvent();
@@ -53,9 +54,9 @@ public class ConnectionListener implements Listener {
 						api.capturePlayer(p);
 					}
 				}
-			};
-			instance.runAsyncTask(run);
-		}
+			}
+		};
+		instance.runAsyncTask(run);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -105,6 +106,6 @@ public class ConnectionListener implements Listener {
 		String playerName = player.getName();
 		instance.time.remove(playerName);
 		instance.login.remove(playerName);
-		instance.saved.remove(playerName);
+		api.saved.remove(playerName);
 	}
 }

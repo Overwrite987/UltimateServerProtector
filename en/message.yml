@@ -24,13 +24,11 @@ log-format:
   joined: "%date% Admin %player% joined the game. IP: %ip%"
   captured: "%date% Player %player% was detected with admin-permissions! IP: %ip%"
  
-# Titles
+# Titles (format - title;subtitle;fadein;stay;fadeout)
 titles:
-  title: "&e&l⚠ &c&lProtection &e&l⚠"
-  subtitle: "&fAdmin permissions detected! You should enter admin-password!"
-  fadeIn: 10
-  stay: 60
-  fadeOut: 15
+  message: '&e&l⚠ &c&lProtection &e&l⚠;&fAdmin permissiond detected! Enter admin-password!;10;60;15'
+  incorrect: '&e&l⚠ &c&lProtection &e&l⚠;&cWrong password!;10;60;15'
+  correct: '&e&l⚠ &c&lProtection &e&l⚠;&aCorrect password. Have a nice day ;);10;60;15'
 
 # Message in boss bar
 bossbar:

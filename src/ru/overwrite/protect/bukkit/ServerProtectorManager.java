@@ -48,9 +48,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public String path;
 
-	public Set<String> ips = new HashSet<>();
 	public Set<String> login = new HashSet<>();
-	public Set<String> saved = new HashSet<>();
 
 	public Map<String, Integer> time;
 
@@ -63,6 +61,26 @@ public class ServerProtectorManager extends JavaPlugin {
 	private File logFile;
 
 	public final Server server = getServer();
+	
+	public Config getPluginConfig() {
+		return pluginConfig;
+	}
+
+	public ServerProtectorAPI getPluginAPI() {
+		return api;
+	}
+
+	public PasswordHandler getPasswordHandler() {
+		return passwordHandler;
+	}
+
+	public PluginMessage getPluginMessage() {
+		return pluginMessage;
+	}
+	
+	public Logger getPluginLogger() {
+		return logger;
+	}
 
 	public boolean isPaper() {
 		if (server.getName().equals("CraftBukkit")) {
@@ -233,11 +251,11 @@ public class ServerProtectorManager extends JavaPlugin {
 			loggerInfo("§6========================================");
 		});
 	}
-
-	public void checkFail(String pName, List<String> command) {
+	
+	public void checkFail(String playerName, List<String> command) {
 		Runnable run = () -> {
 			for (String c : command) {
-				server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", pName));
+				server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", playerName));
 			}
 		};
 		runSyncTask(run);
@@ -278,7 +296,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public void runAsyncDelayedTask(Runnable run) {
 		if (Utils.FOLIA) {
-			server.getAsyncScheduler().runDelayed(this, (s) -> run.run(),
+			server.getAsyncScheduler().runDelayed(this, (sp) -> run.run(),
 					pluginConfig.session_settings_session_time * 20L * 50L, TimeUnit.MILLISECONDS);
 		} else {
 			server.getScheduler().runTaskLaterAsynchronously(this, run,
@@ -290,22 +308,6 @@ public class ServerProtectorManager extends JavaPlugin {
 		if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
 			logToFile(msg.replace("%date%", DATE_FORMAT.format(date)));
 		}
-	}
-
-	public Config getPluginConfig() {
-		return pluginConfig;
-	}
-
-	public ServerProtectorAPI getPluginAPI() {
-		return api;
-	}
-
-	public PasswordHandler getPasswordHandler() {
-		return passwordHandler;
-	}
-
-	public PluginMessage getPluginMessage() {
-		return pluginMessage;
 	}
 
 	public boolean isPermissions(Player p) {
@@ -321,10 +323,6 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public boolean isExcluded(Player p, List<String> list) {
 		return pluginConfig.secure_settings_enable_excluded_players && list.contains(p.getName());
-	}
-
-	public boolean isAuthorised(Player p) {
-		return !pluginConfig.session_settings_session && saved.contains(p.getName());
 	}
 
 	public boolean isAdmin(String nick) {

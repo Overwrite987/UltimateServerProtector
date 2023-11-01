@@ -1,10 +1,11 @@
 name: UltimateServerProtector
-version: 24.1
-author: Overwrite
+version: 25.0
+author: OverwriteMC
 main: ru.overwrite.protect.bukkit.ServerProtector
 api-version: 1.13
 folia-supported: true
 load-priority: STARTUP
+loadafter: [LuckPerms]
 commands:
    ultimateserverprotector:
       aliases: [usp, serverprotector]

@@ -5,38 +5,41 @@ import java.util.Collections;
 import java.util.List;
 
 import org.bukkit.Bukkit;
+import org.bukkit.OfflinePlayer;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandExecutor;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.command.TabCompleter;
-import org.bukkit.entity.Player;
 import org.bukkit.configuration.file.FileConfiguration;
 
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class UspCommand implements CommandExecutor, TabCompleter {
 
 	private final ServerProtectorManager instance;
+	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 
 	public UspCommand(ServerProtectorManager plugin) {
 		instance = plugin;
+		api = plugin.getPluginAPI();
 		pluginConfig = plugin.getPluginConfig();
 		passwordHandler = plugin.getPasswordHandler();
 	}
 
 	@Override
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+		if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+			sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+			return false;
+		}
 		if (sender.hasPermission("serverprotector.admin")) {
-			if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
-				sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-				return false;
-			}
 			if (args.length == 0) {
 				sendHelp(sender, label);
 				return true;
@@ -57,8 +60,8 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					}
 					instance.time.clear();
 					instance.login.clear();
-					instance.ips.clear();
-					instance.saved.clear();
+					api.ips.clear();
+					api.saved.clear();
 					if (Utils.bossbar != null) {
 						Utils.bossbar.removeAll();
 					}
@@ -73,7 +76,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				switch (args[0].toLowerCase()) {
 					case ("setpass"): {
 						if (args.length > 1) {
-							Player targetPlayer = Bukkit.getPlayerExact(args[1]);
+							OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
 							if (targetPlayer == null) {
 								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
 								return true;
@@ -94,7 +97,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					}
 					case ("addop"): {
 						if (args.length > 1) {
-							Player targetPlayer = Bukkit.getPlayerExact(args[1]);
+							OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
 							if (targetPlayer == null) {
 								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
 								return true;
@@ -119,7 +122,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 							ipwl.add(args[2]);
 							config.set("ip-whitelist." + args[1], ipwl);
 							instance.saveConfig();
-							sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]).replace("%ip%", args[1]));
+							sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]).replace("%ip%", args[2]));
 							return true;
 						}
 						sendCmdMessage(sender, pluginConfig.uspmsg_addipusage, label);
@@ -142,7 +145,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					}
 					case ("remop"): {
 						if (args.length > 1) {
-							Player targetPlayer = Bukkit.getPlayerExact(args[1]);
+							OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
 							if (targetPlayer == null) {
 								sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
 								return true;
@@ -167,7 +170,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 							ipwl.remove(args[2]);
 							config.set("ip-whitelist." + args[1], ipwl);
 							instance.saveConfig();
-							sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]).replace("%ip%", args[1]));
+							sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]).replace("%ip%", args[2]));
 							return true;
 						}
 						sendCmdMessage(sender, pluginConfig.uspmsg_remipusage, label);
@@ -183,7 +186,6 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		}
 		return true;
 	}
-	
 	
 	private void addAdmin(FileConfiguration config, String nick, String pas) {
 		FileConfiguration data;

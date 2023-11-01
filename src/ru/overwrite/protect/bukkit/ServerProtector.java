@@ -45,10 +45,9 @@ public final class ServerProtector extends ServerProtectorManager {
 		}
 		if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
 			for (Player ps : server.getOnlinePlayers()) {
-				if (ps.hasPermission("serverprotector.admin")) {
-					if (messageFile != null) {
-						ps.sendMessage(getPluginConfig().getMessage(messageFile.getConfigurationSection("broadcasts"), "disabled"));
-					}
+				if (ps.hasPermission("serverprotector.admin") && messageFile != null) {
+					ps.sendMessage(getPluginConfig().getMessage(messageFile.getConfigurationSection("broadcasts"),
+							"disabled"));
 				}
 			}
 		}
