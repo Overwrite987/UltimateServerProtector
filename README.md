@@ -34,9 +34,7 @@ Admin commands that can be included in the config:
 **• Downloads**
 <br>**en:**
 <br><a href="https://www.spigotmc.org/resources/ultimateserverprotector-admins-operators-security-plugin-lightweight-and-async.105237/">**SpigotMc.org**</a>
-<br><a href="https://forums.papermc.io/threads/ultimateserverprotector-best-security-plugin-full-async.500/">**PaperMc.io**</a>
 <br><a href="https://modrinth.com/plugin/ultimateserverprotector">**Modrinth.com**</a>
 <br>**ru:**
 <br><a href="https://rubukkit.org/threads/admin-sec-ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.177400/">**RuBukkit.org**</a>
-<br><a href="https://spigotmc.ru/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.737/">**SpigotMC.ru**</a>
 <br><a href="https://black-minecraft.com/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.2160/">**Black-Minecraft.com**</a>
