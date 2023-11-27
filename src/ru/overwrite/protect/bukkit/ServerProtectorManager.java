@@ -40,6 +40,7 @@ import ru.overwrite.protect.bukkit.utils.logging.PaperLogger;
 public class ServerProtectorManager extends JavaPlugin {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
+	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 	public static String serialiser;
 	public boolean proxy = false;
 
@@ -55,7 +56,6 @@ public class ServerProtectorManager extends JavaPlugin {
 	private final Config pluginConfig = new Config(this);
 	private final ServerProtectorAPI api = new ServerProtectorAPI(this);
 	private final PasswordHandler passwordHandler = new PasswordHandler(this);
-	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 	private PluginMessage pluginMessage;
 
 	private File logFile;
@@ -90,6 +90,23 @@ public class ServerProtectorManager extends JavaPlugin {
 			loggerInfo("§6============= §c! WARNING ! §c=============");
 			this.setEnabled(false);
 			return false;
+		}
+		return true;
+	}
+	
+	public boolean isSafe(PluginManager pluginManager) {
+		if (getServer().spigot().getConfig().getBoolean("settings.bungeecord")) {
+			if (pluginManager.isPluginEnabled("BungeeGuard")) {
+				return true;
+			} else {
+				loggerInfo("§c============= §6! WARNING ! §c=============");
+				loggerInfo("§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!");
+				loggerInfo("§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation.");
+				loggerInfo("§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/");
+				loggerInfo("§c============= §6! WARNING ! §c=============");
+				server.shutdown();
+				return false;
+			}
 		}
 		return true;
 	}

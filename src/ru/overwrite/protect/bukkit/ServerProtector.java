@@ -20,8 +20,11 @@ public final class ServerProtector extends ServerProtectorManager {
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
 		setupProxy(config);
-		loadConfigs(config);
 		PluginManager pluginManager = server.getPluginManager();
+		if (!isSafe(pluginManager)) {
+			return;
+		}
+		loadConfigs(config);
 		registerListeners(pluginManager);
 		registerCommands(pluginManager, config);
 		startRunners(config);
