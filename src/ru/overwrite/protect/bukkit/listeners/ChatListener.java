@@ -26,7 +26,7 @@ public class ChatListener implements Listener {
 		api = plugin.getPluginAPI();
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onChat(AsyncPlayerChatEvent e) {
 		if (instance.login.isEmpty())
 			return;
