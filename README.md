@@ -38,3 +38,11 @@ Admin commands that can be included in the config:
 <br>**ru:**
 <br><a href="https://rubukkit.org/threads/admin-sec-ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.177400/">**RuBukkit.org**</a>
 <br><a href="https://black-minecraft.com/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.2160/">**Black-Minecraft.com**</a>
+
+**• Build**
+```bash
+# For english locale
+./gradlew :bukkit:shadowJarEn
+# For russian locale
+./gradlew :bukkit:shadowJarRu
+```
