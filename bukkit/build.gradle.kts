@@ -42,9 +42,12 @@ listOf("en", "ru").forEach { lang ->
         dependsOn(configurations)
         archiveClassifier.set(null as String?)
         relocate("org.bstats", projectInfo.group)
-        // Skip version as ci not supports it
-        archiveVersion.set("")
+        archiveVersion.set(projectInfo.versionString)
         archiveBaseName.set(projectInfo.name + "-$lang")
     }
 }
 
+// required for backwards compatibility of old versions
+afterEvaluate {
+    rootProject.file("VERSION").writeText(projectInfo.versionString)
+}
