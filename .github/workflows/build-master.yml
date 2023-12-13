@@ -3,7 +3,6 @@ on:
   push:
     branches:
       - master
-      - fix-ci
 jobs:
   # Validate gradle in case someone deletes directory/file
   gradle_validation:
