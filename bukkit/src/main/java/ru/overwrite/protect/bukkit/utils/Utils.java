@@ -4,7 +4,6 @@ import java.io.IOException;
 import java.net.URL;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
-import java.util.Properties;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -88,13 +87,9 @@ public final class Utils {
 	public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {
 		Runnable run = () -> {
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(
-					new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/gradle.properties")
+					new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION")
 							.openStream()))) {
-				Properties properties = new Properties();
-				properties.load(reader);
-				String version = properties.getProperty("makeevrserg.project.version.string");
-				if (version.isEmpty()) throw new IOException("Could not read gradle.properties");
-				consumer.accept(version);
+				consumer.accept(reader.readLine().trim());
 			} catch (IOException exception) {
 				plugin.getLogger().warning("Can't check for updates: " + exception.getMessage());
 			}

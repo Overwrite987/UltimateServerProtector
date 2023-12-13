@@ -47,4 +47,7 @@ listOf("en", "ru").forEach { lang ->
         archiveBaseName.set(projectInfo.name + "-$lang")
     }
 }
-
+// required for backwards compatibility of old versions
+afterEvaluate {
+    rootProject.file("VERSION").writeText(projectInfo.versionString)
+}
