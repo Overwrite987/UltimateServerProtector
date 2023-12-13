@@ -42,7 +42,7 @@ Admin commands that can be included in the config:
 **• Build**
 ```bash
 # For english locale
-./gradlew :bukkit:shadowJarEn
+./gradlew :bukkit:shadowJarEN
 # For russian locale
-./gradlew :bukkit:shadowJarRu
+./gradlew :bukkit:shadowJarRU
 ```
