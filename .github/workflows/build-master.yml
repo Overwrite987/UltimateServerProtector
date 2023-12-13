@@ -1,0 +1,13 @@
+name: CI
+on:
+  push:
+    branches:
+      - master
+      - fix-ci
+jobs:
+  # Validate gradle in case someone deletes directory/file
+  gradle_validation:
+    uses: ./.github/workflows/gradle-wrapper-validation.yml
+  create_artifact:
+    needs: [ gradle_validation ]
+    uses: ./.github/workflows/create-artifacts.yml
