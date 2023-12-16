@@ -41,6 +41,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
 	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
+	
 	public static String serialiser;
 	public boolean proxy = false;
 
@@ -61,7 +62,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	private File logFile;
 
 	public final Server server = getServer();
-	
+
 	public Config getPluginConfig() {
 		return pluginConfig;
 	}
@@ -77,7 +78,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	public PluginMessage getPluginMessage() {
 		return pluginMessage;
 	}
-	
+
 	public Logger getPluginLogger() {
 		return logger;
 	}
@@ -127,6 +128,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
 		pluginConfig.save(path, dataFile, file_settings.getString("data-file"));
+		pluginConfig.setupPasswords(dataFile);
 		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		pluginConfig.save(getDataFolder().getAbsolutePath(), messageFile, "message.yml");
 		pluginConfig.loadPerms(config);
@@ -164,6 +166,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		Boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
+		pluginConfig.setupPasswords(dataFile);
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
 		pluginConfig.setupExcluded(config);
@@ -218,8 +221,9 @@ public class ServerProtectorManager extends JavaPlugin {
 			loggerInfo("Using chat for password entering!");
 		}
 		PluginCommand uspCommand = getCommand("ultimateserverprotector");
-		uspCommand.setExecutor(new UspCommand(this));
-		uspCommand.setTabCompleter(new UspCommand(this));
+		UspCommand uspCommandClass = new UspCommand(this);
+		uspCommand.setExecutor(uspCommandClass);
+		uspCommand.setTabCompleter(uspCommandClass);
 	}
 
 	public void startRunners(FileConfiguration config) {
@@ -259,16 +263,16 @@ public class ServerProtectorManager extends JavaPlugin {
 		Utils.checkUpdates(this, version -> {
 			loggerInfo("§6========================================");
 			if (getDescription().getVersion().equals(version)) {
-				loggerInfo("§aYou are using latest version of the plugin!");
+				loggerInfo("§aВы используете последнюю версию плагина!");
 			} else {
-				loggerInfo("§aYou are using outdated version of the plugin!");
-				loggerInfo("§aYou can download new version here:");
-				loggerInfo("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
+				loggerInfo("§aВы используете устаревшую или некорректную версию плагина!");
+				loggerInfo("§aВы можете загрузить последнюю версию плагина здесь:");
+				loggerInfo("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
 			}
 			loggerInfo("§6========================================");
 		});
 	}
-	
+
 	public void checkFail(String playerName, List<String> command) {
 		Runnable run = () -> {
 			for (String c : command) {
@@ -288,10 +292,8 @@ public class ServerProtectorManager extends JavaPlugin {
 		};
 		if (Utils.FOLIA) {
 			p.getScheduler().run(plugin, (r) -> run.run(), null);
-			return;
 		} else {
 			server.getScheduler().runTask(plugin, run);
-			return;
 		}
 	}
 
@@ -343,7 +345,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public boolean isAdmin(String nick) {
-		return dataFile.contains("data." + nick);
+		return pluginConfig.per_player_passwords.containsKey(nick);
 	}
 
 	public void sendAlert(Player p, String msg) {

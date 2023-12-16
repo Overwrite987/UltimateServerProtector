@@ -26,6 +26,8 @@ public class Config {
 	public Set<String> perms, blacklisted_perms;
 
 	public Map<String, List<String>> ip_whitelist;
+	
+	public Map<String, String> per_player_passwords;
 
 	public List<String> allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
 			excluded_ip_whitelist, excluded_blacklisted_perms;
@@ -59,6 +61,14 @@ public class Config {
 	public List<String> effect_settings_effects;
 
 	public float sound_settings_volume, sound_settings_pitch;
+	
+	public void setupPasswords(FileConfiguration dataFile) {
+		per_player_passwords = new HashMap<>();
+		ConfigurationSection data = dataFile.getConfigurationSection("data");
+		for (String nick : data.getKeys(true)) {
+			per_player_passwords.put(nick, data.getString(nick + ".pass"));
+		}
+	}
 
 	public void loadMainSettings(FileConfiguration config) {
 		ConfigurationSection main_settings = config.getConfigurationSection("main-settings");

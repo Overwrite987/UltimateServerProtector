@@ -36,7 +36,7 @@ public class PasswordHandler {
 			if (enterEvent.isCancelled()) {
 				return;
 			}
-			if (input.equals(instance.dataFile.getString("data." + p.getName() + ".pass"))) {
+			if (input.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
 				correctPassword(p);
 			} else {
 				failedPassword(p);

@@ -33,15 +33,15 @@ public class ChatListener implements Listener {
 		Player p = e.getPlayer();
 		String msg = e.getMessage();
 		if (api.isCaptured(p)) {
-			e.setCancelled(true);
 			e.setMessage("");
+			e.setCancelled(true);
 			if (!pluginConfig.main_settings_use_command) {
 				passwordHandler.checkPassword(p, msg, true);
 			}
 		}
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onCommand(PlayerCommandPreprocessEvent e) {
 		if (instance.login.isEmpty())
 			return;
