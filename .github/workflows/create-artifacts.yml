@@ -29,16 +29,3 @@ jobs:
         uses: gradle/gradle-build-action@v2
         with:
           arguments: :bukkit:shadowJarEN :bukkit:shadowJarRU --stacktrace
-      # Create release after artifacts created
-      - name: Create release
-        id: create_release
-        uses: softprops/action-gh-release@v1
-        # Here files also now contains version
-        with:
-          files: |
-            ./bukkit/build/libs/${{ steps.properties.outputs.makeevrserg-project-name }}-en-${{ steps.properties.outputs.makeevrserg-project-version-string }}.jar
-            ./bukkit/build/libs/${{ steps.properties.outputs.makeevrserg-project-name }}-ru-${{ steps.properties.outputs.makeevrserg-project-version-string }}.jar
-          tag_name: ${{ steps.properties.outputs.makeevrserg-project-version-string }}
-          name: ${{ steps.properties.outputs.makeevrserg-project-version-string }}
-          draft: false
-          prerelease: false
