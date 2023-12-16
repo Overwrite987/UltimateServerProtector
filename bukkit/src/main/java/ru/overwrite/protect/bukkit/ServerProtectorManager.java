@@ -263,11 +263,11 @@ public class ServerProtectorManager extends JavaPlugin {
 		Utils.checkUpdates(this, version -> {
 			loggerInfo("§6========================================");
 			if (getDescription().getVersion().equals(version)) {
-				loggerInfo("§aВы используете последнюю версию плагина!");
+				loggerInfo("§aYou are using latest version of the plugin!");
 			} else {
-				loggerInfo("§aВы используете устаревшую или некорректную версию плагина!");
-				loggerInfo("§aВы можете загрузить последнюю версию плагина здесь:");
-				loggerInfo("§bhttps://github.com/Overwrite987/UltimateServerProtector/releases/");
+				loggerInfo("§aYou are using outdated version of the plugin!");
+				loggerInfo("§aYou can download new version here:");
+				loggerInfo("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
 			}
 			loggerInfo("§6========================================");
 		});
