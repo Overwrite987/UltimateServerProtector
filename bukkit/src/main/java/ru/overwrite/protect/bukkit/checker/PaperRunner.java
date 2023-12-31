@@ -43,7 +43,7 @@ public class PaperRunner implements Runner {
 				}
 				String playerName = p.getName();
 				if (!api.isAuthorised(p)) {
-					ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
+					ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, Utils.getIp(p));
 					captureEvent.callEvent();
 					if (captureEvent.isCancelled()) {
 						continue;

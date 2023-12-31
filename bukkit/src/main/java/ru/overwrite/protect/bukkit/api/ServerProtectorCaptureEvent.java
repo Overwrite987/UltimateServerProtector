@@ -10,12 +10,15 @@ public class ServerProtectorCaptureEvent extends Event implements Cancellable {
 	private static final HandlerList HANDLERS = new HandlerList();
 
 	private final Player player;
+	
+	private final String ip;
 
 	private boolean isCancelled;
 
-	public ServerProtectorCaptureEvent(Player player) {
+	public ServerProtectorCaptureEvent(Player player, String ip) {
 		super(true);
 		this.player = player;
+		this.ip = ip;
 		isCancelled = false;
 	}
 
@@ -37,6 +40,10 @@ public class ServerProtectorCaptureEvent extends Event implements Cancellable {
 
 	public Player getPlayer() {
 		return player;
+	}
+	
+	public String getIp() {
+		return ip;
 	}
 
 }

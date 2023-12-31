@@ -204,8 +204,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		if (config.getBoolean("main-settings.use-command")) {
 			try {
 				CommandMap commandMap = server.getCommandMap();
-				Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class,
-						Plugin.class);
+				Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
 				constructor.setAccessible(true);
 				PluginCommand command = constructor.newInstance(config.getString("main-settings.pas-command"), this);
 				command.setExecutor(new PasCommand(this));
@@ -315,11 +314,9 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public void runAsyncDelayedTask(Runnable run) {
 		if (Utils.FOLIA) {
-			server.getAsyncScheduler().runDelayed(this, (sp) -> run.run(),
-					pluginConfig.session_settings_session_time * 20L * 50L, TimeUnit.MILLISECONDS);
+			server.getAsyncScheduler().runDelayed(this, (sp) -> run.run(), pluginConfig.session_settings_session_time * 20L * 50L, TimeUnit.MILLISECONDS);
 		} else {
-			server.getScheduler().runTaskLaterAsynchronously(this, run,
-					pluginConfig.session_settings_session_time * 20L);
+			server.getScheduler().runTaskLaterAsynchronously(this, run, pluginConfig.session_settings_session_time * 20L);
 		}
 	}
 

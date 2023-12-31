@@ -46,7 +46,7 @@ public class ConnectionListener implements Listener {
 				}
 				if (!api.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
 					if (!instance.isExcluded(p, pluginConfig.excluded_admin_pass)) {
-						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p);
+						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip);
 						captureEvent.callEvent();
 						if (captureEvent.isCancelled()) {
 							return;

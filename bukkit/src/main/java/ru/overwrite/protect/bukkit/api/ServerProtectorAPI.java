@@ -31,7 +31,7 @@ public class ServerProtectorAPI {
 
 	public void capturePlayer(Player p) {
 		if (isCaptured(p)) {
-			logger.warn("Unable to capture " + p.getName() + " Reason: Already captured.");
+			logger.warn("Unable to capture " + p.getName() + " Reason: Already captured");
 			return;
 		}
 		instance.login.add(p.getName());
