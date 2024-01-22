@@ -9,3 +9,14 @@ loadafter: [LuckPerms, BungeeGuard]
 commands:
    ultimateserverprotector:
       aliases: [usp, serverprotector]
+permissions:
+  serverprotector.admin:
+    children:
+      serverprotector.reload: true
+      serverprotector.reboot: true
+      serverprotector.setpass: true
+      serverprotector.addop: true
+      serverprotector.addip: true
+      serverprotector.rempass: true
+      serverprotector.remop: true
+      serverprotector.remip: true

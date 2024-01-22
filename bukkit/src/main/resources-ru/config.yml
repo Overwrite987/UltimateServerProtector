@@ -99,8 +99,10 @@ secure-settings:
   enable-ip-whitelist: false
   # Включить ли возможность использовать команду /usp только из консоли
   only-console-usp: false
-  # Выключать ли сервер, если отключается плагин (отключено по умолчанию)
-  shutdown-on-disable: false
+  # Выключать ли сервер, если отключается плагин
+  shutdown-on-disable: true
+  # Выключать ли сервер только если включены плугмано-подобные плагины
+  shutdown-on-disable-only-if-plugman: true
   # Разрешить ли ряду игроков входить в игру без админ пароля (откллючено по умолчанию и небезопасно)
   enable-excluded-players: false
 
@@ -207,10 +209,13 @@ permissions:
  - 'vulcan.*'
  - 'dh.admin'
  - 'ls.admin'
+ - 'fawe.admin'
  - 'authme.admin'
  - 'protocol.admin'
  - 'placeholderapi.admin'
  - 'plugman.admin'
+ - 'plugman.download'
+ - 'serverprotector.admin'
 
 # Права, которые никто, кроме игроков из раздела excluded-players, не сможет иметь (отключено по умолчанию.)
 blacklisted-perms: 

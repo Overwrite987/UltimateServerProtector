@@ -34,29 +34,35 @@ titles:
 bossbar:
   message: "&fRemained: &c%time% seconds"
 
-# Message for /usp command (admin-commands)
+# Message when using the /usp command (admin commands)
 uspmsg:
-  consoleonly: "&cThis command can only be executed from the console!"
-  reloaded: "&aPlugin reloaded"
-  rebooted: "&aPlugin rebooted"
-  playernotfound: "&cAccount %nick% isn't online!"
-  alreadyinconfig: "&aThis account is already in the config"
-  notinconfig: "&cThis account is not in the config"
-  playeradded: "&aPlayer %nick% successfully added"
-  playerremoved: "&aPlayer successfully removed"
-  ipadded: "&aIP %ip% successfully added"
-  setpassusage: "&f/%cmd% setpass (nick) (password)"
-  addopusage: "&f/%cmd% addop (nick)"
-  addipusage: "&f/%cmd% addip (ip)"
-  rempassusage: "&f/%cmd% rempass (nick)"
-  remopusage: "&f/%cmd% remop (nick)"
-  remipusage: "&f/%cmd% rempip (ip)"
-  usage: "&7&l> &7Использование:"
-  usage-reload: "&6/%cmd% reload&7 - reload config"
-  usage-reboot: "&6/%cmd% reboot&7 - reboot plugin"
-  usage-setpass: "&6/%cmd% setpass (nick) (password) &7- set password to the player"
-  usage-rempass: "&6/%cmd% rempass (nick) &7- remove player's password"
-  usage-addop: "&6/%cmd% addop (nick) &7- add player to op-whitelist"
-  usage-remop: "&6/%cmd% remop (nick) &7- remove player from op-whitelist"
-  usage-addip: "&6/%cmd% addip (nick) (ip) &7- add player to ip-whitelist"
-  usage-remip: "&6/%cmd% remip (nick) (ip) &7- remove player from ip-whitelist"
+  consoleonly: '&cThis command can only be executed from the console!'
+  playeronly: '&cThis command can only be executed by a player!'
+  logout: '&aYour session has been reset.'
+  reloaded: '&aPlugin reloaded.'
+  rebooted: '&aPlugin rebooted.'
+  playernotfound: '&cAccount %nick% not found in the system!'
+  alreadyinconfig: '&aThis account is already in the config.'
+  notinconfig: '&cThis account is not in the config.'
+  playeradded: '&aPlayer %nick% successfully added.'
+  playerremoved: '&aPlayer successfully removed.'
+  ipadded: '&aIP %ip% successfully added.'
+  setpassusage: '&f/%cmd% setpass (nick) (password)'
+  addopusage: '&f/%cmd% addop (nick)'
+  addipusage: '&f/%cmd% addip (ip)'
+  rempassusage: '&f/%cmd% rempass (nick)'
+  remopusage: '&f/%cmd% remop (nick)'
+  remipusage: '&f/%cmd% rempip (ip)'
+  usage: '&7&l> &7Usage:'
+  usage-logout: '&6/%cmd% logout&7 - end your session'
+  usage-reload: '&6/%cmd% reload&7 - reload the config'
+  usage-reboot: '&6/%cmd% reboot&7 - reboot the plugin'
+  usage-setpass: '&6/%cmd% setpass (nick) (password) &7- set player password'
+  usage-rempass: '&6/%cmd% rempass (nick) &7- remove player password'
+  usage-addop: '&6/%cmd% addop (nick) &7- add player to op whitelist'
+  usage-remop: '&6/%cmd% remop (nick) &7- remove player from op whitelist'
+  usage-addip: '&6/%cmd% addip (nick) (ip) &7- add player and their ip to ip whitelist'
+  usage-remip: '&6/%cmd% remip (nick) (ip) &7- remove player and their ip from ip whitelist'
+  otherdisabled: |- 
+    &7Other commands are disabled.
+    &7To enable them, set &6enable-admin-commands: &atrue

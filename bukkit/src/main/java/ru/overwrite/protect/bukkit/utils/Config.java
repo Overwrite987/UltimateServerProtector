@@ -34,11 +34,11 @@ public class Config {
 	
 	public String[] titles_message, titles_incorrect, titles_correct;
 
-	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig,
+	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
 			uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
 			uspmsg_addopusage, uspmsg_remopusage, uspmsg_ipremoved, uspmsg_remipusage, uspmsg_addipusage,
-			uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_setpass,
-			uspmsg_usage_rempass, uspmsg_usage_addop, uspmsg_usage_remop, uspmsg_usage_addip, uspmsg_usage_remip,
+			uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_logout, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_setpass,
+			uspmsg_usage_rempass, uspmsg_usage_addop, uspmsg_usage_remop, uspmsg_usage_addip, uspmsg_usage_remip, uspmsg_otherdisabled,
 			msg_message, msg_incorrect, msg_correct, msg_noneed, msg_cantbenull, msg_playeronly, broadcasts_failed,
 			broadcasts_passed, broadcasts_joined, broadcasts_captured, bossbar_message,
 			bossbar_settings_bar_color, bossbar_settings_bar_style, main_settings_prefix, main_settings_pas_command,
@@ -81,6 +81,8 @@ public class Config {
 	public void loadUspMessages(FileConfiguration message) {
 		ConfigurationSection uspmsg = message.getConfigurationSection("uspmsg");
 		uspmsg_consoleonly = getMessage(uspmsg, "consoleonly");
+		uspmsg_playeronly = getMessage(uspmsg, "playeronly");
+		uspmsg_logout = getMessage(uspmsg, "logout");
 		uspmsg_reloaded = getMessage(uspmsg, "reloaded");
 		uspmsg_rebooted = getMessage(uspmsg, "rebooted");
 		uspmsg_playernotfound = getMessage(uspmsg, "playernotfound");
@@ -97,6 +99,7 @@ public class Config {
 		uspmsg_ipremoved = getMessage(uspmsg, "ipremoved");
 		uspmsg_remipusage = getMessage(uspmsg, "remipusage");
 		uspmsg_usage = getMessage(uspmsg, "usage");
+		uspmsg_usage_logout = getMessage(uspmsg, "usage-logout");
 		uspmsg_usage_reload = getMessage(uspmsg, "usage-reload");
 		uspmsg_usage_reboot = getMessage(uspmsg, "usage-reboot");
 		uspmsg_usage_setpass = getMessage(uspmsg, "usage-setpass");
@@ -105,6 +108,7 @@ public class Config {
 		uspmsg_usage_remop = getMessage(uspmsg, "usage-remop");
 		uspmsg_usage_addip = getMessage(uspmsg, "usage-addip");
 		uspmsg_usage_remip = getMessage(uspmsg, "usage-remip");
+		uspmsg_otherdisabled = getMessage(uspmsg, "otherdisabled");
 	}
 
 	public void loadMsgMessages(FileConfiguration message) {

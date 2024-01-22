@@ -1,187 +1,182 @@
-#
-#▀██▀  ▀█▀ ▀██    ▄    ██                       ▄            ▄█▀▀▀▄█                                           ▀██▀▀█▄                    ▄                     ▄                   
-# ██    █   ██  ▄██▄  ▄▄▄  ▄▄ ▄▄ ▄▄    ▄▄▄▄   ▄██▄    ▄▄▄▄   ██▄▄  ▀    ▄▄▄▄  ▄▄▄ ▄▄  ▄▄▄▄ ▄▄▄   ▄▄▄▄  ▄▄▄ ▄▄   ██   ██ ▄▄▄ ▄▄    ▄▄▄   ▄██▄    ▄▄▄▄    ▄▄▄▄  ▄██▄    ▄▄▄   ▄▄▄ ▄▄  
-# ██    █   ██   ██    ██   ██ ██ ██  ▀▀ ▄██   ██   ▄█▄▄▄██   ▀▀███▄  ▄█▄▄▄██  ██▀ ▀▀  ▀█▄  █  ▄█▄▄▄██  ██▀ ▀▀  ██▄▄▄█▀  ██▀ ▀▀ ▄█  ▀█▄  ██   ▄█▄▄▄██ ▄█   ▀▀  ██   ▄█  ▀█▄  ██▀ ▀▀ 
-# ██    █   ██   ██    ██   ██ ██ ██  ▄█▀ ██   ██   ██      ▄     ▀██ ██       ██       ▀█▄█   ██       ██      ██       ██     ██   ██  ██   ██      ██       ██   ██   ██  ██     
-#  ▀█▄▄▀   ▄██▄  ▀█▄▀ ▄██▄ ▄██ ██ ██▄ ▀█▄▄▀█▀  ▀█▄▀  ▀█▄▄▄▀ █▀▄▄▄▄█▀   ▀█▄▄▄▀ ▄██▄       ▀█     ▀█▄▄▄▀ ▄██▄    ▄██▄     ▄██▄     ▀█▄▄█▀  ▀█▄▀  ▀█▄▄▄▀  ▀█▄▄▄▀  ▀█▄▀  ▀█▄▄█▀ ▄██▄    
-# 
-
 # Main settings
 main-settings:
-  # Available serializers:
-  # LEGACY - "&c&lExample &c&9Text".
-  # MINIMESSAGE - "<bold><red>Example</red> <blue>Text</blue></bold>". (https://webui.adventure.kyori.net/)
+  # Text formatting.
+  # LEGACY - color using &, MINIMESSAGE - color using <color>
+  # MINIMESSAGE was added in new versions (1.17+)
   serialiser: LEGACY
-  # If true - messages will be sent across the entire network of servers that are on the proxy.
+  # If set to true - messages will be broadcasted to all servers on the proxy network.
   proxy: false
-  # Plugin prefix (hex - &#colorID)
-  prefix: '&f&l[&c&lProtection&f&l] '
-  # If false is specified, then you will need to write a password to the chat to enter the password
+  # Plugin prefix
+  prefix: '&f&l[&c&lProtection&f&l]'
+  # If set to false, players need to type the password in the chat
   use-command: true
-  # Password command. (specified without / at the beginning) (by default - pas)
+  # Password input command. (specified without / at the beginning) (default - pas)
   pas-command: 'pas'
-  # Whether to include commands for adding new players in the config
+  # Enable commands for adding new players to the config
   enable-admin-commands: false
-  # Please don't disable
+  # Send anonymous statistics (advised not to disable)
   enable-metrics: true
+  # Check for updates (advised not to disable)
   update-checker: true
 
-# File configuration settings
+# File settings
 file-settings:
-  # The name of the player data file. (default is data.yml)
+  # Players data file name. (default - data.yml)
   data-file: 'data.yml'
-  # The name of the log file. (by default - log.yml)
+  # Log file name. (default - log.yml)
   log-file: 'log.yml'
-  # If this setting is enabled, then you will need to specify the full path to the file
+  # If this setting is enabled, you need to specify the full path to the file
   # Example: root/server/plugins/UltimateServerProtector/data.yml
   use-full-path: false
-  # data.yml path
+  # Path to the data.yml file
   data-file-path: '/root/server/plugins/UltimateServerProtector/'
-  # log.yml path
+  # Path to the log.yml file
   log-file-path: '/root/server/plugins/UltimateServerProtector/'
-  
-# Additional lock settings
+
+# Additional blocking settings
 blocking-settings:
-  # Whether to block item drop
+  # Block item dropping
   block-item-drop: true
-  # Whether to block items pickup
+  # Block item pickup
   block-item-pickup: true
-  # Whether to block tab completion (/version + TAB)
+  # Block tab-complete (works against /ver + tab)
   block-tab-complete: true
-  # Whether to make the player immortal while entering the password
+  # Make the player invulnerable during password input
   block-damage: true
-  # Block or not the ability to harm mobs and players while entering a password
+  # Block the ability to cause damage to mobs and players during password input
   block-damaging-entity: true
-  # Whether to block the ability to open inventory while entering a password (menu, etc.)
+  # Block the ability to open inventories during password input (menus, etc.)
   block-inventory-open: false
-  # Whether to block the mob trigger on the player while entering the password
+  # Block mobs targeting the player during password input
   block-mobs-targeting: true
-  
+
 # Session settings
 session-settings:
-  # Save player's IP
+  # Save player data so they don't have to enter the admin password again
   session: true
-  # Should player data be deleted after a while
+  # Delete player data after some time
   session-time-enabled: false
-  # The time after which the data about the registered player will be deleted in seconds (the countdown starts from the player's exit)
-  session-time: 21600 #(6 hrs)
+  # Time after which data about a registered player will be deleted in seconds (countdown starts from the password input moment)
+  session-time: 21600 #(6 hours)
 
 # Punishment settings
 punish-settings:
-  # Should punishment be applied to a player who did not have time to enter the admin password for the number of attempts allotted to him
+  # Enable punishments for incorrectly entered admin password
   enable-attempts: true
-  # Maximum number of attempts to enter the admin password
+  # Maximum number of admin password entry attempts
   max-attempts: 3
-  # Should punishment be applied to a player who did not have time to enter the admin password for a certain time
+  # Enable time for entering admin password
   enable-time: true
-  # The time for which the player will have to enter the admin password in seconds
+  # Time in seconds within which the player must enter the admin password
   time: 60
-  
-# Setting of the boss bar (works only if the login time is enabled)
+
+# Bossbar settings (only works if login time is enabled)
 bossbar-settings:
-  # Whether to turn on the bossbar
+  # Enable bossbar
   enable-bossbar: true
-  # Boss bar color (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
+  # Bossbar color (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
   bar-color: RED
-  # Boss bar type (SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
+  # Bossbar type (SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
   bar-style: SEGMENTED_12
- 
-# Secure Settings
+
+# Enhanced security settings
 secure-settings:
-  # Should punishments be applied to operators that are not on the list
-  enable-op-whitelist: true
-  # Should punishments be applied to players with admin-permissions who are not in the config
+  # Apply punishments to operators not listed in the whitelist
+  enable-op-whitelist: false
+  # Apply punishments to those who have admin rights but are not in the config
   enable-notadmin-punish: false
-  # Should punishments be applied to people who have prohibited permissions (default - false)
+  # Apply punishments to people with forbidden permissions
   enable-permission-blacklist: false
-  # Whether to enable IPWhitelist for admins (default - false)
+  # Enable IPWhitelist for administrators
   enable-ip-whitelist: false
-  # Whether to enable the ability to use the /usp command only from the console
+  # Allow using the /usp command only from the console
   only-console-usp: false
-  # Should plugin turn off the server if the plugin is disabled (default - false)
-  shutdown-on-disable: false
-  # Whether to allow a specific players to join the game without an admin password and notifications (disabled by default and unsafe!)
+  # Shutdown the server if the plugin is disabled
+  shutdown-on-disable: true
+  # Whether to shut down the server only if plugman-like plugins are enabled
+  shutdown-on-disable-only-if-plugman: true
+  # Allow certain players to enter the game without an admin password (disabled by default and unsafe)
   enable-excluded-players: false
 
-# Message settingd
+# Message display settings
 message-settings:
   # Delay between auto-messages and titles in seconds
-  delay: 1
-  # Enable titles?
+  delay: 2
+  # Enable full-screen messages
   send-titles: true
-  # Enable broadcasts for admins?
+  # Enable notifications for administrators
   enable-broadcasts: true
-  # Enable broadcasts for console?
+  # Enable notifications for the console
   enable-console-broadcasts: true
 
-# Settings of sounds that will be played when entering commands/actions
+# Sound settings for commands/actions
 sound-settings:
-  # Whether to turn on sounds on commands
+  # Enable sounds for commands
   enable-sounds: true
-  # Aviable sounds: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-  # Sound when catching a player with admin-perms
+  # List of all sounds: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
+  # Sound when capturing an admin with rights
   on-capture: ENTITY_ITEM_BREAK
-  # Sound with an incorrect password
+  # Sound when incorrect password is entered
   on-pas-fail: ENTITY_VILLAGER_NO
-  # Sound with the correct password
+  # Sound when correct password is entered
   on-pas-correct: ENTITY_PLAYER_LEVELUP
-  # Volume from 0.0 to 1.0, where 1.0 is max.
+  # Sound volume from 0.0 to 1.0
   volume: 0.75
-  # Pitch from 0.5 to 2.0, default: 1.0
+  # Sound pitch from 0.5 to 2.0 (higher = "squeakier")
   pitch: 1.0
 
-# Setting up the effects that are given before entering the password
+# Effects settings applied before entering the password
 effect-settings:
-  # Whether to enable the effect that will be given to the admin before entering the password
+  # Enable the effect that will be applied to the admin before entering the password
   enable-effects: true
-  # What effects should be applied to the player (EFFECT:LEVEL)
+  # Effects to apply to the player (EFFECT:LEVEL)
   effects:
     - 'BLINDNESS:3'
- 
-# Log settings
+
+# Logging settings
 logging-settings:
-  # Log successful/failed password entry attempts?
+  # Log successful/unsuccessful password entry attempts to file
   logging-pas: true
-  # Log admin joins?
+  # Log player joins with admin rights to file
   logging-join: true
-  # Log plugin enable and disable?
+  # Log plugin enabling and disabling to file
   logging-enable-disable: true
-  
-# Commands that will be applied to violators
+
+# Commands applied to offenders
 commands:
 
-# Commands that will be applied to those who have admin-permissions, but who are not in the config
+# Commands applied to those with admin rights but not in the config
   not-in-config:
-  - 'kick %player% You are not admin!'
+  - 'kick %player% You are not in the list of administrators!'
   - 'deop %player%'
- 
-# Commands that will be applied to those who hava OP, but who are not in op-whitelist
+
+# Commands applied to those with admin rights but not listed in op-whitelist
   not-in-opwhitelist:
   - 'deop %player%'
-  #- 'ban %player% Вам нельзя иметь права оператора!'
+  #- 'ban %player% You are not allowed to have operator rights!'
 
-# Commands that will be applied to those who have forbidden permissions (disabled by default)
+# Commands applied to those with forbidden permissions (disabled by default)
   have-blacklisted-perm:
   - 'lp user %player% permission clear'
-  #- 'ban %player% Вам нельзя иметь такие права!'
- 
-# Commands that will be applied to those who logged in with admin-perms and are specified in the config, but have a non-admin IP
+  #- 'ban %player% You are not allowed to have such permissions!'
+
+# Commands applied to those who entered with admin rights but have a non-admin IP (disabled by default)
   not-admin-ip:
-  - 'kick %player% Your IP is not in whitelist'
-  #- 'deop %player'
- 
-# Commands that will be applied to those who entered the pass incorrectly for the attempts allotted to him
+  - 'kick %player% Your IP is not on the whitelist'
+  #- 'deop %player%'
+
+# Commands applied to those who entered the wrong password within the allotted attempts
   failed-pass:
-  - 'ban %player% You entered the admin password incorrectly, your account is banned'
-  - 'deop %player%'
- 
-# Commands that will be applied to those who have not entered a pass in the allotted time
-  failed-time:
-  - 'ban %player% You did not have time to enter the admin password in the allotted time'
+  - 'ban %player% You entered the admin password incorrectly, your account is frozen'
   - 'deop %player%'
 
-# Permissions for which the player will need to enter the admin password (Add as many as you need)
-permissions:
+# Commands applied to those who failed to enter the password within the allotted time
+  failed-time:
+  - 'ban %player% You did not manage to enter the admin password within the given time'
+  - 'deop %player%'
+
+# Permissions for which the player will need to enter the admin password (feel free to add your own!)
+permissions: 
  - '*'
  - 'bukkit.*'
  - 'minecraft.*'
@@ -206,16 +201,19 @@ permissions:
  - 'vulcan.*'
  - 'dh.admin'
  - 'ls.admin'
+ - 'fawe.admin'
  - 'authme.admin'
  - 'protocol.admin'
  - 'placeholderapi.admin'
  - 'plugman.admin'
+ - 'plugman.download'
+ - 'serverprotector.admin'
 
-# Permissions that nobody except players in the excluded-players section can have (disabled by default).
-blacklisted-perms:
+# Permissions that no one except players from the excluded-players section can have (disabled by default.)
+blacklisted-perms: 
  - '*'
 
-# Commands that can be executed before entering an admin password (specify with /)
+# Commands that can be entered before entering the admin password (specify with /)
 allowed-commands:
  - '/l'
  - '/login'
@@ -223,13 +221,13 @@ allowed-commands:
  - '/register'
  - '/captcha'
 
-# How players are allowed to have OP permissions
-op-whitelist:
+# Which players are allowed to have OP rights
+op-whitelist: 
  - Overwrite
  - test99999
  
-# Which IPs and players are allowed to log in with admin rights
-# You can specify only part of the IP address to allow people with dynamic IPs. For example, 1.2.3.4 -> 1.2.3.*
+# From which IPs and which players are allowed to enter with admin rights
+# You can specify only part of the IP address to allow entry to people with dynamic IPs. For example, 1.2.3.4 -> 1.2.3.*
 ip-whitelist:
     # Player 1
     test99999:
@@ -239,21 +237,21 @@ ip-whitelist:
     test123123:
       - 228.13.37.*
  
-# Players who will be excluded from checks (each check has its own type)
+# Which players will be excluded from checks (each check has its own type)
 excluded-players:
-    # Players who do not need to enter an admin password
+    # Players who do not need to enter the admin password
     admin-pass:
       - test99999
       - test123123
-    # Players who will not be checked for presence in op-whitelist
+    # Players who will not be checked for inclusion in op-whitelist
     op-whitelist:
       - test99999
       - test123123
-      # Players who will not be checked for presence in ip-whitelist
+      # Players who will not be checked for inclusion in ip-whitelist
     ip-whitelist:
       - test99999
       - test123123
-      # Players who can have blocked permissions
+      # Players who will be allowed to have blocked permissions
     blacklisted-perms:
       - test99999
       - test123123

@@ -1,4 +1,4 @@
-# Сообщения которые будет выводиться людям при вводе команды
+# Сообщения которые будет выводиться людям при вводе команды и при наличии админ-прав
 msg: 
   message: '%prefix% &fУ вас обнаружены админ-права. Вы должны ввести админ-пароль!'
   incorrect: '%prefix% &cВведенный тобой пароль неверен!'
@@ -37,6 +37,8 @@ bossbar:
 # Сообщение при вводе команды /usp (админ-команд)
 uspmsg:
   consoleonly: '&cДанная команда может быть исполнена только из консоли!'
+  playeronly: '&cДанная команда может быть исполнена только игроком!'
+  logout: '&aВаша сессия была сброшена'
   reloaded: '&aПлагин перезагружен'
   rebooted: '&aПлагин перезапущен'
   playernotfound: '&cАккаунт %nick% не найден в системе!'
@@ -52,6 +54,7 @@ uspmsg:
   remopusage: '&f/%cmd% remop (ник)'
   remipusage: '&f/%cmd% rempip (ip)'
   usage: '&7&l> &7Использование:'
+  usage-logout: '&6/%cmd% logout&7 - завешить сессию'
   usage-reload: '&6/%cmd% reload&7 - перезагрузить конфиг'
   usage-reboot: '&6/%cmd% reboot&7 - перезапустить плагин'
   usage-setpass: '&6/%cmd% setpass (ник) (пароль) &7- установить пароль игроку'
@@ -60,3 +63,6 @@ uspmsg:
   usage-remop: '&6/%cmd% remop (ник) &7- удалить игрока из op-whitelist'
   usage-addip: '&6/%cmd% addip (ник) (ip) &7- добавить игрока и его ip в ip-whitelist'
   usage-remip: '&6/%cmd% remip (ник) (ip) &7- удалить игрока и его ip из ip-whitelist'
+  otherdisabled: |- 
+    &7Прочие команды отключены.
+    &7Для их включения выставьте &6enable-admin-commands: &atrue

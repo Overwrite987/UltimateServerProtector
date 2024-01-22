@@ -1,7 +1,10 @@
 package ru.overwrite.protect.bukkit;
 
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
+import org.bukkit.configuration.Configuration;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -10,6 +13,8 @@ import ru.overwrite.protect.bukkit.utils.Metrics;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 public final class ServerProtector extends ServerProtectorManager {
+	
+	private final List<String> forceshutdown = Arrays.asList(new String[] { "PlugMan", "PlugManX", "PluginManager", "ServerUtils" });
 
 	@Override
 	public void onEnable() {
@@ -46,7 +51,8 @@ public final class ServerProtector extends ServerProtectorManager {
 		if (Utils.bossbar != null) {
 			Utils.bossbar.removeAll();
 		}
-		if (getConfig().getBoolean("message-settings.enable-broadcasts")) {
+		FileConfiguration config = getConfig();
+		if (config.getBoolean("message-settings.enable-broadcasts")) {
 			for (Player ps : server.getOnlinePlayers()) {
 				if (ps.hasPermission("serverprotector.admin") && messageFile != null) {
 					ps.sendMessage(getPluginConfig().getMessage(messageFile.getConfigurationSection("broadcasts"),
@@ -63,8 +69,17 @@ public final class ServerProtector extends ServerProtectorManager {
 			server.getMessenger().unregisterOutgoingPluginChannel(this);
 			server.getMessenger().unregisterIncomingPluginChannel(this);
 		}
-		if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
-			server.shutdown();
+		if (config.getBoolean("secure-settings.shutdown-on-disable")) {
+			if (!config.getBoolean("secure-settings.shutdown-on-disable-only-if-plugman")) {
+				server.shutdown();
+			} else {
+				PluginManager pluginManager = server.getPluginManager();
+				for (String s : forceshutdown) {
+					if (pluginManager.isPluginEnabled(s)) {
+						server.shutdown();
+					}
+				}
+			}
 		}
 	}
 }
