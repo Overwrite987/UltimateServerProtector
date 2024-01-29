@@ -32,7 +32,7 @@ public class Config {
 	public List<String> allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
 			excluded_ip_whitelist, excluded_blacklisted_perms;
 	
-	public String[] titles_message, titles_incorrect, titles_correct;
+	public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
 	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
 			uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
@@ -41,8 +41,7 @@ public class Config {
 			uspmsg_usage_rempass, uspmsg_usage_addop, uspmsg_usage_remop, uspmsg_usage_addip, uspmsg_usage_remip, uspmsg_otherdisabled,
 			msg_message, msg_incorrect, msg_correct, msg_noneed, msg_cantbenull, msg_playeronly, broadcasts_failed,
 			broadcasts_passed, broadcasts_joined, broadcasts_captured, bossbar_message,
-			bossbar_settings_bar_color, bossbar_settings_bar_style, main_settings_prefix, main_settings_pas_command,
-			sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
+			bossbar_settings_bar_color, bossbar_settings_bar_style, main_settings_prefix, main_settings_pas_command;
 
 	public boolean blocking_settings_block_item_drop, blocking_settings_block_item_pickup,
 			blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
@@ -59,8 +58,6 @@ public class Config {
 	public int punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
 
 	public List<String> effect_settings_effects;
-
-	public float sound_settings_volume, sound_settings_pitch;
 	
 	public void setupPasswords(FileConfiguration dataFile) {
 		per_player_passwords = new HashMap<>();
@@ -195,11 +192,9 @@ public class Config {
 	public void loadSoundSettings(FileConfiguration config) {
 		ConfigurationSection sound_settings = config.getConfigurationSection("sound-settings");
 		sound_settings_enable_sounds = sound_settings.getBoolean("enable-sounds");
-		sound_settings_on_capture = sound_settings.getString("on-capture");
-		sound_settings_on_pas_fail = sound_settings.getString("on-pas-fail");
-		sound_settings_on_pas_correct = sound_settings.getString("on-pas-correct");
-		sound_settings_volume = (float) sound_settings.getDouble("volume");
-		sound_settings_pitch = (float) sound_settings.getDouble("pitch");
+		sound_settings_on_capture = sound_settings.getString("on-capture").split(";");
+		sound_settings_on_pas_fail = sound_settings.getString("on-pas-fail").split(";");
+		sound_settings_on_pas_correct = sound_settings.getString("on-pas-correct").split(";");
 	}
 
 	public void loadEffects(FileConfiguration config) {

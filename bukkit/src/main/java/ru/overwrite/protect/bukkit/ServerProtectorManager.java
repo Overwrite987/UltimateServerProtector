@@ -42,7 +42,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
 	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 	
-	public static String serialiser;
+	public static String serialiser; // this is bullshit
 	public boolean proxy = false;
 
 	public FileConfiguration messageFile;
@@ -94,7 +94,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		}
 		return true;
 	}
-	
+
 	public boolean isSafe(PluginManager pluginManager) {
 		if (getServer().spigot().getConfig().getBoolean("settings.bungeecord")) {
 			if (pluginManager.isPluginEnabled("BungeeGuard")) {
@@ -284,13 +284,14 @@ public class ServerProtectorManager extends JavaPlugin {
 	public void giveEffect(ServerProtectorManager plugin, Player p) {
 		Runnable run = () -> {
 			for (String s : pluginConfig.effect_settings_effects) {
-				PotionEffectType types = PotionEffectType.getByName(s.split(":")[0].toUpperCase());
-				int level = Integer.parseInt(s.split(":")[1]) - 1;
+				String[] splittedEffect = s.split(";");
+				PotionEffectType types = PotionEffectType.getByName(splittedEffect[0].toUpperCase());
+				int level = Integer.parseInt(splittedEffect[1]) - 1;
 				p.addPotionEffect(new PotionEffect(types, 99999, level));
 			}
 		};
 		if (Utils.FOLIA) {
-			p.getScheduler().run(plugin, (r) -> run.run(), null);
+			p.getScheduler().run(plugin, (sp) -> run.run(), null);
 		} else {
 			server.getScheduler().runTask(plugin, run);
 		}

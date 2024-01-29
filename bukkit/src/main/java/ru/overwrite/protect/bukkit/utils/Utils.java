@@ -10,6 +10,7 @@ import java.util.regex.Pattern;
 
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
+import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
@@ -55,6 +56,13 @@ public final class Utils {
 		int stay = (titleMessages.length > 3 && titleMessages[3] != null) ? Integer.parseInt(titleMessages[3]) : 70;
 		int fadeOut = (titleMessages.length > 4 && titleMessages[4] != null) ? Integer.parseInt(titleMessages[4]) : 20;
 		p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+	}
+	
+	public static void sendSound(String[] soundArgs, Player p) {
+		Sound sound = Sound.valueOf(soundArgs[0]);
+		float volume = (soundArgs.length > 1 && soundArgs[1] != null) ? Float.parseFloat(soundArgs[1]) : 1.0f;
+		float pitch = (soundArgs.length > 2 && soundArgs[2] != null) ? Float.parseFloat(soundArgs[2]) : 1.0f;
+		p.playSound(p.getLocation(), sound, volume, pitch);
 	}
 
 	public static String colorize(String message) {

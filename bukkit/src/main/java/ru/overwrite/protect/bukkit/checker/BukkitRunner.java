@@ -3,7 +3,6 @@ package ru.overwrite.protect.bukkit.checker;
 import java.util.Date;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitRunnable;
@@ -51,8 +50,7 @@ public class BukkitRunner implements Runner {
 						}
 						api.capturePlayer(p);
 						if (pluginConfig.sound_settings_enable_sounds) {
-							p.playSound(p.getLocation(), Sound.valueOf(pluginConfig.sound_settings_on_capture),
-									pluginConfig.sound_settings_volume, pluginConfig.sound_settings_pitch);
+							Utils.sendSound(pluginConfig.sound_settings_on_capture, p);
 						}
 						if (pluginConfig.effect_settings_enable_effects) {
 							instance.giveEffect(instance, p);

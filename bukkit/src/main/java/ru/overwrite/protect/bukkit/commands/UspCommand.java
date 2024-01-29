@@ -49,7 +49,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				Player p = (Player)sender;
-				if (!sender.hasPermission("serverprotector.protect")) {
+				if (!p.hasPermission("serverprotector.protect")) {
 					sendHelp(sender, label);
 					return false;
 				}
@@ -82,6 +82,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				instance.reloadConfigs(config);
+				FileConfiguration newconfig = instance.getConfig();
 				if (Utils.FOLIA) {
 					Bukkit.getAsyncScheduler().cancelTasks(instance);
 				} else {
@@ -95,8 +96,8 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					Utils.bossbar.removeAll();
 				}
 				passwordHandler.attempts.clear();
-				instance.startRunners(config);
-				instance.checkForUpdates(config);
+				instance.startRunners(newconfig);
+				instance.checkForUpdates(newconfig);
 				sender.sendMessage(pluginConfig.uspmsg_rebooted);
 				return true;
 			}
@@ -252,34 +253,37 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	}
 
 	private void sendHelp(CommandSender sender, String label) {
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage, label);
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_logout, label);
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage, label, "serverprotector.protect");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_logout, label, "serverprotector.protect");
 		if (!sender.hasPermission("serverprotector.admin")) {
 			return;
 		}
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reload, label);
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reboot, label);
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reload, label, "serverprotector.reload");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reboot, label, "serverprotector.reboot");
 		if (!pluginConfig.main_settings_enable_admin_commands) {
 			sender.sendMessage(pluginConfig.uspmsg_otherdisabled);
 			return;
 		}
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_setpass, label);
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_rempass, label);
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addop, label);
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remop, label);
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addip, label);
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remip, label);
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_setpass, label, "serverprotector.setpass");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_rempass, label, "serverprotector.rempass");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addop, label, "serverprotector.addop");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remop, label, "serverprotector.remop");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addip, label, "serverprotector.addip");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remip, label, "serverprotector.remip");
 	}
 
+	private void sendCmdMessage(CommandSender sender, String msg, String label, String permission) {
+		if (sender.hasPermission(permission)) {
+			sender.sendMessage(msg.replace("%cmd%", label));
+		}
+	}
+	
 	private void sendCmdMessage(CommandSender sender, String msg, String label) {
 		sender.sendMessage(msg.replace("%cmd%", label));
 	}
 
 	@Override
 	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
-		if (!sender.hasPermission("serverprotector.admin")) {
-			return Collections.emptyList();
-		}
 		if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
 			return Collections.emptyList();
 		}
@@ -290,14 +294,16 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			completions.add("reboot");
 			if (pluginConfig.main_settings_enable_admin_commands) {
 				completions.add("setpass");
-				completions.add("addop");
-				completions.add("addip");
 				completions.add("rempass");
+				completions.add("addop");
+				completions.add("remop");
+				completions.add("addip");
+				completions.add("remip");
 			}
 		}
 		List<String> result = new ArrayList<>();
 		for (String c : completions) {
-			if (c.toLowerCase().startsWith(args[0].toLowerCase()))
+			if (c.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
 				result.add(c);
 		}
 		return result;

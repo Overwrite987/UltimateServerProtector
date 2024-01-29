@@ -5,7 +5,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 import org.bukkit.Bukkit;
-import org.bukkit.Sound;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 
@@ -73,8 +72,7 @@ public class PasswordHandler {
 			Utils.sendTitleMessage(pluginConfig.titles_incorrect, p);
 		}
 		if (pluginConfig.sound_settings_enable_sounds) {
-			p.playSound(p.getLocation(), Sound.valueOf(pluginConfig.sound_settings_on_pas_fail),
-					pluginConfig.sound_settings_volume, pluginConfig.sound_settings_pitch);
+			Utils.sendSound(pluginConfig.sound_settings_on_pas_fail, p);
 		}
 		if (pluginConfig.logging_settings_logging_pas) {
 			instance.logAction("log-format.failed", p, new Date());
@@ -105,8 +103,7 @@ public class PasswordHandler {
 		String playerName = p.getName();
 		instance.time.remove(playerName);
 		if (pluginConfig.sound_settings_enable_sounds) {
-			p.playSound(p.getLocation(), Sound.valueOf(pluginConfig.sound_settings_on_pas_correct),
-					pluginConfig.sound_settings_volume, pluginConfig.sound_settings_pitch);
+			Utils.sendSound(pluginConfig.sound_settings_on_pas_correct, p);
 		}
 		if (pluginConfig.effect_settings_enable_effects) {
 			for (PotionEffect s : p.getActivePotionEffects()) {

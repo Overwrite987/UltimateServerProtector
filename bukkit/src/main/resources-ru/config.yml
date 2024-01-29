@@ -121,25 +121,20 @@ message-settings:
 sound-settings:
   # Включить ли звуки при командах
   enable-sounds: true
-  # Список всех звуков: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-  # Звук при поимке админа с правами
-  on-capture: ENTITY_ITEM_BREAK
+  # Звук при поимке админа с правами (формат - ЗВУК;ГРОМКОСТЬ;ТОНАЛЬНОСТЬ)
+  on-capture: ENTITY_ITEM_BREAK;1.0;1.0
   # Звук при неверном пароле
-  on-pas-fail: ENTITY_VILLAGER_NO
+  on-pas-fail: ENTITY_VILLAGER_NO;1.0;1.0
   # Звук при верном пароле
-  on-pas-correct: ENTITY_PLAYER_LEVELUP
-  # Громкость звука от 0.0 до 1.0
-  volume: 0.75
-  # Тон звука от 0.5 до 2.0 (больше = "писклявее")
-  pitch: 1.0
+  on-pas-correct: ENTITY_PLAYER_LEVELUP;1.0;1.0
 
 # Настройка эффектов, которые даются до ввода пароля
 effect-settings:
   # Включить ли эффект, который будет выдаваться админу, до ввода пароля
   enable-effects: true
-  # Какие эффекты накладывать на игрока (ЭФФЕКТ:УРОВЕНЬ)
+  # Какие эффекты накладывать на игрока (ЭФФЕКТ;УРОВЕНЬ)
   effects:
-    - 'BLINDNESS:3'   
+    - 'BLINDNESS;3'   
 
 # Настройки логгирования
 logging-settings: 

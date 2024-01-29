@@ -113,25 +113,20 @@ message-settings:
 sound-settings:
   # Enable sounds for commands
   enable-sounds: true
-  # List of all sounds: https://hub.spigotmc.org/javadocs/bukkit/org/bukkit/Sound.html
-  # Sound when capturing an admin with rights
-  on-capture: ENTITY_ITEM_BREAK
+  # Sound when capturing an admin with permissions (SOUND:VOLUME:PITCH)
+  on-capture: ENTITY_ITEM_BREAK;1.0;1.0
   # Sound when incorrect password is entered
-  on-pas-fail: ENTITY_VILLAGER_NO
+  on-pas-fail: ENTITY_VILLAGER_NO;1.0;1.0
   # Sound when correct password is entered
-  on-pas-correct: ENTITY_PLAYER_LEVELUP
-  # Sound volume from 0.0 to 1.0
-  volume: 0.75
-  # Sound pitch from 0.5 to 2.0 (higher = "squeakier")
-  pitch: 1.0
+  on-pas-correct: ENTITY_PLAYER_LEVELUP;1.0;1.0
 
 # Effects settings applied before entering the password
 effect-settings:
   # Enable the effect that will be applied to the admin before entering the password
   enable-effects: true
-  # Effects to apply to the player (EFFECT:LEVEL)
+  # Effects to apply to the player (EFFECT;LEVEL)
   effects:
-    - 'BLINDNESS:3'
+    - 'BLINDNESS;3'
 
 # Logging settings
 logging-settings:

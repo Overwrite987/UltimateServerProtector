@@ -41,7 +41,7 @@ public class ChatListener implements Listener {
 		}
 	}
 
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
+	@EventHandler(priority = EventPriority.LOWEST)
 	public void onCommand(PlayerCommandPreprocessEvent e) {
 		if (instance.login.isEmpty())
 			return;
@@ -54,15 +54,17 @@ public class ChatListener implements Listener {
 			String label = cutCommand(message).toLowerCase();
 			if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
 				e.setCancelled(false);
+				return;
 			} else {
 				for (String command : pluginConfig.allowed_commands) {
 					if (label.equals(command) || message.equalsIgnoreCase(command)) {
 						e.setCancelled(false);
-						break;
+						return;
 					}
 				}
 			}
 		}
+		e.setMessage("");
 	}
 
 	private String cutCommand(String str) {
