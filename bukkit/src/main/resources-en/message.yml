@@ -28,7 +28,7 @@ log-format:
 titles:
   message: '&e&l⚠ &c&lProtection &e&l⚠;&fAdmin permissiond detected! Enter admin-password!;10;60;15'
   incorrect: '&e&l⚠ &c&lProtection &e&l⚠;&cWrong password!;10;60;15'
-  correct: '&e&l⚠ &c&lProtection &e&l⚠;&aCorrect password. Have a nice day ;);10;60;15'
+  correct: '&e&l⚠ &c&lProtection &e&l⚠;&aCorrect password. Have a nice day;10;60;15'
 
 # Message in boss bar
 bossbar:
