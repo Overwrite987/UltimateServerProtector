@@ -117,7 +117,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					if (args.length < 4) {
-						addAdmin(config, nickname, args[2]);
+						addAdmin(nickname, args[2]);
 						sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
 						return true;
 					}
@@ -174,7 +174,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					if (args.length < 3) {
-						removeAdmin(config, args[1]);
+						removeAdmin(args[1]);
 						sender.sendMessage(pluginConfig.uspmsg_playerremoved);
 						return true;
 					}
@@ -231,24 +231,22 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		return true;
 	}
 
-	private void addAdmin(FileConfiguration config, String nick, String pas) {
+	private void addAdmin(String nick, String pas) {
 		FileConfiguration data;
-		String datafile = config.getString("file-settings.data-file");
 		String path = instance.path;
-		data = pluginConfig.getFile(path, datafile);
+		data = pluginConfig.getFile(path, instance.dataFile.getName());
 		data.set("data." + nick + ".pass", pas);
-		pluginConfig.save(path, data, datafile);
+		pluginConfig.save(path, data, instance.dataFile.getName());
 		data = instance.dataFile;
 	}
 
-	private void removeAdmin(FileConfiguration config, String nick) {
+	private void removeAdmin(String nick) {
 		FileConfiguration data;
-		String datafile = config.getString("file-settings.data-file");
 		String path = instance.path;
-		data = pluginConfig.getFile(path, datafile);
+		data = pluginConfig.getFile(path, instance.dataFile.getName());
 		data.set("data." + nick + ".pass", null);
 		data.set("data." + nick, null);
-		pluginConfig.save(path, data, datafile);
+		pluginConfig.save(path, data, instance.dataFile.getName());
 		data = instance.dataFile;
 	}
 
@@ -277,7 +275,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			sender.sendMessage(msg.replace("%cmd%", label));
 		}
 	}
-	
+
 	private void sendCmdMessage(CommandSender sender, String msg, String label) {
 		sender.sendMessage(msg.replace("%cmd%", label));
 	}
