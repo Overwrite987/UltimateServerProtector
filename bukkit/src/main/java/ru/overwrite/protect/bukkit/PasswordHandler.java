@@ -45,7 +45,7 @@ public class PasswordHandler {
 		};
 		if (resync) {
 			instance.getRunner().runPlayer(run, p);
-        } else {
+		} else {
 			run.run();
 		}
 	}
