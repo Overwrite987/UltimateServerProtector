@@ -249,13 +249,12 @@ public class Config {
 	}
 
 	public void save(String path, FileConfiguration config, String fileName) {
-		Runnable run = () -> {
+		instance.getRunner().runAsync(() -> {
 			try {
 				config.save(new File(path, fileName));
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-		};
-		instance.getRunner().run(run);
+		});
 	}
 }

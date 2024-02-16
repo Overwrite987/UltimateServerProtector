@@ -32,8 +32,8 @@ public class ConnectionListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
-		Runnable run = () -> {
-			Player p = e.getPlayer();
+		Player p = e.getPlayer();
+		instance.getRunner().run(() -> {
 			if (instance.isPermissions(p)) {
 				String ip = e.getAddress().getHostAddress();
 				if (pluginConfig.secure_settings_enable_ip_whitelist) {
@@ -55,14 +55,13 @@ public class ConnectionListener implements Listener {
 					}
 				}
 			}
-		};
-		instance.getRunner().run(run);
+		});
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onJoin(PlayerJoinEvent e) {
-		Runnable run = () -> {
-			Player p = e.getPlayer();
+		Player p = e.getPlayer();
+		instance.getRunner().run(() -> {
 			if (instance.isPermissions(p)) {
 				if (api.isCaptured(p)) {
 					if (pluginConfig.effect_settings_enable_effects) {
@@ -83,8 +82,7 @@ public class ConnectionListener implements Listener {
 					instance.sendAlert(p, msg);
 				}
 			}
-		};
-		instance.getRunner().run(run);
+		});
 	}
 
 	private boolean isIPAllowed(String p, String ip) {

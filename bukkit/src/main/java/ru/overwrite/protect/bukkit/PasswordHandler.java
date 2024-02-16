@@ -110,12 +110,11 @@ public class PasswordHandler {
 		}
 		api.authorisePlayer(p);
 		if (pluginConfig.session_settings_session_time_enabled) {
-			Runnable run = () -> {
+			instance.getRunner().runDelayedAsync(() -> {
 				if (!instance.login.contains(playerName)) {
 					api.ips.remove(playerName + Utils.getIp(p));
 				}
-			};
-			instance.getRunner().runDelayedAsync(run, pluginConfig.session_settings_session_time * 20L);
+			}, pluginConfig.session_settings_session_time * 20L);
 		}
 		if (pluginConfig.logging_settings_logging_pas) {
 			instance.logAction("log-format.passed", p, new Date());

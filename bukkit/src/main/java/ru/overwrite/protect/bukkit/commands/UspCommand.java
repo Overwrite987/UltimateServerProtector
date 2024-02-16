@@ -49,11 +49,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				if (api.isAuthorised(p)) {
-					Runnable run = () -> {
+					instance.getRunner().run(() -> {
 						new ServerProtectorLogoutEvent(p, Utils.getIp(p)).callEvent();
 						api.deauthorisePlayer(p);
-					};
-					instance.getRunner().run(run);
+					});
 					p.kickPlayer(pluginConfig.uspmsg_logout);
 					return true;
 				}
