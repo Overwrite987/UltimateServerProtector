@@ -117,7 +117,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					if (args.length < 4) {
-						addAdmin(nickname, args[2]);
+						addAdmin(config, nickname, args[2]);
 						sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
 						return true;
 					}
@@ -174,7 +174,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					if (args.length < 3) {
-						removeAdmin(args[1]);
+						removeAdmin(config, args[1]);
 						sender.sendMessage(pluginConfig.uspmsg_playerremoved);
 						return true;
 					}
@@ -231,22 +231,24 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		return true;
 	}
 
-	private void addAdmin(String nick, String pas) {
+	private void addAdmin(FileConfiguration config, String nick, String pas) {
 		FileConfiguration data;
 		String path = instance.path;
-		data = pluginConfig.getFile(path, instance.dataFile.getName());
+		String datafile = config.getString("file-settings.data-file");
+		data = pluginConfig.getFile(path, datafile);
 		data.set("data." + nick + ".pass", pas);
-		pluginConfig.save(path, data, instance.dataFile.getName());
+		pluginConfig.save(path, data, datafile);
 		data = instance.dataFile;
 	}
 
-	private void removeAdmin(String nick) {
+	private void removeAdmin(FileConfiguration config, String nick) {
 		FileConfiguration data;
 		String path = instance.path;
-		data = pluginConfig.getFile(path, instance.dataFile.getName());
+		String datafile = config.getString("file-settings.data-file");
+		data = pluginConfig.getFile(path, datafile);
 		data.set("data." + nick + ".pass", null);
 		data.set("data." + nick, null);
-		pluginConfig.save(path, data, instance.dataFile.getName());
+		pluginConfig.save(path, data, datafile);
 		data = instance.dataFile;
 	}
 
