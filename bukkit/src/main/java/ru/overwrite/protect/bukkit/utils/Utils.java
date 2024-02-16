@@ -1,25 +1,22 @@
 package ru.overwrite.protect.bukkit.utils;
 
-import java.io.IOException;
-import java.net.URL;
-import java.io.BufferedReader;
-import java.io.InputStreamReader;
-import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
+import net.kyori.adventure.text.Component;
+import net.kyori.adventure.text.minimessage.MiniMessage;
+import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
-
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+
+import java.io.BufferedReader;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.net.URL;
+import java.util.function.Consumer;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
@@ -107,8 +104,8 @@ public final class Utils {
 		}
 	}
 
-	public static void checkUpdates(Plugin plugin, Consumer<String> consumer) {
-		Runnable run = () -> {
+	public static void checkUpdates(ServerProtectorManager plugin, Consumer<String> consumer) {
+		plugin.getRunner().runAsync(() -> {
 			try (BufferedReader reader = new BufferedReader(new InputStreamReader(
 					new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION")
 							.openStream()))) {
@@ -116,11 +113,6 @@ public final class Utils {
 			} catch (IOException exception) {
 				plugin.getLogger().warning("Can't check for updates: " + exception.getMessage());
 			}
-		};
-		if (Utils.FOLIA) {
-			Bukkit.getAsyncScheduler().runNow(plugin, (cu) -> run.run());
-		} else {
-			Bukkit.getScheduler().runTaskAsynchronously(plugin, run);
-		}
+		});
 	}
 }

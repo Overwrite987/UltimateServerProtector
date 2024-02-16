@@ -1,15 +1,12 @@
 package ru.overwrite.protect.bukkit.listeners;
 
-import java.util.Date;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
@@ -17,6 +14,9 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
+
+import java.util.Date;
+import java.util.List;
 
 public class ConnectionListener implements Listener {
 
@@ -56,7 +56,7 @@ public class ConnectionListener implements Listener {
 				}
 			}
 		};
-		instance.runAsyncTask(run);
+		instance.getRunner().run(run);
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
@@ -66,7 +66,7 @@ public class ConnectionListener implements Listener {
 			if (instance.isPermissions(p)) {
 				if (api.isCaptured(p)) {
 					if (pluginConfig.effect_settings_enable_effects) {
-						instance.giveEffect(instance, p);
+						instance.giveEffect(p);
 					}
 				}
 				if (pluginConfig.logging_settings_logging_join) {
@@ -84,7 +84,7 @@ public class ConnectionListener implements Listener {
 				}
 			}
 		};
-		instance.runAsyncTask(run);
+		instance.getRunner().run(run);
 	}
 
 	private boolean isIPAllowed(String p, String ip) {

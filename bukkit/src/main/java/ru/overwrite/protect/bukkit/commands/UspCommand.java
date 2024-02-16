@@ -1,25 +1,20 @@
 package ru.overwrite.protect.bukkit.commands;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.command.Command;
-import org.bukkit.command.CommandExecutor;
-import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
-import org.bukkit.command.TabCompleter;
+import org.bukkit.command.*;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
-
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorLogoutEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 public class UspCommand implements CommandExecutor, TabCompleter {
 
@@ -58,7 +53,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						new ServerProtectorLogoutEvent(p, Utils.getIp(p)).callEvent();
 						api.deauthorisePlayer(p);
 					};
-					instance.runAsyncTask(run);
+					instance.getRunner().run(run);
 					p.kickPlayer(pluginConfig.uspmsg_logout);
 					return true;
 				}
@@ -83,11 +78,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				}
 				instance.reloadConfigs(config);
 				FileConfiguration newconfig = instance.getConfig();
-				if (Utils.FOLIA) {
-					Bukkit.getAsyncScheduler().cancelTasks(instance);
-				} else {
-					Bukkit.getScheduler().cancelTasks(instance);
-				}
+				instance.getRunner().cancelTasks();
 				instance.time.clear();
 				instance.login.clear();
 				api.ips.clear();
@@ -96,7 +87,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					Utils.bossbar.removeAll();
 				}
 				passwordHandler.attempts.clear();
-				instance.startRunners(newconfig);
+				instance.startTasks(newconfig);
 				instance.checkForUpdates(newconfig);
 				sender.sendMessage(pluginConfig.uspmsg_rebooted);
 				return true;

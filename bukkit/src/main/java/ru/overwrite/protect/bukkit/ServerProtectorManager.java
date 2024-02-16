@@ -1,20 +1,6 @@
 package ru.overwrite.protect.bukkit;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.lang.reflect.Constructor;
-import java.text.SimpleDateFormat;
-import java.util.Date;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.concurrent.TimeUnit;
-
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
-
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
@@ -26,16 +12,30 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
-
-import ru.overwrite.protect.bukkit.api.*;
-import ru.overwrite.protect.bukkit.commands.*;
-import ru.overwrite.protect.bukkit.checker.*;
-import ru.overwrite.protect.bukkit.listeners.*;
+import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
+import ru.overwrite.protect.bukkit.commands.PasCommand;
+import ru.overwrite.protect.bukkit.commands.UspCommand;
+import ru.overwrite.protect.bukkit.listeners.AdditionalListener;
+import ru.overwrite.protect.bukkit.listeners.ChatListener;
+import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
+import ru.overwrite.protect.bukkit.listeners.InteractionsListener;
+import ru.overwrite.protect.bukkit.task.BukkitRunner;
+import ru.overwrite.protect.bukkit.task.PaperRunner;
+import ru.overwrite.protect.bukkit.task.Runner;
+import ru.overwrite.protect.bukkit.task.TaskManager;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.PluginMessage;
 import ru.overwrite.protect.bukkit.utils.Utils;
 import ru.overwrite.protect.bukkit.utils.logging.BukkitLogger;
 import ru.overwrite.protect.bukkit.utils.logging.PaperLogger;
+
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
+import java.util.*;
 
 public class ServerProtectorManager extends JavaPlugin {
 
@@ -57,6 +57,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	private final Config pluginConfig = new Config(this);
 	private final ServerProtectorAPI api = new ServerProtectorAPI(this);
 	private final PasswordHandler passwordHandler = new PasswordHandler(this);
+	private final Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
 	private PluginMessage pluginMessage;
 
 	private File logFile;
@@ -81,6 +82,10 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public Logger getPluginLogger() {
 		return logger;
+	}
+
+	public Runner getRunner() {
+		return runner;
 	}
 
 	public boolean isPaper() {
@@ -124,7 +129,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	public void loadConfigs(FileConfiguration config) {
 		serialiser = config.getString("main-settings.serialiser");
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-		Boolean fullpath = file_settings.getBoolean("use-full-path");
+		boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
 		pluginConfig.save(path, dataFile, file_settings.getString("data-file"));
@@ -163,7 +168,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		serialiser = config.getString("main-settings.serialiser");
 		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-		Boolean fullpath = file_settings.getBoolean("use-full-path");
+		boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
 		pluginConfig.setupPasswords(dataFile);
@@ -208,10 +213,8 @@ public class ServerProtectorManager extends JavaPlugin {
 				constructor.setAccessible(true);
 				PluginCommand command = constructor.newInstance(config.getString("main-settings.pas-command"), this);
 				command.setExecutor(new PasCommand(this));
-				if (commandMap != null) {
-					commandMap.register(getDescription().getName(), command);
-				}
-			} catch (Exception e) {
+                commandMap.register(getDescription().getName(), command);
+            } catch (Exception e) {
 				loggerInfo("Unable to register password command!");
 				e.printStackTrace();
 				pluginManager.disablePlugin(this);
@@ -225,22 +228,22 @@ public class ServerProtectorManager extends JavaPlugin {
 		uspCommand.setTabCompleter(uspCommandClass);
 	}
 
-	public void startRunners(FileConfiguration config) {
-		Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
-		runner.mainCheck();
-		runner.startMSG(config);
+	public void startTasks(FileConfiguration config) {
+		TaskManager taskManager = new TaskManager(this);
+		taskManager.startMainCheck();
+		taskManager.startCapturesMessages(config);
 		if (pluginConfig.punish_settings_enable_time) {
 			time = new Object2ObjectOpenHashMap<>();
-			runner.startTimer(config);
+			taskManager.startCapturesTimer(config);
 		}
 		if (pluginConfig.secure_settings_enable_notadmin_punish) {
-			runner.adminCheck(config);
+			taskManager.startAdminCheck(config);
 		}
 		if (pluginConfig.secure_settings_enable_op_whitelist) {
-			runner.startOpCheck(config);
+			taskManager.startOpCheck(config);
 		}
 		if (pluginConfig.secure_settings_enable_permission_blacklist) {
-			runner.startPermsCheck(config);
+			taskManager.startPermsCheck(config);
 		}
 	}
 
@@ -250,7 +253,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			throw new RuntimeException("Unable to create data folder");
 		}
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-		Boolean fullpath = file_settings.getBoolean("use-full-path");
+		boolean fullpath = file_settings.getBoolean("use-full-path");
 		String logFilePath = fullpath ? file_settings.getString("log-file-path") : dataFolder.getPath();
 		logFile = new File(logFilePath, file_settings.getString("log-file"));
 	}
@@ -273,52 +276,22 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void checkFail(String playerName, List<String> command) {
-		Runnable run = () -> {
+		runner.run(() -> {
 			for (String c : command) {
 				server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", playerName));
 			}
-		};
-		runSyncTask(run);
+		});
 	}
 
-	public void giveEffect(ServerProtectorManager plugin, Player p) {
-		Runnable run = () -> {
+	public void giveEffect(Player player) {
+		runner.runPlayer(() -> {
 			for (String s : pluginConfig.effect_settings_effects) {
 				String[] splittedEffect = s.split(";");
 				PotionEffectType types = PotionEffectType.getByName(splittedEffect[0].toUpperCase());
 				int level = Integer.parseInt(splittedEffect[1]) - 1;
-				p.addPotionEffect(new PotionEffect(types, 99999, level));
+				player.addPotionEffect(new PotionEffect(types, 99999, level));
 			}
-		};
-		if (Utils.FOLIA) {
-			p.getScheduler().run(plugin, (sp) -> run.run(), null);
-		} else {
-			server.getScheduler().runTask(plugin, run);
-		}
-	}
-
-	public void runSyncTask(Runnable run) {
-		if (Utils.FOLIA) {
-			server.getGlobalRegionScheduler().run(this, (sp) -> run.run());
-		} else {
-			server.getScheduler().runTask(this, run);
-		}
-	}
-
-	public void runAsyncTask(Runnable run) {
-		if (Utils.FOLIA) {
-			server.getAsyncScheduler().runNow(this, (sp) -> run.run());
-		} else {
-			server.getScheduler().runTaskAsynchronously(this, run);
-		}
-	}
-
-	public void runAsyncDelayedTask(Runnable run) {
-		if (Utils.FOLIA) {
-			server.getAsyncScheduler().runDelayed(this, (sp) -> run.run(), pluginConfig.session_settings_session_time * 20L * 50L, TimeUnit.MILLISECONDS);
-		} else {
-			server.getScheduler().runTaskLaterAsynchronously(this, run, pluginConfig.session_settings_session_time * 20L);
-		}
+		}, player);
 	}
 
 	public void logEnableDisable(String msg, Date date) {
@@ -362,11 +335,12 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void logAction(String key, Player player, Date date) {
-		Runnable run = () -> {
-			logToFile(messageFile.getString(key, "ERROR").replace("%player%", player.getName())
-					.replace("%ip%", Utils.getIp(player)).replace("%date%", DATE_FORMAT.format(date)));
-		};
-		runAsyncTask(run);
+		runner.runAsync(() ->
+				logToFile(messageFile.getString(key, "ERROR")
+						.replace("%player%", player.getName())
+                		.replace("%ip%", Utils.getIp(player))
+						.replace("%date%", DATE_FORMAT.format(date)))
+		);
 	}
 
 	public void logToFile(String message) {
