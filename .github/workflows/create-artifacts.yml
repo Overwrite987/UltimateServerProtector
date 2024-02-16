@@ -25,7 +25,21 @@ jobs:
       - name: Give gradle permission
         run: chmod +x gradlew
       # Build versions with shadow task
-      - name: Build with shadow
+      - name: Build with shadow (Russian)
         uses: gradle/gradle-build-action@v2
         with:
-          arguments: :bukkit:shadowJarEN :bukkit:shadowJarRU --stacktrace
+          arguments: :bukkit:shadowJarRU --stacktrace
+      - name: Build with shadow (English)
+        uses: gradle/gradle-build-action@v2
+        with:
+          arguments: :bukkit:shadowJarEN --stacktrace
+      - name: Upload English artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: UltimateServerProtector (English)
+          path: bukkit/build/libs/UltimateServerProtector-en*.jar
+      - name: Upload Russian artifact
+        uses: actions/upload-artifact@main
+        with:
+          name: UltimateServerProtector (Russian)
+          path: bukkit/build/libs/UltimateServerProtector-ru*.jar
