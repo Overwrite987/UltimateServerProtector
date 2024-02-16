@@ -1,19 +1,18 @@
 package ru.overwrite.protect.bukkit;
 
-import java.util.Date;
-import java.util.HashMap;
-import java.util.Map;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
-
-import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordSuccessEvent;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordEnterEvent;
 import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordFailEvent;
+import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordSuccessEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 
 public class PasswordHandler {
 
@@ -45,8 +44,7 @@ public class PasswordHandler {
 			}
 		};
 		if (resync) {
-			instance.runSyncTask(run);
-			return;
+			instance.getRunner().runPlayer(run, p);
 		} else {
 			run.run();
 		}
@@ -112,12 +110,11 @@ public class PasswordHandler {
 		}
 		api.authorisePlayer(p);
 		if (pluginConfig.session_settings_session_time_enabled) {
-			Runnable run = () -> {
+			instance.getRunner().runDelayedAsync(() -> {
 				if (!instance.login.contains(playerName)) {
 					api.ips.remove(playerName + Utils.getIp(p));
 				}
-			};
-			instance.runAsyncDelayedTask(run);
+			}, pluginConfig.session_settings_session_time * 20L);
 		}
 		if (pluginConfig.logging_settings_logging_pas) {
 			instance.logAction("log-format.passed", p, new Date());

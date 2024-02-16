@@ -1,20 +1,18 @@
 package ru.overwrite.protect.bukkit;
 
+import org.bukkit.configuration.file.FileConfiguration;
+import org.bukkit.entity.Player;
+import org.bukkit.plugin.PluginManager;
+import ru.overwrite.protect.bukkit.utils.Metrics;
+import ru.overwrite.protect.bukkit.utils.Utils;
+
 import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
-import org.bukkit.configuration.Configuration;
-import org.bukkit.configuration.file.FileConfiguration;
-import org.bukkit.entity.Player;
-import org.bukkit.plugin.PluginManager;
-
-import ru.overwrite.protect.bukkit.utils.Metrics;
-import ru.overwrite.protect.bukkit.utils.Utils;
-
 public final class ServerProtector extends ServerProtectorManager {
 	
-	private final List<String> forceshutdown = Arrays.asList(new String[] { "PlugMan", "PlugManX", "PluginManager", "ServerUtils" });
+	private final List<String> forceshutdown = Arrays.asList("PlugMan", "PlugManX", "PluginManager", "ServerUtils");
 
 	@Override
 	public void onEnable() {
@@ -32,7 +30,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		loadConfigs(config);
 		registerListeners(pluginManager);
 		registerCommands(pluginManager, config);
-		startRunners(config);
+		startTasks(config);
 		setupLogger(config);
 		logEnableDisable(messageFile.getString("log-format.enabled"), new Date(startTime));
 		if (config.getBoolean("main-settings.enable-metrics")) {
@@ -60,11 +58,7 @@ public final class ServerProtector extends ServerProtectorManager {
 				}
 			}
 		}
-		if (Utils.FOLIA) {
-			server.getAsyncScheduler().cancelTasks(this);
-		} else {
-			server.getScheduler().cancelTasks(this);
-		}
+		getRunner().cancelTasks();
 		if (proxy) {
 			server.getMessenger().unregisterOutgoingPluginChannel(this);
 			server.getMessenger().unregisterIncomingPluginChannel(this);

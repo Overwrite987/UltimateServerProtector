@@ -1,19 +1,13 @@
 package ru.overwrite.protect.bukkit.utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.Map;
-import java.util.HashMap;
-
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+
+import java.io.File;
+import java.io.IOException;
+import java.util.*;
 
 public class Config {
 
@@ -255,13 +249,12 @@ public class Config {
 	}
 
 	public void save(String path, FileConfiguration config, String fileName) {
-		Runnable run = () -> {
+		instance.getRunner().runAsync(() -> {
 			try {
 				config.save(new File(path, fileName));
 			} catch (IOException ex) {
 				ex.printStackTrace();
 			}
-		};
-		instance.runAsyncTask(run);
+		});
 	}
 }

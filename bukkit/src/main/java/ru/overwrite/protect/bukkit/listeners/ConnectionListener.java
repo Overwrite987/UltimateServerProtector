@@ -1,15 +1,12 @@
 package ru.overwrite.protect.bukkit.listeners;
 
-import java.util.Date;
-import java.util.List;
-
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
@@ -17,6 +14,9 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
+
+import java.util.Date;
+import java.util.List;
 
 public class ConnectionListener implements Listener {
 
@@ -32,8 +32,8 @@ public class ConnectionListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
-		Runnable run = () -> {
-			Player p = e.getPlayer();
+		Player p = e.getPlayer();
+		instance.getRunner().run(() -> {
 			if (instance.isPermissions(p)) {
 				String ip = e.getAddress().getHostAddress();
 				if (pluginConfig.secure_settings_enable_ip_whitelist) {
@@ -55,18 +55,17 @@ public class ConnectionListener implements Listener {
 					}
 				}
 			}
-		};
-		instance.runAsyncTask(run);
+		});
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onJoin(PlayerJoinEvent e) {
-		Runnable run = () -> {
-			Player p = e.getPlayer();
+		Player p = e.getPlayer();
+		instance.getRunner().run(() -> {
 			if (instance.isPermissions(p)) {
 				if (api.isCaptured(p)) {
 					if (pluginConfig.effect_settings_enable_effects) {
-						instance.giveEffect(instance, p);
+						instance.giveEffect(p);
 					}
 				}
 				if (pluginConfig.logging_settings_logging_join) {
@@ -83,8 +82,7 @@ public class ConnectionListener implements Listener {
 					instance.sendAlert(p, msg);
 				}
 			}
-		};
-		instance.runAsyncTask(run);
+		});
 	}
 
 	private boolean isIPAllowed(String p, String ip) {
