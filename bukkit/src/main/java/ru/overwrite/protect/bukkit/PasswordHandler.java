@@ -108,6 +108,18 @@ public class PasswordHandler {
 				p.removePotionEffect(s.getType());
 			}
 		}
+		if (pluginConfig.blocking_settings_hide_on_entering) {
+			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+				if (!onlinePlayer.equals(p)) {
+					onlinePlayer.showPlayer(instance, p);
+				}
+			}
+		}
+		if (pluginConfig.blocking_settings_hide_other_on_entering) {
+			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+				p.showPlayer(instance, onlinePlayer);
+			}
+		}
 		api.authorisePlayer(p);
 		if (pluginConfig.session_settings_session_time_enabled) {
 			instance.getRunner().runDelayedAsync(() -> {

@@ -84,9 +84,7 @@ public class ConnectionListener implements Listener {
 				if (pluginConfig.blocking_settings_hide_other_on_entering) {
 					runner.runPlayer(() -> {
 						for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-							if (!onlinePlayer.equals(p)) {
-								onlinePlayer.hidePlayer(instance, p);
-							}
+							p.hidePlayer(instance, onlinePlayer);
 						}
 					}, p);
 				}

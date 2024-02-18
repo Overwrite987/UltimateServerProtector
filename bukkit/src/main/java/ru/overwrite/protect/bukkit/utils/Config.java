@@ -181,8 +181,8 @@ public class Config {
 		blocking_settings_block_damage = blocking_settings.getBoolean("block-damage");
 		blocking_settings_damaging_entity = blocking_settings.getBoolean("block-damaging-entity");
 		blocking_settings_block_inventory_open = blocking_settings.getBoolean("block-inventory-open");
-		blocking_settings_hide_on_entering = blocking_settings.getBoolean("block-mobs-targeting");
-		blocking_settings_hide_other_on_entering = blocking_settings.getBoolean("block-mobs-targeting");
+		blocking_settings_hide_on_entering = blocking_settings.getBoolean("hide-on-entering");
+		blocking_settings_hide_other_on_entering = blocking_settings.getBoolean("hide-other-on-entering");
 	}
 
 	public void loadAttempts(FileConfiguration config) {
