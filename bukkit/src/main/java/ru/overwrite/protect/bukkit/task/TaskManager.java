@@ -20,7 +20,7 @@ public final class TaskManager {
 	private final Config config;
 	private final Runner runner;
 
-	public TaskManager(@NotNull ServerProtectorManager plugin) {
+	public TaskManager(ServerProtectorManager plugin) {
 		this.plugin = plugin;
 		this.api = plugin.getPluginAPI();
 		this.config = plugin.getPluginConfig();
