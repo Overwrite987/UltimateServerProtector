@@ -15,44 +15,44 @@ public class PaperRunner implements Runner {
 	private final AsyncScheduler asyncScheduler;
 	private final GlobalRegionScheduler globalScheduler;
 
-	public PaperRunner(@NotNull Plugin plugin) {
+	public PaperRunner(Plugin plugin) {
 		this.plugin = plugin;
 		this.asyncScheduler = plugin.getServer().getAsyncScheduler();
 		this.globalScheduler = plugin.getServer().getGlobalRegionScheduler();
 	}
 
 	@Override
-	public void runPlayer(@NotNull Runnable task, @NotNull Player player) {
+	public void runPlayer(Runnable task, Player player) {
 		player.getScheduler().run(plugin, toConsumer(task), null);
 	}
 
 	@Override
-	public void run(@NotNull Runnable task) {
+	public void run(Runnable task) {
 		globalScheduler.run(plugin, toConsumer(task));
 	}
 
 	@Override
-	public void runAsync(@NotNull Runnable task) {
+	public void runAsync(Runnable task) {
 		asyncScheduler.runNow(plugin, toConsumer(task));
     }
 
     @Override
-    public void runDelayed(@NotNull Runnable task, long delayTicks) {
+    public void runDelayed(Runnable task, long delayTicks) {
         globalScheduler.runDelayed(plugin, toConsumer(task), delayTicks);
     }
 
     @Override
-    public void runDelayedAsync(@NotNull Runnable task, long delayTicks) {
+    public void runDelayedAsync(Runnable task, long delayTicks) {
         asyncScheduler.runDelayed(plugin, toConsumer(task), toMilli(delayTicks), TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public void runPeriodical(@NotNull Runnable task, long delayTicks, long periodTicks) {
+    public void runPeriodical(Runnable task, long delayTicks, long periodTicks) {
         globalScheduler.runAtFixedRate(plugin, toConsumer(task), delayTicks, periodTicks);
     }
 
     @Override
-    public void runPeriodicalAsync(@NotNull Runnable task, long delayTicks, long periodTicks) {
+    public void runPeriodicalAsync(Runnable task, long delayTicks, long periodTicks) {
         asyncScheduler.runAtFixedRate(plugin, toConsumer(task), toMilli(delayTicks), toMilli(periodTicks), TimeUnit.MILLISECONDS);
     }
 
@@ -62,7 +62,7 @@ public class PaperRunner implements Runner {
         asyncScheduler.cancelTasks(plugin);
     }
 
-    private static @NotNull Consumer<ScheduledTask> toConsumer(@NotNull Runnable task) {
+    private static Consumer<ScheduledTask> toConsumer(Runnable task) {
         return st -> task.run();
     }
 
