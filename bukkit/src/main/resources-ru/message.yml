@@ -57,6 +57,7 @@ uspmsg:
   usage-logout: '&6/%cmd% logout&7 - завешить сессию'
   usage-reload: '&6/%cmd% reload&7 - перезагрузить конфиг'
   usage-reboot: '&6/%cmd% reboot&7 - перезапустить плагин'
+  usage-encrypt: '&6/%cmd% encrypt (password)&7 - показать зашифрованную версию указанного пароля'
   usage-setpass: '&6/%cmd% setpass (ник) (пароль) &7- установить пароль игроку'
   usage-rempass: '&6/%cmd% rempass (ник) &7- удалить пароль игроку'
   usage-addop: '&6/%cmd% addop (ник) &7- добавить игрока в op-whitelist'
@@ -66,3 +67,17 @@ uspmsg:
   otherdisabled: |- 
     &7Прочие команды отключены.
     &7Для их включения выставьте &6enable-admin-commands: &atrue
+
+# Системные сообщения
+system:
+  baseline-warn: "§6============= §c! ВНИМАНИЕ ! §c============="
+  baseline-default: "§6========================================"
+  paper-1: "§eВы используете нестабильное ядро для вашего сервера Minecraft! Рекомендуется использовать §aPaper"
+  paper-2: "§eСкачать Paper: §ahttps://papermc.io/downloads/all"
+  bungeecord-1: "§eУ вас включена настройка §6bungeecord§a, но плагин §6BungeeGuard §eне установлен!"
+  bungeecord-2: "§eБез этого плагина вы подвергаете себя §cопасности! §eУстановите его для дальнейшей безопасной работы."
+  bungeecord-3: "§eСкачать BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"
+  update-latest: "§aВы используете последнюю версию плагина!"
+  update-outdated-1: "§aВы используете устаревшую версию плагина!"
+  update-outdated-2: "§aВы можете скачать новую версию здесь:"
+  update-outdated-3: "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"

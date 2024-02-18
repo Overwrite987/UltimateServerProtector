@@ -57,6 +57,7 @@ uspmsg:
   usage-logout: '&6/%cmd% logout&7 - end your session'
   usage-reload: '&6/%cmd% reload&7 - reload the config'
   usage-reboot: '&6/%cmd% reboot&7 - reboot the plugin'
+  usage-encrypt: '&6/%cmd% encrypt (password)&7 - show encrypted version of the password'
   usage-setpass: '&6/%cmd% setpass (nick) (password) &7- set player password'
   usage-rempass: '&6/%cmd% rempass (nick) &7- remove player password'
   usage-addop: '&6/%cmd% addop (nick) &7- add player to op whitelist'
@@ -66,3 +67,17 @@ uspmsg:
   otherdisabled: |- 
     &7Other commands are disabled.
     &7To enable them, set &6enable-admin-commands: &atrue
+
+# System messages
+system:
+  baseline-warn: "§6============= §c! WARNING ! §c============="
+  baseline-default: "§6========================================"
+  paper-1: "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"
+  paper-2: "§eDownload Paper: §ahttps://papermc.io/downloads/all"
+  bungeecord-1: "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"
+  bungeecord-2: "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."
+  bungeecord-3: "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"
+  update-latest: "§aYou are using latest version of the plugin!"
+  update-outdated-1: "§aYou are using outdated version of the plugin!"
+  update-outdated-2: "§aYou can download new version here:"
+  update-outdated-3: "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"

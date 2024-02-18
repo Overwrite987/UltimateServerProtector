@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit;
 
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
@@ -17,17 +18,16 @@ public final class ServerProtector extends ServerProtectorManager {
 	@Override
 	public void onEnable() {
 		long startTime = System.currentTimeMillis();
-		if (!isPaper()) {
-			return;
-		}
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
 		setupProxy(config);
+		loadConfigs(config);
+		ConfigurationSection systemMessages = messageFile.getConfigurationSection("system");
 		PluginManager pluginManager = server.getPluginManager();
-		if (!isSafe(pluginManager)) {
+		if (!isSafe(systemMessages, pluginManager)) {
 			return;
 		}
-		loadConfigs(config);
+		checkPaper(systemMessages);
 		registerListeners(pluginManager);
 		registerCommands(pluginManager, config);
 		startTasks(config);
@@ -36,7 +36,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		if (config.getBoolean("main-settings.enable-metrics")) {
 			new Metrics(this, 13347);
 		}
-		checkForUpdates(config);
+		checkForUpdates(config, systemMessages);
 		long endTime = System.currentTimeMillis();
 		loggerInfo("Plugin started in " + (endTime - startTime) + " ms");
 	}

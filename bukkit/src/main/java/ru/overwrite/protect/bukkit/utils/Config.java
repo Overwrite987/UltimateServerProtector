@@ -28,18 +28,18 @@ public class Config {
 	
 	public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
-	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
+	public String encryption_settings_encrypt_method, uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
 			uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
 			uspmsg_addopusage, uspmsg_remopusage, uspmsg_ipremoved, uspmsg_remipusage, uspmsg_addipusage,
-			uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_logout, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_setpass,
+			uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_logout, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_encrypt, uspmsg_usage_setpass,
 			uspmsg_usage_rempass, uspmsg_usage_addop, uspmsg_usage_remop, uspmsg_usage_addip, uspmsg_usage_remip, uspmsg_otherdisabled,
 			msg_message, msg_incorrect, msg_correct, msg_noneed, msg_cantbenull, msg_playeronly, broadcasts_failed,
 			broadcasts_passed, broadcasts_joined, broadcasts_captured, bossbar_message,
 			bossbar_settings_bar_color, bossbar_settings_bar_style, main_settings_prefix, main_settings_pas_command;
 
-	public boolean blocking_settings_block_item_drop, blocking_settings_block_item_pickup,
+	public boolean encryption_settings_enable_encryption, encryption_settings_auto_encrypt_passwords, blocking_settings_block_item_drop, blocking_settings_block_item_pickup,
 			blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
-			blocking_settings_block_inventory_open, blocking_settings_mobs_targeting, main_settings_use_command,
+			blocking_settings_block_inventory_open, blocking_settings_hide_on_entering, blocking_settings_hide_other_on_entering, main_settings_use_command,
 			main_settings_enable_admin_commands, punish_settings_enable_attempts, punish_settings_enable_time,
 			bossbar_settings_enable_bossbar, secure_settings_enable_op_whitelist,
 			secure_settings_enable_notadmin_punish, secure_settings_enable_permission_blacklist,
@@ -51,13 +51,31 @@ public class Config {
 
 	public int punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
 
+	public long main_settings_check_interval;
+
 	public List<String> effect_settings_effects;
 	
 	public void setupPasswords(FileConfiguration dataFile) {
 		per_player_passwords = new HashMap<>();
 		ConfigurationSection data = dataFile.getConfigurationSection("data");
-		for (String nick : data.getKeys(true)) {
-			per_player_passwords.put(nick, data.getString(nick + ".pass"));
+		boolean shouldSave = false;
+		for (String nick : data.getKeys(false)) {
+			if (!encryption_settings_enable_encryption) {
+				per_player_passwords.put(nick, data.getString(nick + ".pass"));
+			} else {
+				if (data.getString(nick + ".pass") != null) {
+					String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), encryption_settings_encrypt_method);
+					dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
+					dataFile.set("data." + nick + ".pass", null);
+					shouldSave = true;
+					instance.dataFile = dataFile;
+				}
+				per_player_passwords.put(nick, data.getString(nick + ".encrypted-pass"));
+			}
+		}
+		if (shouldSave) {
+			instance.loggerInfo("re-saving");
+			save(instance.path, dataFile, instance.dataFileName);
 		}
 	}
 
@@ -67,6 +85,14 @@ public class Config {
 		main_settings_pas_command = main_settings.getString("pas-command");
 		main_settings_use_command = main_settings.getBoolean("use-command");
 		main_settings_enable_admin_commands = main_settings.getBoolean("enable-admin-commands");
+		main_settings_check_interval = main_settings.getLong("check-interval");
+	}
+
+	public void loadEncryptionSettings(FileConfiguration config) {
+		ConfigurationSection encryption_settings = config.getConfigurationSection("encryption-settings");
+		encryption_settings_enable_encryption = encryption_settings.getBoolean("enable-encryption");
+		encryption_settings_encrypt_method = encryption_settings.getString("encrypt-method").toUpperCase();
+		encryption_settings_auto_encrypt_passwords = encryption_settings.getBoolean("auto-encrypt-passwords");
 	}
 
 	public void loadUspMessages(FileConfiguration message) {
@@ -93,6 +119,7 @@ public class Config {
 		uspmsg_usage_logout = getMessage(uspmsg, "usage-logout");
 		uspmsg_usage_reload = getMessage(uspmsg, "usage-reload");
 		uspmsg_usage_reboot = getMessage(uspmsg, "usage-reboot");
+		uspmsg_usage_encrypt = getMessage(uspmsg, "usage-encrypt");
 		uspmsg_usage_setpass = getMessage(uspmsg, "usage-setpass");
 		uspmsg_usage_rempass = getMessage(uspmsg, "usage-rempass");
 		uspmsg_usage_addop = getMessage(uspmsg, "usage-addop");
@@ -154,7 +181,8 @@ public class Config {
 		blocking_settings_block_damage = blocking_settings.getBoolean("block-damage");
 		blocking_settings_damaging_entity = blocking_settings.getBoolean("block-damaging-entity");
 		blocking_settings_block_inventory_open = blocking_settings.getBoolean("block-inventory-open");
-		blocking_settings_mobs_targeting = blocking_settings.getBoolean("block-mobs-targeting");
+		blocking_settings_hide_on_entering = blocking_settings.getBoolean("block-mobs-targeting");
+		blocking_settings_hide_other_on_entering = blocking_settings.getBoolean("block-mobs-targeting");
 	}
 
 	public void loadAttempts(FileConfiguration config) {

@@ -12,6 +12,7 @@ import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
+import ru.overwrite.protect.bukkit.task.Runner;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
@@ -24,16 +25,19 @@ public class ConnectionListener implements Listener {
 	private final ServerProtectorAPI api;
 	private final Config pluginConfig;
 
+	private final Runner runner;
+
 	public ConnectionListener(ServerProtectorManager plugin) {
 		instance = plugin;
 		api = plugin.getPluginAPI();
 		pluginConfig = plugin.getPluginConfig();
+		runner = plugin.getRunner();
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
-		instance.getRunner().run(() -> {
+		instance.getRunner().runAsync (() -> {
 			if (instance.isPermissions(p)) {
 				String ip = e.getAddress().getHostAddress();
 				if (pluginConfig.secure_settings_enable_ip_whitelist) {
@@ -61,12 +65,30 @@ public class ConnectionListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		instance.getRunner().run(() -> {
+		instance.getRunner().runAsync(() -> {
 			if (instance.isPermissions(p)) {
 				if (api.isCaptured(p)) {
 					if (pluginConfig.effect_settings_enable_effects) {
 						instance.giveEffect(p);
 					}
+				}
+				if (pluginConfig.blocking_settings_hide_on_entering) {
+					runner.runPlayer(() -> {
+						for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+							if (!onlinePlayer.equals(p)) {
+								onlinePlayer.hidePlayer(instance, p);
+							}
+						}
+					}, p);
+				}
+				if (pluginConfig.blocking_settings_hide_other_on_entering) {
+					runner.runPlayer(() -> {
+						for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+							if (!onlinePlayer.equals(p)) {
+								onlinePlayer.hidePlayer(instance, p);
+							}
+						}
+					}, p);
 				}
 				if (pluginConfig.logging_settings_logging_join) {
 					instance.logAction("log-format.joined", p, new Date());

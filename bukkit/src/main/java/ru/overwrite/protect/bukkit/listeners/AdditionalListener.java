@@ -8,8 +8,6 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.entity.EntityPickupItemEvent;
 import org.bukkit.event.entity.EntityDamageByEntityEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityTargetEvent;
-import org.bukkit.event.entity.EntityTargetEvent.TargetReason;
 import org.bukkit.event.player.PlayerDropItemEvent;
 import org.bukkit.event.inventory.InventoryOpenEvent;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
@@ -87,24 +85,11 @@ public class AdditionalListener implements Listener {
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void onInvontoryOpen(InventoryOpenEvent e) {
+	public void onInventoryOpen(InventoryOpenEvent e) {
 		if (instance.login.isEmpty())
 			return;
 		Player p = (Player) e.getPlayer();
 		if (pluginConfig.blocking_settings_block_inventory_open) {
-			api.handleInteraction(p, e);
-		}
-	}
-
-	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
-	public void onTarget(EntityTargetEvent e) {
-		if (instance.login.isEmpty())
-			return;
-		if (!(e.getTarget() instanceof Player))
-			return;
-		Player p = (Player) e.getTarget();
-		if (pluginConfig.blocking_settings_mobs_targeting
-				&& (e.getReason() == TargetReason.CLOSEST_PLAYER || e.getReason() == TargetReason.RANDOM_TARGET)) {
 			api.handleInteraction(p, e);
 		}
 	}

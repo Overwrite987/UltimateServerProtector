@@ -11,6 +11,7 @@ import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.utils.Config;
+import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class ChatListener implements Listener {
 
@@ -31,14 +32,15 @@ public class ChatListener implements Listener {
 		if (instance.login.isEmpty())
 			return;
 		Player p = e.getPlayer();
-		String msg = e.getMessage();
 		if (api.isCaptured(p)) {
-			e.setMessage("");
+			String msg = e.getMessage();
 			e.setCancelled(true);
 			if (!pluginConfig.main_settings_use_command) {
-				passwordHandler.checkPassword(p, msg, true);
+				String inputPass = pluginConfig.encryption_settings_enable_encryption ? Utils.encryptPassword(msg, pluginConfig.encryption_settings_encrypt_method) : msg;
+				passwordHandler.checkPassword(p, inputPass, true);
 			}
 		}
+		e.setMessage("");
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST)

@@ -14,6 +14,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
 import java.net.URL;
+import java.nio.charset.StandardCharsets;
+import java.security.MessageDigest;
+import java.security.NoSuchAlgorithmException;
+import java.util.Base64;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -24,7 +28,7 @@ public final class Utils {
 
 	public static BossBar bossbar;
 
-	public static final int SUB_VERSION = Integer.parseInt(Bukkit.getMinecraftVersion().split(".")[1]);
+	public static final int SUB_VERSION = Integer.parseInt(Bukkit.getMinecraftVersion().split("\\.")[1]);
 	private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F\\d]{6})");
 
 	public static final boolean FOLIA;
@@ -114,5 +118,45 @@ public final class Utils {
 				plugin.getLogger().warning("Can't check for updates: " + exception.getMessage());
 			}
 		});
+	}
+
+	public static String encryptPassword(String password, String hashType) {
+		switch (hashType) {
+			case "BASE64":
+				return encryptToBase64(password);
+			case "MD5":
+				return encryptToHash(password, "MD5");
+			case "SHA256":
+				return encryptToHash(password, "SHA-256");
+            case "SHA512":
+				return encryptToHash(password, "SHA-512");
+			default:
+				throw new IllegalArgumentException("Unsupported hash type: " + hashType);
+		}
+	}
+
+	private static String encryptToBase64(String str) {
+		return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
+	}
+
+	private static String encryptToHash(String str, String algorithm) {
+		try {
+			MessageDigest digest = MessageDigest.getInstance(algorithm);
+			byte[] hash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
+			return bytesToHexString(hash);
+		} catch (NoSuchAlgorithmException e) {
+			e.printStackTrace();
+			return null;
+		}
+	}
+
+	private static String bytesToHexString(byte[] bytes) {
+		StringBuilder hexString = new StringBuilder();
+		for (byte b : bytes) {
+			String hex = Integer.toHexString(0xff & b);
+			if (hex.length() == 1) hexString.append('0');
+			hexString.append(hex);
+		}
+		return hexString.toString();
 	}
 }

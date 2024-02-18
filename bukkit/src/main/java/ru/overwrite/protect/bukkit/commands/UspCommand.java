@@ -59,11 +59,15 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				break;
 			}
 			case ("reload"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.reload")) {
 					sendHelp(sender, label);
 					return false;
 				}
-				instance.reloadConfigs(config);
+				instance.reloadConfigs();
 				sender.sendMessage(pluginConfig.uspmsg_reloaded);
 				return true;
 			}
@@ -75,9 +79,9 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				if (!sender.hasPermission("serverprotector.reboot")) {
 					return false;
 				}
-				instance.reloadConfigs(config);
-				FileConfiguration newconfig = instance.getConfig();
 				instance.getRunner().cancelTasks();
+				instance.reloadConfigs();
+				FileConfiguration newconfig = instance.getConfig();
 				instance.time.clear();
 				instance.login.clear();
 				api.ips.clear();
@@ -87,11 +91,28 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				}
 				passwordHandler.attempts.clear();
 				instance.startTasks(newconfig);
-				instance.checkForUpdates(newconfig);
 				sender.sendMessage(pluginConfig.uspmsg_rebooted);
 				return true;
 			}
+			case ("encrypt"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
+				if (!sender.hasPermission("serverprotector.encrypt")) {
+					return false;
+				}
+				if (pluginConfig.encryption_settings_enable_encryption && args.length == 2) {
+					sender.sendMessage(Utils.encryptPassword(args[1], pluginConfig.encryption_settings_encrypt_method));
+					return true;
+				}
+				break;
+			}
 			case ("setpass"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.setpass")) {
 					return false;
 				}
@@ -107,7 +128,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					if (args.length < 4) {
-						addAdmin(config, nickname, args[2]);
+						addAdmin(nickname, args[2]);
 						sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
 						return true;
 					}
@@ -116,6 +137,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				return true;
 			}
 			case ("addop"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.addop")) {
 					return false;
 				}
@@ -137,6 +162,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				return true;
 			}
 			case ("addip"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.addip")) {
 					return false;
 				}
@@ -155,6 +184,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				return true;
 			}
 			case ("rempass"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.rempass")) {
 					return false;
 				}
@@ -164,7 +197,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					if (args.length < 3) {
-						removeAdmin(config, args[1]);
+						removeAdmin(args[1]);
 						sender.sendMessage(pluginConfig.uspmsg_playerremoved);
 						return true;
 					}
@@ -173,6 +206,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				return true;
 			}
 			case ("remop"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.remop")) {
 					break;
 				}
@@ -194,6 +231,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				return true;
 			}
 			case ("remip"): {
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.remip")) {
 					break;
 				}
@@ -221,25 +262,31 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		return true;
 	}
 
-	private void addAdmin(FileConfiguration config, String nick, String pas) {
-		FileConfiguration data;
-		String path = instance.path;
-		String datafile = config.getString("file-settings.data-file");
-		data = pluginConfig.getFile(path, datafile);
-		data.set("data." + nick + ".pass", pas);
-		pluginConfig.save(path, data, datafile);
-		data = instance.dataFile;
+	private void addAdmin(String nick, String pas) {
+		FileConfiguration dataFile;
+		dataFile = pluginConfig.getFile(instance.path, instance.dataFileName);
+		if (!pluginConfig.encryption_settings_enable_encryption) {
+			dataFile.set("data." + nick + ".pass", pas);
+		} else {
+			String encryptedPas = Utils.encryptPassword(pas, pluginConfig.encryption_settings_encrypt_method);
+			dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
+		}
+		pluginConfig.save(instance.path, dataFile, instance.dataFileName);
+		instance.dataFile = dataFile;
 	}
 
-	private void removeAdmin(FileConfiguration config, String nick) {
-		FileConfiguration data;
-		String path = instance.path;
-		String datafile = config.getString("file-settings.data-file");
-		data = pluginConfig.getFile(path, datafile);
-		data.set("data." + nick + ".pass", null);
-		data.set("data." + nick, null);
-		pluginConfig.save(path, data, datafile);
-		data = instance.dataFile;
+	private void removeAdmin(String nick) {
+		FileConfiguration dataFile;
+		dataFile = pluginConfig.getFile(instance.path, instance.dataFileName);
+		if (!pluginConfig.encryption_settings_enable_encryption) {
+			dataFile.set("data." + nick + ".pass", null);
+			dataFile.set("data." + nick, null);
+		} else {
+			dataFile.set("data." + nick + ".encrypted-pass", null);
+		}
+		dataFile.set("data." + nick, null);
+		pluginConfig.save(instance.path, dataFile, instance.dataFileName);
+		instance.dataFile = dataFile;
 	}
 
 	private void sendHelp(CommandSender sender, String label) {
@@ -250,6 +297,9 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		}
 		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reload, label, "serverprotector.reload");
 		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reboot, label, "serverprotector.reboot");
+		if (pluginConfig.encryption_settings_enable_encryption) {
+			sendCmdMessage(sender, pluginConfig.uspmsg_usage_encrypt, label, "serverprotector.encrypt");
+		}
 		if (!pluginConfig.main_settings_enable_admin_commands) {
 			sender.sendMessage(pluginConfig.uspmsg_otherdisabled);
 			return;
@@ -282,6 +332,9 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			completions.add("logout");
 			completions.add("reload");
 			completions.add("reboot");
+			if (pluginConfig.encryption_settings_enable_encryption) {
+				completions.add("encrypt");
+			}
 			if (pluginConfig.main_settings_enable_admin_commands) {
 				completions.add("setpass");
 				completions.add("rempass");

@@ -9,6 +9,7 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.utils.Config;
+import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class PasCommand implements CommandExecutor {
 
@@ -38,7 +39,8 @@ public class PasCommand implements CommandExecutor {
 			sender.sendMessage(pluginConfig.msg_cantbenull);
 			return true;
 		}
-		passwordHandler.checkPassword(p, args[0], false);
+		String inputPass = pluginConfig.encryption_settings_enable_encryption ? Utils.encryptPassword(args[0], pluginConfig.encryption_settings_encrypt_method) : args[0];
+		passwordHandler.checkPassword(p, inputPass, false);
 		return true;
 	}
 }

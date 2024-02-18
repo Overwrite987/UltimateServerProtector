@@ -29,10 +29,7 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 import ru.overwrite.protect.bukkit.utils.logging.BukkitLogger;
 import ru.overwrite.protect.bukkit.utils.logging.PaperLogger;
 
-import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import java.lang.reflect.Constructor;
 import java.text.SimpleDateFormat;
 import java.util.*;
@@ -47,6 +44,8 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public FileConfiguration messageFile;
 	public FileConfiguration dataFile;
+
+	public String dataFileName;
 
 	public String path;
 
@@ -88,28 +87,25 @@ public class ServerProtectorManager extends JavaPlugin {
 		return runner;
 	}
 
-	public boolean isPaper() {
+	public void checkPaper(ConfigurationSection systemMessages) {
 		if (server.getName().equals("CraftBukkit")) {
-			loggerInfo("§6============= §c! WARNING ! §c=============");
-			loggerInfo("§eYou are using an unstable core for your MC server! It's recomended to use §aPaper");
-			loggerInfo("§eDownload Paper: §ahttps://papermc.io/downloads/all");
-			loggerInfo("§6============= §c! WARNING ! §c=============");
-			this.setEnabled(false);
-			return false;
+			loggerInfo(systemMessages.getString("baseline-warn"));
+			loggerInfo(systemMessages.getString("paper-1"));
+			loggerInfo(systemMessages.getString("paper-2"));
+			loggerInfo(systemMessages.getString("baseline-warn"));
 		}
-		return true;
 	}
 
-	public boolean isSafe(PluginManager pluginManager) {
+	public boolean isSafe(ConfigurationSection systemMessages, PluginManager pluginManager) {
 		if (getServer().spigot().getConfig().getBoolean("settings.bungeecord")) {
 			if (pluginManager.isPluginEnabled("BungeeGuard")) {
 				return true;
 			} else {
-				loggerInfo("§c============= §6! WARNING ! §c=============");
-				loggerInfo("§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!");
-				loggerInfo("§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation.");
-				loggerInfo("§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/");
-				loggerInfo("§c============= §6! WARNING ! §c=============");
+				loggerInfo(systemMessages.getString("baseline-warn"));
+				loggerInfo(systemMessages.getString("bungeecord-1"));
+				loggerInfo(systemMessages.getString("bungeecord-2"));
+				loggerInfo(systemMessages.getString("bungeecord-3"));
+				loggerInfo(systemMessages.getString("baseline-warn"));
 				server.shutdown();
 				return false;
 			}
@@ -131,15 +127,16 @@ public class ServerProtectorManager extends JavaPlugin {
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
 		boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
-		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
-		pluginConfig.save(path, dataFile, file_settings.getString("data-file"));
-		pluginConfig.setupPasswords(dataFile);
+		dataFileName = file_settings.getString("data-file");
+		dataFile = pluginConfig.getFile(path, dataFileName);
+		pluginConfig.save(path, dataFile, dataFileName);
 		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		pluginConfig.save(getDataFolder().getAbsolutePath(), messageFile, "message.yml");
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
 		pluginConfig.setupExcluded(config);
 		pluginConfig.loadMainSettings(config);
+		pluginConfig.loadEncryptionSettings(config);
 		pluginConfig.loadSecureSettings(config);
 		pluginConfig.loadAdditionalChecks(config);
 		pluginConfig.loadAttempts(config);
@@ -161,21 +158,24 @@ public class ServerProtectorManager extends JavaPlugin {
 			pluginConfig.loadBroadcastMessages(messageFile);
 		}
 		pluginConfig.loadUspMessages(messageFile);
+		pluginConfig.setupPasswords(dataFile);
 	}
 
-	public void reloadConfigs(FileConfiguration config) {
+	public void reloadConfigs() {
 		reloadConfig();
+		FileConfiguration config = getConfig();
 		serialiser = config.getString("main-settings.serialiser");
 		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
 		boolean fullpath = file_settings.getBoolean("use-full-path");
 		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
-		dataFile = pluginConfig.getFile(path, file_settings.getString("data-file"));
-		pluginConfig.setupPasswords(dataFile);
+		dataFileName = file_settings.getString("data-file");
+		dataFile = pluginConfig.getFile(path, dataFileName);
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
 		pluginConfig.setupExcluded(config);
 		pluginConfig.loadMainSettings(config);
+		pluginConfig.loadEncryptionSettings(config);
 		pluginConfig.loadSecureSettings(config);
 		pluginConfig.loadAdditionalChecks(config);
 		pluginConfig.loadAttempts(config);
@@ -196,6 +196,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			pluginConfig.loadBroadcastMessages(messageFile);
 		}
 		pluginConfig.loadUspMessages(messageFile);
+		pluginConfig.setupPasswords(dataFile);
 	}
 
 	public void registerListeners(PluginManager pluginManager) {
@@ -230,7 +231,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public void startTasks(FileConfiguration config) {
 		TaskManager taskManager = new TaskManager(this);
-		taskManager.startMainCheck();
+		taskManager.startMainCheck(pluginConfig.main_settings_check_interval);
 		taskManager.startCapturesMessages(config);
 		if (pluginConfig.punish_settings_enable_time) {
 			time = new Object2ObjectOpenHashMap<>();
@@ -258,20 +259,20 @@ public class ServerProtectorManager extends JavaPlugin {
 		logFile = new File(logFilePath, file_settings.getString("log-file"));
 	}
 
-	public void checkForUpdates(FileConfiguration config) {
+	public void checkForUpdates(FileConfiguration config, ConfigurationSection systemMessages) {
 		if (!config.getBoolean("main-settings.update-checker")) {
 			return;
 		}
 		Utils.checkUpdates(this, version -> {
-			loggerInfo("§6========================================");
+			loggerInfo(systemMessages.getString("baseline-default"));
 			if (getDescription().getVersion().equals(version)) {
-				loggerInfo("§aYou are using latest version of the plugin!");
+				loggerInfo(systemMessages.getString("update-latest"));
 			} else {
-				loggerInfo("§aYou are using outdated version of the plugin!");
-				loggerInfo("§aYou can download new version here:");
-				loggerInfo("§bgithub.com/Overwrite987/UltimateServerProtector/releases/");
+				loggerInfo(systemMessages.getString("update-outdated-1"));
+				loggerInfo(systemMessages.getString("update-outdated-2"));
+				loggerInfo(systemMessages.getString("update-outdated-3"));
 			}
-			loggerInfo("§6========================================");
+			loggerInfo(systemMessages.getString("baseline-default"));
 		});
 	}
 
