@@ -37,8 +37,8 @@ public class Config {
 			broadcasts_passed, broadcasts_joined, broadcasts_captured, bossbar_message,
 			bossbar_settings_bar_color, bossbar_settings_bar_style, main_settings_prefix, main_settings_pas_command;
 
-	public boolean encryption_settings_enable_encryption, encryption_settings_auto_encrypt_passwords, blocking_settings_block_item_drop, blocking_settings_block_item_pickup,
-			blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
+	public boolean encryption_settings_enable_encryption, encryption_settings_auto_encrypt_passwords, blocking_settings_block_item_drop,
+			blocking_settings_block_item_pickup, blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
 			blocking_settings_block_inventory_open, blocking_settings_hide_on_entering, blocking_settings_hide_other_on_entering, main_settings_use_command,
 			main_settings_enable_admin_commands, punish_settings_enable_attempts, punish_settings_enable_time,
 			bossbar_settings_enable_bossbar, secure_settings_enable_op_whitelist,
@@ -63,18 +63,19 @@ public class Config {
 			if (!encryption_settings_enable_encryption) {
 				per_player_passwords.put(nick, data.getString(nick + ".pass"));
 			} else {
-				if (data.getString(nick + ".pass") != null) {
-					String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), encryption_settings_encrypt_method);
-					dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
-					dataFile.set("data." + nick + ".pass", null);
-					shouldSave = true;
-					instance.dataFile = dataFile;
+				if (encryption_settings_auto_encrypt_passwords) {
+					if (data.getString(nick + ".pass") != null) {
+						String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), encryption_settings_encrypt_method);
+						dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
+						dataFile.set("data." + nick + ".pass", null);
+						shouldSave = true;
+						instance.dataFile = dataFile;
+					}
 				}
 				per_player_passwords.put(nick, data.getString(nick + ".encrypted-pass"));
 			}
 		}
 		if (shouldSave) {
-			instance.loggerInfo("re-saving");
 			save(instance.path, dataFile, instance.dataFileName);
 		}
 	}
