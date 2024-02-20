@@ -27,7 +27,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		if (!isSafe(systemMessages, pluginManager)) {
 			return;
 		}
-		checkPaper(systemMessages);
+		paper = checkPaper(systemMessages);
 		registerListeners(pluginManager);
 		registerCommands(pluginManager, config);
 		startTasks(config);

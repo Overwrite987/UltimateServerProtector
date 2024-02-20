@@ -28,7 +28,7 @@ public final class Utils {
 
 	public static BossBar bossbar;
 
-	public static final int SUB_VERSION = Integer.parseInt(Bukkit.getMinecraftVersion().split("\\.")[1]);
+	public static final int SUB_VERSION = Integer.parseInt(Bukkit.getBukkitVersion().split("\\.")[1]);
 	private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F\\d]{6})");
 
 	public static final boolean FOLIA;

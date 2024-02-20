@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit;
 
-import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
@@ -41,6 +40,8 @@ public class ServerProtectorManager extends JavaPlugin {
 	
 	public static String serialiser; // this is bullshit
 	public boolean proxy = false;
+
+	public boolean paper;
 
 	public FileConfiguration messageFile;
 	public FileConfiguration dataFile;
@@ -87,13 +88,15 @@ public class ServerProtectorManager extends JavaPlugin {
 		return runner;
 	}
 
-	public void checkPaper(ConfigurationSection systemMessages) {
+	public boolean checkPaper(ConfigurationSection systemMessages) {
 		if (server.getName().equals("CraftBukkit")) {
 			loggerInfo(systemMessages.getString("baseline-warn"));
 			loggerInfo(systemMessages.getString("paper-1"));
 			loggerInfo(systemMessages.getString("paper-2"));
 			loggerInfo(systemMessages.getString("baseline-warn"));
+			return false;
 		}
+		return  true;
 	}
 
 	public boolean isSafe(ConfigurationSection systemMessages, PluginManager pluginManager) {
@@ -203,11 +206,11 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginManager.registerEvents(new ChatListener(this), this);
 		pluginManager.registerEvents(new ConnectionListener(this), this);
 		pluginManager.registerEvents(new InteractionsListener(this), this);
-		pluginManager.registerEvents(new AdditionalListener(this), this);
+		if (paper) { pluginManager.registerEvents(new AdditionalListener(this), this); }
 	}
 
 	public void registerCommands(PluginManager pluginManager, FileConfiguration config) {
-		if (config.getBoolean("main-settings.use-command")) {
+		if (config.getBoolean("main-settings.use-command") && paper) {
 			try {
 				CommandMap commandMap = server.getCommandMap();
 				Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
@@ -234,7 +237,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		taskManager.startMainCheck(pluginConfig.main_settings_check_interval);
 		taskManager.startCapturesMessages(config);
 		if (pluginConfig.punish_settings_enable_time) {
-			time = new Object2ObjectOpenHashMap<>();
+			time = new HashMap<>();
 			taskManager.startCapturesTimer(config);
 		}
 		if (pluginConfig.secure_settings_enable_notadmin_punish) {
