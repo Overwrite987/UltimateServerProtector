@@ -103,7 +103,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				if (pluginConfig.encryption_settings_enable_encryption && args.length == 2) {
-					sender.sendMessage(Utils.encryptPassword(args[1], pluginConfig.encryption_settings_encrypt_method));
+					sender.sendMessage(Utils.encryptPassword(args[1], pluginConfig.encryption_settings_encrypt_methods));
 					return true;
 				}
 				break;
@@ -268,7 +268,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		if (!pluginConfig.encryption_settings_enable_encryption) {
 			dataFile.set("data." + nick + ".pass", pas);
 		} else {
-			String encryptedPas = Utils.encryptPassword(pas, pluginConfig.encryption_settings_encrypt_method);
+			String encryptedPas = Utils.encryptPassword(pas, pluginConfig.encryption_settings_encrypt_methods);
 			dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
 		}
 		pluginConfig.save(instance.path, dataFile, instance.dataFileName);

@@ -39,7 +39,7 @@ public class PasCommand implements CommandExecutor {
 			sender.sendMessage(pluginConfig.msg_cantbenull);
 			return true;
 		}
-		String inputPass = pluginConfig.encryption_settings_enable_encryption ? Utils.encryptPassword(args[0], pluginConfig.encryption_settings_encrypt_method) : args[0];
+		String inputPass = pluginConfig.encryption_settings_enable_encryption ? Utils.encryptPassword(args[0], pluginConfig.encryption_settings_encrypt_methods) : args[0];
 		passwordHandler.checkPassword(p, inputPass, false);
 		return true;
 	}

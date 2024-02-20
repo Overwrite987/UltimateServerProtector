@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.util.Base64;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,19 +121,25 @@ public final class Utils {
 		});
 	}
 
-	public static String encryptPassword(String password, String hashType) {
-		switch (hashType) {
-			case "BASE64":
-				return encryptToBase64(password);
-			case "MD5":
-				return encryptToHash(password, "MD5");
-			case "SHA256":
-				return encryptToHash(password, "SHA-256");
-            case "SHA512":
-				return encryptToHash(password, "SHA-512");
-			default:
-				throw new IllegalArgumentException("Unsupported hash type: " + hashType);
+	public static String encryptPassword(String password, List<String> hashTypes) {
+		String encryptedPassword = password;
+		for (String hashType : hashTypes) {
+			switch (hashType.toUpperCase()) {
+				case "BASE64":
+					encryptedPassword = encryptToBase64(encryptedPassword);
+					break;
+				case "MD5":
+				case "SHA224":
+				case "SHA256":
+				case "SHA384":
+				case "SHA512":
+					encryptedPassword = encryptToHash(encryptedPassword, hashType);
+					break;
+				default:
+					throw new IllegalArgumentException("Unsupported hash type: " + hashType);
+			}
 		}
+		return encryptedPassword;
 	}
 
 	private static String encryptToBase64(String str) {

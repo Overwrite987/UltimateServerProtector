@@ -23,12 +23,12 @@ public class Config {
 	
 	public Map<String, String> per_player_passwords;
 
-	public List<String> allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
+	public List<String> encryption_settings_encrypt_methods, allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
 			excluded_ip_whitelist, excluded_blacklisted_perms;
 	
 	public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
-	public String encryption_settings_encrypt_method, uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
+	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
 			uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
 			uspmsg_addopusage, uspmsg_remopusage, uspmsg_ipremoved, uspmsg_remipusage, uspmsg_addipusage,
 			uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_logout, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_encrypt, uspmsg_usage_setpass,
@@ -65,7 +65,7 @@ public class Config {
 			} else {
 				if (encryption_settings_auto_encrypt_passwords) {
 					if (data.getString(nick + ".pass") != null) {
-						String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), encryption_settings_encrypt_method);
+						String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), encryption_settings_encrypt_methods);
 						dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
 						dataFile.set("data." + nick + ".pass", null);
 						shouldSave = true;
@@ -92,7 +92,9 @@ public class Config {
 	public void loadEncryptionSettings(FileConfiguration config) {
 		ConfigurationSection encryption_settings = config.getConfigurationSection("encryption-settings");
 		encryption_settings_enable_encryption = encryption_settings.getBoolean("enable-encryption");
-		encryption_settings_encrypt_method = encryption_settings.getString("encrypt-method").toUpperCase();
+		encryption_settings_encrypt_methods = encryption_settings.getString("encrypt-method").contains(";")
+				? List.of(encryption_settings.getString("encrypt-method").trim().split(";"))
+				: List.of(encryption_settings.getString("encrypt-method").trim());
 		encryption_settings_auto_encrypt_passwords = encryption_settings.getBoolean("auto-encrypt-passwords");
 	}
 
