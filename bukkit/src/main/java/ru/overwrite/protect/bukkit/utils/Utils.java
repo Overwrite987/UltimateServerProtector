@@ -133,6 +133,10 @@ public final class Utils {
 				case "SHA256":
 				case "SHA384":
 				case "SHA512":
+				case "SHA-224":
+				case "SHA-256":
+				case "SHA-384":
+				case "SHA-512":
 				case "SHA3-224":
 				case "SHA3-256":
 				case "SHA3-384":
