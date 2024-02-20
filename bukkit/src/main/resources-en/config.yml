@@ -21,27 +21,31 @@ main-settings:
   # Main check interval in ticks (do not touch if you don't know how it works)
   check-interval: 40
 
-# Encryption settings for passwords
+# Encryption settings
 encryption-settings:
   # Whether to enable encryption
-  # When encryption is enabled, the password in data.yml must be specified in encrypted format in a separate field encrypted-pass:
-  # To see how the password will look in encrypted form, you can use the command /usp encrypt <password>
-  # However, if the auto-encrypt-passwords option is enabled, you can specify a regular password in the old pass: format in data.yml and the plugin will automatically convert it
+  # When encryption is enabled, the password in data.yml must be specified in an already encrypted format and in a separate field encrypted-pass:
+  # To see what the password will look like in encrypted form, you can use the command /usp encrypt <password>
+  # However, if the auto-encrypt-passwords option is enabled, you can specify a regular password in the old pass: format in data.yml, and the plugin will automatically convert it.
   enable-encryption: false
-  # Method of password encryption (Supported types: BASE64, MD5, SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512)
+  # Password encryption method (Supported types: BASE64, MD5, SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512)
   # BASE64 - This "encryption" does not provide data protection; it is simply a method of converting data to another format for network transmission or storage.
-  # Use BASE64 if you are afraid of "accidentally showing the password file to random people" and you don't specifically need to hide the data
-  # MD5 - Old encryption method prone to collisions (in other words, decryption)
-  # Use MD5 if you want to hide the data and decrypt it if necessary
-  # SHA256 and others - Variants of the SHA algorithm, practically resistant to decryption
-  # Use SHA256 if you want to securely hide passwords without the possibility of decryption and SHA512 for even more efficient encryption
-  # You can use 2 or more encryptions simultaneously for greater security of your passwords, so they cannot be brute-forced so easily.
-  # Encryption will be performed sequentially 1;2;3 and so on. It's important - deep encryption can take a long time, so don't use too many of them.
-  encrypt-method: 'BASE64;MD5'
-  # Whether to enable automatic encryption of all existing passwords from the data.yml file when the plugin starts and restarts
-  # This feature will automatically convert all passwords from the pass: format to the encrypted-pass: format, encrypting the existing passwords at the moment
-  # If there are many data in the file, automatic encryption may take a long time! Disable it if any problems occur.
+  # Use BASE64 only if you're afraid of "accidentally showing the password file in a demo" and don't need to specifically hide data or to complicate encryption
+  # MD5 - An old encryption method prone to collisions (in other words, decryption)
+  # Use MD5 if you want to hide data and at the same time decrypt it if necessary
+  # SHA256 and other SHA - variations of the SHA algorithm, practically immune to decryption
+  # Use SHA256 if you want to securely hide passwords without the possibility of decryption, and SHA512 for even more effective encryption
+  # SHA3-256 and other SHA3 - an analogue of the usual SHA with a modified encryption algorithm.
+  # Use SHA3 if you want to make non-standard and at the same time strong encryption
+  # You can use 2 or more encryption methods simultaneously for greater security of your passwords, so they cannot be easily brute-forced
+  # Encryption will be performed in order 1;2;3 and so on. It's important - deep encryption can take a lot of time, so don't use too many of them
+  # SALT is used to apply salt (random string to an existing password). You can only apply it once
+  encrypt-method: 'BASE64;SALT;MD5'
+  # Enable automatic encryption of all existing passwords from the data.yml file when the plugin starts and restarts
+  # This function will automatically convert all passwords from the pass: format to the encrypted-pass: format, encrypting the existing passwords
+  # If there is a lot of data in the file, automatic encryption can take a long time! Disable it in case of problems.
   auto-encrypt-passwords: true
+
 
 # File settings
 file-settings:

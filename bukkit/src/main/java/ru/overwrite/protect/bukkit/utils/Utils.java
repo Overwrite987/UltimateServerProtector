@@ -17,6 +17,7 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
+import java.security.SecureRandom;
 import java.util.Base64;
 import java.util.List;
 import java.util.function.Consumer;
@@ -121,12 +122,19 @@ public final class Utils {
 		});
 	}
 
-	public static String encryptPassword(String password, List<String> hashTypes) {
+	public static String encryptPassword(boolean generateSalt, String password, List<String> hashTypes) {
 		String encryptedPassword = password;
+		String salt = generateSalt ? generateSalt() : password.split(":")[0];
+		boolean salted = false;
 		for (String hashType : hashTypes) {
 			switch (hashType.toUpperCase()) {
 				case "BASE64":
 					encryptedPassword = encryptToBase64(encryptedPassword);
+					break;
+				case "SALT":
+					if (salted) { break; }
+					encryptedPassword = salt+encryptedPassword;
+					salted = true;
 					break;
 				case "MD5":
 				case "SHA224":
@@ -147,7 +155,17 @@ public final class Utils {
 					throw new IllegalArgumentException("Unsupported hash type: " + hashType);
 			}
 		}
+		if (salted) {
+			return salt + ":" + encryptedPassword;
+		}
 		return encryptedPassword;
+	}
+
+	public static String generateSalt() {
+		SecureRandom random = new SecureRandom();
+		byte[] saltBytes = new byte[12];
+		random.nextBytes(saltBytes);
+		return Base64.getEncoder().encodeToString(saltBytes);
 	}
 
 	private static String encryptToBase64(String str) {
