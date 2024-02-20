@@ -46,7 +46,6 @@ encryption-settings:
   # If there is a lot of data in the file, automatic encryption can take a long time! Disable it in case of problems.
   auto-encrypt-passwords: true
 
-
 # File settings
 file-settings:
   # Players data file name. (default - data.yml)
