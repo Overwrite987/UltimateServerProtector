@@ -133,6 +133,10 @@ public final class Utils {
 				case "SHA256":
 				case "SHA384":
 				case "SHA512":
+				case "SHA3-224":
+				case "SHA3-256":
+				case "SHA3-384":
+				case "SHA3-512":
 					encryptedPassword = encryptToHash(encryptedPassword, hashType);
 					break;
 				default:

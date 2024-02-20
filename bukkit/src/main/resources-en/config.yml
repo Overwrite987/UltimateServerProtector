@@ -28,7 +28,7 @@ encryption-settings:
   # To see how the password will look in encrypted form, you can use the command /usp encrypt <password>
   # However, if the auto-encrypt-passwords option is enabled, you can specify a regular password in the old pass: format in data.yml and the plugin will automatically convert it
   enable-encryption: false
-  # Method of password encryption (Supported types: BASE64, MD5, SHA224, SHA256, SHA384, SHA512)
+  # Method of password encryption (Supported types: BASE64, MD5, SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512)
   # BASE64 - This "encryption" does not provide data protection; it is simply a method of converting data to another format for network transmission or storage.
   # Use BASE64 if you are afraid of "accidentally showing the password file to random people" and you don't specifically need to hide the data
   # MD5 - Old encryption method prone to collisions (in other words, decryption)
@@ -36,7 +36,7 @@ encryption-settings:
   # SHA256 and others - Variants of the SHA algorithm, practically resistant to decryption
   # Use SHA256 if you want to securely hide passwords without the possibility of decryption and SHA512 for even more efficient encryption
   # You can use 2 or more encryptions simultaneously for greater security of your passwords, so they cannot be brute-forced so easily.
-  # Encryption will be performed sequentially 1;2;3 and so on. It's important - encryption can take a long time, so don't use too many of them.
+  # Encryption will be performed sequentially 1;2;3 and so on. It's important - deep encryption can take a long time, so don't use too many of them.
   encrypt-method: 'BASE64;MD5'
   # Whether to enable automatic encryption of all existing passwords from the data.yml file when the plugin starts and restarts
   # This feature will automatically convert all passwords from the pass: format to the encrypted-pass: format, encrypting the existing passwords at the moment
