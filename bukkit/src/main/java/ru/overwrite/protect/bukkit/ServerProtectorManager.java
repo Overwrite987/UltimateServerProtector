@@ -90,10 +90,10 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public boolean checkPaper(ConfigurationSection systemMessages) {
 		if (server.getName().equals("CraftBukkit")) {
-			loggerInfo(systemMessages.getString("baseline-warn"));
-			loggerInfo(systemMessages.getString("paper-1"));
-			loggerInfo(systemMessages.getString("paper-2"));
-			loggerInfo(systemMessages.getString("baseline-warn"));
+			loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
+			loggerInfo(systemMessages.getString("paper-1", "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"));
+			loggerInfo(systemMessages.getString("paper-2", "§eDownload Paper: §ahttps://papermc.io/downloads/all"));
+			loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
 			return false;
 		}
 		return  true;
@@ -104,11 +104,11 @@ public class ServerProtectorManager extends JavaPlugin {
 			if (pluginManager.isPluginEnabled("BungeeGuard")) {
 				return true;
 			} else {
-				loggerInfo(systemMessages.getString("baseline-warn"));
-				loggerInfo(systemMessages.getString("bungeecord-1"));
-				loggerInfo(systemMessages.getString("bungeecord-2"));
-				loggerInfo(systemMessages.getString("bungeecord-3"));
-				loggerInfo(systemMessages.getString("baseline-warn"));
+				loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
+				loggerInfo(systemMessages.getString("bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
+				loggerInfo(systemMessages.getString("bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
+				loggerInfo(systemMessages.getString("bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
+				loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
 				server.shutdown();
 				return false;
 			}
@@ -267,15 +267,15 @@ public class ServerProtectorManager extends JavaPlugin {
 			return;
 		}
 		Utils.checkUpdates(this, version -> {
-			loggerInfo(systemMessages.getString("baseline-default"));
+			loggerInfo(systemMessages.getString("baseline-default", "§6========================================"));
 			if (getDescription().getVersion().equals(version)) {
-				loggerInfo(systemMessages.getString("update-latest"));
+				loggerInfo(systemMessages.getString("update-latest", "§aYou are using latest version of the plugin!"));
 			} else {
-				loggerInfo(systemMessages.getString("update-outdated-1"));
-				loggerInfo(systemMessages.getString("update-outdated-2"));
-				loggerInfo(systemMessages.getString("update-outdated-3"));
+				loggerInfo(systemMessages.getString("update-outdated-1", "§aYou are using outdated version of the plugin!"));
+				loggerInfo(systemMessages.getString("update-outdated-2", "§aYou can download new version here:"));
+				loggerInfo(systemMessages.getString("update-outdated-3", "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"));
 			}
-			loggerInfo(systemMessages.getString("baseline-default"));
+			loggerInfo(systemMessages.getString("baseline-default", "§6========================================"));
 		});
 	}
 
@@ -292,7 +292,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			for (String s : pluginConfig.effect_settings_effects) {
 				String[] splittedEffect = s.split(";");
 				PotionEffectType types = PotionEffectType.getByName(splittedEffect[0].toUpperCase());
-				int level = Integer.parseInt(splittedEffect[1]) - 1;
+				int level = splittedEffect.length > 1 ? Integer.parseInt(splittedEffect[1]) - 1 : 0;
 				player.addPotionEffect(new PotionEffect(types, 99999, level));
 			}
 		}, player);

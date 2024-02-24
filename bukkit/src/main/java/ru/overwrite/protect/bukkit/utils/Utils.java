@@ -51,35 +51,30 @@ public final class Utils {
 	}
 	
 	public static void sendTitleMessage(String[] titleMessages, Player p) {
+		if (titleMessages.length > 5) {
+			Bukkit.getConsoleSender().sendMessage ("Unable to send title. " + titleMessages.toString());
+		}
 		String title = titleMessages[0];
 		String subtitle = (titleMessages.length > 1 && titleMessages[1] != null) ? titleMessages[1] : "";
 		int fadeIn = 10;
 		int stay = 70;
 		int fadeOut = 20;
-		// Temporary solution for idiotic monkeys that cannot read // TODO: Remove this completely
-		try {
-			fadeIn = (titleMessages.length > 2 && titleMessages[2] != null) ? Integer.parseInt(titleMessages[2]) : 10;
-			stay = (titleMessages.length > 3 && titleMessages[3] != null) ? Integer.parseInt(titleMessages[3]) : 70;
-			fadeOut = (titleMessages.length > 4 && titleMessages[4] != null) ? Integer.parseInt(titleMessages[4]) : 20;
-		} catch (NumberFormatException ex) {
-			ex.printStackTrace();
-		}
+		fadeIn = (titleMessages.length > 2 && titleMessages[2] != null) ? Integer.parseInt(titleMessages[2]) : 10;
+		stay = (titleMessages.length > 3 && titleMessages[3] != null) ? Integer.parseInt(titleMessages[3]) : 70;
+		fadeOut = (titleMessages.length > 4 && titleMessages[4] != null) ? Integer.parseInt(titleMessages[4]) : 20;
 
 		p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 	}
 
 	public static void sendSound(String[] soundArgs, Player p) {
+		if (soundArgs.length > 3) {
+			Bukkit.getConsoleSender().sendMessage ("Unable to give effect. " + soundArgs.toString());
+		}
 		Sound sound = Sound.valueOf(soundArgs[0]);
 		float volume = 1.0f;
 		float pitch = 1.0f;
-		// Temporary solution for idiotic monkeys that cannot read // TODO: Remove this completely
-		try {
-	        volume = (soundArgs.length > 1 && soundArgs[1] != null) ? Float.parseFloat(soundArgs[1]) : 1.0f;
-	        pitch = (soundArgs.length > 2 && soundArgs[2] != null) ? Float.parseFloat(soundArgs[2]) : 1.0f;
-	    } catch (IllegalArgumentException ex) {
-	    	ex.printStackTrace();
-	    }
-
+		volume = (soundArgs.length > 1 && soundArgs[1] != null) ? Float.parseFloat(soundArgs[1]) : 1.0f;
+		pitch = (soundArgs.length > 2 && soundArgs[2] != null) ? Float.parseFloat(soundArgs[2]) : 1.0f;
 	    p.playSound(p.getLocation(), sound, volume, pitch);
 	}
 

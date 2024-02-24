@@ -107,10 +107,21 @@ public class ConnectionListener implements Listener {
 
 	private boolean isIPAllowed(String p, String ip) {
 		List<String> ips = pluginConfig.ip_whitelist.get(p);
-		return ips.stream()
-				.anyMatch(allowedIP -> allowedIP.endsWith("*")
-						? ip.startsWith(allowedIP.substring(0, allowedIP.length() - 1))
-						: allowedIP.equals(ip));
+		String[] ipParts = ip.split("\\.");
+
+		return ips.stream().anyMatch(allowedIP -> {
+			String[] allowedParts = allowedIP.split("\\.");
+			if (ipParts.length != allowedParts.length) {
+				return false;
+			}
+
+			for (int i = 0; i < ipParts.length; i++) {
+				if (!allowedParts[i].equals("*") && !allowedParts[i].equals(ipParts[i])) {
+					return false;
+				}
+			}
+			return true;
+		});
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
