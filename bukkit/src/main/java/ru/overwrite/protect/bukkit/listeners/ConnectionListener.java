@@ -71,22 +71,22 @@ public class ConnectionListener implements Listener {
 					if (pluginConfig.effect_settings_enable_effects) {
 						instance.giveEffect(p);
 					}
-				}
-				if (pluginConfig.blocking_settings_hide_on_entering) {
-					runner.runPlayer(() -> {
-						for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-							if (!onlinePlayer.equals(p)) {
-								onlinePlayer.hidePlayer(instance, p);
+					if (pluginConfig.blocking_settings_hide_on_entering) {
+						runner.runPlayer(() -> {
+							for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+								if (!onlinePlayer.equals(p)) {
+									onlinePlayer.hidePlayer(instance, p);
+								}
 							}
-						}
-					}, p);
-				}
-				if (pluginConfig.blocking_settings_hide_other_on_entering) {
-					runner.runPlayer(() -> {
-						for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-							p.hidePlayer(instance, onlinePlayer);
-						}
-					}, p);
+						}, p);
+					}
+					if (pluginConfig.blocking_settings_hide_other_on_entering) {
+						runner.runPlayer(() -> {
+							for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+								p.hidePlayer(instance, onlinePlayer);
+							}
+						}, p);
+					}
 				}
 				if (pluginConfig.logging_settings_logging_join) {
 					instance.logAction("log-format.joined", p, new Date());

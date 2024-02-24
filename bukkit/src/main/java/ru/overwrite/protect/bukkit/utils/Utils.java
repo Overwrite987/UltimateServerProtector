@@ -118,6 +118,7 @@ public final class Utils {
 	}
 
 	public static String encryptPassword(boolean generateSalt, String password, List<String> hashTypes) {
+		//long startTime = System.currentTimeMillis();
 		String encryptedPassword = password;
 		String salt = generateSalt ? generateSalt() : password.split(":")[0];
 		boolean salted = false;
@@ -153,10 +154,12 @@ public final class Utils {
 		if (salted) {
 			return salt + ":" + encryptedPassword;
 		}
+		//long endTime = System.currentTimeMillis();
+		//Bukkit.getConsoleSender().sendMessage("Plugin started in " + (endTime - startTime) + " ms");
 		return encryptedPassword;
 	}
 
-	public static String generateSalt() {
+	private static String generateSalt() {
 		SecureRandom random = new SecureRandom();
 		byte[] saltBytes = new byte[12];
 		random.nextBytes(saltBytes);

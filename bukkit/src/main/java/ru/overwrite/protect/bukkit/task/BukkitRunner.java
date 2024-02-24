@@ -3,7 +3,6 @@ package ru.overwrite.protect.bukkit.task;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
-import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
 public class BukkitRunner implements Runner {
