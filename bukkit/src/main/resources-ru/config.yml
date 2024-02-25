@@ -134,6 +134,8 @@ secure-settings:
   shutdown-on-disable-only-if-plugman: true
   # Разрешить ли ряду игроков входить в игру без админ пароля (отключено по умолчанию и небезопасно)
   enable-excluded-players: false
+  # Вызывать ли ServerProtectorPasswordEnterEvent при вводе пароля игроком? (Отключено по умолчанию в целях безопасности)
+  call-event-on-password-enter: false
 
 # Настройки показа сообщений
 message-settings:

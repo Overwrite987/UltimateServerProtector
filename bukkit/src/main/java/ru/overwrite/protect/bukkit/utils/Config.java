@@ -44,7 +44,7 @@ public class Config {
 			bossbar_settings_enable_bossbar, secure_settings_enable_op_whitelist,
 			secure_settings_enable_notadmin_punish, secure_settings_enable_permission_blacklist,
 			secure_settings_enable_ip_whitelist, secure_settings_only_console_usp,
-			secure_settings_enable_excluded_players, session_settings_session, session_settings_session_time_enabled,
+			secure_settings_enable_excluded_players, secure_settings_call_event_on_password_enter, session_settings_session, session_settings_session_time_enabled,
 			message_settings_send_title, message_settings_enable_broadcasts, message_settings_enable_console_broadcasts,
 			sound_settings_enable_sounds, effect_settings_enable_effects, logging_settings_logging_pas,
 			logging_settings_logging_join, logging_settings_logging_enable_disable;
@@ -174,6 +174,7 @@ public class Config {
 		secure_settings_enable_ip_whitelist = secure_settings.getBoolean("enable-ip-whitelist");
 		secure_settings_only_console_usp = secure_settings.getBoolean("only-console-usp");
 		secure_settings_enable_excluded_players = secure_settings.getBoolean("enable-excluded-players");
+		secure_settings_call_event_on_password_enter = secure_settings.getBoolean("call-event-on-password-enter");
 	}
 
 	public void loadAdditionalChecks(FileConfiguration config) {

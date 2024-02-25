@@ -30,7 +30,7 @@ public class PasswordHandler {
 	public void checkPassword(Player p, String input, boolean resync) {
 		Runnable run = () -> {
 			ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(p, input);
-			enterEvent.callEvent();
+			if (pluginConfig.secure_settings_call_event_on_password_enter) { enterEvent.callEvent(); }
 			if (enterEvent.isCancelled()) {
 				return;
 			}

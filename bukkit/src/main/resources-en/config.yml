@@ -126,6 +126,8 @@ secure-settings:
   shutdown-on-disable-only-if-plugman: true
   # Allow certain players to enter the game without an admin password (disabled by default and unsafe)
   enable-excluded-players: false
+  # Should the plugin call ServerProtectorPasswordEnterEvent on password entering? (Disabled by default for security reasons)
+  call-event-on-password-enter: false
 
 # Message display settings
 message-settings:
