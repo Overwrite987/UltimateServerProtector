@@ -13,6 +13,11 @@ dependencies {
     compileOnly(libs.minecraft.paper)
 }
 
+java {
+    sourceCompatibility = JavaVersion.VERSION_17
+    targetCompatibility = JavaVersion.VERSION_11
+}
+
 val processResources = project.tasks.named<ProcessResources>("processResources") {
     filteringCharset = "UTF-8"
     filesMatching("plugin.yml") {

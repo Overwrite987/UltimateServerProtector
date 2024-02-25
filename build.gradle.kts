@@ -13,3 +13,4 @@ plugins {
     alias(libs.plugins.klibs.gradle.rootinfo)
     alias(libs.plugins.gradle.shadow) apply false
 }
+
