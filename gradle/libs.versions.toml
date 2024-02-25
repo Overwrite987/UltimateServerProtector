@@ -4,8 +4,7 @@ klibs-gradleplugin = "0.5.0"
 
 [libraries]
 # Minecraft
-minecraft-bstats = { module = "org.bstats:bstats-bukkit", version.strictly = "3.0.0" }
-minecraft-folia = { module = "dev.folia:folia-api", version.strictly = "1.20.1-R0.1-SNAPSHOT" }
+minecraft-paper = { module = "io.papermc.paper:paper-api", version.strictly = "1.20.4-R0.1-SNAPSHOT" }
 
 [plugins]
 # Kotlin

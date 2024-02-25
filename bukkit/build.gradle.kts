@@ -10,8 +10,7 @@ plugins {
 }
 
 dependencies {
-    compileOnly(libs.minecraft.folia)
-    implementation(libs.minecraft.bstats)
+    compileOnly(libs.minecraft.paper)
 }
 
 val processResources = project.tasks.named<ProcessResources>("processResources") {
@@ -41,7 +40,6 @@ listOf("en", "ru").forEach { lang ->
         mergeServiceFiles()
         dependsOn(configurations)
         archiveClassifier.set(null as String?)
-        relocate("org.bstats", projectInfo.group)
         archiveVersion.set(projectInfo.versionString)
         archiveBaseName.set(projectInfo.name + "-$lang")
     }
