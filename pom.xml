@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <groupId>ru.overwrite.protect</groupId>
+  <artifactId>serverprotector-project</artifactId>
+  <version>28</version>
+  <packaging>pom</packaging>
+
+  <name>ServerProtector Project</name>
+
+  <modules>
+    <module>bukkit</module>
+  </modules>
+
+  <description>ServerProtector Project</description>
+  <properties>
+    <java.version>17</java.version>
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <lang>en</lang>
+  </properties>
+
+  <profiles>
+    <profile>
+      <id>ru</id>
+      <properties>
+        <lang>ru</lang>
+      </properties>
+    </profile>
+  </profiles>
+
+  <build>
+    <defaultGoal>clean package</defaultGoal>
+  </build>
+
+  <repositories>
+    <repository>
+      <id>papermc</id>
+      <url>https://repo.papermc.io/repository/maven-public/</url>
+    </repository>
+  </repositories>
+</project>

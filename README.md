@@ -40,9 +40,10 @@ Admin commands that can be included in the config:
 <br><a href="https://black-minecraft.com/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.2160/">**Black-Minecraft.com**</a>
 
 **• Build**
+<br>Maven required
 ```bash
-# For english locale
-./gradlew :bukkit:shadowJarEN
+# For English locale
+mvn clean package
 # For russian locale
-./gradlew :bukkit:shadowJarRU
+mvn clean package -P ru
 ```
