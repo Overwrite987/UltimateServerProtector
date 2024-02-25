@@ -7,6 +7,7 @@ buildscript {
 plugins {
     java
     `java-library`
+	`maven-publish`
     alias(libs.plugins.kotlin.jvm) apply false
     alias(libs.plugins.klibs.gradle.java.core) apply false
     alias(libs.plugins.klibs.gradle.rootinfo)
