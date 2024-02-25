@@ -175,8 +175,8 @@ public final class Utils {
 			MessageDigest digest = MessageDigest.getInstance(algorithm);
 			byte[] hash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
 			return bytesToHexString(hash);
-		} catch (NoSuchAlgorithmException e) {
-			e.printStackTrace();
+		} catch (NoSuchAlgorithmException ex) {
+			ex.printStackTrace();
 			return null;
 		}
 	}
