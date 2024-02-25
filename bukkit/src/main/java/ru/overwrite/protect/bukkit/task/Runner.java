@@ -1,7 +1,6 @@
 package ru.overwrite.protect.bukkit.task;
 
 import org.bukkit.entity.Player;
-import org.jetbrains.annotations.NotNull;
 
 public interface Runner {
 	void runPlayer(Runnable task, Player player);
