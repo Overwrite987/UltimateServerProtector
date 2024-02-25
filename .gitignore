@@ -4,3 +4,4 @@
 target/
 build
 bukkit/build
+bukkit/dependency-reduced-pom.xml
