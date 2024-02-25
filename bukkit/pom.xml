@@ -6,16 +6,16 @@
 
   <parent>
     <groupId>ru.overwrite.protect</groupId>
-    <artifactId>serverprotector-project</artifactId>
+    <artifactId>ultimateserverprotector-project</artifactId>
     <version>28</version>
   </parent>
 
-  <artifactId>serverprotector</artifactId>
+  <artifactId>ultimateserverprotector</artifactId>
   <packaging>jar</packaging>
 
-  <name>ServerProtector</name>
+  <name>UltimateServerProtector</name>
 
-  <description>ServerProtector Plugin</description>
+  <description>UltimateServerProtector Plugin</description>
 
   <build>
     <finalName>${project.name}-v${project.version}-${lang}</finalName>

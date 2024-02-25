@@ -5,17 +5,17 @@
   <modelVersion>4.0.0</modelVersion>
 
   <groupId>ru.overwrite.protect</groupId>
-  <artifactId>serverprotector-project</artifactId>
+  <artifactId>ultimateserverprotector-project</artifactId>
   <version>28</version>
   <packaging>pom</packaging>
 
-  <name>ServerProtector Project</name>
+  <name>UltimateServerProtector Project</name>
 
   <modules>
     <module>bukkit</module>
   </modules>
 
-  <description>ServerProtector Project</description>
+  <description>UltimateServerProtector Project</description>
   <properties>
     <java.version>17</java.version>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
