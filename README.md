@@ -44,6 +44,6 @@ Admin commands that can be included in the config:
 ```bash
 # For English locale
 mvn clean package
-# For russian locale
+# For Russian locale
 mvn clean package -P ru
 ```
