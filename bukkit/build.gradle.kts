@@ -13,10 +13,6 @@ dependencies {
     compileOnly(libs.minecraft.paper)
 }
 
-java {
-    sourceCompatibility = JavaVersion.VERSION_17
-    targetCompatibility = JavaVersion.VERSION_17
-}
 
 val processResources = project.tasks.named<ProcessResources>("processResources") {
     filteringCharset = "UTF-8"
