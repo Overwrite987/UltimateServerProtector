@@ -60,7 +60,6 @@ public class ChatListener implements Listener {
 			}
 		}
 		e.setCancelled(true);
-		e.setMessage("");
 	}
 
 	private static String cutCommand(String str) {
