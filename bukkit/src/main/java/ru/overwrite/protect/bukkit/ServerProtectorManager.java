@@ -224,7 +224,7 @@ public class ServerProtectorManager extends JavaPlugin {
 				pluginManager.disablePlugin(this);
 			}
 		} else {
-			loggerInfo("Using chat for password entering!");
+			loggerInfo("Command for password entering will not be registered.");
 		}
 		PluginCommand uspCommand = getCommand("ultimateserverprotector");
 		UspCommand uspCommandClass = new UspCommand(this);

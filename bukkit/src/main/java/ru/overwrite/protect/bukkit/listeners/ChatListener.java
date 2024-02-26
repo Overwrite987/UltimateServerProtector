@@ -13,11 +13,14 @@ import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class ChatListener implements Listener {
+
+	private final ServerProtectorManager instance;
 	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 
 	public ChatListener(ServerProtectorManager plugin) {
+		instance = plugin;
 		pluginConfig = plugin.getPluginConfig();
 		passwordHandler = plugin.getPasswordHandler();
 		api = plugin.getPluginAPI();
@@ -46,17 +49,22 @@ public class ChatListener implements Listener {
 		if (!api.isCaptured(p)) {
 			return;
 		}
+		String message = e.getMessage();
+		String label = cutCommand(message).toLowerCase();
 		if (pluginConfig.main_settings_use_command) {
-			String message = e.getMessage();
-			String label = cutCommand(message).toLowerCase();
 			if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
-				return;
-			} else {
-				for (String command : pluginConfig.allowed_commands) {
-					if (label.equals(command) || message.equalsIgnoreCase(command)) {
-						return;
-					}
+				if (!instance.paper) {
+					String inputPass = pluginConfig.encryption_settings_enable_encryption
+							? Utils.encryptPassword(false, message.split(" ")[1], pluginConfig.encryption_settings_encrypt_methods)
+							: message.split(" ")[1];
+					passwordHandler.checkPassword(p, inputPass, false);
 				}
+				return;
+			}
+		}
+		for (String command : pluginConfig.allowed_commands) {
+			if (label.equals(command) || message.equalsIgnoreCase(command)) {
+				return;
 			}
 		}
 		e.setCancelled(true);

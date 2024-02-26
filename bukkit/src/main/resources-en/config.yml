@@ -8,9 +8,9 @@ main-settings:
   proxy: false
   # Plugin prefix
   prefix: '&f&l[&c&lProtection&f&l]'
-  # If set to false, players need to type the password in the chat (doesn't work on spigot. use chat instead)
+  # If set to false, players need to type the password in the chat
   use-command: true
-  # Password input command. (specified without / at the beginning) (default - pas)
+  # Password input command. (specified without / at the beginning) (default - pas) (command is not going to be registered on Spigot)
   pas-command: 'pas'
   # Enable commands for adding new players to the config
   enable-admin-commands: false
