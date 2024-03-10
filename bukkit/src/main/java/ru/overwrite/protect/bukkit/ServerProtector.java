@@ -22,12 +22,11 @@ public final class ServerProtector extends ServerProtectorManager {
 		FileConfiguration config = getConfig();
 		setupProxy(config);
 		loadConfigs(config);
-		ConfigurationSection systemMessages = messageFile.getConfigurationSection("system");
 		PluginManager pluginManager = server.getPluginManager();
-		if (!isSafe(systemMessages, pluginManager)) {
+		if (!isSafe(messageFile, pluginManager)) {
 			return;
 		}
-		paper = checkPaper(systemMessages);
+		paper = checkPaper(messageFile);
 		registerListeners(pluginManager);
 		registerCommands(pluginManager, config);
 		startTasks(config);
@@ -36,7 +35,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		if (config.getBoolean("main-settings.enable-metrics")) {
 			new Metrics(this, 13347);
 		}
-		checkForUpdates(config, systemMessages);
+		checkForUpdates(config, messageFile);
 		long endTime = System.currentTimeMillis();
 		loggerInfo("Plugin started in " + (endTime - startTime) + " ms");
 	}

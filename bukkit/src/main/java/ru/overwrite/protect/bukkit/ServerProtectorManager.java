@@ -88,27 +88,27 @@ public class ServerProtectorManager extends JavaPlugin {
 		return runner;
 	}
 
-	public boolean checkPaper(ConfigurationSection systemMessages) {
+	public boolean checkPaper(FileConfiguration messageFile) {
 		if (server.getName().equals("CraftBukkit")) {
-			loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
-			loggerInfo(systemMessages.getString("paper-1", "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"));
-			loggerInfo(systemMessages.getString("paper-2", "§eDownload Paper: §ahttps://papermc.io/downloads/all"));
-			loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
+			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+			loggerInfo(messageFile.getString("system.paper-1", "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"));
+			loggerInfo(messageFile.getString("system.paper-2", "§eDownload Paper: §ahttps://papermc.io/downloads/all"));
+			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
 			return false;
 		}
 		return  true;
 	}
 
-	public boolean isSafe(ConfigurationSection systemMessages, PluginManager pluginManager) {
+	public boolean isSafe(FileConfiguration messageFile, PluginManager pluginManager) {
 		if (getServer().spigot().getConfig().getBoolean("settings.bungeecord")) {
 			if (pluginManager.isPluginEnabled("BungeeGuard")) {
 				return true;
 			} else {
-				loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
-				loggerInfo(systemMessages.getString("bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
-				loggerInfo(systemMessages.getString("bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
-				loggerInfo(systemMessages.getString("bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
-				loggerInfo(systemMessages.getString("baseline-warn", "§6============= §c! WARNING ! §c============="));
+				loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+				loggerInfo(messageFile.getString("system.bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
+				loggerInfo(messageFile.getString("system.bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
+				loggerInfo(messageFile.getString("system.bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
+				loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
 				server.shutdown();
 				return false;
 			}
@@ -262,20 +262,20 @@ public class ServerProtectorManager extends JavaPlugin {
 		logFile = new File(logFilePath, file_settings.getString("log-file"));
 	}
 
-	public void checkForUpdates(FileConfiguration config, ConfigurationSection systemMessages) {
+	public void checkForUpdates(FileConfiguration config, FileConfiguration messageFile) {
 		if (!config.getBoolean("main-settings.update-checker")) {
 			return;
 		}
 		Utils.checkUpdates(this, version -> {
-			loggerInfo(systemMessages.getString("baseline-default", "§6========================================"));
+			loggerInfo(messageFile.getString("system.baseline-default", "§6========================================"));
 			if (getDescription().getVersion().equals(version)) {
-				loggerInfo(systemMessages.getString("update-latest", "§aYou are using latest version of the plugin!"));
+				loggerInfo(messageFile.getString("system.update-latest", "§aYou are using latest version of the plugin!"));
 			} else {
-				loggerInfo(systemMessages.getString("update-outdated-1", "§aYou are using outdated version of the plugin!"));
-				loggerInfo(systemMessages.getString("update-outdated-2", "§aYou can download new version here:"));
-				loggerInfo(systemMessages.getString("update-outdated-3", "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"));
+				loggerInfo(messageFile.getString("system.update-outdated-1", "§aYou are using outdated version of the plugin!"));
+				loggerInfo(messageFile.getString("system.update-outdated-2", "§aYou can download new version here:"));
+				loggerInfo(messageFile.getString("system.update-outdated-3", "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"));
 			}
-			loggerInfo(systemMessages.getString("baseline-default", "§6========================================"));
+			loggerInfo(messageFile.getString("system.baseline-default", "§6========================================"));
 		});
 	}
 

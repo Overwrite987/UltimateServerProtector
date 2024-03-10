@@ -23,7 +23,7 @@ public class Config {
 	
 	public Map<String, String> per_player_passwords;
 
-	public List<String> encryption_settings_encrypt_methods, allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
+	public List<String> encryption_settings_encrypt_methods, encryption_settings_old_encrypt_methods, effect_settings_effects, allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
 			excluded_ip_whitelist, excluded_blacklisted_perms;
 	
 	public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
@@ -52,8 +52,6 @@ public class Config {
 	public int punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
 
 	public long main_settings_check_interval;
-
-	public List<String> effect_settings_effects;
 	
 	public void setupPasswords(FileConfiguration dataFile) {
 		per_player_passwords = new HashMap<>();
@@ -92,9 +90,14 @@ public class Config {
 	public void loadEncryptionSettings(FileConfiguration config) {
 		ConfigurationSection encryption_settings = config.getConfigurationSection("encryption-settings");
 		encryption_settings_enable_encryption = encryption_settings.getBoolean("enable-encryption");
-		encryption_settings_encrypt_methods = encryption_settings.getString("encrypt-method").contains(";")
-				? List.of(encryption_settings.getString("encrypt-method").trim().split(";"))
-				: List.of(encryption_settings.getString("encrypt-method").trim());
+		String encryptionMethod = encryption_settings.getString("encrypt-method").trim();
+		encryption_settings_encrypt_methods = encryptionMethod.contains(";")
+				? List.of(encryptionMethod.split(";"))
+				: List.of(encryptionMethod);
+		String oldEncryptionMethod = encryption_settings.getString("old-encrypt-method").trim();
+		encryption_settings_old_encrypt_methods = oldEncryptionMethod.isBlank() ? Collections.EMPTY_LIST : oldEncryptionMethod.contains(";")
+				? List.of(oldEncryptionMethod.split(";"))
+				: List.of(oldEncryptionMethod);
 		encryption_settings_auto_encrypt_passwords = encryption_settings.getBoolean("auto-encrypt-passwords");
 	}
 

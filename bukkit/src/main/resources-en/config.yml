@@ -41,6 +41,8 @@ encryption-settings:
   # Encryption will be performed in order 1;2;3 and so on. It's important - deep encryption can take a lot of time, so don't use too many of them
   # SALT is used to apply salt (random string to an existing password). You can only apply it once
   encrypt-method: 'BASE64;SALT;MD5'
+  # If you used any encryption method and for some reason decide to change it - you can specify it here so that you don't lose data
+  old-encrypt-method: ''
   # Enable automatic encryption of all existing passwords from the data.yml file when the plugin starts and restarts
   # This function will automatically convert all passwords from the pass: format to the encrypted-pass: format, encrypting the existing passwords
   # If there is a lot of data in the file, automatic encryption can take a long time! Disable it in case of problems.
@@ -167,119 +169,117 @@ logging-settings:
   logging-join: true
   # Log plugin enabling and disabling to file
   logging-enable-disable: true
-  # Log the execution of commands by the plugin from the section below
-  logging-command-execution: true
 
 # Commands applied to offenders
 commands:
 
-# Commands applied to those with admin permissions but not in the config
+  # Commands applied to those with admin rights but not in the config
   not-in-config:
-  - 'kick %player% You are not in the list of administrators!'
-  - 'deop %player%'
+    - 'kick %player% You are not in the list of administrators!'
+    - 'deop %player%'
 
-# Commands applied to those with admin rights but not listed in op-whitelist
+  # Commands applied to those with admin rights but not listed in op-whitelist
   not-in-opwhitelist:
-  - 'deop %player%'
+    - 'deop %player%'
   #- 'ban %player% You are not allowed to have operator rights!'
 
-# Commands applied to those with forbidden permissions (disabled by default)
+  # Commands applied to those with forbidden permissions (disabled by default)
   have-blacklisted-perm:
-  - 'lp user %player% permission clear'
+    - 'lp user %player% permission clear'
   #- 'ban %player% You are not allowed to have such permissions!'
 
-# Commands applied to those who entered with admin rights but have a non-admin IP (disabled by default)
+  # Commands applied to those who entered with admin rights but have a non-admin IP (disabled by default)
   not-admin-ip:
-  - 'kick %player% Your IP is not on the whitelist'
+    - 'kick %player% Your IP is not on the whitelist'
   #- 'deop %player%'
 
-# Commands applied to those who entered the wrong password within the allotted attempts
+  # Commands applied to those who entered the wrong password within the allotted attempts
   failed-pass:
-  - 'ban %player% You entered the admin password incorrectly, your account is frozen'
-  - 'deop %player%'
+    - 'ban %player% You entered the admin password incorrectly, your account is frozen'
+    - 'deop %player%'
 
-# Commands applied to those who failed to enter the password within the allotted time
+  # Commands applied to those who failed to enter the password within the allotted time
   failed-time:
-  - 'ban %player% You did not manage to enter the admin password within the given time'
-  - 'deop %player%'
+    - 'ban %player% You did not manage to enter the admin password within the given time'
+    - 'deop %player%'
 
 # Permissions for which the player will need to enter the admin password (feel free to add your own!)
-permissions: 
- - '*'
- - 'bukkit.*'
- - 'minecraft.*'
- - 'essentials.*'
- - 'cmi.*'
- - 'worldguard.*'
- - 'worldedit.*'
- - 'fawe.*'
- - 'permissions.*'
- - 'luckperms.*'
- - 'luckperms.editor'
- - 'luckperms.applyedits'
- - 'citizens.*'
- - 'citizenscmd.*'
- - 'znpcs.*'
- - 'holograms.*'
- - 'multiverse.*'
- - 'coreprotect.*'
- - 'mycommand.*'
- - 'towny.*'
- - 'matrix.*'
- - 'vulcan.*'
- - 'dh.admin'
- - 'ls.admin'
- - 'fawe.admin'
- - 'authme.admin'
- - 'protocol.admin'
- - 'placeholderapi.admin'
- - 'plugman.admin'
- - 'plugman.download'
- - 'serverprotector.admin'
+permissions:
+  - '*'
+  - 'bukkit.*'
+  - 'minecraft.*'
+  - 'essentials.*'
+  - 'cmi.*'
+  - 'worldguard.*'
+  - 'worldedit.*'
+  - 'fawe.*'
+  - 'permissions.*'
+  - 'luckperms.*'
+  - 'luckperms.editor'
+  - 'luckperms.applyedits'
+  - 'citizens.*'
+  - 'citizenscmd.*'
+  - 'znpcs.*'
+  - 'holograms.*'
+  - 'multiverse.*'
+  - 'coreprotect.*'
+  - 'mycommand.*'
+  - 'towny.*'
+  - 'matrix.*'
+  - 'vulcan.*'
+  - 'dh.admin'
+  - 'ls.admin'
+  - 'fawe.admin'
+  - 'authme.admin'
+  - 'protocol.admin'
+  - 'placeholderapi.admin'
+  - 'plugman.admin'
+  - 'plugman.download'
+  - 'serverprotector.admin'
 
 # Permissions that no one except players from the excluded-players section can have (disabled by default.)
-blacklisted-perms: 
- - '*'
+blacklisted-perms:
+  - '*'
 
 # Commands that can be entered before entering the admin password (specify with /)
 allowed-commands:
- - '/l'
- - '/login'
- - '/reg'
- - '/register'
- - '/captcha'
+  - '/l'
+  - '/login'
+  - '/reg'
+  - '/register'
+  - '/captcha'
 
 # Which players are allowed to have OP rights
-op-whitelist: 
- - Overwrite
- - test99999
- 
+op-whitelist:
+  - Overwrite
+  - test99999
+
 # From which IPs and which players are allowed to enter with admin rights
 # You can specify only part of the IP address to allow entry to people with dynamic IPs. For example, 1.2.3.4 -> 1.2.3.*
 ip-whitelist:
-    # Player 1
-    test99999:
-      - 127.0.0.1
-      - 0.0.0.0
-    # Player 2
-    test123123:
-      - 228.13.37.*
- 
+  # Player 1
+  test99999:
+    - 127.0.0.1
+    - 0.0.0.0
+  # Player 2
+  test123123:
+    - 228.13.37.*
+
 # Which players will be excluded from checks (each check has its own type)
 excluded-players:
-    # Players who do not need to enter the admin password
-    admin-pass:
-      - test99999
-      - test123123
-    # Players who will not be checked for inclusion in op-whitelist
-    op-whitelist:
-      - test99999
-      - test123123
-      # Players who will not be checked for inclusion in ip-whitelist
-    ip-whitelist:
-      - test99999
-      - test123123
-      # Players who will be allowed to have blocked permissions
-    blacklisted-perms:
-      - test99999
-      - test123123
+  # Players who do not need to enter the admin password
+  admin-pass:
+    - test99999
+    - test123123
+  # Players who will not be checked for inclusion in op-whitelist
+  op-whitelist:
+    - test99999
+    - test123123
+    # Players who will not be checked for inclusion in ip-whitelist
+  ip-whitelist:
+    - test99999
+    - test123123
+    # Players who will be allowed to have blocked permissions
+  blacklisted-perms:
+    - test99999
+    - test123123
