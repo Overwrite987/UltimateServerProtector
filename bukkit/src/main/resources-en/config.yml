@@ -42,7 +42,7 @@ encryption-settings:
   # SALT is used to apply salt (random string to an existing password). You can only apply it once
   encrypt-method: 'BASE64;SALT;MD5'
   # If you used any encryption method and for some reason decide to change it - you can specify it here so that you don't lose data
-  old-encrypt-method: ''
+  old-encrypt-methods: []
   # Enable automatic encryption of all existing passwords from the data.yml file when the plugin starts and restarts
   # This function will automatically convert all passwords from the pass: format to the encrypted-pass: format, encrypting the existing passwords
   # If there is a lot of data in the file, automatic encryption can take a long time! Disable it in case of problems.

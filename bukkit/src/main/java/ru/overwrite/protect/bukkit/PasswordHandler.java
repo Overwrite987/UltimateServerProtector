@@ -12,6 +12,7 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class PasswordHandler {
@@ -41,12 +42,14 @@ public class PasswordHandler {
 				correctPassword(p);
 			} else {
 				if (!pluginConfig.encryption_settings_old_encrypt_methods.isEmpty()) {
-					String oldgenPass = pluginConfig.encryption_settings_enable_encryption
-							? Utils.encryptPassword(false, input, pluginConfig.encryption_settings_old_encrypt_methods)
-							: input;
-					if (oldgenPass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
-						correctPassword(p);
-						return;
+					for (List<String> oldEncryptMethod : pluginConfig.encryption_settings_old_encrypt_methods) {
+						String oldgenPass = pluginConfig.encryption_settings_enable_encryption
+								? Utils.encryptPassword(false, input, oldEncryptMethod)
+								: input;
+						if (oldgenPass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
+							correctPassword(p);
+							return;
+						}
 					}
 				}
 				failedPassword(p);

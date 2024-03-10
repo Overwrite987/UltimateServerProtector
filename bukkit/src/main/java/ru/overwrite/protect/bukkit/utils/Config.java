@@ -23,8 +23,10 @@ public class Config {
 	
 	public Map<String, String> per_player_passwords;
 
-	public List<String> encryption_settings_encrypt_methods, encryption_settings_old_encrypt_methods, effect_settings_effects, allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
+	public List<String> encryption_settings_encrypt_methods, effect_settings_effects, allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
 			excluded_ip_whitelist, excluded_blacklisted_perms;
+
+	public List<List> encryption_settings_old_encrypt_methods;
 	
 	public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
@@ -94,11 +96,19 @@ public class Config {
 		encryption_settings_encrypt_methods = encryptionMethod.contains(";")
 				? List.of(encryptionMethod.split(";"))
 				: List.of(encryptionMethod);
-		String oldEncryptionMethod = encryption_settings.getString("old-encrypt-method").trim();
-		encryption_settings_old_encrypt_methods = oldEncryptionMethod.isBlank() ? Collections.EMPTY_LIST : oldEncryptionMethod.contains(";")
-				? List.of(oldEncryptionMethod.split(";"))
-				: List.of(oldEncryptionMethod);
+		encryption_settings_old_encrypt_methods = new ArrayList<>();
 		encryption_settings_auto_encrypt_passwords = encryption_settings.getBoolean("auto-encrypt-passwords");
+		if (!encryption_settings_enable_encryption) {
+			return;
+		}
+		List<String> oldEncryptionMethods = encryption_settings.getStringList("old-encrypt-methods");
+		for (String oldEncryptionMethod : oldEncryptionMethods) {
+			if (oldEncryptionMethod.contains(";")) {
+				encryption_settings_old_encrypt_methods.add(List.of(oldEncryptionMethod.trim().split(";")));
+			} else {
+				encryption_settings_old_encrypt_methods.add(List.of(oldEncryptionMethod.trim()));
+			}
+		}
 	}
 
 	public void loadUspMessages(FileConfiguration message) {
