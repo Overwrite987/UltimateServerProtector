@@ -34,10 +34,7 @@ public class ChatListener implements Listener {
 		}
 		if (!pluginConfig.main_settings_use_command) {
 			String message = e.getMessage();
-			String inputPass = pluginConfig.encryption_settings_enable_encryption
-					? Utils.encryptPassword(false, message, pluginConfig.encryption_settings_encrypt_methods)
-					: message;
-			passwordHandler.checkPassword(p, inputPass, true);
+			passwordHandler.checkPassword(p, message, true);
 		}
 		e.setCancelled(true);
 		e.setMessage("");

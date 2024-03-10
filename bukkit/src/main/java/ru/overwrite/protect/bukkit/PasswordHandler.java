@@ -28,13 +28,16 @@ public class PasswordHandler {
 	}
 
 	public void checkPassword(Player p, String input, boolean resync) {
+		String pass = pluginConfig.encryption_settings_enable_encryption
+				? Utils.encryptPassword(false, input, pluginConfig.encryption_settings_encrypt_methods)
+				: input;
 		Runnable run = () -> {
 			ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(p, input);
 			if (pluginConfig.secure_settings_call_event_on_password_enter) { enterEvent.callEvent(); }
 			if (enterEvent.isCancelled()) {
 				return;
 			}
-			if (input.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
+			if (pass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
 				correctPassword(p);
 			} else {
 				failedPassword(p);

@@ -47,7 +47,7 @@ public class Config {
 			secure_settings_enable_excluded_players, secure_settings_call_event_on_password_enter, session_settings_session, session_settings_session_time_enabled,
 			message_settings_send_title, message_settings_enable_broadcasts, message_settings_enable_console_broadcasts,
 			sound_settings_enable_sounds, effect_settings_enable_effects, logging_settings_logging_pas,
-			logging_settings_logging_join, logging_settings_logging_enable_disable;
+			logging_settings_logging_join, logging_settings_logging_enable_disable, logging_settings_logging_command_execution;
 
 	public int punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
 
@@ -234,6 +234,7 @@ public class Config {
 		logging_settings_logging_pas = logging_settings.getBoolean("logging-pas");
 		logging_settings_logging_join = logging_settings.getBoolean("logging-join");
 		logging_settings_logging_enable_disable = logging_settings.getBoolean("logging-enable-disable");
+		logging_settings_logging_command_execution = logging_settings.getBoolean("logging-command-execution");
 	}
 
 	public void loadPerms(FileConfiguration config) {

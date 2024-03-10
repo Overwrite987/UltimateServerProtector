@@ -167,11 +167,13 @@ logging-settings:
   logging-join: true
   # Log plugin enabling and disabling to file
   logging-enable-disable: true
+  # Log the execution of commands by the plugin from the section below
+  logging-command-execution: true
 
 # Commands applied to offenders
 commands:
 
-# Commands applied to those with admin rights but not in the config
+# Commands applied to those with admin permissions but not in the config
   not-in-config:
   - 'kick %player% You are not in the list of administrators!'
   - 'deop %player%'

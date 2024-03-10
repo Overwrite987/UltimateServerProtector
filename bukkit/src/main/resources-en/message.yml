@@ -23,6 +23,7 @@ log-format:
   passed: "%date% Admin %player% sucsessfully logged in! IP: %ip%"
   joined: "%date% Admin %player% joined the game. IP: %ip%"
   captured: "%date% Player %player% was detected with admin-permissions! IP: %ip%"
+  command: "%date% Plugin executed command: %cmd%"
  
 # Titles (format - title;subtitle;fadein;stay;fadeout)
 titles:

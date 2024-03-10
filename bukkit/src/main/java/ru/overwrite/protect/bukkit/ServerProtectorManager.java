@@ -280,9 +280,19 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void checkFail(String playerName, List<String> command) {
+		if (command.isEmpty()) {
+			return;
+		}
 		runner.run(() -> {
 			for (String c : command) {
 				server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", playerName));
+				if (pluginConfig.logging_settings_logging_command_execution) {
+					Date date = new Date();
+					logToFile(messageFile.getString("log-format.command", "ERROR")
+							.replace("%player%", playerName)
+							.replace("%cmd%", c)
+							.replace("%date%", DATE_FORMAT.format(date)));
+				}
 			}
 		});
 	}

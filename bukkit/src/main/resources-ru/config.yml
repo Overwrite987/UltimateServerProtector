@@ -175,6 +175,8 @@ logging-settings:
   logging-join: true
   # Записывать ли в файл включение и отключение плагина
   logging-enable-disable: true
+  # Записывать ли в файл исполнение команд плагином из раздела ниже?
+  logging-command-execution: true
   
 # Команды, которые будут применяться к нарушителям
 commands:
