@@ -40,22 +40,22 @@ public class PasswordHandler {
 			}
 			if (pass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
 				correctPassword(p);
-			} else {
-				if (!pluginConfig.encryption_settings_old_encrypt_methods.isEmpty()) {
-					for (List<String> oldEncryptMethod : pluginConfig.encryption_settings_old_encrypt_methods) {
-						String oldgenPass = pluginConfig.encryption_settings_enable_encryption
-								? Utils.encryptPassword(false, input, oldEncryptMethod)
-								: input;
-						if (oldgenPass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
-							correctPassword(p);
-							return;
-						}
+				return;
+			}
+			if (!pluginConfig.encryption_settings_old_encrypt_methods.isEmpty()) {
+				for (List<String> oldEncryptMethod : pluginConfig.encryption_settings_old_encrypt_methods) {
+					String oldgenPass = pluginConfig.encryption_settings_enable_encryption
+							? Utils.encryptPassword(false, input, oldEncryptMethod)
+							: input;
+					if (oldgenPass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
+						correctPassword(p);
+						return;
 					}
 				}
-				failedPassword(p);
-				if (!isAttemptsMax(p) && pluginConfig.punish_settings_enable_attempts) {
-					instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.failed-pass"));
-				}
+			}
+			failedPassword(p);
+			if (!isAttemptsMax(p) && pluginConfig.punish_settings_enable_attempts) {
+				instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.failed-pass"));
 			}
 		};
 		if (resync) {

@@ -57,9 +57,9 @@ public class ServerProtectorAPI {
 		}
 		if (pluginConfig.session_settings_session) {
 			ips.add(p.getName() + Utils.getIp(p));
-		} else {
-			saved.add(p.getName());
+			return;
 		}
+		saved.add(p.getName());
 	}
 	
 	public void deauthorisePlayer(Player p) {
@@ -69,9 +69,9 @@ public class ServerProtectorAPI {
 		}
 		if (pluginConfig.session_settings_session) {
 			ips.remove(p.getName() + Utils.getIp(p));
-		} else {
-			saved.remove(p.getName());
+			return;
 		}
+		saved.remove(p.getName());
 	}
 
 	public void handleInteraction(Player p, Cancellable e) {

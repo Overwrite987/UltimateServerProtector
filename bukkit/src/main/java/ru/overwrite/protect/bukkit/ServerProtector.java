@@ -65,12 +65,12 @@ public final class ServerProtector extends ServerProtectorManager {
 		if (config.getBoolean("secure-settings.shutdown-on-disable")) {
 			if (!config.getBoolean("secure-settings.shutdown-on-disable-only-if-plugman")) {
 				server.shutdown();
-			} else {
-				PluginManager pluginManager = server.getPluginManager();
-				for (String s : forceshutdown) {
-					if (pluginManager.isPluginEnabled(s)) {
-						server.shutdown();
-					}
+				return;
+			}
+			PluginManager pluginManager = server.getPluginManager();
+			for (String s : forceshutdown) {
+				if (pluginManager.isPluginEnabled(s)) {
+					server.shutdown();
 				}
 			}
 		}

@@ -103,15 +103,14 @@ public class ServerProtectorManager extends JavaPlugin {
 		if (getServer().spigot().getConfig().getBoolean("settings.bungeecord")) {
 			if (pluginManager.isPluginEnabled("BungeeGuard")) {
 				return true;
-			} else {
-				loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-				loggerInfo(messageFile.getString("system.bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
-				loggerInfo(messageFile.getString("system.bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
-				loggerInfo(messageFile.getString("system.bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
-				loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-				server.shutdown();
-				return false;
 			}
+			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+			loggerInfo(messageFile.getString("system.bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
+			loggerInfo(messageFile.getString("system.bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
+			loggerInfo(messageFile.getString("system.bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
+			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+			server.shutdown();
+			return false;
 		}
 		return true;
 	}
