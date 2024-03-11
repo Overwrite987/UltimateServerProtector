@@ -83,7 +83,7 @@ public final class TaskManager {
 					}
 				}
 			}
-		}, 20L, interval);
+		}, 20L, interval >= 0 ? interval : 40L);
 	}
 
 	public void startAdminCheck(FileConfiguration config) {
