@@ -349,7 +349,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public void logAction(String key, Player player, Date date) {
 		runner.runAsync(() ->
-				logToFile(messageFile.getString(key, "ERROR")
+				logToFile(messageFile.getString(key, "ERROR: " + key + " does not exist!")
 						.replace("%player%", player.getName())
                 		.replace("%ip%", Utils.getIp(player))
 						.replace("%date%", DATE_FORMAT.format(date)))

@@ -283,7 +283,7 @@ public class Config {
 	}
 
 	public String getMessage(ConfigurationSection section, String key) {
-		return Utils.colorize(section.getString(key, "&4&lERROR&r").replace("%prefix%", main_settings_prefix));
+		return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", main_settings_prefix));
 	}
 
 	public FileConfiguration getFile(String path, String fileName) {
