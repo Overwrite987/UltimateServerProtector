@@ -92,10 +92,10 @@ public class Config {
 	public void loadEncryptionSettings(FileConfiguration config) {
 		ConfigurationSection encryption_settings = config.getConfigurationSection("encryption-settings");
 		encryption_settings_enable_encryption = encryption_settings.getBoolean("enable-encryption");
-		String encryptionMethods = encryption_settings.getString("encrypt-method").trim();
-		encryption_settings_encrypt_methods = encryptionMethods.contains(";")
-				? List.of(encryptionMethods.split(";"))
-				: List.of(encryptionMethods);
+		String encryptionMethod = encryption_settings.getString("encrypt-method").trim();
+		encryption_settings_encrypt_methods = encryptionMethod.contains(";")
+				? List.of(encryptionMethod.split(";"))
+				: List.of(encryptionMethod);
 		encryption_settings_old_encrypt_methods = new ArrayList<>();
 		encryption_settings_auto_encrypt_passwords = encryption_settings.getBoolean("auto-encrypt-passwords");
 		if (!encryption_settings_enable_encryption) {
