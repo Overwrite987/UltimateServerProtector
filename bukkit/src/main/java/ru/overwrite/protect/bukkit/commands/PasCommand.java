@@ -13,13 +13,13 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class PasCommand implements CommandExecutor {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 
 	public PasCommand(ServerProtectorManager plugin) {
-		instance = plugin;
+		this.plugin = plugin;
 		pluginConfig = plugin.getPluginConfig();
 		passwordHandler = plugin.getPasswordHandler();
 		api = plugin.getPluginAPI();
@@ -27,7 +27,7 @@ public class PasCommand implements CommandExecutor {
 
 	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
 		if (!(sender instanceof Player)) {
-			instance.loggerInfo(pluginConfig.msg_playeronly);
+			plugin.loggerInfo(pluginConfig.msg_playeronly);
 			return true;
 		}
 		Player p = (Player) sender;

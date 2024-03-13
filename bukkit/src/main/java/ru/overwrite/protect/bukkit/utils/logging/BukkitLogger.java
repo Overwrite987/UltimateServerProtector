@@ -5,18 +5,18 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 public class BukkitLogger implements Logger {
 	
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 	
 	public BukkitLogger(ServerProtectorManager plugin) {
-		instance = plugin;
+		this.plugin = plugin;
 	}
 	
 	public void info(String msg) {
-		instance.getLogger().info(msg);
+		plugin.getLogger().info(msg);
 	}
 	
 	public void warn(String msg) {
-		instance.getLogger().warning(msg);
+		plugin.getLogger().warning(msg);
 	}
 
 }

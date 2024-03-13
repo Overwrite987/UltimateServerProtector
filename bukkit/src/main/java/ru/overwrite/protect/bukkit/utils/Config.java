@@ -11,10 +11,10 @@ import java.util.*;
 
 public class Config {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 
 	public Config(ServerProtectorManager plugin) {
-		this.instance = plugin;
+		this.plugin = plugin;
 	}
 
 	public Set<String> perms, blacklisted_perms;
@@ -69,14 +69,14 @@ public class Config {
 						dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
 						dataFile.set("data." + nick + ".pass", null);
 						shouldSave = true;
-						instance.dataFile = dataFile;
+						plugin.dataFile = dataFile;
 					}
 				}
 				per_player_passwords.put(nick, data.getString(nick + ".encrypted-pass"));
 			}
 		}
 		if (shouldSave) {
-			save(instance.path, dataFile, instance.dataFileName);
+			save(plugin.path, dataFile, plugin.dataFileName);
 		}
 	}
 
@@ -175,7 +175,7 @@ public class Config {
 		bossbar_settings_enable_bossbar = bossbar_settings.getBoolean("enable-bossbar");
 		bossbar_settings_bar_color = bossbar_settings.getString("bar-color");
 		bossbar_settings_bar_style = bossbar_settings.getString("bar-style");
-		ConfigurationSection bossbar = instance.messageFile.getConfigurationSection("bossbar");
+		ConfigurationSection bossbar = plugin.messageFile.getConfigurationSection("bossbar");
 		bossbar_message = getMessage(bossbar, "message");
 	}
 
@@ -289,13 +289,13 @@ public class Config {
 	public FileConfiguration getFile(String path, String fileName) {
 		File file = new File(path, fileName);
 		if (!file.exists()) {
-			instance.saveResource(fileName, false);
+			plugin.saveResource(fileName, false);
 		}
 		return YamlConfiguration.loadConfiguration(file);
 	}
 
 	public void save(String path, FileConfiguration config, String fileName) {
-		instance.getRunner().runAsync(() -> {
+		plugin.getRunner().runAsync(() -> {
 			try {
 				config.save(new File(path, fileName));
 			} catch (IOException ex) {

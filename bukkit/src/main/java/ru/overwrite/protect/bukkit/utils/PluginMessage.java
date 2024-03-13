@@ -12,10 +12,10 @@ import org.bukkit.plugin.messaging.PluginMessageListener;
 
 public class PluginMessage implements PluginMessageListener {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 
 	public PluginMessage(ServerProtectorManager plugin) {
-		instance = plugin;
+		this.plugin = plugin;
 	}
 
 	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
@@ -39,7 +39,7 @@ public class PluginMessage implements PluginMessageListener {
 		out.writeUTF("ALL");
 		out.writeUTF("serverprotector");
 		out.writeUTF(message);
-		player.sendPluginMessage(instance, "BungeeCord", out.toByteArray());
+		player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
 	}
 
 }

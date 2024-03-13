@@ -17,13 +17,13 @@ import java.util.Map;
 
 public class PasswordHandler {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 	private final Config pluginConfig;
 	public final Map<Player, Integer> attempts = new HashMap<>();
 
 	public PasswordHandler(ServerProtectorManager plugin) {
-		instance = plugin;
+		this.plugin = plugin;
 		pluginConfig = plugin.getPluginConfig();
 		api = plugin.getPluginAPI();
 	}
@@ -55,11 +55,11 @@ public class PasswordHandler {
 			}
 			failedPassword(p);
 			if (!isAttemptsMax(p) && pluginConfig.punish_settings_enable_attempts) {
-				instance.checkFail(p.getName(), instance.getConfig().getStringList("commands.failed-pass"));
+				plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-pass"));
 			}
 		};
 		if (resync) {
-			instance.getRunner().runPlayer(run, p);
+			plugin.getRunner().runPlayer(run, p);
 		} else {
 			run.run();
 		}
@@ -88,12 +88,12 @@ public class PasswordHandler {
 			Utils.sendSound(pluginConfig.sound_settings_on_pas_fail, p);
 		}
 		if (pluginConfig.logging_settings_logging_pas) {
-			instance.logAction("log-format.failed", p, new Date());
+			plugin.logAction("log-format.failed", p, new Date());
 		}
 		if (pluginConfig.message_settings_enable_broadcasts) {
 			String msg = pluginConfig.broadcasts_failed.replace("%player%", p.getName()).replace("%ip%",
 					Utils.getIp(p));
-			instance.sendAlert(p, msg);
+			plugin.sendAlert(p, msg);
 		}
 		if (pluginConfig.message_settings_enable_console_broadcasts) {
 			String msg = pluginConfig.broadcasts_failed.replace("%player%", p.getName()).replace("%ip%",
@@ -114,7 +114,7 @@ public class PasswordHandler {
 			Utils.sendTitleMessage(pluginConfig.titles_correct, p);
 		}
 		String playerName = p.getName();
-		instance.time.remove(playerName);
+		plugin.time.remove(playerName);
 		if (pluginConfig.sound_settings_enable_sounds) {
 			Utils.sendSound(pluginConfig.sound_settings_on_pas_correct, p);
 		}
@@ -126,25 +126,25 @@ public class PasswordHandler {
 		if (pluginConfig.blocking_settings_hide_on_entering) {
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
 				if (!onlinePlayer.equals(p)) {
-					onlinePlayer.showPlayer(instance, p);
+					onlinePlayer.showPlayer(plugin, p);
 				}
 			}
 		}
 		if (pluginConfig.blocking_settings_hide_other_on_entering) {
 			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-				p.showPlayer(instance, onlinePlayer);
+				p.showPlayer(plugin, onlinePlayer);
 			}
 		}
 		api.authorisePlayer(p);
 		if (pluginConfig.session_settings_session_time_enabled) {
-			instance.getRunner().runDelayedAsync(() -> {
-				if (!instance.login.contains(playerName)) {
+			plugin.getRunner().runDelayedAsync(() -> {
+				if (!plugin.login.contains(playerName)) {
 					api.ips.remove(playerName + Utils.getIp(p));
 				}
 			}, pluginConfig.session_settings_session_time * 20L);
 		}
 		if (pluginConfig.logging_settings_logging_pas) {
-			instance.logAction("log-format.passed", p, new Date());
+			plugin.logAction("log-format.passed", p, new Date());
 		}
 		if (pluginConfig.bossbar_settings_enable_bossbar) {
 			if (Utils.bossbar == null) {
@@ -157,7 +157,7 @@ public class PasswordHandler {
 		if (pluginConfig.message_settings_enable_broadcasts) {
 			String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%",
 					Utils.getIp(p));
-			instance.sendAlert(p, msg);
+			plugin.sendAlert(p, msg);
 		}
 		if (pluginConfig.message_settings_enable_console_broadcasts) {
 			String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%",

@@ -16,19 +16,19 @@ import ru.overwrite.protect.bukkit.utils.Config;
 
 public class AdditionalListener implements Listener {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 	private final Config pluginConfig;
 
 	public AdditionalListener(ServerProtectorManager plugin) {
-		instance = plugin;
+		this.plugin = plugin;
 		api = plugin.getPluginAPI();
 		pluginConfig = plugin.getPluginConfig();
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onItemDrop(PlayerDropItemEvent e) {
-		if (instance.login.isEmpty())
+		if (plugin.login.isEmpty())
 			return;
 		Player p = e.getPlayer();
 		if (pluginConfig.blocking_settings_block_item_drop) {
@@ -38,7 +38,7 @@ public class AdditionalListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onItemPickup(EntityPickupItemEvent e) {
-		if (instance.login.isEmpty())
+		if (plugin.login.isEmpty())
 			return;
 		if (!(e.getEntity() instanceof Player))
 			return;
@@ -50,7 +50,7 @@ public class AdditionalListener implements Listener {
 
 	@EventHandler(ignoreCancelled = true)
 	public void onTabComplete(AsyncTabCompleteEvent e) {
-		if (instance.login.isEmpty())
+		if (plugin.login.isEmpty())
 			return;
 		if (!(e.getSender() instanceof Player))
 			return;
@@ -62,7 +62,7 @@ public class AdditionalListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerDamage(EntityDamageEvent e) {
-		if (instance.login.isEmpty())
+		if (plugin.login.isEmpty())
 			return;
 		if (!(e.getEntity() instanceof Player))
 			return;
@@ -74,7 +74,7 @@ public class AdditionalListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
-		if (instance.login.isEmpty())
+		if (plugin.login.isEmpty())
 			return;
 		if (!(e.getDamager() instanceof Player))
 			return;
@@ -86,7 +86,7 @@ public class AdditionalListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onInventoryOpen(InventoryOpenEvent e) {
-		if (instance.login.isEmpty())
+		if (plugin.login.isEmpty())
 			return;
 		Player p = (Player) e.getPlayer();
 		if (pluginConfig.blocking_settings_block_inventory_open) {

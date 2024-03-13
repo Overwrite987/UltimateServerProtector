@@ -18,13 +18,13 @@ import java.util.List;
 
 public class UspCommand implements CommandExecutor, TabCompleter {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 
 	public UspCommand(ServerProtectorManager plugin) {
-		instance = plugin;
+		this.plugin = plugin;
 		api = plugin.getPluginAPI();
 		pluginConfig = plugin.getPluginConfig();
 		passwordHandler = plugin.getPasswordHandler();
@@ -36,7 +36,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			sendHelp(sender, label);
 			return true;
 		}
-		FileConfiguration config = instance.getConfig();
+		FileConfiguration config = plugin.getConfig();
 		switch (args[0].toLowerCase()) {
 			case ("logout"): {
 				if (!(sender instanceof Player)) {
@@ -49,7 +49,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				if (api.isAuthorised(p)) {
-					instance.getRunner().run(() -> {
+					plugin.getRunner().run(() -> {
 						new ServerProtectorLogoutEvent(p, Utils.getIp(p)).callEvent();
 						api.deauthorisePlayer(p);
 					});
@@ -67,7 +67,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sendHelp(sender, label);
 					return false;
 				}
-				instance.reloadConfigs();
+				plugin.reloadConfigs();
 				sender.sendMessage(pluginConfig.uspmsg_reloaded);
 				return true;
 			}
@@ -79,18 +79,18 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				if (!sender.hasPermission("serverprotector.reboot")) {
 					return false;
 				}
-				instance.getRunner().cancelTasks();
-				instance.reloadConfigs();
-				FileConfiguration newconfig = instance.getConfig();
-				instance.time.clear();
-				instance.login.clear();
+				plugin.getRunner().cancelTasks();
+				plugin.reloadConfigs();
+				FileConfiguration newconfig = plugin.getConfig();
+				plugin.time.clear();
+				plugin.login.clear();
 				api.ips.clear();
 				api.saved.clear();
 				if (Utils.bossbar != null) {
 					Utils.bossbar.removeAll();
 				}
 				passwordHandler.attempts.clear();
-				instance.startTasks(newconfig);
+				plugin.startTasks(newconfig);
 				sender.sendMessage(pluginConfig.uspmsg_rebooted);
 				return true;
 			}
@@ -123,7 +123,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 						return true;
 					}
 					String nickname = targetPlayer.getName();
-					if (instance.isAdmin(nickname)) {
+					if (plugin.isAdmin(nickname)) {
 						sender.sendMessage(pluginConfig.uspmsg_alreadyinconfig);
 						return true;
 					}
@@ -154,7 +154,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					List<String> wl = pluginConfig.op_whitelist;
 					wl.add(nickname);
 					config.set("op-whitelist", wl);
-					instance.saveConfig();
+					plugin.saveConfig();
 					sender.sendMessage(pluginConfig.uspmsg_playeradded.replace("%nick%", nickname));
 					return true;
 				}
@@ -176,7 +176,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					}
 					ipwl.add(args[2]);
 					config.set("ip-whitelist." + args[1], ipwl);
-					instance.saveConfig();
+					plugin.saveConfig();
 					sender.sendMessage(pluginConfig.uspmsg_ipadded.replace("%nick%", args[1]).replace("%ip%", args[2]));
 					return true;
 				}
@@ -192,7 +192,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				if (args.length > 1) {
-					if (!instance.isAdmin(args[1])) {
+					if (!plugin.isAdmin(args[1])) {
 						sender.sendMessage(pluginConfig.uspmsg_notinconfig);
 						return true;
 					}
@@ -223,7 +223,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					List<String> wl = pluginConfig.op_whitelist;
 					wl.remove(nickname);
 					config.set("op-whitelist", wl);
-					instance.saveConfig();
+					plugin.saveConfig();
 					sender.sendMessage(pluginConfig.uspmsg_playerremoved.replace("%nick%", nickname));
 					return true;
 				}
@@ -245,7 +245,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					}
 					ipwl.remove(args[2]);
 					config.set("ip-whitelist." + args[1], ipwl);
-					instance.saveConfig();
+					plugin.saveConfig();
 					sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]).replace("%ip%", args[2]));
 					return true;
 				}
@@ -257,27 +257,27 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			sendHelp(sender, label);
 			return true;
 		}
-		sender.sendMessage("§6❖ §7Running §c§lUltimateServerProtector " + instance.getDescription().getVersion()
+		sender.sendMessage("§6❖ §7Running §c§lUltimateServerProtector " + plugin.getDescription().getVersion()
 				+ "§7 by §5OverwriteMC");
 		return true;
 	}
 
 	private void addAdmin(String nick, String pas) {
 		FileConfiguration dataFile;
-		dataFile = pluginConfig.getFile(instance.path, instance.dataFileName);
+		dataFile = pluginConfig.getFile(plugin.path, plugin.dataFileName);
 		if (!pluginConfig.encryption_settings_enable_encryption) {
 			dataFile.set("data." + nick + ".pass", pas);
 		} else {
 			String encryptedPas = Utils.encryptPassword(false, pas, pluginConfig.encryption_settings_encrypt_methods);
 			dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
 		}
-		pluginConfig.save(instance.path, dataFile, instance.dataFileName);
-		instance.dataFile = dataFile;
+		pluginConfig.save(plugin.path, dataFile, plugin.dataFileName);
+		plugin.dataFile = dataFile;
 	}
 
 	private void removeAdmin(String nick) {
 		FileConfiguration dataFile;
-		dataFile = pluginConfig.getFile(instance.path, instance.dataFileName);
+		dataFile = pluginConfig.getFile(plugin.path, plugin.dataFileName);
 		if (!pluginConfig.encryption_settings_enable_encryption) {
 			dataFile.set("data." + nick + ".pass", null);
 			dataFile.set("data." + nick, null);
@@ -285,8 +285,8 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			dataFile.set("data." + nick + ".encrypted-pass", null);
 		}
 		dataFile.set("data." + nick, null);
-		pluginConfig.save(instance.path, dataFile, instance.dataFileName);
-		instance.dataFile = dataFile;
+		pluginConfig.save(plugin.path, dataFile, plugin.dataFileName);
+		plugin.dataFile = dataFile;
 	}
 
 	private void sendHelp(CommandSender sender, String label) {

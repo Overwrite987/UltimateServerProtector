@@ -13,20 +13,20 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class ServerProtectorAPI {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 	private final Config pluginConfig;
 	private final Logger logger;
 	public Set<String> ips = new HashSet<>();
 	public Set<String> saved = new HashSet<>();
 
 	public ServerProtectorAPI(ServerProtectorManager plugin) {
-		this.instance = plugin;
+		this.plugin = plugin;
 		pluginConfig = plugin.getPluginConfig();
 		logger = plugin.getPluginLogger();
 	}
 
 	public boolean isCaptured(Player p) {
-		return instance.login.contains(p.getName());
+		return plugin.login.contains(p.getName());
 	}
 
 	public void capturePlayer(Player p) {
@@ -34,7 +34,7 @@ public class ServerProtectorAPI {
 			logger.warn("Unable to capture " + p.getName() + " Reason: Already captured");
 			return;
 		}
-		instance.login.add(p.getName());
+		plugin.login.add(p.getName());
 	}
 
 	public void uncapturePlayer(Player p) {
@@ -42,7 +42,7 @@ public class ServerProtectorAPI {
 			logger.warn("Unable to uncapture " + p.getName() + " Reason: Not captured");
 			return;
 		}
-		instance.login.remove(p.getName());
+		plugin.login.remove(p.getName());
 	}
 
 	public boolean isAuthorised(Player p) {

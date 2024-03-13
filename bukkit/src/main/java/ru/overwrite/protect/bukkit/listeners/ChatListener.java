@@ -14,13 +14,13 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class ChatListener implements Listener {
 
-	private final ServerProtectorManager instance;
+	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 
 	public ChatListener(ServerProtectorManager plugin) {
-		instance = plugin;
+		this.plugin = plugin;
 		pluginConfig = plugin.getPluginConfig();
 		passwordHandler = plugin.getPasswordHandler();
 		api = plugin.getPluginAPI();
@@ -50,7 +50,7 @@ public class ChatListener implements Listener {
 		String label = cutCommand(message).toLowerCase();
 		if (pluginConfig.main_settings_use_command) {
 			if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
-				if (!instance.paper) {
+				if (!plugin.paper) {
 					String inputPass = pluginConfig.encryption_settings_enable_encryption
 							? Utils.encryptPassword(false, message.split(" ")[1], pluginConfig.encryption_settings_encrypt_methods)
 							: message.split(" ")[1];
