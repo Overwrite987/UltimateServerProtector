@@ -79,9 +79,9 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				if (!sender.hasPermission("serverprotector.reboot")) {
 					return false;
 				}
+
 				plugin.getRunner().cancelTasks();
 				plugin.reloadConfigs();
-				FileConfiguration newconfig = plugin.getConfig();
 				plugin.time.clear();
 				plugin.login.clear();
 				api.ips.clear();
@@ -90,6 +90,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					Utils.bossbar.removeAll();
 				}
 				passwordHandler.attempts.clear();
+				FileConfiguration newconfig = plugin.getConfig();
 				plugin.startTasks(newconfig);
 				sender.sendMessage(pluginConfig.uspmsg_rebooted);
 				return true;

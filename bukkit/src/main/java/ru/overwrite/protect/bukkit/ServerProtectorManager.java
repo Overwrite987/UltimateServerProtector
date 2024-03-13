@@ -164,41 +164,43 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void reloadConfigs() {
-		reloadConfig();
-		FileConfiguration config = getConfig();
-		serialiser = config.getString("main-settings.serialiser");
-		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
-		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-		boolean fullpath = file_settings.getBoolean("use-full-path");
-		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
-		dataFileName = file_settings.getString("data-file");
-		dataFile = pluginConfig.getFile(path, dataFileName);
-		pluginConfig.loadPerms(config);
-		pluginConfig.loadLists(config);
-		pluginConfig.setupExcluded(config);
-		pluginConfig.loadMainSettings(config);
-		pluginConfig.loadEncryptionSettings(config);
-		pluginConfig.loadSecureSettings(config);
-		pluginConfig.loadAdditionalChecks(config);
-		pluginConfig.loadAttempts(config);
-		pluginConfig.loadTime(config);
-		pluginConfig.loadSessionSettings(config);
-		pluginConfig.loadMessageSettings(config);
-		pluginConfig.loadSoundSettings(config);
-		pluginConfig.loadEffects(config);
-		pluginConfig.loadLoggingSettings(config);
-		pluginConfig.loadMsgMessages(messageFile);
-		if (config.getBoolean("message-settings.send-titles")) {
-			pluginConfig.loadTitleMessages(messageFile);
-		}
-		if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-			pluginConfig.loadBossbar(config);
-		}
-		if (config.getBoolean("message-settings.enable-broadcasts")) {
-			pluginConfig.loadBroadcastMessages(messageFile);
-		}
-		pluginConfig.loadUspMessages(messageFile);
-		pluginConfig.setupPasswords(dataFile);
+		runner.runAsync(() -> {
+			reloadConfig();
+			FileConfiguration config = getConfig();
+			serialiser = config.getString("main-settings.serialiser");
+			messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
+			ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
+			boolean fullpath = file_settings.getBoolean("use-full-path");
+			path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+			dataFileName = file_settings.getString("data-file");
+			dataFile = pluginConfig.getFile(path, dataFileName);
+			pluginConfig.loadPerms(config);
+			pluginConfig.loadLists(config);
+			pluginConfig.setupExcluded(config);
+			pluginConfig.loadMainSettings(config);
+			pluginConfig.loadEncryptionSettings(config);
+			pluginConfig.loadSecureSettings(config);
+			pluginConfig.loadAdditionalChecks(config);
+			pluginConfig.loadAttempts(config);
+			pluginConfig.loadTime(config);
+			pluginConfig.loadSessionSettings(config);
+			pluginConfig.loadMessageSettings(config);
+			pluginConfig.loadSoundSettings(config);
+			pluginConfig.loadEffects(config);
+			pluginConfig.loadLoggingSettings(config);
+			pluginConfig.loadMsgMessages(messageFile);
+			if (config.getBoolean("message-settings.send-titles")) {
+				pluginConfig.loadTitleMessages(messageFile);
+			}
+			if (config.getBoolean("bossbar-settings.enable-bossbar")) {
+				pluginConfig.loadBossbar(config);
+			}
+			if (config.getBoolean("message-settings.enable-broadcasts")) {
+				pluginConfig.loadBroadcastMessages(messageFile);
+			}
+			pluginConfig.loadUspMessages(messageFile);
+			pluginConfig.setupPasswords(dataFile);
+		});
 	}
 
 	public void registerListeners(PluginManager pluginManager) {
