@@ -51,7 +51,7 @@ public class Config {
 			sound_settings_enable_sounds, effect_settings_enable_effects, logging_settings_logging_pas,
 			logging_settings_logging_join, logging_settings_logging_enable_disable, logging_settings_logging_command_execution;
 
-	public int punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
+	public int encryption_settings_salt_length, punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
 
 	public long main_settings_check_interval;
 	
@@ -65,7 +65,7 @@ public class Config {
 			} else {
 				if (encryption_settings_auto_encrypt_passwords) {
 					if (data.getString(nick + ".pass") != null) {
-						String encryptedPas = Utils.encryptPassword(true, data.getString(nick + ".pass"), encryption_settings_encrypt_methods);
+						String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(encryption_settings_salt_length), encryption_settings_encrypt_methods);
 						dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
 						dataFile.set("data." + nick + ".pass", null);
 						shouldSave = true;
@@ -97,6 +97,7 @@ public class Config {
 				? List.of(encryptionMethod.split(";"))
 				: List.of(encryptionMethod);
 		encryption_settings_old_encrypt_methods = new ArrayList<>();
+		encryption_settings_salt_length = encryption_settings.getInt("salt-length");
 		encryption_settings_auto_encrypt_passwords = encryption_settings.getBoolean("auto-encrypt-passwords");
 		if (!encryption_settings_enable_encryption) {
 			return;

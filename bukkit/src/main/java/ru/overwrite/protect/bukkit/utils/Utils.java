@@ -117,9 +117,8 @@ public final class Utils {
 		});
 	}
 
-	public static String encryptPassword(boolean generateSalt, String password, List<String> hashTypes) {
+	public static String encryptPassword(String password, String salt, List<String> hashTypes) {
 		String encryptedPassword = password;
-		String salt = generateSalt ? generateSalt() : password.split(":")[0];
 		boolean salted = false;
 		for (String hashType : hashTypes) {
 			switch (hashType.toUpperCase()) {
@@ -156,9 +155,9 @@ public final class Utils {
 		return encryptedPassword;
 	}
 
-	private static String generateSalt() {
+	public static String generateSalt(int length) {
 		SecureRandom random = new SecureRandom();
-		byte[] saltBytes = new byte[12];
+		byte[] saltBytes = new byte[(int) Math.ceil((double) length * 3 / 4)];
 		random.nextBytes(saltBytes);
 		return Base64.getEncoder().encodeToString(saltBytes);
 	}

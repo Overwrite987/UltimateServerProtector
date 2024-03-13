@@ -29,23 +29,29 @@ public class PasswordHandler {
 	}
 
 	public void checkPassword(Player p, String input, boolean resync) {
-		String pass = pluginConfig.encryption_settings_enable_encryption
-				? Utils.encryptPassword(false, input, pluginConfig.encryption_settings_encrypt_methods)
-				: input;
 		Runnable run = () -> {
 			ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(p, input);
 			if (pluginConfig.secure_settings_call_event_on_password_enter) { enterEvent.callEvent(); }
 			if (enterEvent.isCancelled()) {
 				return;
 			}
-			if (pass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
+			if (pluginConfig.per_player_passwords.get(p.getName()) == null) {
+				failedPassword(p);
+				return;
+			}
+			String playerPass = pluginConfig.per_player_passwords.get(p.getName());
+			String salt = playerPass.split(":")[0];
+			String pass = pluginConfig.encryption_settings_enable_encryption
+					? Utils.encryptPassword(input, salt, pluginConfig.encryption_settings_encrypt_methods)
+					: input;
+			if (pass.equals(playerPass)) {
 				correctPassword(p);
 				return;
 			}
 			if (!pluginConfig.encryption_settings_old_encrypt_methods.isEmpty()) {
 				for (List<String> oldEncryptMethod : pluginConfig.encryption_settings_old_encrypt_methods) {
 					String oldgenPass = pluginConfig.encryption_settings_enable_encryption
-							? Utils.encryptPassword(false, input, oldEncryptMethod)
+							? Utils.encryptPassword(input, salt, oldEncryptMethod)
 							: input;
 					if (oldgenPass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
 						correctPassword(p);
