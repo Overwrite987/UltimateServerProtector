@@ -56,10 +56,10 @@ public final class Utils {
 			return;
 		}
 		String title = titleMessages[0];
-		String subtitle = (titleMessages.length > 1 && titleMessages[1] != null) ? titleMessages[1] : "";
-		int fadeIn = (titleMessages.length > 2 && titleMessages[2] != null) ? Integer.parseInt(titleMessages[2]) : 10;
-		int stay = (titleMessages.length > 3 && titleMessages[3] != null) ? Integer.parseInt(titleMessages[3]) : 70;
-		int fadeOut = (titleMessages.length > 4 && titleMessages[4] != null) ? Integer.parseInt(titleMessages[4]) : 20;
+		String subtitle = (titleMessages.length >= 2 && titleMessages[1] != null) ? titleMessages[1] : "";
+		int fadeIn = (titleMessages.length >= 3 && titleMessages[2] != null) ? Integer.parseInt(titleMessages[2]) : 10;
+		int stay = (titleMessages.length >= 4 && titleMessages[3] != null) ? Integer.parseInt(titleMessages[3]) : 70;
+		int fadeOut = (titleMessages.length == 5 && titleMessages[4] != null) ? Integer.parseInt(titleMessages[4]) : 20;
 		p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
 	}
 
@@ -69,8 +69,8 @@ public final class Utils {
 			return;
 		}
 		Sound sound = Sound.valueOf(soundArgs[0]);
-		float volume = (soundArgs.length > 1 && soundArgs[1] != null) ? Float.parseFloat(soundArgs[1]) : 1.0f;
-		float pitch = (soundArgs.length > 2 && soundArgs[2] != null) ? Float.parseFloat(soundArgs[2]) : 1.0f;
+		float volume = (soundArgs.length >= 2 && soundArgs[1] != null) ? Float.parseFloat(soundArgs[1]) : 1.0f;
+		float pitch = (soundArgs.length == 3 && soundArgs[2] != null) ? Float.parseFloat(soundArgs[2]) : 1.0f;
 	    p.playSound(p.getLocation(), sound, volume, pitch);
 	}
 
