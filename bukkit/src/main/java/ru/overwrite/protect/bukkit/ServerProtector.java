@@ -20,6 +20,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		long startTime = System.currentTimeMillis();
 		saveDefaultConfig();
 		FileConfiguration config = getConfig();
+		setupLogger(config);
 		setupProxy(config);
 		loadConfigs(config);
 		PluginManager pluginManager = server.getPluginManager();
@@ -30,7 +31,6 @@ public final class ServerProtector extends ServerProtectorManager {
 		registerListeners(pluginManager);
 		registerCommands(pluginManager, config);
 		startTasks(config);
-		setupLogger(config);
 		logEnableDisable(messageFile.getString("log-format.enabled"), new Date(startTime));
 		if (config.getBoolean("main-settings.enable-metrics")) {
 			new Metrics(this, 13347);
