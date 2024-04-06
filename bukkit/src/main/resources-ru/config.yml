@@ -11,7 +11,7 @@ main-settings:
   # Форматирование текста. 
   # LEGACY - цвет через &, MINIMESSAGE - цвет через <цвет>
   # MINIMESSAGE был добавлен в новых версиях (1.17+)
-  serialiser: LEGACY
+  serializer: LEGACY
   # Если стоит true - сообщения будут отправляться по всей сети серверов которые стоят на прокси.
   proxy: false
   # Префикс плагина

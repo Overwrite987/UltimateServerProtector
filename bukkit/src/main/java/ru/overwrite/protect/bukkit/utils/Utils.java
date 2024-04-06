@@ -74,8 +74,8 @@ public final class Utils {
 	    p.playSound(p.getLocation(), sound, volume, pitch);
 	}
 
-	public static String colorize(String message) {
-		switch (ServerProtectorManager.serialiser) {
+	public static String colorize(String message, String serializer) {
+		switch (serializer) {
 			case "LEGACY": {
 				if (SUB_VERSION >= 16) {
 					Matcher matcher = HEX_PATTERN.matcher(message);

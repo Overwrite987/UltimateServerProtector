@@ -37,8 +37,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
 	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
-	
-	public static String serialiser; // this is bullshit
+
 	public boolean proxy = false;
 
 	public boolean paper;
@@ -125,10 +124,9 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void loadConfigs(FileConfiguration config) {
-		serialiser = config.getString("main-settings.serialiser");
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-		boolean fullpath = file_settings.getBoolean("use-full-path");
-		path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+		boolean fullPath = file_settings.getBoolean("use-full-path");
+		path = fullPath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 		dataFileName = file_settings.getString("data-file");
 		dataFile = pluginConfig.getFile(path, dataFileName);
 		pluginConfig.save(path, dataFile, dataFileName);
@@ -167,11 +165,10 @@ public class ServerProtectorManager extends JavaPlugin {
 		runner.runAsync(() -> {
 			reloadConfig();
 			FileConfiguration config = getConfig();
-			serialiser = config.getString("main-settings.serialiser");
 			messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 			ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-			boolean fullpath = file_settings.getBoolean("use-full-path");
-			path = fullpath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+			boolean fullPath = file_settings.getBoolean("use-full-path");
+			path = fullPath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 			dataFileName = file_settings.getString("data-file");
 			dataFile = pluginConfig.getFile(path, dataFileName);
 			pluginConfig.loadPerms(config);

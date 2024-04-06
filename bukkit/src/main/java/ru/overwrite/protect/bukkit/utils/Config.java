@@ -17,6 +17,8 @@ public class Config {
 		this.plugin = plugin;
 	}
 
+	private String serializer;
+
 	public Set<String> perms, blacklisted_perms;
 
 	public Map<String, List<String>> ip_whitelist;
@@ -82,6 +84,7 @@ public class Config {
 
 	public void loadMainSettings(FileConfiguration config) {
 		ConfigurationSection main_settings = config.getConfigurationSection("main-settings");
+		serializer = main_settings.getString("serializer", "LEGACY").toUpperCase();
 		main_settings_prefix = main_settings.getString("prefix");
 		main_settings_pas_command = main_settings.getString("pas-command");
 		main_settings_use_command = main_settings.getBoolean("use-command");
@@ -284,7 +287,7 @@ public class Config {
 	}
 
 	public String getMessage(ConfigurationSection section, String key) {
-		return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", main_settings_prefix));
+		return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", main_settings_prefix), serializer);
 	}
 
 	public FileConfiguration getFile(String path, String fileName) {
