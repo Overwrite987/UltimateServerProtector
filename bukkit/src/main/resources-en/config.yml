@@ -33,18 +33,18 @@ encryption-settings:
   # Use BASE64 only if you're afraid of "accidentally showing the password file in a demo" and don't need to specifically hide data or to complicate encryption
   # MD5 - An old encryption method prone to collisions (case when 2 different values in encrypted form give the same values)
   # Use MD5 if you want to hide data and at the same do not want to use something hard-weight
-  # SHA256 and other SHA - variations of the SHA algorithm
+  # SHA256 and other SHA - variations of the SHA algorithm.
   # Use SHA256 if you want to securely hide passwords without the possibility of decryption, and SHA512 for even more effective encryption
   # SHA3-256 and other SHA3 - an analogue of the usual SHA with a modified encryption algorithm.
   # Use SHA3 if you want to make non-standard and at the same time strong encryption
   # You can use 2 or more encryption methods simultaneously for greater security of your passwords, so they cannot be easily brute-forced
   # Encryption will be performed in order 1;2;3 and so on. It's important - deep encryption can take a lot of time, so don't use too many of them
-  # SALT is used to apply salt (random string to an existing password). You can only apply it once
+  # SALT is used to apply salt (random string to an existing password). You can only apply it once.
   encrypt-method: 'BASE64;SALT;MD5'
   # If you used any encryption method and for some reason decide to change it - you can specify it here so that you don't lose data
   old-encrypt-methods: []
   # The length of the dynamically generated salt. The longer it is, the more effectively passwords are protected.
-  salt-length: 12
+  salt-length: 24
   # Enable automatic encryption of all existing passwords from the data.yml file when the plugin starts and restarts
   # This function will automatically convert all passwords from the pass: format to the encrypted-pass: format, encrypting the existing passwords
   # If there is a lot of data in the file, automatic encryption can take a long time! Disable it in case of problems.
@@ -277,11 +277,11 @@ excluded-players:
   op-whitelist:
     - test99999
     - test123123
-    # Players who will not be checked for inclusion in ip-whitelist
+  # Players who will not be checked for inclusion in ip-whitelist
   ip-whitelist:
     - test99999
     - test123123
-    # Players who will be allowed to have blocked permissions
+  # Players who will be allowed to have blocked permissions
   blacklisted-perms:
     - test99999
     - test123123
