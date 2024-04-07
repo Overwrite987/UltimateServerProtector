@@ -139,8 +139,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.loadEncryptionSettings(config);
 		pluginConfig.loadSecureSettings(config);
 		pluginConfig.loadAdditionalChecks(config);
-		pluginConfig.loadAttempts(config);
-		pluginConfig.loadTime(config);
+		pluginConfig.loadPunishSettings(config);
 		pluginConfig.loadSessionSettings(config);
 		pluginConfig.loadMessageSettings(config);
 		pluginConfig.loadSoundSettings(config);
@@ -177,8 +176,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			pluginConfig.loadEncryptionSettings(config);
 			pluginConfig.loadSecureSettings(config);
 			pluginConfig.loadAdditionalChecks(config);
-			pluginConfig.loadAttempts(config);
-			pluginConfig.loadTime(config);
+			pluginConfig.loadPunishSettings(config);
 			pluginConfig.loadSessionSettings(config);
 			pluginConfig.loadMessageSettings(config);
 			pluginConfig.loadSoundSettings(config);

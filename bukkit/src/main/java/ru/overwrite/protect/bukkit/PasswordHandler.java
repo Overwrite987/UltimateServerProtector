@@ -60,7 +60,7 @@ public class PasswordHandler {
 				}
 			}
 			failedPassword(p);
-			if (!isAttemptsMax(p) && pluginConfig.punish_settings_enable_attempts) {
+			if (pluginConfig.punish_settings_enable_attempts && !isAttemptsMax(p)) {
 				plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-pass"));
 			}
 		};
@@ -73,8 +73,8 @@ public class PasswordHandler {
 
 	private boolean isAttemptsMax(Player p) {
 		if (!attempts.containsKey(p))
-			return true;
-		return (attempts.get(p) < pluginConfig.punish_settings_max_attempts);
+			return false;
+		return !(attempts.get(p) < pluginConfig.punish_settings_max_attempts);
 	}
 
 	private void failedPassword(Player p) {

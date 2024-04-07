@@ -6,6 +6,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.PlayerJoinEvent;
+import org.bukkit.event.player.PlayerKickEvent;
 import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
@@ -17,7 +18,9 @@ import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class ConnectionListener implements Listener {
 
@@ -124,17 +127,46 @@ public class ConnectionListener implements Listener {
 		});
 	}
 
+	public final Map<Player, Integer> rejoins = new HashMap<>();
+
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLeave(PlayerQuitEvent event) {
-		Player player = event.getPlayer();
-		if (api.isCaptured(player)) {
-			for (PotionEffect s : player.getActivePotionEffects()) {
-				player.removePotionEffect(s.getType());
+		Player p = event.getPlayer();
+		if (api.isCaptured(p)) {
+			for (PotionEffect s : p.getActivePotionEffects()) {
+				p.removePotionEffect(s.getType());
+			}
+			if (pluginConfig.punish_settings_enable_rejoin) {
+				rejoins.put(p, rejoins.getOrDefault(p, 0) + 1);
+				if (isMaxRejoins(p)) {
+					plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-rejoin"));
+				}
 			}
 		}
-		String playerName = player.getName();
+		String playerName = p.getName();
 		plugin.time.remove(playerName);
-		plugin.login.remove(playerName);
 		api.saved.remove(playerName);
+	}
+
+	@EventHandler(priority = EventPriority.HIGHEST)
+	public void onKick(PlayerKickEvent event) {
+		Player p = event.getPlayer();
+		if (api.isCaptured(p)) {
+			for (PotionEffect s : p.getActivePotionEffects()) {
+				p.removePotionEffect(s.getType());
+			}
+			if (pluginConfig.punish_settings_enable_rejoin) {
+				plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-rejoin"));
+			}
+		}
+		String playerName = p.getName();
+		plugin.time.remove(playerName);
+		api.saved.remove(playerName);
+	}
+
+	private boolean isMaxRejoins(Player p) {
+		if (rejoins.containsKey(p))
+			return false;
+		return (rejoins.get(p) > pluginConfig.punish_settings_max_rejoins);
 	}
 }

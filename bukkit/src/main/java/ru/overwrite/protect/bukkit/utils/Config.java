@@ -44,7 +44,7 @@ public class Config {
 	public boolean encryption_settings_enable_encryption, encryption_settings_auto_encrypt_passwords, blocking_settings_block_item_drop,
 			blocking_settings_block_item_pickup, blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
 			blocking_settings_block_inventory_open, blocking_settings_hide_on_entering, blocking_settings_hide_other_on_entering, main_settings_use_command,
-			main_settings_enable_admin_commands, punish_settings_enable_attempts, punish_settings_enable_time,
+			main_settings_enable_admin_commands, punish_settings_enable_attempts, punish_settings_enable_time, punish_settings_enable_rejoin,
 			bossbar_settings_enable_bossbar, secure_settings_enable_op_whitelist,
 			secure_settings_enable_notadmin_punish, secure_settings_enable_permission_blacklist,
 			secure_settings_enable_ip_whitelist, secure_settings_only_console_usp,
@@ -53,7 +53,7 @@ public class Config {
 			sound_settings_enable_sounds, effect_settings_enable_effects, logging_settings_logging_pas,
 			logging_settings_logging_join, logging_settings_logging_enable_disable, logging_settings_logging_command_execution;
 
-	public int encryption_settings_salt_length, punish_settings_max_attempts, punish_settings_time, session_settings_session_time;
+	public int encryption_settings_salt_length, punish_settings_max_attempts, punish_settings_time, punish_settings_max_rejoins, session_settings_session_time;
 
 	public long main_settings_check_interval;
 	
@@ -209,16 +209,14 @@ public class Config {
 		blocking_settings_hide_other_on_entering = blocking_settings.getBoolean("hide-other-on-entering");
 	}
 
-	public void loadAttempts(FileConfiguration config) {
+	public void loadPunishSettings(FileConfiguration config) {
 		ConfigurationSection punish_settings = config.getConfigurationSection("punish-settings");
 		punish_settings_enable_attempts = punish_settings.getBoolean("enable-attempts");
 		punish_settings_max_attempts = punish_settings.getInt("max-attempts");
-	}
-
-	public void loadTime(FileConfiguration config) {
-		ConfigurationSection punish_settings = config.getConfigurationSection("punish-settings");
 		punish_settings_enable_time = punish_settings.getBoolean("enable-time");
 		punish_settings_time = punish_settings.getInt("time");
+		punish_settings_enable_rejoin = punish_settings.getBoolean("enable-rejoin");
+		punish_settings_max_rejoins = punish_settings.getInt("max-rejoin");
 	}
 
 	public void loadSessionSettings(FileConfiguration config) {
