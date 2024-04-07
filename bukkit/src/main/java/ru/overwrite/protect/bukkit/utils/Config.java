@@ -176,6 +176,9 @@ public class Config {
 
 	public void loadBossbar(FileConfiguration config) {
 		ConfigurationSection bossbar_settings = config.getConfigurationSection("bossbar-settings");
+		if (!bossbar_settings.getBoolean("enable-bossbar")) {
+			return;
+		}
 		bossbar_settings_enable_bossbar = bossbar_settings.getBoolean("enable-bossbar");
 		bossbar_settings_bar_color = bossbar_settings.getString("bar-color");
 		bossbar_settings_bar_style = bossbar_settings.getString("bar-style");

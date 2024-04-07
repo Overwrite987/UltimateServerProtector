@@ -146,17 +146,16 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.loadSoundSettings(config);
 		pluginConfig.loadEffects(config);
 		pluginConfig.loadLoggingSettings(config);
-		pluginConfig.loadMsgMessages(messageFile);
-		if (config.getBoolean("message-settings.send-titles")) {
+		pluginConfig.loadBossbar(config);
+		ConfigurationSection message_settings = config.getConfigurationSection("message-settings");
+		if (message_settings.getBoolean("send-titles")) {
 			pluginConfig.loadTitleMessages(messageFile);
 		}
-		if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-			pluginConfig.loadBossbar(config);
-		}
-		if (config.getBoolean("message-settings.enable-broadcasts")
-				|| config.getBoolean("message-settings.enable-console-broadcasts")) {
+		if (message_settings.getBoolean("enable-broadcasts")
+				|| message_settings.getBoolean("enable-console-broadcasts")) {
 			pluginConfig.loadBroadcastMessages(messageFile);
 		}
+		pluginConfig.loadMsgMessages(messageFile);
 		pluginConfig.loadUspMessages(messageFile);
 		pluginConfig.setupPasswords(dataFile);
 	}
@@ -185,16 +184,16 @@ public class ServerProtectorManager extends JavaPlugin {
 			pluginConfig.loadSoundSettings(config);
 			pluginConfig.loadEffects(config);
 			pluginConfig.loadLoggingSettings(config);
-			pluginConfig.loadMsgMessages(messageFile);
-			if (config.getBoolean("message-settings.send-titles")) {
+			pluginConfig.loadBossbar(config);
+			ConfigurationSection message_settings = config.getConfigurationSection("message-settings");
+			if (message_settings.getBoolean("send-titles")) {
 				pluginConfig.loadTitleMessages(messageFile);
 			}
-			if (config.getBoolean("bossbar-settings.enable-bossbar")) {
-				pluginConfig.loadBossbar(config);
-			}
-			if (config.getBoolean("message-settings.enable-broadcasts")) {
+			if (message_settings.getBoolean("enable-broadcasts")
+					|| message_settings.getBoolean("enable-console-broadcasts")) {
 				pluginConfig.loadBroadcastMessages(messageFile);
 			}
+			pluginConfig.loadMsgMessages(messageFile);
 			pluginConfig.loadUspMessages(messageFile);
 			pluginConfig.setupPasswords(dataFile);
 		});
