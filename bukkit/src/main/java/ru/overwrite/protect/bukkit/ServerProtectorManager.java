@@ -254,8 +254,8 @@ public class ServerProtectorManager extends JavaPlugin {
 			throw new RuntimeException("Unable to create data folder");
 		}
 		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-		boolean fullpath = file_settings.getBoolean("use-full-path");
-		String logFilePath = fullpath ? file_settings.getString("log-file-path") : dataFolder.getPath();
+		boolean fullPath = file_settings.getBoolean("use-full-path");
+		String logFilePath = fullPath ? file_settings.getString("log-file-path") : dataFolder.getPath();
 		logFile = new File(logFilePath, file_settings.getString("log-file"));
 	}
 
