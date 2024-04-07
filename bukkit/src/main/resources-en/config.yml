@@ -30,7 +30,7 @@ encryption-settings:
   enable-encryption: false
   # Password encryption method (Supported types: BASE64, MD5, SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512)
   # BASE64 - This "encryption" does not provide data protection; it is simply a method of converting data to another format for network transmission or storage.
-  # Use BASE64 only if you're afraid of "accidentally showing the password file in a demo" and don't need to specifically hide data or to complicate encryption
+  # Use BASE64 only if you're afraid of "accidentally showing the file with passwords on the demo" and you don't need to specifically hide the data or to make encryption more complicated
   # MD5 - An old encryption method prone to collisions (case when 2 different values in encrypted form give the same values)
   # Use MD5 if you want to hide data and at the same do not want to use something hard-weight
   # SHA256 and other SHA - variations of the SHA algorithm.

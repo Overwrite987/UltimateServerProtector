@@ -123,7 +123,7 @@ public final class Utils {
 		for (String hashType : hashTypes) {
 			switch (hashType.toUpperCase()) {
 				case "BASE64":
-					encryptedPassword = encryptToBase64(encryptedPassword);
+					encryptedPassword = encodeToBase64(encryptedPassword);
 					break;
 				case "SALT":
 					if (salted) { break; }
@@ -162,7 +162,7 @@ public final class Utils {
 		return Base64.getEncoder().encodeToString(saltBytes);
 	}
 
-	private static String encryptToBase64(String str) {
+	private static String encodeToBase64(String str) {
 		return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
 	}
 
