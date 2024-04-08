@@ -71,10 +71,10 @@ public class PasswordHandler {
 		}
 	}
 
-	private boolean isAttemptsMax(Player p) {
-		if (!attempts.containsKey(p))
+	private boolean isAttemptsMax(String playerName) {
+		if (!attempts.containsKey(playerName))
 			return false;
-		return !(attempts.get(p) < pluginConfig.punish_settings_max_attempts);
+		return !(attempts.get(playerName) < pluginConfig.punish_settings_max_attempts);
 	}
 
 	private void failedPassword(Player p) {

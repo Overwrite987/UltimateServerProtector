@@ -164,9 +164,9 @@ public class ConnectionListener implements Listener {
 		api.saved.remove(playerName);
 	}
 
-	private boolean isMaxRejoins(Player p) {
-		if (!rejoins.containsKey(p))
+	private boolean isMaxRejoins(String playerName) {
+		if (!rejoins.containsKey(playerName))
 			return false;
-		return (rejoins.get(p) > pluginConfig.punish_settings_max_rejoins);
+		return (rejoins.get(playerName) > pluginConfig.punish_settings_max_rejoins);
 	}
 }
