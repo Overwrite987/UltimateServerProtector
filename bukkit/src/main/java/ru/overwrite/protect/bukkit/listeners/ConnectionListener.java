@@ -127,23 +127,23 @@ public class ConnectionListener implements Listener {
 		});
 	}
 
-	public final Map<Player, Integer> rejoins = new HashMap<>();
+	public final Map<String, Integer> rejoins = new HashMap<>();
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLeave(PlayerQuitEvent event) {
 		Player p = event.getPlayer();
+		String playerName = p.getName();
 		if (api.isCaptured(p)) {
 			for (PotionEffect s : p.getActivePotionEffects()) {
 				p.removePotionEffect(s.getType());
 			}
 			if (pluginConfig.punish_settings_enable_rejoin) {
-				rejoins.put(p, rejoins.getOrDefault(p, 0) + 1);
+				rejoins.put(playerName, rejoins.getOrDefault(p, 0) + 1);
 				if (isMaxRejoins(p)) {
 					plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-rejoin"));
 				}
 			}
 		}
-		String playerName = p.getName();
 		plugin.time.remove(playerName);
 		api.saved.remove(playerName);
 	}
@@ -165,7 +165,7 @@ public class ConnectionListener implements Listener {
 	}
 
 	private boolean isMaxRejoins(Player p) {
-		if (rejoins.containsKey(p))
+		if (!rejoins.containsKey(p))
 			return false;
 		return (rejoins.get(p) > pluginConfig.punish_settings_max_rejoins);
 	}

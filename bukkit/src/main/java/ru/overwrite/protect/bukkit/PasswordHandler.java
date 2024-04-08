@@ -20,7 +20,7 @@ public class PasswordHandler {
 	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 	private final Config pluginConfig;
-	public final Map<Player, Integer> attempts = new HashMap<>();
+	public final Map<String, Integer> attempts = new HashMap<>();
 
 	public PasswordHandler(ServerProtectorManager plugin) {
 		this.plugin = plugin;
@@ -79,7 +79,7 @@ public class PasswordHandler {
 
 	private void failedPassword(Player p) {
 		if (pluginConfig.punish_settings_enable_attempts) {
-			attempts.put(p, attempts.getOrDefault(p, 0) + 1);
+			attempts.put(p.getName(), attempts.getOrDefault(p, 0) + 1);
 		}
 		ServerProtectorPasswordFailEvent failEvent = new ServerProtectorPasswordFailEvent(p, attempts.get(p));
 		failEvent.callEvent();

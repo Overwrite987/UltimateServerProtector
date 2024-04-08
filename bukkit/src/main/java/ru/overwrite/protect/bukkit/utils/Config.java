@@ -216,7 +216,7 @@ public class Config {
 		punish_settings_enable_time = punish_settings.getBoolean("enable-time");
 		punish_settings_time = punish_settings.getInt("time");
 		punish_settings_enable_rejoin = punish_settings.getBoolean("enable-rejoin");
-		punish_settings_max_rejoins = punish_settings.getInt("max-rejoin");
+		punish_settings_max_rejoins = punish_settings.getInt("max-rejoins");
 	}
 
 	public void loadSessionSettings(FileConfiguration config) {
