@@ -104,7 +104,7 @@ punish-settings:
   time: 60
   # Enable punishments for rejoin to the server if a player exits without entering the admin password
   enable-rejoin: true
-  # Maximum number of rejoins to the server if a player exits without entering admin password
+  # Maximum number of rejoins to the server if a player exits without entering correct admin password
   max-rejoins: 3
 
 # Bossbar settings (only works if login time is enabled)
@@ -209,7 +209,7 @@ commands:
     - 'kick %player% You did not manage to enter the admin password within the given time'
     - 'deop %player%'
 
-  # Commands that will be applied to those who have rejoined the server without entering the password too many times
+  # Commands that will be applied to those who have rejoined the server without entering the correct password too many times
   failed-rejoin:
     - 'ban %player% You have been rejoining the server too many times without entering the password'
     - 'deop %player%'
