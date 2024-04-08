@@ -77,6 +77,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				if (!sender.hasPermission("serverprotector.reboot")) {
+					sendHelp(sender, label);
 					return false;
 				}
 
@@ -101,6 +102,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					return false;
 				}
 				if (!sender.hasPermission("serverprotector.encrypt")) {
+					sendHelp(sender, label);
 					return false;
 				}
 				if (pluginConfig.encryption_settings_enable_encryption && args.length == 2) {
@@ -114,7 +116,12 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
 					return false;
 				}
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.setpass")) {
+					sendHelp(sender, label);
 					return false;
 				}
 				if (args.length > 1) {
@@ -142,7 +149,12 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
 					return false;
 				}
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.addop")) {
+					sendHelp(sender, label);
 					return false;
 				}
 				if (args.length > 1) {
@@ -167,7 +179,16 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
 					return false;
 				}
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.addip")) {
+					sendHelp(sender, label);
+					return false;
+				}
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
 					return false;
 				}
 				if (args.length > 2 && (args[1] != null && args[2] != null)) {
@@ -189,7 +210,12 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
 					return false;
 				}
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.rempass")) {
+					sendHelp(sender, label);
 					return false;
 				}
 				if (args.length > 1) {
@@ -211,7 +237,12 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
 					return false;
 				}
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.remop")) {
+					sendHelp(sender, label);
 					break;
 				}
 				if (args.length > 1) {
@@ -236,7 +267,12 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
 					return false;
 				}
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
+					return false;
+				}
 				if (!sender.hasPermission("serverprotector.remip")) {
+					sendHelp(sender, label);
 					break;
 				}
 				if (args.length > 2 && (args[1] != null && args[2] != null)) {
