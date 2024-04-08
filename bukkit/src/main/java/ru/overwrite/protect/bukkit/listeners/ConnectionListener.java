@@ -138,7 +138,7 @@ public class ConnectionListener implements Listener {
 				p.removePotionEffect(s.getType());
 			}
 			if (pluginConfig.punish_settings_enable_rejoin) {
-				rejoins.put(playerName, rejoins.getOrDefault(p, 0) + 1);
+				rejoins.put(playerName, rejoins.getOrDefault(playerName, 0) + 1);
 				if (isMaxRejoins(p)) {
 					plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-rejoin"));
 				}
