@@ -60,7 +60,7 @@ public class PasswordHandler {
 				}
 			}
 			failedPassword(p);
-			if (pluginConfig.punish_settings_enable_attempts && !isAttemptsMax(p)) {
+			if (pluginConfig.punish_settings_enable_attempts && !isAttemptsMax(p.getName())) {
 				plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-pass"));
 			}
 		};
