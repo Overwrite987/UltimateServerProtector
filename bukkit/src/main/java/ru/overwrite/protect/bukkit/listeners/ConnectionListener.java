@@ -139,7 +139,7 @@ public class ConnectionListener implements Listener {
 			}
 			if (pluginConfig.punish_settings_enable_rejoin) {
 				rejoins.put(playerName, rejoins.getOrDefault(playerName, 0) + 1);
-				if (isMaxRejoins(p)) {
+				if (isMaxRejoins(playerName)) {
 					plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-rejoin"));
 				}
 			}
