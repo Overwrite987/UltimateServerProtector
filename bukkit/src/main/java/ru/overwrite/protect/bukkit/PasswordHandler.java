@@ -78,8 +78,9 @@ public class PasswordHandler {
 	}
 
 	private void failedPassword(Player p) {
+		String playerName = p.getName();
 		if (pluginConfig.punish_settings_enable_attempts) {
-			attempts.put(p.getName(), attempts.getOrDefault(p, 0) + 1);
+			attempts.put(playerName, attempts.getOrDefault(playerName, 0) + 1);
 		}
 		ServerProtectorPasswordFailEvent failEvent = new ServerProtectorPasswordFailEvent(p, attempts.get(p));
 		failEvent.callEvent();
@@ -97,12 +98,12 @@ public class PasswordHandler {
 			plugin.logAction("log-format.failed", p, new Date());
 		}
 		if (pluginConfig.message_settings_enable_broadcasts) {
-			String msg = pluginConfig.broadcasts_failed.replace("%player%", p.getName()).replace("%ip%",
+			String msg = pluginConfig.broadcasts_failed.replace("%player%", playerName).replace("%ip%",
 					Utils.getIp(p));
 			plugin.sendAlert(p, msg);
 		}
 		if (pluginConfig.message_settings_enable_console_broadcasts) {
-			String msg = pluginConfig.broadcasts_failed.replace("%player%", p.getName()).replace("%ip%",
+			String msg = pluginConfig.broadcasts_failed.replace("%player%", playerName).replace("%ip%",
 					Utils.getIp(p));
 			Bukkit.getConsoleSender().sendMessage(msg);
 		}
