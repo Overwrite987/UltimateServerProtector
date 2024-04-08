@@ -187,10 +187,6 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 					sendHelp(sender, label);
 					return false;
 				}
-				if (!pluginConfig.main_settings_enable_admin_commands) {
-					sendHelp(sender, label);
-					return false;
-				}
 				if (args.length > 2 && (args[1] != null && args[2] != null)) {
 					List<String> ipwl = pluginConfig.ip_whitelist.get(args[1]);
 					if (ipwl.isEmpty()) {
