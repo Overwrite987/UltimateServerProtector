@@ -88,7 +88,7 @@ public final class TaskManager {
 
 	public void startAdminCheck(FileConfiguration config) {
 		runner.runPeriodicalAsync(() -> {
-			if (plugin.login.isEmpty())
+			if (api.login.isEmpty())
 				return;
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				if (api.isCaptured(p) && !plugin.isAdmin(p.getName())) {
@@ -100,7 +100,7 @@ public final class TaskManager {
 
 	public void startCapturesMessages(FileConfiguration config) {
 		runner.runPeriodicalAsync(() -> {
-			if (plugin.login.isEmpty())
+			if (api.login.isEmpty())
 				return;
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				if (api.isCaptured(p)) {
@@ -137,7 +137,7 @@ public final class TaskManager {
 
 	public void startCapturesTimer(FileConfiguration config) {
 		runner.runPeriodicalAsync(() -> {
-			if (plugin.login.isEmpty())
+			if (api.login.isEmpty())
 				return;
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				if (api.isCaptured(p)) {

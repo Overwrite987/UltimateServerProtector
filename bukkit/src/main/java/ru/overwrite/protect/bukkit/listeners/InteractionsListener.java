@@ -12,17 +12,15 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 
 public class InteractionsListener implements Listener {
 
-	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 
 	public InteractionsListener(ServerProtectorManager plugin) {
-		this.plugin = plugin;
 		api = plugin.getPluginAPI();
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onMove(PlayerMoveEvent e) {
-		if (plugin.login.isEmpty())
+		if (api.login.isEmpty())
 			return;
 		Player p = e.getPlayer();
 		api.handleInteraction(p, e);
@@ -30,7 +28,7 @@ public class InteractionsListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerInteract(PlayerInteractEvent e) {
-		if (plugin.login.isEmpty())
+		if (api.login.isEmpty())
 			return;
 		Player p = e.getPlayer();
 		api.handleInteraction(p, e);
@@ -38,7 +36,7 @@ public class InteractionsListener implements Listener {
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
 	public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
-		if (plugin.login.isEmpty())
+		if (api.login.isEmpty())
 			return;
 		Player p = e.getPlayer();
 		api.handleInteraction(p, e);

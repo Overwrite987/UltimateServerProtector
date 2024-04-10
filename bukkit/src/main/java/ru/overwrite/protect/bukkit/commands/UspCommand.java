@@ -84,7 +84,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				plugin.getRunner().cancelTasks();
 				plugin.reloadConfigs();
 				plugin.time.clear();
-				plugin.login.clear();
+				api.login.clear();
 				api.ips.clear();
 				api.saved.clear();
 				if (Utils.bossbar != null) {

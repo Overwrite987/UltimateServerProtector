@@ -16,6 +16,7 @@ public class ServerProtectorAPI {
 	private final ServerProtectorManager plugin;
 	private final Config pluginConfig;
 	private final Logger logger;
+	public Set<String> login = new HashSet<>();
 	public Set<String> ips = new HashSet<>();
 	public Set<String> saved = new HashSet<>();
 
@@ -26,7 +27,7 @@ public class ServerProtectorAPI {
 	}
 
 	public boolean isCaptured(Player p) {
-		return plugin.login.contains(p.getName());
+		return this.login.contains(p.getName());
 	}
 
 	public void capturePlayer(Player p) {
@@ -34,7 +35,7 @@ public class ServerProtectorAPI {
 			logger.warn("Unable to capture " + p.getName() + " Reason: Already captured");
 			return;
 		}
-		plugin.login.add(p.getName());
+		this.login.add(p.getName());
 	}
 
 	public void uncapturePlayer(Player p) {
@@ -42,7 +43,7 @@ public class ServerProtectorAPI {
 			logger.warn("Unable to uncapture " + p.getName() + " Reason: Not captured");
 			return;
 		}
-		plugin.login.remove(p.getName());
+		this.login.remove(p.getName());
 	}
 
 	public boolean isAuthorised(Player p) {

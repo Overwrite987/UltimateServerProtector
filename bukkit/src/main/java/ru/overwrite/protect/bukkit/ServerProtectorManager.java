@@ -49,15 +49,13 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public String path;
 
-	public Set<String> login = new HashSet<>();
-
-	public Map<String, Integer> time;
-
 	private final Config pluginConfig = new Config(this);
 	private final ServerProtectorAPI api = new ServerProtectorAPI(this);
 	private final PasswordHandler passwordHandler = new PasswordHandler(this);
 	private final Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
 	private PluginMessage pluginMessage;
+
+	public Map<String, Integer> time;
 
 	private File logFile;
 
