@@ -14,10 +14,10 @@ import org.bukkit.potion.PotionEffectType;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.commands.PasCommand;
 import ru.overwrite.protect.bukkit.commands.UspCommand;
-import ru.overwrite.protect.bukkit.listeners.AdditionalListener;
+import ru.overwrite.protect.bukkit.listeners.MainListener;
 import ru.overwrite.protect.bukkit.listeners.ChatListener;
 import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
-import ru.overwrite.protect.bukkit.listeners.InteractionsListener;
+import ru.overwrite.protect.bukkit.listeners.TabCompleteListener;
 import ru.overwrite.protect.bukkit.task.BukkitRunner;
 import ru.overwrite.protect.bukkit.task.PaperRunner;
 import ru.overwrite.protect.bukkit.task.Runner;
@@ -198,8 +198,10 @@ public class ServerProtectorManager extends JavaPlugin {
 	public void registerListeners(PluginManager pluginManager) {
 		pluginManager.registerEvents(new ChatListener(this), this);
 		pluginManager.registerEvents(new ConnectionListener(this), this);
-		pluginManager.registerEvents(new InteractionsListener(this), this);
-		if (paper) { pluginManager.registerEvents(new AdditionalListener(this), this); }
+		pluginManager.registerEvents(new MainListener(this), this);
+		if (paper && pluginConfig.blocking_settings_block_tab_complete) {
+			pluginManager.registerEvents(new TabCompleteListener(this), this);
+		}
 	}
 
 	public void registerCommands(PluginManager pluginManager, FileConfiguration config) {

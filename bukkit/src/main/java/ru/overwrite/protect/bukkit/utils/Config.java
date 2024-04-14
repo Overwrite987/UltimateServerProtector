@@ -22,14 +22,14 @@ public class Config {
 	public Set<String> perms, blacklisted_perms;
 
 	public Map<String, List<String>> ip_whitelist;
-	
+
 	public Map<String, String> per_player_passwords;
 
 	public List<String> encryption_settings_encrypt_methods, effect_settings_effects, allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
 			excluded_ip_whitelist, excluded_blacklisted_perms;
 
 	public List<List> encryption_settings_old_encrypt_methods;
-	
+
 	public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
 	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
@@ -43,7 +43,7 @@ public class Config {
 
 	public boolean encryption_settings_enable_encryption, encryption_settings_auto_encrypt_passwords, blocking_settings_block_item_drop,
 			blocking_settings_block_item_pickup, blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
-			blocking_settings_block_inventory_open, blocking_settings_hide_on_entering, blocking_settings_hide_other_on_entering, main_settings_use_command,
+			blocking_settings_block_inventory_open, blocking_settings_hide_on_entering, blocking_settings_hide_other_on_entering, blocking_settings_allow_orientation_change, main_settings_use_command,
 			main_settings_enable_admin_commands, punish_settings_enable_attempts, punish_settings_enable_time, punish_settings_enable_rejoin,
 			bossbar_settings_enable_bossbar, secure_settings_enable_op_whitelist,
 			secure_settings_enable_notadmin_punish, secure_settings_enable_permission_blacklist,
@@ -56,7 +56,7 @@ public class Config {
 	public int encryption_settings_salt_length, punish_settings_max_attempts, punish_settings_time, punish_settings_max_rejoins, session_settings_session_time;
 
 	public long main_settings_check_interval;
-	
+
 	public void setupPasswords(FileConfiguration dataFile) {
 		per_player_passwords = new HashMap<>();
 		ConfigurationSection data = dataFile.getConfigurationSection("data");
@@ -207,6 +207,7 @@ public class Config {
 		blocking_settings_block_inventory_open = blocking_settings.getBoolean("block-inventory-open");
 		blocking_settings_hide_on_entering = blocking_settings.getBoolean("hide-on-entering");
 		blocking_settings_hide_other_on_entering = blocking_settings.getBoolean("hide-other-on-entering");
+		blocking_settings_allow_orientation_change = blocking_settings.getBoolean("allow-orientation-change");
 	}
 
 	public void loadPunishSettings(FileConfiguration config) {

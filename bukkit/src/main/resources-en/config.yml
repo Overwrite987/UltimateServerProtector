@@ -82,6 +82,8 @@ blocking-settings:
   hide-on-entering: true
   # Whether to hide other players from the person entering the password
   hide-other-on-entering: true
+  # Whether to allow you to move camera while entering a password
+  allow-orientation-change: false
 
 # Session settings
 session-settings:

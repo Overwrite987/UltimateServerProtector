@@ -27,6 +27,7 @@ public class ServerProtectorAPI {
 	}
 
 	public boolean isCaptured(Player p) {
+		if (this.login.isEmpty()) { return false; }
 		return this.login.contains(p.getName());
 	}
 

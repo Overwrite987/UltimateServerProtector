@@ -90,6 +90,8 @@ blocking-settings:
   hide-on-entering: true
   # Скрывать ли других игроков от человека вводящего пароль
   hide-other-on-entering: true
+  # Разрешить ли двигать головой во время ввода пароля
+  allow-orientation-change: false
 
 # Настройки сессии
 session-settings:
