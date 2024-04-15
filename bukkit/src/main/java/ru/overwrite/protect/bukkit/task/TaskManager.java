@@ -153,8 +153,7 @@ public final class TaskManager {
 							Utils.bossbar.addPlayer(p);
 						}
 					} else {
-						int currentTime = plugin.time.get(playerName);
-						plugin.time.put(playerName, currentTime + 1);
+						plugin.time.compute(playerName, (k, currentTime) -> currentTime + 1);
 						int newTime = plugin.time.get(playerName);
 						if (this.pluginConfig.bossbar_settings_enable_bossbar && Utils.bossbar != null) {
 							Utils.bossbar.setTitle(this.pluginConfig.bossbar_message.replace("%time%",

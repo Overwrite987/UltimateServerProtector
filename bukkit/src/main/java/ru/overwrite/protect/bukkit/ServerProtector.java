@@ -1,7 +1,6 @@
 package ru.overwrite.protect.bukkit;
 
 import org.bstats.bukkit.Metrics;
-import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;

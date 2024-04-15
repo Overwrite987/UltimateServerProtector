@@ -6,7 +6,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
-import ru.overwrite.protect.bukkit.utils.Config;
 
 public class TabCompleteListener implements Listener {
 
