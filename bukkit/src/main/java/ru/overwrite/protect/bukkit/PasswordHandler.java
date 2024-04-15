@@ -77,7 +77,7 @@ public class PasswordHandler {
 		return attempts.get(playerName) >= pluginConfig.punish_settings_max_attempts;
 	}
 
-	private void failedPassword(Player p) {
+	public void failedPassword(Player p) {
 		String playerName = p.getName();
 		if (pluginConfig.punish_settings_enable_attempts) {
 			attempts.put(playerName, attempts.getOrDefault(playerName, 0) + 1);
@@ -109,7 +109,7 @@ public class PasswordHandler {
 		}
 	}
 
-	private void correctPassword(Player p) {
+	public void correctPassword(Player p) {
 		ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(p);
 		successEvent.callEvent();
 		if (successEvent.isCancelled()) {
