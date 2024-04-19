@@ -41,7 +41,12 @@ public class ConnectionListener implements Listener {
 	public void onLogin(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
 		plugin.getRunner().runAsync (() -> {
-			if (plugin.isPermissions(p)) {
+			boolean isPermission = plugin.isPermissions(p);
+			if (api.isCaptured(p) && !isPermission) {
+				api.uncapturePlayer(p);
+				return;
+			}
+			if (isPermission) {
 				String ip = e.getAddress().getHostAddress();
 				if (pluginConfig.secure_settings_enable_ip_whitelist) {
 					if (!isIPAllowed(p.getName(), ip)) {
