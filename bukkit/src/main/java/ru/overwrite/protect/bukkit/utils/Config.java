@@ -19,7 +19,7 @@ public class Config {
 
 	private String serializer;
 
-	public Set<String> perms, blacklisted_perms;
+	public Set<String> perms, blacklisted_perms, geyser_names;
 
 	public Map<String, List<String>> ip_whitelist;
 
@@ -32,7 +32,7 @@ public class Config {
 
 	public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
-	public String uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
+	public String geyser_prefix, uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
 			uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
 			uspmsg_addopusage, uspmsg_remopusage, uspmsg_ipremoved, uspmsg_remipusage, uspmsg_addipusage,
 			uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_logout, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_encrypt, uspmsg_usage_setpass,
@@ -62,8 +62,13 @@ public class Config {
 		ConfigurationSection data = dataFile.getConfigurationSection("data");
 		boolean shouldSave = false;
 		for (String nick : data.getKeys(false)) {
+			// TODO: replace this mess with something better...
+			String playerNick = nick;
+			if (!geyser_prefix.isBlank() && geyser_names.contains(nick)) {
+				playerNick = geyser_prefix + nick;
+			}
 			if (!encryption_settings_enable_encryption) {
-				per_player_passwords.put(nick, data.getString(nick + ".pass"));
+				per_player_passwords.put(playerNick, data.getString(nick + ".pass"));
 			} else {
 				if (encryption_settings_auto_encrypt_passwords) {
 					if (data.getString(nick + ".pass") != null) {
@@ -74,7 +79,7 @@ public class Config {
 						plugin.dataFile = dataFile;
 					}
 				}
-				per_player_passwords.put(nick, data.getString(nick + ".encrypted-pass"));
+				per_player_passwords.put(playerNick, data.getString(nick + ".encrypted-pass"));
 			}
 		}
 		if (shouldSave) {
@@ -90,6 +95,12 @@ public class Config {
 		main_settings_use_command = main_settings.getBoolean("use-command");
 		main_settings_enable_admin_commands = main_settings.getBoolean("enable-admin-commands");
 		main_settings_check_interval = main_settings.getLong("check-interval");
+	}
+
+	public void loadGeyserSettings(FileConfiguration config) {
+		ConfigurationSection geyser_settings = config.getConfigurationSection("geyser-settings");
+		geyser_prefix = geyser_settings.getString("geyser-prefix");
+		geyser_names = new HashSet<>(geyser_settings.getStringList("geyser-nicknames"));
 	}
 
 	public void loadEncryptionSettings(FileConfiguration config) {

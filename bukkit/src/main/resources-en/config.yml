@@ -64,6 +64,14 @@ file-settings:
   # Path to the log.yml file
   log-file-path: '/root/server/plugins/UltimateServerProtector/'
 
+# Customization for floodgate + geyser users (with special characters)
+geyser-settings:
+  # The symbol that all players from the hip (put '' if there is no symbol, then the check will be disabled)
+  geyser-symbol: '.'
+  # Nicknames of players who are players from Bedrock (if this nickname is recorded in data.yml, a symbol will be automatically added to it during password verification)
+  geyser-nicknames:
+    - 'test99999'
+
 # Additional blocking settings
 blocking-settings:
   # Block item dropping

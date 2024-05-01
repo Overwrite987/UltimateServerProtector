@@ -135,6 +135,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.setupExcluded(config);
 		pluginConfig.loadMainSettings(config);
 		pluginConfig.loadEncryptionSettings(config);
+		pluginConfig.loadGeyserSettings(config);
 		pluginConfig.loadSecureSettings(config);
 		pluginConfig.loadAdditionalChecks(config);
 		pluginConfig.loadPunishSettings(config);
@@ -172,6 +173,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			pluginConfig.setupExcluded(config);
 			pluginConfig.loadMainSettings(config);
 			pluginConfig.loadEncryptionSettings(config);
+			pluginConfig.loadGeyserSettings(config);
 			pluginConfig.loadSecureSettings(config);
 			pluginConfig.loadAdditionalChecks(config);
 			pluginConfig.loadPunishSettings(config);
@@ -314,6 +316,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			return true;
 		for (String s : pluginConfig.perms) {
 			if (p.hasPermission(s)) {
+				loggerInfo(s);
 				return true;
 			}
 		}

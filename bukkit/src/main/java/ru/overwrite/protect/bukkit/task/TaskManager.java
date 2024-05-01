@@ -126,8 +126,8 @@ public final class TaskManager {
 	public void startPermsCheck(FileConfiguration config) {
 		runner.runPeriodicalAsync(() -> {
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				for (String badperms : this.pluginConfig.blacklisted_perms) {
-					if (p.hasPermission(badperms) && !plugin.isExcluded(p, this.pluginConfig.excluded_blacklisted_perms)) {
+				for (String badperm : this.pluginConfig.blacklisted_perms) {
+					if (p.hasPermission(badperm) && !plugin.isExcluded(p, this.pluginConfig.excluded_blacklisted_perms)) {
 						plugin.checkFail(p.getName(), config.getStringList("commands.have-blacklisted-perm"));
 					}
 				}

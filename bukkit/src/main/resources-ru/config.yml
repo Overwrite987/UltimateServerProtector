@@ -71,6 +71,14 @@ file-settings:
   data-file-path: '/root/server/plugins/UltimateServerProtector/'
   # Путь к файлу log.yml
   log-file-path: '/root/server/plugins/UltimateServerProtector/'
+
+# Настройка для пользователей floodgate + geyser (со спец.символами)
+geyser-settings:
+  # Символ, который есть у всех игроков с бедрока (поставьте '' если символа никакого нет, тогда проверка будет отключена)
+  geyser-symbol: ''
+  # Ники игроков, которые являются игроками с бедрока (если данный ник будет записан в data.yml, то к нему в ходе проверки пароля автоматически добавится символ)
+  geyser-nicknames:
+    - 'test99999'
   
 # Настройки дополнительных блокировок
 blocking-settings:
