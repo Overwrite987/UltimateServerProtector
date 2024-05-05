@@ -13,7 +13,6 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class ServerProtectorAPI {
 
-	private final ServerProtectorManager plugin;
 	private final Config pluginConfig;
 	private final Logger logger;
 	public Set<String> login = new HashSet<>();
@@ -21,7 +20,6 @@ public class ServerProtectorAPI {
 	public Set<String> saved = new HashSet<>();
 
 	public ServerProtectorAPI(ServerProtectorManager plugin) {
-		this.plugin = plugin;
 		pluginConfig = plugin.getPluginConfig();
 		logger = plugin.getPluginLogger();
 	}

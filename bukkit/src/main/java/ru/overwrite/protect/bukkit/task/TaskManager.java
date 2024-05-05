@@ -5,6 +5,7 @@ import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
@@ -140,36 +141,37 @@ public final class TaskManager {
 			if (api.login.isEmpty())
 				return;
 			for (Player p : Bukkit.getOnlinePlayers()) {
-				if (api.isCaptured(p)) {
-					String playerName = p.getName();
-					if (!plugin.time.containsKey(playerName)) {
-						plugin.time.put(playerName, 0);
-						if (this.pluginConfig.bossbar_settings_enable_bossbar) {
-							Utils.bossbar = Bukkit.createBossBar(
-									this.pluginConfig.bossbar_message.replace("%time%",
-											Integer.toString(this.pluginConfig.punish_settings_time)),
-									BarColor.valueOf(this.pluginConfig.bossbar_settings_bar_color),
-									BarStyle.valueOf(this.pluginConfig.bossbar_settings_bar_style));
+				if (!api.isCaptured(p)) {
+					return;
+				}
+				String playerName = p.getName();
+				if (!plugin.time.containsKey(playerName)) {
+					plugin.time.put(playerName, 0);
+					if (this.pluginConfig.bossbar_settings_enable_bossbar) {
+						Utils.bossbar = Bukkit.createBossBar(
+								this.pluginConfig.bossbar_message.replace("%time%",
+										Integer.toString(this.pluginConfig.punish_settings_time)),
+								BarColor.valueOf(this.pluginConfig.bossbar_settings_bar_color),
+								BarStyle.valueOf(this.pluginConfig.bossbar_settings_bar_style));
+						Utils.bossbar.addPlayer(p);
+					}
+				} else {
+					plugin.time.compute(playerName, (k, currentTime) -> currentTime + 1);
+					int newTime = plugin.time.get(playerName);
+					if (this.pluginConfig.bossbar_settings_enable_bossbar && Utils.bossbar != null) {
+						Utils.bossbar.setTitle(this.pluginConfig.bossbar_message.replace("%time%",
+								Integer.toString(this.pluginConfig.punish_settings_time - newTime)));
+						double percents = (this.pluginConfig.punish_settings_time - newTime)
+								/ (double) this.pluginConfig.punish_settings_time;
+						if (percents > 0) {
+							Utils.bossbar.setProgress(percents);
 							Utils.bossbar.addPlayer(p);
 						}
-					} else {
-						plugin.time.compute(playerName, (k, currentTime) -> currentTime + 1);
-						int newTime = plugin.time.get(playerName);
-						if (this.pluginConfig.bossbar_settings_enable_bossbar && Utils.bossbar != null) {
-							Utils.bossbar.setTitle(this.pluginConfig.bossbar_message.replace("%time%",
-									Integer.toString(this.pluginConfig.punish_settings_time - newTime)));
-							double percents = (this.pluginConfig.punish_settings_time - newTime)
-									/ (double) this.pluginConfig.punish_settings_time;
-							if (percents > 0) {
-								Utils.bossbar.setProgress(percents);
-								Utils.bossbar.addPlayer(p);
-							}
-						}
 					}
-					if (!noTimeLeft(playerName) && this.pluginConfig.punish_settings_enable_time) {
-						plugin.checkFail(playerName, config.getStringList("commands.failed-time"));
-						Utils.bossbar.removePlayer(p);
-					}
+				}
+				if (!noTimeLeft(playerName) && this.pluginConfig.punish_settings_enable_time) {
+					plugin.checkFail(playerName, config.getStringList("commands.failed-time"));
+					Utils.bossbar.removePlayer(p);
 				}
 			}
 		}, 0L, 20L);

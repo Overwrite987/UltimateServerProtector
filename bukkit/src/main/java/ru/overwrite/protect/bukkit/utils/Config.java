@@ -8,6 +8,7 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class Config {
 
@@ -58,7 +59,7 @@ public class Config {
 	public long main_settings_check_interval;
 
 	public void setupPasswords(FileConfiguration dataFile) {
-		per_player_passwords = new HashMap<>();
+		per_player_passwords = new ConcurrentHashMap<>();
 		ConfigurationSection data = dataFile.getConfigurationSection("data");
 		boolean shouldSave = false;
 		for (String nick : data.getKeys(false)) {

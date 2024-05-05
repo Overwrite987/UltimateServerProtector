@@ -32,6 +32,7 @@ import java.io.*;
 import java.lang.reflect.Constructor;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerProtectorManager extends JavaPlugin {
 
@@ -234,7 +235,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		taskManager.startMainCheck(pluginConfig.main_settings_check_interval);
 		taskManager.startCapturesMessages(config);
 		if (pluginConfig.punish_settings_enable_time) {
-			time = new HashMap<>();
+			time = new ConcurrentHashMap<>();
 			taskManager.startCapturesTimer(config);
 		}
 		if (pluginConfig.secure_settings_enable_notadmin_punish) {
