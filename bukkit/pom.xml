@@ -7,7 +7,7 @@
   <parent>
     <groupId>ru.overwrite.protect</groupId>
     <artifactId>ultimateserverprotector-project</artifactId>
-    <version>29.0</version>
+    <version>29.1</version>
   </parent>
   <artifactId>bukkit-plugin</artifactId>
   <packaging>jar</packaging>
