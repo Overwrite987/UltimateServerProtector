@@ -10,6 +10,7 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
+import ru.overwrite.protect.bukkit.utils.PAPIUtils;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
@@ -75,11 +76,17 @@ public final class TaskManager {
 					if (pluginConfig.message_settings_enable_broadcasts) {
 						String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%",
 								Utils.getIp(p));
+						if (pluginConfig.main_settings_papi_support) {
+							msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+						}
 						plugin.sendAlert(p, msg);
 					}
 					if (pluginConfig.message_settings_enable_console_broadcasts) {
 						String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%",
 								Utils.getIp(p));
+						if (pluginConfig.main_settings_papi_support) {
+							msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+						}
 						Bukkit.getConsoleSender().sendMessage(msg);
 					}
 				}
