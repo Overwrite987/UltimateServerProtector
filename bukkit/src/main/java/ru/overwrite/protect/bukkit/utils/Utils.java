@@ -118,6 +118,9 @@ public final class Utils {
 	}
 
 	public static String encryptPassword(String password, String salt, List<String> hashTypes) {
+		if (hashTypes.isEmpty()) {
+			return password;
+		}
 		String encryptedPassword = password;
 		boolean salted = false;
 		for (String hashType : hashTypes) {
@@ -131,6 +134,8 @@ public final class Utils {
 					salted = true;
 					break;
 				case "MD5":
+					System.err.println("Hash type 'MD5' is outdated! You have to change it to SHA224 at least.");
+					break;
 				case "SHA224":
 				case "SHA256":
 				case "SHA384":
