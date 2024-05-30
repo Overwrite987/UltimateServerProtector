@@ -36,7 +36,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		}
 		checkForUpdates(config, messageFile);
 		long endTime = System.currentTimeMillis();
-		loggerInfo("Plugin started in " + (endTime - startTime) + " ms");
+		getPluginLogger().info("Plugin started in " + (endTime - startTime) + " ms");
 	}
 
 	@Override

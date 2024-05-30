@@ -125,15 +125,6 @@ punish-settings:
   enable-rejoin: true
   # Максимальное число перезаходов на сервер если игрок выходит без ввода верного админ-пароля
   max-rejoins: 3
-
-# Настройка боссбара (работает только, если включено время для входа)
-bossbar-settings:
-  # Включить ли боссбар
-  enable-bossbar: true
-  # Цвет боссбара (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
-  bar-color: RED
-  # Тип боссбара (SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
-  bar-style: SEGMENTED_12
   
 # Настройки повышенной безопасности
 secure-settings:
@@ -166,6 +157,15 @@ message-settings:
   enable-broadcasts: true
   # Включить ли оповещения для консоли
   enable-console-broadcasts: true
+
+# Настройка боссбара (работает только, если включено время для входа)
+bossbar-settings:
+  # Включить ли боссбар
+  enable-bossbar: true
+  # Цвет боссбара (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
+  bar-color: RED
+  # Тип боссбара (SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
+  bar-style: SEGMENTED_12
 
 # Настройки звуков, которые будут проигрываться при вводе команд/действиях 
 sound-settings:

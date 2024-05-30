@@ -37,7 +37,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerProtectorManager extends JavaPlugin {
 
 	public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
-	private final Logger logger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
+	private final Logger pluginLogger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 
 	public boolean proxy = false;
 
@@ -79,7 +79,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public Logger getPluginLogger() {
-		return logger;
+		return pluginLogger;
 	}
 
 	public Runner getRunner() {
@@ -88,10 +88,10 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public boolean checkPaper(FileConfiguration messageFile) {
 		if (server.getName().equals("CraftBukkit")) {
-			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-			loggerInfo(messageFile.getString("system.paper-1", "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"));
-			loggerInfo(messageFile.getString("system.paper-2", "§eDownload Paper: §ahttps://papermc.io/downloads/all"));
-			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+			pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+			pluginLogger.info(messageFile.getString("system.paper-1", "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"));
+			pluginLogger.info(messageFile.getString("system.paper-2", "§eDownload Paper: §ahttps://papermc.io/downloads/all"));
+			pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
 			return false;
 		}
 		return  true;
@@ -102,11 +102,11 @@ public class ServerProtectorManager extends JavaPlugin {
 			if (pluginManager.isPluginEnabled("BungeeGuard")) {
 				return true;
 			}
-			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-			loggerInfo(messageFile.getString("system.bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
-			loggerInfo(messageFile.getString("system.bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
-			loggerInfo(messageFile.getString("system.bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
-			loggerInfo(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+			pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+			pluginLogger.info(messageFile.getString("system.bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
+			pluginLogger.info(messageFile.getString("system.bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
+			pluginLogger.info(messageFile.getString("system.bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
+			pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
 			server.shutdown();
 			return false;
 		}
@@ -123,10 +123,10 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void loadConfigs(FileConfiguration config) {
-		ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-		boolean fullPath = file_settings.getBoolean("use-full-path");
-		path = fullPath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
-		dataFileName = file_settings.getString("data-file");
+		ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
+		boolean fullPath = fileSettings.getBoolean("use-full-path");
+		path = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+		dataFileName = fileSettings.getString("data-file");
 		dataFile = pluginConfig.getFile(path, dataFileName);
 		pluginConfig.save(path, dataFile, dataFileName);
 		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
@@ -136,26 +136,26 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.setupExcluded(config);
 		pluginConfig.loadMainSettings(config);
 		pluginConfig.loadEncryptionSettings(config);
-		pluginConfig.loadGeyserSettings(config);
 		pluginConfig.loadSecureSettings(config);
+		pluginConfig.loadGeyserSettings(config);
 		pluginConfig.loadAdditionalChecks(config);
 		pluginConfig.loadPunishSettings(config);
 		pluginConfig.loadSessionSettings(config);
 		pluginConfig.loadMessageSettings(config);
+		pluginConfig.loadBossbarSettings(config);
 		pluginConfig.loadSoundSettings(config);
 		pluginConfig.loadEffects(config);
 		pluginConfig.loadLoggingSettings(config);
-		pluginConfig.loadBossbar(config);
-		ConfigurationSection message_settings = config.getConfigurationSection("message-settings");
-		if (message_settings.getBoolean("send-titles")) {
-			pluginConfig.loadTitleMessages(messageFile);
-		}
-		if (message_settings.getBoolean("enable-broadcasts")
-				|| message_settings.getBoolean("enable-console-broadcasts")) {
-			pluginConfig.loadBroadcastMessages(messageFile);
-		}
 		pluginConfig.loadMsgMessages(messageFile);
 		pluginConfig.loadUspMessages(messageFile);
+		ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
+		if (messageSettings.getBoolean("send-titles")) {
+			pluginConfig.loadTitleMessages(messageFile);
+		}
+		if (messageSettings.getBoolean("enable-broadcasts")
+				|| messageSettings.getBoolean("enable-console-broadcasts")) {
+			pluginConfig.loadBroadcastMessages(messageFile);
+		}
 		pluginConfig.setupPasswords(dataFile);
 	}
 
@@ -164,10 +164,10 @@ public class ServerProtectorManager extends JavaPlugin {
 			reloadConfig();
 			FileConfiguration config = getConfig();
 			messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
-			ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-			boolean fullPath = file_settings.getBoolean("use-full-path");
-			path = fullPath ? file_settings.getString("data-file-path") : getDataFolder().getAbsolutePath();
-			dataFileName = file_settings.getString("data-file");
+			ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
+			boolean fullPath = fileSettings.getBoolean("use-full-path");
+			path = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+			dataFileName = fileSettings.getString("data-file");
 			dataFile = pluginConfig.getFile(path, dataFileName);
 			pluginConfig.loadPerms(config);
 			pluginConfig.loadLists(config);
@@ -180,16 +180,16 @@ public class ServerProtectorManager extends JavaPlugin {
 			pluginConfig.loadPunishSettings(config);
 			pluginConfig.loadSessionSettings(config);
 			pluginConfig.loadMessageSettings(config);
+			pluginConfig.loadBossbarSettings(config);
 			pluginConfig.loadSoundSettings(config);
 			pluginConfig.loadEffects(config);
 			pluginConfig.loadLoggingSettings(config);
-			pluginConfig.loadBossbar(config);
-			ConfigurationSection message_settings = config.getConfigurationSection("message-settings");
-			if (message_settings.getBoolean("send-titles")) {
+			ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
+			if (messageSettings.getBoolean("send-titles")) {
 				pluginConfig.loadTitleMessages(messageFile);
 			}
-			if (message_settings.getBoolean("enable-broadcasts")
-					|| message_settings.getBoolean("enable-console-broadcasts")) {
+			if (messageSettings.getBoolean("enable-broadcasts")
+					|| messageSettings.getBoolean("enable-console-broadcasts")) {
 				pluginConfig.loadBroadcastMessages(messageFile);
 			}
 			pluginConfig.loadMsgMessages(messageFile);
@@ -217,12 +217,12 @@ public class ServerProtectorManager extends JavaPlugin {
 				command.setExecutor(new PasCommand(this));
 				commandMap.register(getDescription().getName(), command);
 			} catch (Exception e) {
-				loggerInfo("Unable to register password command!");
+				pluginLogger.info("Unable to register password command!");
 				e.printStackTrace();
 				pluginManager.disablePlugin(this);
 			}
 		} else {
-			loggerInfo("Command for password entering will not be registered.");
+			pluginLogger.info("Command for password entering will not be registered.");
 		}
 		PluginCommand uspCommand = getCommand("ultimateserverprotector");
 		UspCommand uspCommandClass = new UspCommand(this);
@@ -265,15 +265,15 @@ public class ServerProtectorManager extends JavaPlugin {
 			return;
 		}
 		Utils.checkUpdates(this, version -> {
-			loggerInfo(messageFile.getString("system.baseline-default", "§6========================================"));
+			pluginLogger.info(messageFile.getString("system.baseline-default", "§6========================================"));
 			if (getDescription().getVersion().equals(version)) {
-				loggerInfo(messageFile.getString("system.update-latest", "§aYou are using latest version of the plugin!"));
+				pluginLogger.info(messageFile.getString("system.update-latest", "§aYou are using latest version of the plugin!"));
 			} else {
-				loggerInfo(messageFile.getString("system.update-outdated-1", "§aYou are using outdated version of the plugin!"));
-				loggerInfo(messageFile.getString("system.update-outdated-2", "§aYou can download new version here:"));
-				loggerInfo(messageFile.getString("system.update-outdated-3", "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"));
+				pluginLogger.info(messageFile.getString("system.update-outdated-1", "§aYou are using outdated version of the plugin!"));
+				pluginLogger.info(messageFile.getString("system.update-outdated-2", "§aYou can download new version here:"));
+				pluginLogger.info(messageFile.getString("system.update-outdated-3", "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"));
 			}
-			loggerInfo(messageFile.getString("system.baseline-default", "§6========================================"));
+			pluginLogger.info(messageFile.getString("system.baseline-default", "§6========================================"));
 		});
 	}
 
@@ -317,7 +317,7 @@ public class ServerProtectorManager extends JavaPlugin {
 			return true;
 		for (String s : pluginConfig.perms) {
 			if (p.hasPermission(s)) {
-				loggerInfo(s);
+				pluginLogger.info(s);
 				return true;
 			}
 		}
@@ -343,15 +343,11 @@ public class ServerProtectorManager extends JavaPlugin {
 		}
 	}
 
-	public void loggerInfo(String logMessage) {
-		logger.info(logMessage);
-	}
-
 	public void logAction(String key, Player player, Date date) {
 		runner.runAsync(() ->
 				logToFile(messageFile.getString(key, "ERROR: " + key + " does not exist!")
 						.replace("%player%", player.getName())
-                		.replace("%ip%", Utils.getIp(player))
+						.replace("%ip%", Utils.getIp(player))
 						.replace("%date%", DATE_FORMAT.format(date)))
 		);
 	}

@@ -118,15 +118,6 @@ punish-settings:
   # Maximum number of rejoins to the server if a player exits without entering correct admin password
   max-rejoins: 3
 
-# Bossbar settings (only works if login time is enabled)
-bossbar-settings:
-  # Enable bossbar
-  enable-bossbar: true
-  # Bossbar color (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
-  bar-color: RED
-  # Bossbar type (SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
-  bar-style: SEGMENTED_12
-
 # Enhanced security settings
 secure-settings:
   # Apply punishments to operators not listed in the whitelist
@@ -158,6 +149,15 @@ message-settings:
   enable-broadcasts: true
   # Enable notifications for the console
   enable-console-broadcasts: true
+
+# Bossbar settings (only works if login time is enabled)
+bossbar-settings:
+  # Enable bossbar
+  enable-bossbar: true
+  # Bossbar color (PINK, BLUE, RED, GREEN, YELLOW, PURPLE, WHITE)
+  bar-color: RED
+  # Bossbar type (SOLID, SEGMENTED_6, SEGMENTED_10, SEGMENTED_12, SEGMENTED_20)
+  bar-style: SEGMENTED_12
 
 # Sound settings for commands/actions
 sound-settings:
