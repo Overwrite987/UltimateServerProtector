@@ -65,7 +65,7 @@ public class Config {
 		for (String nick : data.getKeys(false)) {
 			// TODO: replace this mess with something better...
 			String playerNick = nick;
-			if (!geyser_prefix.isBlank() && geyser_names.contains(nick)) {
+			if (geyser_prefix != null && !geyser_prefix.isBlank() && geyser_names.contains(nick)) {
 				playerNick = geyser_prefix + nick;
 			}
 			if (!encryption_settings_enable_encryption) {
