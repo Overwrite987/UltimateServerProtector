@@ -134,7 +134,8 @@ public final class Utils {
 					salted = true;
 					break;
 				case "MD5":
-					System.err.println("Hash type 'MD5' is outdated! You have to change it to SHA224 at least.");
+					System.err.println("Hash type 'MD5' is outdated and will be removed in the future! You have to change it to SHA224 at least.");
+					encryptedPassword = encryptToHash(encryptedPassword, hashType);
 					break;
 				case "SHA224":
 				case "SHA256":
