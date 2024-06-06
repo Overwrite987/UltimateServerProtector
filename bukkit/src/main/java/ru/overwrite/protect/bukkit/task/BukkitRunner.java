@@ -6,6 +6,7 @@ import org.bukkit.scheduler.BukkitScheduler;
 
 @SuppressWarnings("deprecation")
 public class BukkitRunner implements Runner {
+
 	private final Plugin plugin;
 	private final BukkitScheduler scheduler;
 

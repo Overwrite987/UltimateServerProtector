@@ -362,8 +362,8 @@ public class ServerProtectorManager extends JavaPlugin {
 			bufferedWriter.newLine();
 			bufferedWriter.flush();
 			bufferedWriter.close();
-		} catch (IOException e) {
-			e.printStackTrace();
+		} catch (IOException ex) {
+			ex.printStackTrace();
 		}
 	}
 }

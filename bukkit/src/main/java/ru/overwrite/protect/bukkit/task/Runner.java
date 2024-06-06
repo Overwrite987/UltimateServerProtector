@@ -3,6 +3,7 @@ package ru.overwrite.protect.bukkit.task;
 import org.bukkit.entity.Player;
 
 public interface Runner {
+
 	void runPlayer(Runnable task, Player player);
 
 	void run(Runnable task);

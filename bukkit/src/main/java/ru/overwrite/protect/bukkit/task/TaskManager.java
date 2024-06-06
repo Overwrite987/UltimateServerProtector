@@ -16,6 +16,7 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 import java.util.Date;
 
 public final class TaskManager {
+
 	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
 	private final Config pluginConfig;
