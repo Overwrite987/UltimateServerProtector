@@ -65,13 +65,13 @@ public final class Utils {
 
 	public static void sendSound(String[] soundArgs, Player p) {
 		if (soundArgs.length > 3) {
-			Bukkit.getConsoleSender().sendMessage ("Unable to give effect. " + soundArgs.toString());
+			Bukkit.getConsoleSender().sendMessage ("Unable to send sound. " + soundArgs.toString());
 			return;
 		}
 		Sound sound = Sound.valueOf(soundArgs[0]);
 		float volume = (soundArgs.length >= 2 && soundArgs[1] != null) ? Float.parseFloat(soundArgs[1]) : 1.0f;
 		float pitch = (soundArgs.length == 3 && soundArgs[2] != null) ? Float.parseFloat(soundArgs[2]) : 1.0f;
-	    p.playSound(p.getLocation(), sound, volume, pitch);
+		p.playSound(p.getLocation(), sound, volume, pitch);
 	}
 
 	public static String colorize(String message, String serializer) {
