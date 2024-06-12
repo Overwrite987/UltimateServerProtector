@@ -8,6 +8,10 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class RebootSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "reboot";
+    }
+
     public RebootSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }

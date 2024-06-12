@@ -7,6 +7,10 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class EncryptSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "encrypt";
+    }
+
     public EncryptSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }

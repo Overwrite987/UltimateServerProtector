@@ -7,6 +7,10 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 public class RempassSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "rempass";
+    }
+
     public RempassSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }

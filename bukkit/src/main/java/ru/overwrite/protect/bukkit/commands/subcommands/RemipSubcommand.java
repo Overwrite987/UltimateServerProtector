@@ -8,6 +8,10 @@ import java.util.List;
 
 public class RemipSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "remip";
+    }
+
     public RemipSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }

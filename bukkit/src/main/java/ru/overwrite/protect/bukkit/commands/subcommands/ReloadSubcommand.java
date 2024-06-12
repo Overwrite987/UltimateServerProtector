@@ -6,6 +6,10 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 public class ReloadSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "reload";
+    }
+
     public ReloadSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }

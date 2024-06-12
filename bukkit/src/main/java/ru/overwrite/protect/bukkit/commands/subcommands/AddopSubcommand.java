@@ -10,6 +10,10 @@ import java.util.List;
 
 public class AddopSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "addop";
+    }
+
     public AddopSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }

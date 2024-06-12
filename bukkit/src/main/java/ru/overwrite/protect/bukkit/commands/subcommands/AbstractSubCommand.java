@@ -8,6 +8,8 @@ import ru.overwrite.protect.bukkit.utils.Config;
 
 public abstract class AbstractSubCommand implements SubCommand {
 
+    public abstract String getName();
+
     protected final ServerProtectorManager plugin;
     protected final ServerProtectorAPI api;
     protected final Config pluginConfig;

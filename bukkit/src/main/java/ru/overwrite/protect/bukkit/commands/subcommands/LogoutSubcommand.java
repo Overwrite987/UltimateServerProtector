@@ -8,6 +8,10 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class LogoutSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "logout";
+    }
+
     public LogoutSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }

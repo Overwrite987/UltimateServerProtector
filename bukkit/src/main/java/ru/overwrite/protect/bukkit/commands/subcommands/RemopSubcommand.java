@@ -10,6 +10,10 @@ import java.util.List;
 
 public class RemopSubcommand extends AbstractSubCommand {
 
+    public String getName() {
+        return "remop";
+    }
+
     public RemopSubcommand(ServerProtectorManager plugin) {
         super(plugin);
     }
