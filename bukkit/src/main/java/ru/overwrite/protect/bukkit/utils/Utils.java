@@ -134,7 +134,7 @@ public final class Utils {
 					salted = true;
 					break;
 				case "MD5":
-					warnOutdatedHash(hashType);
+					Bukkit.getLogger().warning("Hash type" + hashType + "is outdated and will be removed in the future!");
 					encryptedPassword = encryptToHash(encryptedPassword, hashType);
 					break;
 				case "SHA224":
@@ -156,10 +156,6 @@ public final class Utils {
 			}
 		}
 		return salted ? salt + ":" + encryptedPassword : encryptedPassword;
-	}
-
-	private static void warnOutdatedHash(String hashType) {
-		Bukkit.getLogger().warning("Hash type" + hashType + "is outdated and will be removed in the future!");
 	}
 
 	public static String generateSalt(int length) {
