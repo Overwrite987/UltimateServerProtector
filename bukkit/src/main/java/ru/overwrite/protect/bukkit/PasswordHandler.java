@@ -122,18 +122,7 @@ public class PasswordHandler {
 				p.removePotionEffect(s.getType());
 			}
 		}
-		if (pluginConfig.blocking_settings_hide_on_entering) {
-			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-				if (!onlinePlayer.equals(p)) {
-					onlinePlayer.showPlayer(plugin, p);
-				}
-			}
-		}
-		if (pluginConfig.blocking_settings_hide_other_on_entering) {
-			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-				p.showPlayer(plugin, onlinePlayer);
-			}
-		}
+		this.showPlayer(p);
 		api.authorisePlayer(p);
 		if (pluginConfig.session_settings_session_time_enabled) {
 			plugin.getRunner().runDelayedAsync(() -> {
@@ -153,21 +142,21 @@ public class PasswordHandler {
 				Utils.bossbar.removePlayer(p);
 			}
 		}
-		if (pluginConfig.message_settings_enable_broadcasts) {
-			String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%",
-					Utils.getIp(p));
-			if (pluginConfig.main_settings_papi_support) {
-				msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+		plugin.sendAlert(p, pluginConfig.broadcasts_passed);
+	}
+
+	private void showPlayer(Player p) {
+		if (pluginConfig.blocking_settings_hide_on_entering) {
+			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+				if (!onlinePlayer.equals(p)) {
+					onlinePlayer.showPlayer(plugin, p);
+				}
 			}
-			plugin.sendAlert(p, msg);
 		}
-		if (pluginConfig.message_settings_enable_console_broadcasts) {
-			String msg = pluginConfig.broadcasts_passed.replace("%player%", playerName).replace("%ip%",
-					Utils.getIp(p));
-			if (pluginConfig.main_settings_papi_support) {
-				msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+		if (pluginConfig.blocking_settings_hide_other_on_entering) {
+			for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+				p.showPlayer(plugin, onlinePlayer);
 			}
-			Bukkit.getConsoleSender().sendMessage(msg);
 		}
 	}
 }
