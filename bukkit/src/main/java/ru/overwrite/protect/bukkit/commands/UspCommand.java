@@ -23,12 +23,12 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		subCommands.put("reload", new ReloadSubcommand(plugin));
 		subCommands.put("reboot", new RebootSubcommand(plugin));
 		subCommands.put("encrypt", new EncryptSubcommand(plugin));
-		subCommands.put("setpass", new EncryptSubcommand(plugin));
-		subCommands.put("addop", new EncryptSubcommand(plugin));
-		subCommands.put("addip", new EncryptSubcommand(plugin));
-		subCommands.put("rempass", new EncryptSubcommand(plugin));
-		subCommands.put("remop", new EncryptSubcommand(plugin));
-		subCommands.put("remip", new EncryptSubcommand(plugin));
+		subCommands.put("setpass", new SetpassSubcommand(plugin));
+		subCommands.put("addop", new AddopSubcommand(plugin));
+		subCommands.put("addip", new AddipSubcommand(plugin));
+		subCommands.put("rempass", new RempassSubcommand(plugin));
+		subCommands.put("remop", new RemopSubcommand(plugin));
+		subCommands.put("remip", new RemipSubcommand(plugin));
 	}
 
 	@Override

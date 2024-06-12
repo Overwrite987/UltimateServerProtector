@@ -23,6 +23,7 @@ import ru.overwrite.protect.bukkit.task.PaperRunner;
 import ru.overwrite.protect.bukkit.task.Runner;
 import ru.overwrite.protect.bukkit.task.TaskManager;
 import ru.overwrite.protect.bukkit.utils.Config;
+import ru.overwrite.protect.bukkit.utils.PAPIUtils;
 import ru.overwrite.protect.bukkit.utils.PluginMessage;
 import ru.overwrite.protect.bukkit.utils.Utils;
 import ru.overwrite.protect.bukkit.utils.logging.BukkitLogger;
@@ -308,6 +309,25 @@ public class ServerProtectorManager extends JavaPlugin {
 		}, player);
 	}
 
+	public void applyHide(Player p) {
+		if (pluginConfig.blocking_settings_hide_on_entering) {
+			runner.runPlayer(() -> {
+				for (Player onlinePlayer : server.getOnlinePlayers()) {
+					if (!onlinePlayer.equals(p)) {
+						onlinePlayer.hidePlayer(this, p);
+					}
+				}
+			}, p);
+		}
+		if (pluginConfig.blocking_settings_hide_other_on_entering) {
+			runner.runPlayer(() -> {
+				for (Player onlinePlayer : server.getOnlinePlayers()) {
+					p.hidePlayer(this, onlinePlayer);
+				}
+			}, p);
+		}
+	}
+
 	public void logEnableDisable(String msg, Date date) {
 		if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
 			logToFile(msg.replace("%date%", DATE_FORMAT.format(date)));
@@ -335,13 +355,26 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void sendAlert(Player p, String msg) {
-		for (Player ps : server.getOnlinePlayers()) {
-			if (ps.hasPermission("serverprotector.admin")) {
-				ps.sendMessage(msg);
+		if (pluginConfig.message_settings_enable_broadcasts) {
+			msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
+			if (pluginConfig.main_settings_papi_support) {
+				msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+			}
+			for (Player ps : server.getOnlinePlayers()) {
+				if (ps.hasPermission("serverprotector.admin")) {
+					ps.sendMessage(msg);
+				}
+			}
+			if (proxy) {
+				pluginMessage.sendCrossProxy(p, msg);
 			}
 		}
-		if (proxy) {
-			pluginMessage.sendCrossProxy(p, msg);
+		if (pluginConfig.message_settings_enable_console_broadcasts) {
+			msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
+			if (pluginConfig.main_settings_papi_support) {
+				msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+			}
+			server.getConsoleSender().sendMessage(msg);
 		}
 	}
 

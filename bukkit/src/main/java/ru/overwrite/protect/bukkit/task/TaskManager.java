@@ -10,7 +10,6 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
-import ru.overwrite.protect.bukkit.utils.PAPIUtils;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
@@ -41,7 +40,6 @@ public final class TaskManager {
 				if (!plugin.isPermissions(p)) {
 					continue;
 				}
-				String playerName = p.getName();
 				if (!api.isAuthorised(p)) {
 					ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, Utils.getIp(p));
 					captureEvent.callEvent();
@@ -55,41 +53,11 @@ public final class TaskManager {
 					if (pluginConfig.effect_settings_enable_effects) {
 						plugin.giveEffect(p);
 					}
-					if (pluginConfig.blocking_settings_hide_on_entering) {
-						runner.runPlayer(() -> {
-							for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-								if (!onlinePlayer.equals(p)) {
-									onlinePlayer.hidePlayer(plugin, p);
-								}
-							}
-						}, p);
-					}
-					if (pluginConfig.blocking_settings_hide_other_on_entering) {
-						runner.runPlayer(() -> {
-							for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-								p.hidePlayer(plugin, onlinePlayer);
-							}
-						}, p);
-					}
+					plugin.applyHide(p);
 					if (pluginConfig.logging_settings_logging_pas) {
 						plugin.logAction("log-format.captured", p, new Date());
 					}
-					if (pluginConfig.message_settings_enable_broadcasts) {
-						String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%",
-								Utils.getIp(p));
-						if (pluginConfig.main_settings_papi_support) {
-							msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
-						}
-						plugin.sendAlert(p, msg);
-					}
-					if (pluginConfig.message_settings_enable_console_broadcasts) {
-						String msg = pluginConfig.broadcasts_captured.replace("%player%", playerName).replace("%ip%",
-								Utils.getIp(p));
-						if (pluginConfig.main_settings_papi_support) {
-							msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
-						}
-						Bukkit.getConsoleSender().sendMessage(msg);
-					}
+					plugin.sendAlert(p, pluginConfig.broadcasts_captured);
 				}
 			}
 		}, 20L, interval >= 0 ? interval : 40L);

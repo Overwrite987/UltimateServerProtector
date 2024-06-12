@@ -98,22 +98,7 @@ public class PasswordHandler {
 		if (pluginConfig.logging_settings_logging_pas) {
 			plugin.logAction("log-format.failed", p, new Date());
 		}
-		if (pluginConfig.message_settings_enable_broadcasts) {
-			String msg = pluginConfig.broadcasts_failed.replace("%player%", playerName).replace("%ip%",
-					Utils.getIp(p));
-			if (pluginConfig.main_settings_papi_support) {
-				msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
-			}
-			plugin.sendAlert(p, msg);
-		}
-		if (pluginConfig.message_settings_enable_console_broadcasts) {
-			String msg = pluginConfig.broadcasts_failed.replace("%player%", playerName).replace("%ip%",
-					Utils.getIp(p));
-			if (pluginConfig.main_settings_papi_support) {
-				msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
-			}
-			Bukkit.getConsoleSender().sendMessage(msg);
-		}
+		plugin.sendAlert(p, pluginConfig.broadcasts_failed);
 	}
 
 	public void correctPassword(Player p) {
