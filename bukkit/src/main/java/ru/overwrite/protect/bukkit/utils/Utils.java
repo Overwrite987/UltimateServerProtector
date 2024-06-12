@@ -155,10 +155,7 @@ public final class Utils {
 					throw new IllegalArgumentException("Unsupported hash type: " + hashType);
 			}
 		}
-		if (salted) {
-			return salt + ":" + encryptedPassword;
-		}
-		return encryptedPassword;
+		return salted ? salt + ":" + encryptedPassword : encryptedPassword;
 	}
 
 	public static String generateSalt(int length) {
