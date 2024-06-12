@@ -1,3 +1,5 @@
+[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/overwrite987/ultimateserverprotector?style=flat-square)](https://www.codefactor.io/repository/github/overwrite987/ultimateserverprotector)
+
 **• This is an  incredibly lightweight plugin, that add an "admin-password" to your server.**
 
 • The main features should be considered the function of adding rights to check and creating a personal admin password for each player! All together, this creates an almost insurmountable barrier for the "hackers".
