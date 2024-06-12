@@ -66,7 +66,6 @@ public class Config {
         ConfigurationSection data = dataFile.getConfigurationSection("data");
         boolean shouldSave = false;
         for (String nick : data.getKeys(false)) {
-            // TODO: replace this mess with something better...
             String playerNick = nick;
             if (geyser_prefix != null && !geyser_prefix.isBlank() && geyser_names.contains(nick)) {
                 playerNick = geyser_prefix + nick;
