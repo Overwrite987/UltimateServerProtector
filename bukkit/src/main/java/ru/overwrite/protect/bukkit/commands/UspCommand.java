@@ -1,9 +1,7 @@
 package ru.overwrite.protect.bukkit.commands;
 
 import org.bukkit.command.*;
-import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
-import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.commands.subcommands.*;
 import ru.overwrite.protect.bukkit.utils.Config;
 

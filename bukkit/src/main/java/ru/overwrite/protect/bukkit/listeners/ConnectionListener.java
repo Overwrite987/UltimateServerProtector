@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit.listeners;
 
-import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -15,7 +14,6 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.task.Runner;
 import ru.overwrite.protect.bukkit.utils.Config;
-import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;
 import java.util.HashMap;
