@@ -150,7 +150,6 @@ public class Config {
 
     public void loadGeyserSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection geyserSettings = config.getConfigurationSection("geyser-settings");
-        logger.info(Boolean.toString(!configFile.contains("geyser-settings")));
         if (!configFile.contains("geyser-settings")) {
             logger.warn("Configuration section geyser-settings not found!");
             configFile.createSection("geyser-settings");
