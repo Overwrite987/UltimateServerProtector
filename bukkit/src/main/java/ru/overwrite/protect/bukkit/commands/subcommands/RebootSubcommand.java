@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit.commands.subcommands;
 
+import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -33,8 +34,8 @@ public class RebootSubcommand extends AbstractSubCommand {
         api.login.clear();
         api.ips.clear();
         api.saved.clear();
-        if (Utils.bossbar != null) {
-            Utils.bossbar.removeAll();
+        for (String playerName : passwordHandler.bossbars.keySet()) {
+            passwordHandler.bossbars.get(playerName).removeAll();
         }
         passwordHandler.attempts.clear();
         FileConfiguration newconfig = plugin.getConfig();
