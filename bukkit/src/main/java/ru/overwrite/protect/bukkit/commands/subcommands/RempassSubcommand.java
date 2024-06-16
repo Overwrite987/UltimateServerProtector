@@ -12,7 +12,7 @@ public class RempassSubcommand extends AbstractSubCommand {
     }
 
     public RempassSubcommand(ServerProtectorManager plugin) {
-        super(plugin);
+        super(plugin, "rempass", "serverprotector.rempass", true);
     }
 
     @Override
@@ -21,16 +21,8 @@ public class RempassSubcommand extends AbstractSubCommand {
             sender.sendMessage(pluginConfig.uspmsg_consoleonly);
             return false;
         }
-        if (!pluginConfig.main_settings_enable_admin_commands) {
-            sendHelp(sender, label);
-            return false;
-        }
-        if (!sender.hasPermission("serverprotector.rempass")) {
-            sendHelp(sender, label);
-            return false;
-        }
         if (args.length > 1) {
-            if (!plugin.isAdmin(args[1])) {
+            if (!plugin.isAdmin(args[1]) && !plugin.isAdmin(pluginConfig.geyser_prefix+args[1])) {
                 sender.sendMessage(pluginConfig.uspmsg_notinconfig);
                 return true;
             }
@@ -40,7 +32,7 @@ public class RempassSubcommand extends AbstractSubCommand {
                 return true;
             }
         }
-        sendCmdMessage(sender, pluginConfig.uspmsg_rempassusage, label);
+        sendCmdUsage(sender, pluginConfig.uspmsg_rempassusage, label);
         return true;
     }
 

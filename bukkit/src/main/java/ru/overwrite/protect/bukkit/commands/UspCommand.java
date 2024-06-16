@@ -12,24 +12,24 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	private final ServerProtectorManager plugin;
 	private final Config pluginConfig;
 
-	private final Map<String, SubCommand> subCommands = new HashMap<>();
+	private final Map<String, AbstractSubCommand> subCommands = new HashMap<>();
 
 	public UspCommand(ServerProtectorManager plugin) {
 		this.plugin = plugin;
 		pluginConfig = plugin.getPluginConfig();
-		registerSub(new LogoutSubcommand(plugin));
-		registerSub(new ReloadSubcommand(plugin));
-		registerSub(new RebootSubcommand(plugin));
-		registerSub(new EncryptSubcommand(plugin));
-		registerSub(new SetpassSubcommand(plugin));
-		registerSub(new AddopSubcommand(plugin));
-		registerSub(new AddipSubcommand(plugin));
-		registerSub(new RempassSubcommand(plugin));
-		registerSub(new RemopSubcommand(plugin));
-		registerSub(new RemipSubcommand(plugin));
+		registerSubCommand(new LogoutSubcommand(plugin));
+		registerSubCommand(new ReloadSubcommand(plugin));
+		registerSubCommand(new RebootSubcommand(plugin));
+		registerSubCommand(new EncryptSubcommand(plugin));
+		registerSubCommand(new SetpassSubcommand(plugin));
+		registerSubCommand(new AddopSubcommand(plugin));
+		registerSubCommand(new AddipSubcommand(plugin));
+		registerSubCommand(new RempassSubcommand(plugin));
+		registerSubCommand(new RemopSubcommand(plugin));
+		registerSubCommand(new RemipSubcommand(plugin));
 	}
 
-	private void registerSub(AbstractSubCommand subCmd) {
+	private void registerSubCommand(AbstractSubCommand subCmd) {
 		subCommands.put(subCmd.getName(), subCmd);
 	}
 
@@ -39,8 +39,16 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 			sendHelp(sender, label);
 			return true;
 		}
-		SubCommand subCommand = subCommands.get(args[0].toLowerCase());
+		AbstractSubCommand subCommand = subCommands.get(args[0].toLowerCase());
 		if (subCommand != null) {
+			if (!pluginConfig.main_settings_enable_admin_commands && subCommand.isAdminCommand()) {
+				sendHelp(sender, label);
+				return false;
+			}
+			if (!sender.hasPermission(subCommand.getPermission())) {
+				sendHelp(sender, label);
+				return false;
+			}
 			return subCommand.execute(sender, label, args);
 		}
 		if (sender.hasPermission("serverprotector.protect")) {

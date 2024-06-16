@@ -8,26 +8,14 @@ import java.util.List;
 
 public class RemipSubcommand extends AbstractSubCommand {
 
-    public String getName() {
-        return "remip";
-    }
-
     public RemipSubcommand(ServerProtectorManager plugin) {
-        super(plugin);
+        super(plugin, "remip", "serverprotector.remip", true);
     }
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-            return false;
-        }
-        if (!pluginConfig.main_settings_enable_admin_commands) {
-            sendHelp(sender, label);
-            return false;
-        }
-        if (!sender.hasPermission("serverprotector.remip")) {
-            sendHelp(sender, label);
             return false;
         }
         if (args.length > 2 && (args[1] != null && args[2] != null)) {
@@ -41,7 +29,7 @@ public class RemipSubcommand extends AbstractSubCommand {
             sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]).replace("%ip%", args[2]));
             return true;
         }
-        sendCmdMessage(sender, pluginConfig.uspmsg_remipusage, label);
+        sendCmdUsage(sender, pluginConfig.uspmsg_remipusage, label);
         return true;
     }
 }

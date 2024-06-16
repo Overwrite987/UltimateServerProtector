@@ -8,12 +8,8 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class LogoutSubcommand extends AbstractSubCommand {
 
-    public String getName() {
-        return "logout";
-    }
-
     public LogoutSubcommand(ServerProtectorManager plugin) {
-        super(plugin);
+        super(plugin, "logout", "serverprotector.protect", false);
     }
 
     @Override
@@ -23,10 +19,6 @@ public class LogoutSubcommand extends AbstractSubCommand {
             return false;
         }
         Player p = (Player)sender;
-        if (!p.hasPermission("serverprotector.protect")) {
-            sendHelp(sender, label);
-            return false;
-        }
         if (api.isAuthorised(p)) {
             plugin.getRunner().run(() -> {
                 new ServerProtectorLogoutEvent(p, Utils.getIp(p)).callEvent();

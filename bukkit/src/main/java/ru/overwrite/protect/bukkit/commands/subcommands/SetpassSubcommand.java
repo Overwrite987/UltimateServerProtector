@@ -15,21 +15,13 @@ public class SetpassSubcommand extends AbstractSubCommand {
     }
 
     public SetpassSubcommand(ServerProtectorManager plugin) {
-        super(plugin);
+        super(plugin, "setpass", "serverprotector.setpass", true);
     }
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-            return false;
-        }
-        if (!pluginConfig.main_settings_enable_admin_commands) {
-            sendHelp(sender, label);
-            return false;
-        }
-        if (!sender.hasPermission("serverprotector.setpass")) {
-            sendHelp(sender, label);
             return false;
         }
         if (args.length > 1) {
@@ -49,7 +41,7 @@ public class SetpassSubcommand extends AbstractSubCommand {
                 return true;
             }
         }
-        sendCmdMessage(sender, pluginConfig.uspmsg_setpassusage, label);
+        sendCmdUsage(sender, pluginConfig.uspmsg_setpassusage, label);
         return true;
     }
 

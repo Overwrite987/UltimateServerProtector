@@ -1,30 +1,20 @@
 package ru.overwrite.protect.bukkit.commands.subcommands;
 
-import org.bukkit.boss.BossBar;
 import org.bukkit.command.CommandSender;
 import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
-import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class RebootSubcommand extends AbstractSubCommand {
 
-    public String getName() {
-        return "reboot";
-    }
-
     public RebootSubcommand(ServerProtectorManager plugin) {
-        super(plugin);
+        super(plugin, "reboot", "serverprotector.reboot", false);
     }
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-            return false;
-        }
-        if (!sender.hasPermission("serverprotector.reboot")) {
-            sendHelp(sender, label);
             return false;
         }
 

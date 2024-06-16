@@ -10,26 +10,14 @@ import java.util.List;
 
 public class RemopSubcommand extends AbstractSubCommand {
 
-    public String getName() {
-        return "remop";
-    }
-
     public RemopSubcommand(ServerProtectorManager plugin) {
-        super(plugin);
+        super(plugin, "remop", "serverprotector.remop", true);
     }
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
             sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-            return false;
-        }
-        if (!pluginConfig.main_settings_enable_admin_commands) {
-            sendHelp(sender, label);
-            return false;
-        }
-        if (!sender.hasPermission("serverprotector.remop")) {
-            sendHelp(sender, label);
             return false;
         }
         if (args.length > 1) {
@@ -46,7 +34,7 @@ public class RemopSubcommand extends AbstractSubCommand {
             sender.sendMessage(pluginConfig.uspmsg_playerremoved.replace("%nick%", nickname));
             return true;
         }
-        sendCmdMessage(sender, pluginConfig.uspmsg_remopusage, label);
+        sendCmdUsage(sender, pluginConfig.uspmsg_remopusage, label);
         return true;
     }
 }
