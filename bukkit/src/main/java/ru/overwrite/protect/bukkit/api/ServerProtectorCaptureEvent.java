@@ -13,12 +13,15 @@ public class ServerProtectorCaptureEvent extends Event implements Cancellable {
 	
 	private final String ip;
 
+	private final CaptureReason captureReason;
+
 	private boolean isCancelled;
 
-	public ServerProtectorCaptureEvent(Player player, String ip) {
+	public ServerProtectorCaptureEvent(Player player, String ip, CaptureReason captureReason) {
 		super(true);
 		this.player = player;
 		this.ip = ip;
+		this.captureReason = captureReason;
 		isCancelled = false;
 	}
 
@@ -44,6 +47,10 @@ public class ServerProtectorCaptureEvent extends Event implements Cancellable {
 	
 	public String getIp() {
 		return ip;
+	}
+
+	public CaptureReason getCaptureReason() {
+		return captureReason;
 	}
 
 }

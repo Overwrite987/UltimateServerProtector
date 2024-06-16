@@ -10,6 +10,7 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.task.Runner;
@@ -39,12 +40,12 @@ public class ConnectionListener implements Listener {
 	public void onLogin(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
 		plugin.getRunner().runAsync (() -> {
-			boolean isPermission = plugin.isPermissions(p);
-			if (api.isCaptured(p) && !isPermission) {
+			CaptureReason captureReason = plugin.checkPermissions(p);
+			if (api.isCaptured(p) && captureReason != null) {
 				api.uncapturePlayer(p);
 				return;
 			}
-			if (isPermission) {
+			if (captureReason != null) {
 				String ip = e.getAddress().getHostAddress();
 				if (pluginConfig.secure_settings_enable_ip_whitelist) {
 					if (!isIPAllowed(p.getName(), ip)) {
@@ -56,7 +57,7 @@ public class ConnectionListener implements Listener {
 				}
 				if (!api.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
 					if (!plugin.isExcluded(p, pluginConfig.excluded_admin_pass)) {
-						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip);
+						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip, captureReason);
 						captureEvent.callEvent();
 						if (captureEvent.isCancelled()) {
 							return;
@@ -72,7 +73,8 @@ public class ConnectionListener implements Listener {
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
 		plugin.getRunner().runAsync(() -> {
-			if (plugin.isPermissions(p)) {
+			CaptureReason captureReason = plugin.checkPermissions(p);
+			if (captureReason != null) {
 				if (api.isCaptured(p)) {
 					if (pluginConfig.effect_settings_enable_effects) {
 						plugin.giveEffect(p);

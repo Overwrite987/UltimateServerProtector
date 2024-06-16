@@ -7,6 +7,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.utils.Config;
@@ -37,11 +38,12 @@ public final class TaskManager {
 				if (api.isCaptured(p)) {
 					continue;
 				}
-				if (!plugin.isPermissions(p)) {
+				CaptureReason captureReason = plugin.checkPermissions(p);
+				if (captureReason == null) {
 					continue;
 				}
 				if (!api.isAuthorised(p)) {
-					ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, Utils.getIp(p));
+					ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, Utils.getIp(p), captureReason);
 					captureEvent.callEvent();
 					if (captureEvent.isCancelled()) {
 						continue;

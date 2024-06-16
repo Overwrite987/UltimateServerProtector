@@ -11,6 +11,7 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
+import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.commands.PasCommand;
 import ru.overwrite.protect.bukkit.commands.UspCommand;
@@ -334,16 +335,19 @@ public class ServerProtectorManager extends JavaPlugin {
 		}
 	}
 
-	public boolean isPermissions(Player p) {
-		if (p.isOp() || p.hasPermission("serverprotector.protect"))
-			return true;
+	public CaptureReason checkPermissions(Player p) {
+		if (p.isOp()) {
+			return new CaptureReason(CaptureReason.Reason.OPERATOR, null);
+		}
+		if (p.hasPermission("serverprotector.protect")) {
+			return new CaptureReason(CaptureReason.Reason.PERMISSION, "serverprotector.protect");
+		}
 		for (String s : pluginConfig.perms) {
 			if (p.hasPermission(s)) {
-				pluginLogger.info(s);
-				return true;
+				return new CaptureReason(CaptureReason.Reason.PERMISSION, s);
 			}
 		}
-		return false;
+		return null;
 	}
 
 	public boolean isExcluded(Player p, List<String> list) {
