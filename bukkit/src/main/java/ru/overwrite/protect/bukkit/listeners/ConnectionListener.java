@@ -113,26 +113,16 @@ public class ConnectionListener implements Listener {
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onLeave(PlayerQuitEvent event) {
 		Player p = event.getPlayer();
-		String playerName = p.getName();
-		if (api.isCaptured(p)) {
-			for (PotionEffect s : p.getActivePotionEffects()) {
-				p.removePotionEffect(s.getType());
-			}
-			if (pluginConfig.punish_settings_enable_rejoin) {
-				rejoins.put(playerName, rejoins.getOrDefault(playerName, 0) + 1);
-				if (isMaxRejoins(playerName)) {
-					rejoins.remove(playerName);
-					plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-rejoin"));
-				}
-			}
-		}
-		plugin.time.remove(playerName);
-		api.saved.remove(playerName);
+		handlePlayerLeave(p);
 	}
 
 	@EventHandler(priority = EventPriority.HIGHEST)
 	public void onKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
+		handlePlayerLeave(p);
+	}
+
+	private void handlePlayerLeave(Player p) {
 		String playerName = p.getName();
 		if (api.isCaptured(p)) {
 			for (PotionEffect s : p.getActivePotionEffects()) {

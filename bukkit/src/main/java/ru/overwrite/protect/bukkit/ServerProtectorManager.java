@@ -133,32 +133,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.save(path, dataFile, dataFileName);
 		messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 		pluginConfig.save(getDataFolder().getAbsolutePath(), messageFile, "message.yml");
-		pluginConfig.loadPerms(config);
-		pluginConfig.loadLists(config);
-		pluginConfig.setupExcluded(config);
-		FileConfiguration configFile = pluginConfig.getFile(path, "config.yml");
-        pluginConfig.loadMainSettings(config, configFile);
-        pluginConfig.loadEncryptionSettings(config, configFile);
-        pluginConfig.loadSecureSettings(config, configFile);
-        pluginConfig.loadGeyserSettings(config, configFile);
-        pluginConfig.loadAdditionalChecks(config, configFile);
-        pluginConfig.loadPunishSettings(config, configFile);
-        pluginConfig.loadSessionSettings(config, configFile);
-        pluginConfig.loadMessageSettings(config, configFile);
-        pluginConfig.loadBossbarSettings(config, configFile);
-        pluginConfig.loadSoundSettings(config, configFile);
-        pluginConfig.loadEffects(config, configFile);
-        pluginConfig.loadLoggingSettings(config, configFile);
-		pluginConfig.loadMsgMessages(messageFile);
-		pluginConfig.loadUspMessages(messageFile);
-		ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
-		if (messageSettings.getBoolean("send-titles")) {
-			pluginConfig.loadTitleMessages(messageFile);
-		}
-		if (messageSettings.getBoolean("enable-broadcasts")
-				|| messageSettings.getBoolean("enable-console-broadcasts")) {
-			pluginConfig.loadBroadcastMessages(messageFile);
-		}
+		setupPluginConfig(config);
 		pluginConfig.setupPasswords(dataFile);
 	}
 
@@ -172,34 +147,38 @@ public class ServerProtectorManager extends JavaPlugin {
 			path = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
 			dataFileName = fileSettings.getString("data-file");
 			dataFile = pluginConfig.getFile(path, dataFileName);
-			pluginConfig.loadPerms(config);
-			pluginConfig.loadLists(config);
-			pluginConfig.setupExcluded(config);
-			FileConfiguration configFile = pluginConfig.getFile(path, "config.yml");
-            pluginConfig.loadMainSettings(config, configFile);
-            pluginConfig.loadEncryptionSettings(config, configFile);
-            pluginConfig.loadSecureSettings(config, configFile);
-            pluginConfig.loadGeyserSettings(config, configFile);
-            pluginConfig.loadAdditionalChecks(config, configFile);
-            pluginConfig.loadPunishSettings(config, configFile);
-            pluginConfig.loadSessionSettings(config, configFile);
-            pluginConfig.loadMessageSettings(config, configFile);
-            pluginConfig.loadBossbarSettings(config, configFile);
-            pluginConfig.loadSoundSettings(config, configFile);
-            pluginConfig.loadEffects(config, configFile);
-            pluginConfig.loadLoggingSettings(config, configFile);
-			ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
-			if (messageSettings.getBoolean("send-titles")) {
-				pluginConfig.loadTitleMessages(messageFile);
-			}
-			if (messageSettings.getBoolean("enable-broadcasts")
-					|| messageSettings.getBoolean("enable-console-broadcasts")) {
-				pluginConfig.loadBroadcastMessages(messageFile);
-			}
-			pluginConfig.loadMsgMessages(messageFile);
-			pluginConfig.loadUspMessages(messageFile);
+			setupPluginConfig(config);
 			pluginConfig.setupPasswords(dataFile);
 		});
+	}
+
+	private void setupPluginConfig(FileConfiguration config) {
+		pluginConfig.loadPerms(config);
+		pluginConfig.loadLists(config);
+		pluginConfig.setupExcluded(config);
+		FileConfiguration configFile = pluginConfig.getFile(path, "config.yml");
+		pluginConfig.loadMainSettings(config, configFile);
+		pluginConfig.loadEncryptionSettings(config, configFile);
+		pluginConfig.loadSecureSettings(config, configFile);
+		pluginConfig.loadGeyserSettings(config, configFile);
+		pluginConfig.loadAdditionalChecks(config, configFile);
+		pluginConfig.loadPunishSettings(config, configFile);
+		pluginConfig.loadSessionSettings(config, configFile);
+		pluginConfig.loadMessageSettings(config, configFile);
+		pluginConfig.loadBossbarSettings(config, configFile);
+		pluginConfig.loadSoundSettings(config, configFile);
+		pluginConfig.loadEffects(config, configFile);
+		pluginConfig.loadLoggingSettings(config, configFile);
+		pluginConfig.loadMsgMessages(messageFile);
+		pluginConfig.loadUspMessages(messageFile);
+		ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
+		if (messageSettings.getBoolean("send-titles")) {
+			pluginConfig.loadTitleMessages(messageFile);
+		}
+		if (messageSettings.getBoolean("enable-broadcasts")
+				|| messageSettings.getBoolean("enable-console-broadcasts")) {
+			pluginConfig.loadBroadcastMessages(messageFile);
+		}
 	}
 
 	public void registerListeners(PluginManager pluginManager) {
