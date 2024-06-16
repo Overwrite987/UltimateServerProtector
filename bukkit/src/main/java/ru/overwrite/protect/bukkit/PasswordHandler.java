@@ -1,6 +1,7 @@
 package ru.overwrite.protect.bukkit;
 
 import org.bukkit.Bukkit;
+import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
@@ -21,6 +22,7 @@ public class PasswordHandler {
 	private final ServerProtectorAPI api;
 	private final Config pluginConfig;
 	public final Map<String, Integer> attempts = new HashMap<>();
+	public final Map<String, BossBar> bossbars = new HashMap<>();
 
 	public PasswordHandler(ServerProtectorManager plugin) {
 		this.plugin = plugin;
@@ -134,11 +136,8 @@ public class PasswordHandler {
 			plugin.logAction("log-format.passed", p, new Date());
 		}
 		if (pluginConfig.bossbar_settings_enable_bossbar) {
-			if (Utils.bossbar == null) {
-				return;
-			}
-			if (Utils.bossbar.getPlayers().contains(p)) {
-				Utils.bossbar.removePlayer(p);
+			if (bossbars.get(playerName) != null) {
+				bossbars.get(playerName).removeAll();
 			}
 		}
 		plugin.sendAlert(p, pluginConfig.broadcasts_passed);

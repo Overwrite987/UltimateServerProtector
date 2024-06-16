@@ -3,9 +3,11 @@ package ru.overwrite.protect.bukkit.task;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BarColor;
 import org.bukkit.boss.BarStyle;
+import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 
+import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
@@ -19,12 +21,14 @@ public final class TaskManager {
 
 	private final ServerProtectorManager plugin;
 	private final ServerProtectorAPI api;
+	private final PasswordHandler passwordHandler;
 	private final Config pluginConfig;
 	private final Runner runner;
 
 	public TaskManager(ServerProtectorManager plugin) {
 		this.plugin = plugin;
 		this.api = plugin.getPluginAPI();
+		this.passwordHandler = plugin.getPasswordHandler();
 		this.pluginConfig = plugin.getPluginConfig();
 		this.runner = plugin.getRunner();
 	}
@@ -126,30 +130,31 @@ public final class TaskManager {
 				if (!plugin.time.containsKey(playerName)) {
 					plugin.time.put(playerName, 0);
 					if (this.pluginConfig.bossbar_settings_enable_bossbar) {
-						Utils.bossbar = Bukkit.createBossBar(
+						BossBar bossbar = Bukkit.createBossBar(
 								this.pluginConfig.bossbar_message.replace("%time%",
 										Integer.toString(this.pluginConfig.punish_settings_time)),
 								BarColor.valueOf(this.pluginConfig.bossbar_settings_bar_color),
 								BarStyle.valueOf(this.pluginConfig.bossbar_settings_bar_style));
-						Utils.bossbar.addPlayer(p);
+						bossbar.addPlayer(p);
+						passwordHandler.bossbars.put(playerName, bossbar);
 					}
 				} else {
 					plugin.time.compute(playerName, (k, currentTime) -> currentTime + 1);
 					int newTime = plugin.time.get(playerName);
-					if (this.pluginConfig.bossbar_settings_enable_bossbar && Utils.bossbar != null) {
-						Utils.bossbar.setTitle(this.pluginConfig.bossbar_message.replace("%time%",
+					if (this.pluginConfig.bossbar_settings_enable_bossbar && passwordHandler.bossbars.get(playerName) != null) {
+						passwordHandler.bossbars.get(playerName).setTitle(this.pluginConfig.bossbar_message.replace("%time%",
 								Integer.toString(this.pluginConfig.punish_settings_time - newTime)));
 						double percents = (this.pluginConfig.punish_settings_time - newTime)
 								/ (double) this.pluginConfig.punish_settings_time;
 						if (percents > 0) {
-							Utils.bossbar.setProgress(percents);
-							Utils.bossbar.addPlayer(p);
+							passwordHandler.bossbars.get(playerName).setProgress(percents);
+							passwordHandler.bossbars.get(playerName).addPlayer(p);
 						}
 					}
 				}
 				if (!noTimeLeft(playerName) && this.pluginConfig.punish_settings_enable_time) {
 					plugin.checkFail(playerName, config.getStringList("commands.failed-time"));
-					Utils.bossbar.removePlayer(p);
+					passwordHandler.bossbars.get(playerName).removePlayer(p);
 				}
 			}
 		}, 0L, 20L);
