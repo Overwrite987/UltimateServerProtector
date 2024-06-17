@@ -39,23 +39,24 @@ public class ConnectionListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onLogin(PlayerLoginEvent e) {
 		Player p = e.getPlayer();
-		plugin.getRunner().runAsync (() -> {
+		runner.runAsync(() -> {
 			CaptureReason captureReason = plugin.checkPermissions(p);
-			if (api.isCaptured(p) && captureReason != null) {
+			if (api.isCaptured(p) && captureReason == null) {
 				api.uncapturePlayer(p);
 				return;
 			}
 			if (captureReason != null) {
+				String playerName = p.getName();
 				String ip = e.getAddress().getHostAddress();
 				if (pluginConfig.secure_settings_enable_ip_whitelist) {
-					if (!isIPAllowed(p.getName(), ip)) {
+					if (!isIPAllowed(playerName, ip)) {
 						if (!plugin.isExcluded(p, pluginConfig.excluded_ip_whitelist)) {
-							plugin.checkFail(p.getName(),
+							plugin.checkFail(playerName,
 									plugin.getConfig().getStringList("commands.not-admin-ip"));
 						}
 					}
 				}
-				if (!api.ips.contains(p.getName() + ip) && pluginConfig.session_settings_session) {
+				if (!api.ips.contains(playerName + ip) && pluginConfig.session_settings_session) {
 					if (!plugin.isExcluded(p, pluginConfig.excluded_admin_pass)) {
 						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip, captureReason);
 						captureEvent.callEvent();
@@ -72,7 +73,7 @@ public class ConnectionListener implements Listener {
 	@EventHandler(priority = EventPriority.LOWEST)
 	public void onJoin(PlayerJoinEvent e) {
 		Player p = e.getPlayer();
-		plugin.getRunner().runAsync(() -> {
+		runner.runAsync(() -> {
 			CaptureReason captureReason = plugin.checkPermissions(p);
 			if (captureReason != null) {
 				if (api.isCaptured(p)) {
