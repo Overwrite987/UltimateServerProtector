@@ -41,9 +41,15 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		}
 		AbstractSubCommand subCommand = subCommands.get(args[0].toLowerCase());
 		if (subCommand != null) {
-			if (!pluginConfig.main_settings_enable_admin_commands && subCommand.isAdminCommand()) {
-				sendHelp(sender, label);
-				return false;
+			if (subCommand.isAdminCommand()) {
+				if (!pluginConfig.main_settings_enable_admin_commands) {
+					sendHelp(sender, label);
+					return false;
+				}
+				if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+					sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+					return false;
+				}
 			}
 			if (!sender.hasPermission(subCommand.getPermission())) {
 				sendHelp(sender, label);

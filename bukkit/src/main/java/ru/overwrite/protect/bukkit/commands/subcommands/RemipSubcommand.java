@@ -1,7 +1,6 @@
 package ru.overwrite.protect.bukkit.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 import java.util.List;
@@ -14,10 +13,6 @@ public class RemipSubcommand extends AbstractSubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-            return false;
-        }
         if (args.length > 2 && (args[1] != null && args[2] != null)) {
             List<String> ipwl = pluginConfig.ip_whitelist.get(args[1]);
             if (ipwl.isEmpty()) {

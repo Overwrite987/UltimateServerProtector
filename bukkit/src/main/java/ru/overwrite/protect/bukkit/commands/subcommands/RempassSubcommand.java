@@ -1,7 +1,6 @@
 package ru.overwrite.protect.bukkit.commands.subcommands;
 
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
@@ -13,10 +12,6 @@ public class RempassSubcommand extends AbstractSubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-            return false;
-        }
         if (args.length > 1) {
             if (!plugin.isAdmin(args[1]) && !plugin.isAdmin(pluginConfig.geyser_prefix+args[1])) {
                 sender.sendMessage(pluginConfig.uspmsg_notinconfig);

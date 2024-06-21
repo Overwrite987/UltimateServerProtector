@@ -3,7 +3,6 @@ package ru.overwrite.protect.bukkit.commands.subcommands;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
-import org.bukkit.command.ConsoleCommandSender;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 import java.util.List;
@@ -16,10 +15,6 @@ public class RemopSubcommand extends AbstractSubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
-            sender.sendMessage(pluginConfig.uspmsg_consoleonly);
-            return false;
-        }
         if (args.length > 1) {
             OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
             if (targetPlayer == null) {
