@@ -63,7 +63,7 @@ public class ChatListener implements Listener {
 		e.setCancelled(true);
 	}
 
-	private static String cutCommand(String str) {
+	private String cutCommand(String str) {
 		int index = str.indexOf(' ');
 		return index == -1 ? str : str.substring(0, index);
 	}
