@@ -15,9 +15,9 @@ public class ServerProtectorAPI {
 
 	private final Config pluginConfig;
 	private final Logger logger;
-	public Set<String> login = new HashSet<>();
-	public Set<String> ips = new HashSet<>();
-	public Set<String> saved = new HashSet<>();
+	public final Set<String> login = new HashSet<>();
+	public final Set<String> ips = new HashSet<>();
+	public final Set<String> saved = new HashSet<>();
 
 	public ServerProtectorAPI(ServerProtectorManager plugin) {
 		pluginConfig = plugin.getPluginConfig();
