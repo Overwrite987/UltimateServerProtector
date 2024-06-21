@@ -131,8 +131,8 @@ public final class TaskManager {
 					plugin.time.put(playerName, 0);
 					if (this.pluginConfig.bossbar_settings_enable_bossbar) {
 						BossBar bossbar = Bukkit.createBossBar(
-								this.pluginConfig.bossbar_message.replace("%time%",
-										Integer.toString(this.pluginConfig.punish_settings_time)),
+								this.pluginConfig.bossbar_message
+										.replace("%time%", Integer.toString(this.pluginConfig.punish_settings_time)),
 								BarColor.valueOf(this.pluginConfig.bossbar_settings_bar_color),
 								BarStyle.valueOf(this.pluginConfig.bossbar_settings_bar_style));
 						bossbar.addPlayer(p);
@@ -142,8 +142,8 @@ public final class TaskManager {
 					plugin.time.compute(playerName, (k, currentTime) -> currentTime + 1);
 					int newTime = plugin.time.get(playerName);
 					if (this.pluginConfig.bossbar_settings_enable_bossbar && passwordHandler.bossbars.get(playerName) != null) {
-						passwordHandler.bossbars.get(playerName).setTitle(this.pluginConfig.bossbar_message.replace("%time%",
-								Integer.toString(this.pluginConfig.punish_settings_time - newTime)));
+						passwordHandler.bossbars.get(playerName).setTitle(this.pluginConfig.bossbar_message
+								.replace("%time%", Integer.toString(this.pluginConfig.punish_settings_time - newTime)));
 						double percents = (this.pluginConfig.punish_settings_time - newTime)
 								/ (double) this.pluginConfig.punish_settings_time;
 						if (percents > 0) {
