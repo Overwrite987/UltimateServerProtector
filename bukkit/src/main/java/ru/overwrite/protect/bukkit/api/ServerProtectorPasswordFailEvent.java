@@ -2,23 +2,20 @@ package ru.overwrite.protect.bukkit.api;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
+import org.bukkit.event.player.PlayerEvent;
 
-public class ServerProtectorPasswordFailEvent extends Event implements Cancellable {
+public class ServerProtectorPasswordFailEvent extends PlayerEvent implements Cancellable {
 
 	private static final HandlerList HANDLERS = new HandlerList();
 
-	private final Player player;
-
 	private final int attempts;
 
-	private boolean isCancelled;
+	private boolean isCancelled = false;
 
 	public ServerProtectorPasswordFailEvent(Player player, Integer attempts) {
-		this.player = player;
+		super(player);
 		this.attempts = attempts;
-		this.isCancelled = false;
 	}
 
 	public static HandlerList getHandlerList() {
@@ -35,10 +32,6 @@ public class ServerProtectorPasswordFailEvent extends Event implements Cancellab
 
 	public void setCancelled(boolean cancel) {
 		isCancelled = cancel;
-	}
-
-	public Player getPlayer() {
-		return player;
 	}
 
 	public int getAttempts() {
