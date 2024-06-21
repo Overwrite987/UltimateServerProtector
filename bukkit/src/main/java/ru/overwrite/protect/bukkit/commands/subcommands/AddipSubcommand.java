@@ -8,10 +8,6 @@ import java.util.List;
 
 public class AddipSubcommand extends AbstractSubCommand {
 
-    public String getName() {
-        return "addip";
-    }
-
     public AddipSubcommand(ServerProtectorManager plugin) {
         super(plugin, "addip", "serverprotector.addip", true);
     }

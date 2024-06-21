@@ -10,10 +10,6 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class SetpassSubcommand extends AbstractSubCommand {
 
-    public String getName() {
-        return "setpass";
-    }
-
     public SetpassSubcommand(ServerProtectorManager plugin) {
         super(plugin, "setpass", "serverprotector.setpass", true);
     }
