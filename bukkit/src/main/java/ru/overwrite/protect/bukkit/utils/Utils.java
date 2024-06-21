@@ -1,12 +1,12 @@
 package ru.overwrite.protect.bukkit.utils;
 
+import com.google.common.collect.ImmutableSet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
-import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
@@ -27,8 +27,6 @@ import java.util.regex.Pattern;
 import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 public final class Utils {
-
-	//public static volatile BossBar bossbar;
 
 	public static final int SUB_VERSION = Integer.parseInt(Bukkit.getBukkitVersion().split("\\.")[1]);
 	private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F\\d]{6})");
@@ -117,6 +115,9 @@ public final class Utils {
 		});
 	}
 
+	private static final ImmutableSet<String> SUPPORTED_HASH_TYPES =
+			ImmutableSet.of("MD5", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
+
 	public static String encryptPassword(String password, String salt, List<String> hashTypes) {
 		if (hashTypes.isEmpty()) {
 			return password;
@@ -133,26 +134,15 @@ public final class Utils {
 					encryptedPassword = salt+encryptedPassword;
 					salted = true;
 					break;
-				case "MD5":
-					Bukkit.getLogger().warning("Hash type" + hashType + "is outdated and will be removed in the future!");
-					encryptedPassword = encryptToHash(encryptedPassword, hashType);
-					break;
-				case "SHA224":
-				case "SHA256":
-				case "SHA384":
-				case "SHA512":
-				case "SHA-224":
-				case "SHA-256":
-				case "SHA-384":
-				case "SHA-512":
-				case "SHA3-224":
-				case "SHA3-256":
-				case "SHA3-384":
-				case "SHA3-512":
-					encryptedPassword = encryptToHash(encryptedPassword, hashType);
-					break;
 				default:
-					throw new IllegalArgumentException("Unsupported hash type: " + hashType);
+					if (SUPPORTED_HASH_TYPES.contains(hashType.toUpperCase())) {
+						if (hashType.equalsIgnoreCase("MD5")) {
+							Bukkit.getLogger().warning("Hash type " + hashType + " is outdated and will be removed in the future!");
+						}
+						encryptedPassword = encryptToHash(encryptedPassword, hashType);
+					} else {
+						throw new IllegalArgumentException("Unsupported hash type: " + hashType);
+					}
 			}
 		}
 		return salted ? salt + ":" + encryptedPassword : encryptedPassword;
