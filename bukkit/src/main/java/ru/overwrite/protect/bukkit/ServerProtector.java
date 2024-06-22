@@ -1,18 +1,17 @@
 package ru.overwrite.protect.bukkit;
 
+import com.google.common.collect.ImmutableList;
 import org.bstats.bukkit.Metrics;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
-import ru.overwrite.protect.bukkit.utils.Utils;
 
-import java.util.Arrays;
 import java.util.Date;
 import java.util.List;
 
 public final class ServerProtector extends ServerProtectorManager {
 	
-	private final List<String> forceshutdown = Arrays.asList("PlugMan", "PlugManX", "PluginManager", "ServerUtils");
+	private final List<String> forceshutdown = ImmutableList.of("PlugMan", "PlugManX", "PluginManager", "ServerUtils");
 
 	@Override
 	public void onEnable() {
