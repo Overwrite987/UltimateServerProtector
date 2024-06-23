@@ -77,7 +77,7 @@ public final class Utils {
 			case "LEGACY": {
 				if (SUB_VERSION >= 16) {
 					Matcher matcher = HEX_PATTERN.matcher(message);
-					StringBuilder builder = new StringBuilder(message.length() + 4 * 8);
+					StringBuilder builder = new StringBuilder(message.length() + 32);
 					while (matcher.find()) {
 						String group = matcher.group(1);
 						matcher.appendReplacement(builder,
