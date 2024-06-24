@@ -100,7 +100,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public boolean isSafe(FileConfiguration messageFile, PluginManager pluginManager) {
-		if (getServer().spigot().getConfig().getBoolean("settings.bungeecord")) {
+		if (server.spigot().getConfig().getBoolean("settings.bungeecord")) {
 			if (pluginManager.isPluginEnabled("BungeeGuard")) {
 				return true;
 			}
