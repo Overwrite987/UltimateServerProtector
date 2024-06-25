@@ -116,7 +116,7 @@ public final class Utils {
 	}
 
 	private static final ImmutableSet<String> SUPPORTED_HASH_TYPES =
-			ImmutableSet.of("MD5", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
+			ImmutableSet.of("MD5", "SHA224", "SHA256", "SHA384", "SHA512", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
 
 	public static String encryptPassword(String password, String salt, List<String> hashTypes) {
 		if (hashTypes.isEmpty()) {

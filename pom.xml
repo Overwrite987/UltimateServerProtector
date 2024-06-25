@@ -6,7 +6,7 @@
 
   <groupId>ru.overwrite.protect</groupId>
   <artifactId>ultimateserverprotector-project</artifactId>
-  <version>30.0</version>
+  <version>31.0</version>
   <packaging>pom</packaging>
 
   <name>UltimateServerProtector Project</name>
