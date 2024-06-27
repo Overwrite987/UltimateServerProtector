@@ -52,7 +52,7 @@ public class ServerProtectorAPI {
 
 	public void authorisePlayer(Player p) {
 		if (isAuthorised(p)) {
-			logger.warn("Unable to authorise " + p.getName() + " Reason: Alerady authorised");
+			logger.warn("Unable to authorise " + p.getName() + " Reason: Already authorised");
 			return;
 		}
 		if (pluginConfig.session_settings_session) {
