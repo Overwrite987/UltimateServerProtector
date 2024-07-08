@@ -32,7 +32,7 @@ public class MainListener implements Listener {
 	public void onMove(PlayerMoveEvent e) {
 		if (api.login.isEmpty())
 			return;
-		if (pluginConfig.blocking_settings_allow_orientation_change && hasChangedOrientation(e.getFrom(), e.getTo())) {
+		if (pluginConfig.blocking_settings_allow_orientation_change && hasChangedOrientation(e.getFrom(), e.getTo()) && !hasExplicitlyChangedBlock(e.getFrom(), e.getTo())) {
 			return;
 		}
 		Player p = e.getPlayer();
@@ -41,6 +41,10 @@ public class MainListener implements Listener {
 
 	private boolean hasChangedOrientation(Location from, Location to) {
 		return from.getPitch() != to.getPitch() || from.getYaw() != to.getYaw();
+	}
+
+	public boolean hasExplicitlyChangedBlock(Location from, Location to) {
+		return from.getBlockX() != to.getBlockX() || from.getBlockY() != to.getBlockY() || from.getBlockZ() != to.getBlockZ();
 	}
 
 	@EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
