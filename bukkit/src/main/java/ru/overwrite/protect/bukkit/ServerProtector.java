@@ -7,11 +7,10 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
 import java.util.Date;
-import java.util.List;
 
 public final class ServerProtector extends ServerProtectorManager {
 	
-	private final List<String> forceshutdown = ImmutableList.of("PlugMan", "PlugManX", "PluginManager", "ServerUtils");
+	private final ImmutableList<String> forceshutdown = ImmutableList.of("PlugMan", "PlugManX", "PluginManager", "ServerUtils");
 
 	@Override
 	public void onEnable() {
