@@ -4,6 +4,7 @@ import com.google.common.io.ByteArrayDataInput;
 import com.google.common.io.ByteArrayDataOutput;
 import com.google.common.io.ByteStreams;
 
+import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 import org.bukkit.Bukkit;
@@ -18,7 +19,7 @@ public class PluginMessage implements PluginMessageListener {
 		this.plugin = plugin;
 	}
 
-	public void onPluginMessageReceived(String channel, Player player, byte[] message) {
+	public void onPluginMessageReceived(String channel, @NotNull Player player, byte[] message) {
 		if (!channel.equals("BungeeCord"))
 			return;
 		ByteArrayDataInput input = ByteStreams.newDataInput(message);

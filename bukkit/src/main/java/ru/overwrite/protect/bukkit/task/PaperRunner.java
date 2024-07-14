@@ -5,6 +5,7 @@ import io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler;
 import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
@@ -22,37 +23,37 @@ public class PaperRunner implements Runner {
 	}
 
 	@Override
-	public void runPlayer(Runnable task, Player player) {
+	public void runPlayer(@NotNull Runnable task, Player player) {
 		player.getScheduler().run(plugin, toConsumer(task), null);
 	}
 
 	@Override
-	public void run(Runnable task) {
+	public void run(@NotNull Runnable task) {
 		globalScheduler.run(plugin, toConsumer(task));
 	}
 
 	@Override
-	public void runAsync(Runnable task) {
+	public void runAsync(@NotNull Runnable task) {
 		asyncScheduler.runNow(plugin, toConsumer(task));
     }
 
     @Override
-    public void runDelayed(Runnable task, long delayTicks) {
+    public void runDelayed(@NotNull Runnable task, long delayTicks) {
         globalScheduler.runDelayed(plugin, toConsumer(task), delayTicks);
     }
 
     @Override
-    public void runDelayedAsync(Runnable task, long delayTicks) {
+    public void runDelayedAsync(@NotNull Runnable task, long delayTicks) {
         asyncScheduler.runDelayed(plugin, toConsumer(task), toMilli(delayTicks), TimeUnit.MILLISECONDS);
     }
 
     @Override
-    public void runPeriodical(Runnable task, long delayTicks, long periodTicks) {
+    public void runPeriodical(@NotNull Runnable task, long delayTicks, long periodTicks) {
         globalScheduler.runAtFixedRate(plugin, toConsumer(task), delayTicks, periodTicks);
     }
 
     @Override
-    public void runPeriodicalAsync(Runnable task, long delayTicks, long periodTicks) {
+    public void runPeriodicalAsync(@NotNull Runnable task, long delayTicks, long periodTicks) {
         asyncScheduler.runAtFixedRate(plugin, toConsumer(task), toMilli(delayTicks), toMilli(periodTicks), TimeUnit.MILLISECONDS);
     }
 

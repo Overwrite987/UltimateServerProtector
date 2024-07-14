@@ -1,6 +1,7 @@
 package ru.overwrite.protect.bukkit.commands;
 
 import org.bukkit.command.*;
+import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.commands.subcommands.*;
 import ru.overwrite.protect.bukkit.utils.Config;
@@ -34,7 +35,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	}
 
 	@Override
-	public boolean onCommand(CommandSender sender, Command cmd, String label, String[] args) {
+	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
 		if (args.length == 0) {
 			sendHelp(sender, label);
 			return true;
@@ -96,7 +97,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	}
 
 	@Override
-	public List<String> onTabComplete(CommandSender sender, Command command, String alias, String[] args) {
+	public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
 		if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
 			return Collections.emptyList();
 		}
@@ -117,10 +118,15 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 				completions.add("remip");
 			}
 		}
+		return getResult(args, completions);
+	}
+
+	private List<String> getResult(String[] args, List<String> completions) {
 		List<String> result = new ArrayList<>();
 		for (String c : completions) {
-			if (c.toLowerCase().startsWith(args[args.length - 1].toLowerCase()))
+			if (c.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
 				result.add(c);
+			}
 		}
 		return result;
 	}

@@ -6,6 +6,7 @@ import java.util.Set;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
+import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.Logger;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.Config;
@@ -19,17 +20,17 @@ public class ServerProtectorAPI {
 	public final Set<String> ips = new HashSet<>();
 	public final Set<String> saved = new HashSet<>();
 
-	public ServerProtectorAPI(ServerProtectorManager plugin) {
+	public ServerProtectorAPI(@NotNull ServerProtectorManager plugin) {
 		pluginConfig = plugin.getPluginConfig();
 		logger = plugin.getPluginLogger();
 	}
 
-	public boolean isCaptured(Player p) {
+	public boolean isCaptured(@NotNull Player p) {
 		if (this.login.isEmpty()) { return false; }
 		return this.login.contains(p.getName());
 	}
 
-	public void capturePlayer(Player p) {
+	public void capturePlayer(@NotNull Player p) {
 		if (isCaptured(p)) {
 			logger.warn("Unable to capture " + p.getName() + " Reason: Already captured");
 			return;
@@ -37,7 +38,7 @@ public class ServerProtectorAPI {
 		this.login.add(p.getName());
 	}
 
-	public void uncapturePlayer(Player p) {
+	public void uncapturePlayer(@NotNull Player p) {
 		if (!isCaptured(p)) {
 			logger.warn("Unable to uncapture " + p.getName() + " Reason: Not captured");
 			return;
@@ -45,12 +46,12 @@ public class ServerProtectorAPI {
 		this.login.remove(p.getName());
 	}
 
-	public boolean isAuthorised(Player p) {
+	public boolean isAuthorised(@NotNull Player p) {
 		return pluginConfig.session_settings_session ? ips.contains(p.getName() + Utils.getIp(p))
 				: saved.contains(p.getName());
 	}
 
-	public void authorisePlayer(Player p) {
+	public void authorisePlayer(@NotNull Player p) {
 		if (isAuthorised(p)) {
 			logger.warn("Unable to authorise " + p.getName() + " Reason: Already authorised");
 			return;
@@ -62,7 +63,7 @@ public class ServerProtectorAPI {
 		saved.add(p.getName());
 	}
 	
-	public void deauthorisePlayer(Player p) {
+	public void deauthorisePlayer(@NotNull Player p) {
 		if (!isAuthorised(p)) {
 			logger.warn("Unable to deauthorise " + p.getName() + " Reason: Is not authorised");
 			return;
@@ -74,7 +75,7 @@ public class ServerProtectorAPI {
 		saved.remove(p.getName());
 	}
 
-	public void handleInteraction(Player p, Cancellable e) {
+	public void handleInteraction(@NotNull Player p, Cancellable e) {
 		if (isCaptured(p)) {
 			e.setCancelled(true);
 		}

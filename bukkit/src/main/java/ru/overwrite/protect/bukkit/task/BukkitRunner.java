@@ -3,6 +3,7 @@ package ru.overwrite.protect.bukkit.task;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
+import org.jetbrains.annotations.NotNull;
 
 @SuppressWarnings("deprecation")
 public class BukkitRunner implements Runner {
@@ -16,37 +17,37 @@ public class BukkitRunner implements Runner {
 	}
 
 	@Override
-	public void runPlayer(Runnable task, Player player) {
+	public void runPlayer(@NotNull Runnable task, @NotNull Player player) {
 		run(task);
 	}
 
 	@Override
-	public void run(Runnable task) {
+	public void run(@NotNull Runnable task) {
 		scheduler.runTask(plugin, task);
 	}
 
 	@Override
-	public void runAsync(Runnable task) {
+	public void runAsync(@NotNull Runnable task) {
 		scheduler.runTaskAsynchronously(plugin, task);
     }
 
     @Override
-    public void runDelayed(Runnable task, long delayTicks) {
+    public void runDelayed(@NotNull Runnable task, long delayTicks) {
         scheduler.runTaskLater(plugin, task, delayTicks);
     }
 
     @Override
-    public void runDelayedAsync(Runnable task, long delayTicks) {
+    public void runDelayedAsync(@NotNull Runnable task, long delayTicks) {
         scheduler.runTaskLaterAsynchronously(plugin, task, delayTicks);
     }
 
     @Override
-    public void runPeriodical(Runnable task, long delayTicks, long periodTicks) {
+    public void runPeriodical(@NotNull Runnable task, long delayTicks, long periodTicks) {
         scheduler.runTaskTimer(plugin, task, delayTicks, periodTicks);
     }
 
     @Override
-    public void runPeriodicalAsync(Runnable task, long delayTicks, long periodTicks) {
+    public void runPeriodicalAsync(@NotNull Runnable task, long delayTicks, long periodTicks) {
         scheduler.runTaskTimerAsynchronously(plugin, task, delayTicks, periodTicks);
     }
 
