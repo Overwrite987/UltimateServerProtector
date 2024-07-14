@@ -116,7 +116,7 @@ public final class Utils {
 	}
 
 	private static final ImmutableSet<String> SUPPORTED_HASH_TYPES =
-			ImmutableSet.of("MD5", "SHA224", "SHA256", "SHA384", "SHA512", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
+			ImmutableSet.of("SHA224", "SHA256", "SHA384", "SHA512", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
 
 	public static String encryptPassword(String password, String salt, List<String> hashTypes) {
 		if (hashTypes.isEmpty()) {
@@ -126,23 +126,25 @@ public final class Utils {
 		boolean salted = false;
 		for (String hashType : hashTypes) {
 			switch (hashType.toUpperCase()) {
-				case "BASE64":
+				case "BASE64": {
 					encryptedPassword = encodeToBase64(encryptedPassword);
 					break;
-				case "SALT":
-					if (salted) { break; }
-					encryptedPassword = salt+encryptedPassword;
+				}
+				case "SALT": {
+					if (salted) {
+						break;
+					}
+					encryptedPassword = salt + encryptedPassword;
 					salted = true;
 					break;
-				default:
+				}
+				default: {
 					if (SUPPORTED_HASH_TYPES.contains(hashType.toUpperCase())) {
-						if (hashType.equalsIgnoreCase("MD5")) {
-							Bukkit.getLogger().warning("Hash type " + hashType + " is outdated and will be removed in the future!");
-						}
 						encryptedPassword = encryptToHash(encryptedPassword, hashType);
 					} else {
 						throw new IllegalArgumentException("Unsupported hash type: " + hashType);
 					}
+				}
 			}
 		}
 		return salted ? salt + ":" + encryptedPassword : encryptedPassword;
