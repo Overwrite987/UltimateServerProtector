@@ -19,9 +19,8 @@ public class TabCompleteListener implements Listener {
     public void onTabComplete(AsyncTabCompleteEvent e) {
         if (api.login.isEmpty())
             return;
-        if (!(e.getSender() instanceof Player))
+        if (!(e.getSender() instanceof Player p))
             return;
-        Player p = (Player) e.getSender();
         api.handleInteraction(p, e);
     }
 }

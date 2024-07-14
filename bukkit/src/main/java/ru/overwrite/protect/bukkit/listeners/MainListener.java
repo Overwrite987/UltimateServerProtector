@@ -77,10 +77,9 @@ public class MainListener implements Listener {
 	public void onItemPickup(EntityPickupItemEvent e) {
 		if (api.login.isEmpty())
 			return;
-		if (!(e.getEntity() instanceof Player))
+		if (!(e.getEntity() instanceof Player p))
 			return;
-		Player p = (Player) e.getEntity();
-		if (pluginConfig.blocking_settings_block_item_pickup) {
+        if (pluginConfig.blocking_settings_block_item_pickup) {
 			api.handleInteraction(p, e);
 		}
 	}
@@ -89,10 +88,9 @@ public class MainListener implements Listener {
 	public void onTabComplete(AsyncTabCompleteEvent e) {
 		if (api.login.isEmpty())
 			return;
-		if (!(e.getSender() instanceof Player))
+		if (!(e.getSender() instanceof Player p))
 			return;
-		Player p = (Player) e.getSender();
-		if (pluginConfig.blocking_settings_block_tab_complete) {
+        if (pluginConfig.blocking_settings_block_tab_complete) {
 			api.handleInteraction(p, e);
 		}
 	}
@@ -101,10 +99,9 @@ public class MainListener implements Listener {
 	public void onPlayerDamage(EntityDamageEvent e) {
 		if (api.login.isEmpty())
 			return;
-		if (!(e.getEntity() instanceof Player))
+		if (!(e.getEntity() instanceof Player p))
 			return;
-		Player p = (Player) e.getEntity();
-		if (pluginConfig.blocking_settings_block_damage) {
+        if (pluginConfig.blocking_settings_block_damage) {
 			api.handleInteraction(p, e);
 		}
 	}
@@ -113,10 +110,9 @@ public class MainListener implements Listener {
 	public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
 		if (api.login.isEmpty())
 			return;
-		if (!(e.getDamager() instanceof Player))
+		if (!(e.getDamager() instanceof Player p))
 			return;
-		Player p = (Player) e.getDamager();
-		if (pluginConfig.blocking_settings_damaging_entity) {
+        if (pluginConfig.blocking_settings_damaging_entity) {
 			api.handleInteraction(p, e);
 		}
 	}

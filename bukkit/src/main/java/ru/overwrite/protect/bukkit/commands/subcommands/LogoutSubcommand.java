@@ -14,11 +14,10 @@ public class LogoutSubcommand extends AbstractSubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player)) {
+        if (!(sender instanceof Player p)) {
             sender.sendMessage(pluginConfig.uspmsg_playeronly);
             return false;
         }
-        Player p = (Player)sender;
         if (api.isAuthorised(p)) {
             plugin.getRunner().run(() -> {
                 new ServerProtectorLogoutEvent(p, Utils.getIp(p)).callEvent();

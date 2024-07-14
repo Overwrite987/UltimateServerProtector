@@ -73,34 +73,32 @@ public final class Utils {
 	}
 
 	public static String colorize(String message, String serializer) {
-		switch (serializer) {
-			case "LEGACY": {
-				if (SUB_VERSION >= 16) {
-					Matcher matcher = HEX_PATTERN.matcher(message);
-					StringBuilder builder = new StringBuilder(message.length() + 32);
-					while (matcher.find()) {
-						String group = matcher.group(1);
-						matcher.appendReplacement(builder,
-								COLOR_CHAR + "x" +
-										COLOR_CHAR + group.charAt(0) +
-										COLOR_CHAR + group.charAt(1) +
-										COLOR_CHAR + group.charAt(2) +
-										COLOR_CHAR + group.charAt(3) +
-										COLOR_CHAR + group.charAt(4) +
-										COLOR_CHAR + group.charAt(5));
-					}
-					message = matcher.appendTail(builder).toString();
-				}
-				return ChatColor.translateAlternateColorCodes('&', message);
-			}
-			case "MINIMESSAGE": {
-				Component component = MiniMessage.miniMessage().deserialize(message);
-				return LegacyComponentSerializer.legacySection().serialize(component);
-			}
-			default: {
-				return message;
-			}
-		}
+        return switch (serializer) {
+            case "LEGACY" -> {
+                if (SUB_VERSION >= 16) {
+                    Matcher matcher = HEX_PATTERN.matcher(message);
+                    StringBuilder builder = new StringBuilder(message.length() + 32);
+                    while (matcher.find()) {
+                        String group = matcher.group(1);
+                        matcher.appendReplacement(builder,
+                                COLOR_CHAR + "x" +
+                                        COLOR_CHAR + group.charAt(0) +
+                                        COLOR_CHAR + group.charAt(1) +
+                                        COLOR_CHAR + group.charAt(2) +
+                                        COLOR_CHAR + group.charAt(3) +
+                                        COLOR_CHAR + group.charAt(4) +
+                                        COLOR_CHAR + group.charAt(5));
+                    }
+                    message = matcher.appendTail(builder).toString();
+                }
+                yield ChatColor.translateAlternateColorCodes('&', message);
+            }
+            case "MINIMESSAGE" -> {
+                Component component = MiniMessage.miniMessage().deserialize(message);
+                yield LegacyComponentSerializer.legacySection().serialize(component);
+            }
+            default -> message;
+        };
 	}
 
 	public static void checkUpdates(ServerProtectorManager plugin, Consumer<String> consumer) {
