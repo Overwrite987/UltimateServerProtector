@@ -50,6 +50,9 @@ public final class Utils {
 	}
 	
 	public static void sendTitleMessage(String[] titleMessages, Player p) {
+		if (titleMessages.length == 0) {
+			return;
+		}
 		if (titleMessages.length > 5) {
 			Bukkit.getConsoleSender().sendMessage ("Unable to send title. " + Arrays.toString(titleMessages));
 			return;
@@ -63,6 +66,9 @@ public final class Utils {
 	}
 
 	public static void sendSound(String[] soundArgs, Player p) {
+		if (soundArgs.length == 0) {
+			return;
+		}
 		if (soundArgs.length > 3) {
 			Bukkit.getConsoleSender().sendMessage ("Unable to send sound. " + Arrays.toString(soundArgs));
 			return;
