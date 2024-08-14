@@ -1,6 +1,8 @@
 package ru.overwrite.protect.bukkit.api;
 
+import java.util.HashMap;
 import java.util.HashSet;
+import java.util.Map;
 import java.util.Set;
 
 import org.bukkit.entity.Player;
@@ -17,7 +19,7 @@ public class ServerProtectorAPI {
 	private final Config pluginConfig;
 	private final Logger logger;
 	public final Set<String> login = new HashSet<>();
-	public final Set<String> ips = new HashSet<>();
+	public final Map<String, String> sessions = new HashMap<>();
 	public final Set<String> saved = new HashSet<>();
 
 	public ServerProtectorAPI(@NotNull ServerProtectorManager plugin) {
@@ -52,7 +54,7 @@ public class ServerProtectorAPI {
 	}
 
 	public boolean hasSession(@NotNull Player p) {
-		return !ips.isEmpty() && ips.contains(p.getName() + Utils.getIp(p));
+		return !sessions.isEmpty() && sessions.containsKey(p.getName()) && sessions.get(p.getName()).equals(Utils.getIp(p));
 	}
 
 	public void authorisePlayer(@NotNull Player p) {
@@ -61,7 +63,7 @@ public class ServerProtectorAPI {
 			return;
 		}
 		if (pluginConfig.session_settings_session) {
-			ips.add(p.getName() + Utils.getIp(p));
+			sessions.put(p.getName(), Utils.getIp(p));
 			return;
 		}
 		saved.add(p.getName());
@@ -73,7 +75,7 @@ public class ServerProtectorAPI {
 			return;
 		}
 		if (pluginConfig.session_settings_session) {
-			ips.remove(p.getName() + Utils.getIp(p));
+			sessions.remove(p.getName(), Utils.getIp(p));
 			return;
 		}
 		saved.remove(p.getName());

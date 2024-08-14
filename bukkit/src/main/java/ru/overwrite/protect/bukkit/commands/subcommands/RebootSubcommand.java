@@ -16,7 +16,7 @@ public class RebootSubcommand extends AbstractSubCommand {
         plugin.reloadConfigs();
         plugin.time.clear();
         api.login.clear();
-        api.ips.clear();
+        api.sessions.clear();
         api.saved.clear();
         for (String playerName : passwordHandler.bossbars.keySet()) {
             passwordHandler.bossbars.get(playerName).removeAll();
