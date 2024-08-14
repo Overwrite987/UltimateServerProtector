@@ -47,8 +47,12 @@ public class ServerProtectorAPI {
 	}
 
 	public boolean isAuthorised(@NotNull Player p) {
-		return pluginConfig.session_settings_session ? ips.contains(p.getName() + Utils.getIp(p))
+		return pluginConfig.session_settings_session ? hasSession(p)
 				: saved.contains(p.getName());
+	}
+
+	public boolean hasSession(@NotNull Player p) {
+		return !ips.isEmpty() && ips.contains(p.getName() + Utils.getIp(p));
 	}
 
 	public void authorisePlayer(@NotNull Player p) {
