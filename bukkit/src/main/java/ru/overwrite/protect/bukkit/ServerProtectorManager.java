@@ -101,7 +101,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
 	public boolean isSafe(FileConfiguration messageFile, PluginManager pluginManager) {
 		if (server.spigot().getConfig().getBoolean("settings.bungeecord")) {
-			if (pluginManager.isPluginEnabled("BungeeGuard")) {
+			if (pluginManager.isPluginEnabled("BungeeGuard") || pluginManager.isPluginEnabled("SafeNET")) {
 				return true;
 			}
 			pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
