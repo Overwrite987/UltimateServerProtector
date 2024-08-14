@@ -260,12 +260,12 @@ public class ServerProtectorManager extends JavaPlugin {
 		});
 	}
 
-	public void checkFail(String playerName, List<String> command) {
-		if (command.isEmpty()) {
+	public void checkFail(String playerName, List<String> commands) {
+		if (commands.isEmpty()) {
 			return;
 		}
 		runner.run(() -> {
-			for (String c : command) {
+			for (String c : commands) {
 				server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", playerName));
 				if (pluginConfig.logging_settings_logging_command_execution) {
 					Date date = new Date();
