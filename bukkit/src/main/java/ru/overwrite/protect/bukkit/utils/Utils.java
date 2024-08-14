@@ -18,6 +18,7 @@ import java.nio.charset.StandardCharsets;
 import java.security.MessageDigest;
 import java.security.NoSuchAlgorithmException;
 import java.security.SecureRandom;
+import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
 import java.util.function.Consumer;
@@ -50,7 +51,7 @@ public final class Utils {
 	
 	public static void sendTitleMessage(String[] titleMessages, Player p) {
 		if (titleMessages.length > 5) {
-			Bukkit.getConsoleSender().sendMessage ("Unable to send title. " + titleMessages.toString());
+			Bukkit.getConsoleSender().sendMessage ("Unable to send title. " + Arrays.toString(titleMessages));
 			return;
 		}
 		String title = titleMessages[0];
@@ -63,7 +64,7 @@ public final class Utils {
 
 	public static void sendSound(String[] soundArgs, Player p) {
 		if (soundArgs.length > 3) {
-			Bukkit.getConsoleSender().sendMessage ("Unable to send sound. " + soundArgs.toString());
+			Bukkit.getConsoleSender().sendMessage ("Unable to send sound. " + Arrays.toString(soundArgs));
 			return;
 		}
 		Sound sound = Sound.valueOf(soundArgs[0]);
