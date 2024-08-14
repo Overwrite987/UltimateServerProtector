@@ -63,7 +63,7 @@ public class PasswordHandler {
 			}
 			failedPassword(p);
 			if (pluginConfig.punish_settings_enable_attempts && isAttemptsMax(p.getName())) {
-				plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-pass"));
+				plugin.checkFail(p.getName(), pluginConfig.commands_failed_pass);
 			}
 		};
 		if (resync) {

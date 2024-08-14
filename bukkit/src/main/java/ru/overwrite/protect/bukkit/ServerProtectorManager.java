@@ -169,6 +169,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.loadSoundSettings(config, configFile);
 		pluginConfig.loadEffects(config, configFile);
 		pluginConfig.loadLoggingSettings(config, configFile);
+		pluginConfig.loadFailCommands(config, configFile);
 		pluginConfig.loadMsgMessages(messageFile);
 		pluginConfig.loadUspMessages(messageFile);
 		ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
@@ -219,16 +220,16 @@ public class ServerProtectorManager extends JavaPlugin {
 		taskManager.startCapturesMessages(config);
 		if (pluginConfig.punish_settings_enable_time) {
 			time = new ConcurrentHashMap<>();
-			taskManager.startCapturesTimer(config);
+			taskManager.startCapturesTimer();
 		}
 		if (pluginConfig.secure_settings_enable_notadmin_punish) {
-			taskManager.startAdminCheck(config);
+			taskManager.startAdminCheck();
 		}
 		if (pluginConfig.secure_settings_enable_op_whitelist) {
-			taskManager.startOpCheck(config);
+			taskManager.startOpCheck();
 		}
 		if (pluginConfig.secure_settings_enable_permission_blacklist) {
-			taskManager.startPermsCheck(config);
+			taskManager.startPermsCheck();
 		}
 	}
 

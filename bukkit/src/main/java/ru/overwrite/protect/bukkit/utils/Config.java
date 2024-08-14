@@ -23,41 +23,141 @@ public class Config {
 
     public String serializer;
 
-    public Set<String> perms, blacklisted_perms, geyser_names;
+    public Set<String> perms,
+            blacklisted_perms,
+            geyser_names;
 
     public Map<String, List<String>> ip_whitelist;
 
     public Map<String, String> per_player_passwords;
 
-    public List<String> encryption_settings_encrypt_methods, effect_settings_effects, allowed_commands, op_whitelist, excluded_admin_pass, excluded_op_whitelist,
-            excluded_ip_whitelist, excluded_blacklisted_perms;
+    public List<String> encryption_settings_encrypt_methods;
+
+    public List<String> effect_settings_effects;
+
+    public List<String> allowed_commands;
+
+    public List<String> op_whitelist;
+
+    public List<String> excluded_admin_pass,
+            excluded_op_whitelist,
+            excluded_ip_whitelist,
+            excluded_blacklisted_perms;
+
+    public List<String> commands_not_in_config,
+            commands_not_in_opwhitelist,
+            commands_have_blacklisted_perm,
+            commands_not_admin_ip,
+            commands_failed_pass,
+            commands_failed_time,
+            commands_failed_rejoin;
 
     public List<List<String>> encryption_settings_old_encrypt_methods;
 
-    public String[] titles_message, titles_incorrect, titles_correct, sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
+    public String[] titles_message, titles_incorrect, titles_correct;
+    public String[] sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
 
-    public String geyser_prefix, uspmsg_consoleonly, uspmsg_reloaded, uspmsg_rebooted, uspmsg_playernotfound, uspmsg_alreadyinconfig, uspmsg_playeronly, uspmsg_logout,
-            uspmsg_notinconfig, uspmsg_playeradded, uspmsg_playerremoved, uspmsg_ipadded, uspmsg_setpassusage,
-            uspmsg_addopusage, uspmsg_remopusage, uspmsg_ipremoved, uspmsg_remipusage, uspmsg_addipusage,
-            uspmsg_rempassusage, uspmsg_usage, uspmsg_usage_logout, uspmsg_usage_reload, uspmsg_usage_reboot, uspmsg_usage_encrypt, uspmsg_usage_setpass,
-            uspmsg_usage_rempass, uspmsg_usage_addop, uspmsg_usage_remop, uspmsg_usage_addip, uspmsg_usage_remip, uspmsg_otherdisabled,
-            msg_message, msg_incorrect, msg_correct, msg_noneed, msg_cantbenull, msg_playeronly, broadcasts_failed,
-            broadcasts_passed, broadcasts_joined, broadcasts_captured, bossbar_message,
-            bossbar_settings_bar_color, bossbar_settings_bar_style, main_settings_prefix, main_settings_pas_command;
+    public String geyser_prefix;
 
-    public boolean main_settings_papi_support, encryption_settings_enable_encryption, encryption_settings_auto_encrypt_passwords, blocking_settings_block_item_drop,
-            blocking_settings_block_item_pickup, blocking_settings_block_tab_complete, blocking_settings_block_damage, blocking_settings_damaging_entity,
-            blocking_settings_block_inventory_open, blocking_settings_hide_on_entering, blocking_settings_hide_other_on_entering, blocking_settings_allow_orientation_change, main_settings_use_command,
-            main_settings_enable_admin_commands, punish_settings_enable_attempts, punish_settings_enable_time, punish_settings_enable_rejoin,
-            bossbar_settings_enable_bossbar, secure_settings_enable_op_whitelist,
-            secure_settings_enable_notadmin_punish, secure_settings_enable_permission_blacklist,
-            secure_settings_enable_ip_whitelist, secure_settings_only_console_usp,
-            secure_settings_enable_excluded_players, secure_settings_call_event_on_password_enter, session_settings_session, session_settings_session_time_enabled,
-            message_settings_send_title, message_settings_enable_broadcasts, message_settings_enable_console_broadcasts,
-            sound_settings_enable_sounds, effect_settings_enable_effects, logging_settings_logging_pas,
-            logging_settings_logging_join, logging_settings_logging_enable_disable, logging_settings_logging_command_execution;
+    public String uspmsg_consoleonly,
+            uspmsg_reloaded,
+            uspmsg_rebooted,
+            uspmsg_playernotfound,
+            uspmsg_alreadyinconfig,
+            uspmsg_playeronly,
+            uspmsg_logout,
+            uspmsg_notinconfig,
+            uspmsg_playeradded,
+            uspmsg_playerremoved,
+            uspmsg_ipadded,
+            uspmsg_setpassusage,
+            uspmsg_addopusage,
+            uspmsg_remopusage,
+            uspmsg_ipremoved,
+            uspmsg_remipusage,
+            uspmsg_addipusage,
+            uspmsg_rempassusage,
+            uspmsg_usage,
+            uspmsg_usage_logout,
+            uspmsg_usage_reload,
+            uspmsg_usage_reboot,
+            uspmsg_usage_encrypt,
+            uspmsg_usage_setpass,
+            uspmsg_usage_rempass,
+            uspmsg_usage_addop,
+            uspmsg_usage_remop,
+            uspmsg_usage_addip,
+            uspmsg_usage_remip,
+            uspmsg_otherdisabled;
 
-    public int encryption_settings_salt_length, punish_settings_max_attempts, punish_settings_time, punish_settings_max_rejoins, session_settings_session_time;
+    public String msg_message,
+            msg_incorrect,
+            msg_correct,
+            msg_noneed,
+            msg_cantbenull,
+            msg_playeronly;
+
+    public String broadcasts_failed,
+            broadcasts_passed,
+            broadcasts_joined,
+            broadcasts_captured;
+
+    public String bossbar_message,
+            bossbar_settings_bar_color,
+            bossbar_settings_bar_style;
+
+    public String main_settings_prefix,
+            main_settings_pas_command;
+
+    public boolean encryption_settings_enable_encryption,
+            encryption_settings_auto_encrypt_passwords;
+
+    public boolean blocking_settings_block_item_drop,
+            blocking_settings_block_item_pickup,
+            blocking_settings_block_tab_complete,
+            blocking_settings_block_damage,
+            blocking_settings_damaging_entity,
+            blocking_settings_block_inventory_open,
+            blocking_settings_hide_on_entering,
+            blocking_settings_hide_other_on_entering,
+            blocking_settings_allow_orientation_change;
+
+    public boolean main_settings_papi_support,
+            main_settings_use_command,
+            main_settings_enable_admin_commands;
+
+    public boolean punish_settings_enable_attempts,
+            punish_settings_enable_time,
+            punish_settings_enable_rejoin,
+            bossbar_settings_enable_bossbar;
+
+    public boolean secure_settings_enable_op_whitelist,
+            secure_settings_enable_notadmin_punish,
+            secure_settings_enable_permission_blacklist,
+            secure_settings_enable_ip_whitelist,
+            secure_settings_only_console_usp,
+            secure_settings_enable_excluded_players,
+            secure_settings_call_event_on_password_enter;
+
+    public boolean session_settings_session,
+            session_settings_session_time_enabled;
+
+    public boolean message_settings_send_title,
+            message_settings_enable_broadcasts,
+            message_settings_enable_console_broadcasts;
+
+    public boolean sound_settings_enable_sounds;
+
+    public boolean effect_settings_enable_effects;
+
+    public boolean logging_settings_logging_pas,
+            logging_settings_logging_join,
+            logging_settings_logging_enable_disable,
+            logging_settings_logging_command_execution;
+
+    public int encryption_settings_salt_length,
+            punish_settings_max_attempts, punish_settings_time, punish_settings_max_rejoins,
+            session_settings_session_time;
 
     public long main_settings_check_interval;
 
@@ -339,6 +439,30 @@ public class Config {
         logging_settings_logging_join = loggingSettings.getBoolean("logging-join", true);
         logging_settings_logging_enable_disable = loggingSettings.getBoolean("logging-enable-disable", true);
         logging_settings_logging_command_execution = loggingSettings.getBoolean("logging-command-execution", true);
+    }
+
+    public void loadFailCommands(FileConfiguration config, FileConfiguration configFile) {
+        ConfigurationSection commands = config.getConfigurationSection("commands");
+        if (!configFile.contains("commands")) {
+            logger.warn("Configuration section commands not found!");
+            configFile.createSection("commands");
+            configFile.set("commands.not-in-config", Collections.emptyList());
+            configFile.set("commands.not-in-opwhitelist", Collections.emptyList());
+            configFile.set("commands.have-blacklisted-perm", Collections.emptyList());
+            configFile.set("commands.not-admin-ip", Collections.emptyList());
+            configFile.set("commands.failed-pass", Collections.emptyList());
+            configFile.set("commands.failed-time", Collections.emptyList());
+            configFile.set("commands.failed-rejoin", Collections.emptyList());
+            save(plugin.path, configFile, "config.yml");
+            logger.info("Created section main-settings");
+        }
+        commands_not_in_config = commands.getStringList("not-in-config");
+        commands_not_in_opwhitelist = commands.getStringList("not-in-opwhitelist");
+        commands_have_blacklisted_perm = commands.getStringList("have-blacklisted-perm");
+        commands_not_admin_ip = commands.getStringList("not-admin-ip");
+        commands_failed_pass = commands.getStringList("failed-pass");
+        commands_failed_time =commands.getStringList("failed-time");
+        commands_failed_rejoin = commands.getStringList("failed-rejoin");
     }
 
     public void loadPerms(FileConfiguration config) {

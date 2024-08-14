@@ -69,13 +69,13 @@ public final class TaskManager {
 		}, 20L, interval >= 0 ? interval : 40L);
 	}
 
-	public void startAdminCheck(FileConfiguration config) {
+	public void startAdminCheck() {
 		runner.runPeriodicalAsync(() -> {
 			if (api.login.isEmpty())
 				return;
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				if (api.isCaptured(p) && !plugin.isAdmin(p.getName())) {
-					plugin.checkFail(p.getName(), config.getStringList("commands.not-in-config"));
+					plugin.checkFail(p.getName(), pluginConfig.commands_not_in_config);
 				}
 			}
 		}, 0L, 20L);
@@ -96,29 +96,29 @@ public final class TaskManager {
 		}, 0L, config.getInt("message-settings.delay") * 20L);
 	}
 
-	public void startOpCheck(FileConfiguration config) {
+	public void startOpCheck() {
 		runner.runPeriodicalAsync(() -> {
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				if (p.isOp() && !this.pluginConfig.op_whitelist.contains(p.getName())) {
-					plugin.checkFail(p.getName(), config.getStringList("commands.not-in-opwhitelist"));
+					plugin.checkFail(p.getName(), pluginConfig.commands_not_in_opwhitelist);
 				}
 			}
 		}, 0L, 20L);
 	}
 
-	public void startPermsCheck(FileConfiguration config) {
+	public void startPermsCheck() {
 		runner.runPeriodicalAsync(() -> {
 			for (Player p : Bukkit.getOnlinePlayers()) {
 				for (String badperm : this.pluginConfig.blacklisted_perms) {
 					if (p.hasPermission(badperm) && !plugin.isExcluded(p, this.pluginConfig.excluded_blacklisted_perms)) {
-						plugin.checkFail(p.getName(), config.getStringList("commands.have-blacklisted-perm"));
+						plugin.checkFail(p.getName(), pluginConfig.commands_have_blacklisted_perm);
 					}
 				}
 			}
 		}, 5L, 20L);
 	}
 
-	public void startCapturesTimer(FileConfiguration config) {
+	public void startCapturesTimer() {
 		runner.runPeriodicalAsync(() -> {
 			if (api.login.isEmpty())
 				return;
@@ -153,7 +153,7 @@ public final class TaskManager {
 					}
 				}
 				if (!noTimeLeft(playerName) && this.pluginConfig.punish_settings_enable_time) {
-					plugin.checkFail(playerName, config.getStringList("commands.failed-time"));
+					plugin.checkFail(playerName, pluginConfig.commands_failed_time);
 					passwordHandler.bossbars.get(playerName).removePlayer(p);
 				}
 			}

@@ -51,8 +51,7 @@ public class ConnectionListener implements Listener {
 				if (pluginConfig.secure_settings_enable_ip_whitelist) {
 					if (!isIPAllowed(playerName, ip)) {
 						if (!plugin.isExcluded(p, pluginConfig.excluded_ip_whitelist)) {
-							plugin.checkFail(playerName,
-									plugin.getConfig().getStringList("commands.not-admin-ip"));
+							plugin.checkFail(playerName, pluginConfig.commands_not_admin_ip);
 						}
 					}
 				}
@@ -133,7 +132,7 @@ public class ConnectionListener implements Listener {
 				rejoins.put(playerName, rejoins.getOrDefault(playerName, 0) + 1);
 				if (isMaxRejoins(playerName)) {
 					rejoins.remove(playerName);
-					plugin.checkFail(p.getName(), plugin.getConfig().getStringList("commands.failed-rejoin"));
+					plugin.checkFail(p.getName(), pluginConfig.commands_failed_rejoin);
 				}
 			}
 		}
