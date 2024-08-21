@@ -91,6 +91,9 @@ public class ConnectionListener implements Listener {
 
 	private boolean isIPAllowed(String p, String ip) {
 		List<String> ips = pluginConfig.ip_whitelist.get(p);
+		if (ips == null || ips.isEmpty()) {
+			return false;
+		}
 		String[] ipParts = ip.split("\\.");
 
 		return ips.stream().anyMatch(allowedIP -> {
