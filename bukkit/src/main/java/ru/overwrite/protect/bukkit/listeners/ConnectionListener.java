@@ -55,7 +55,7 @@ public class ConnectionListener implements Listener {
 						}
 					}
 				}
-				if (pluginConfig.session_settings_session && !api.hasSession(p)) {
+				if (pluginConfig.session_settings_session && !api.hasSession(p, ip)) {
 					if (!plugin.isExcluded(p, pluginConfig.excluded_admin_pass)) {
 						ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip, captureReason);
 						captureEvent.callEvent();

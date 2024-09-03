@@ -57,6 +57,10 @@ public class ServerProtectorAPI {
 		return !sessions.isEmpty() && sessions.containsKey(p.getName()) && sessions.get(p.getName()).equals(Utils.getIp(p));
 	}
 
+	public boolean hasSession(@NotNull Player p, @NotNull String ip) {
+		return !sessions.isEmpty() && sessions.containsKey(p.getName()) && sessions.get(p.getName()).equals(ip);
+	}
+
 	public void authorisePlayer(@NotNull Player p) {
 		if (isAuthorised(p)) {
 			logger.warn("Unable to authorise " + p.getName() + " Reason: Already authorised");
