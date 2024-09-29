@@ -372,13 +372,9 @@ public class ServerProtectorManager extends JavaPlugin {
 	}
 
 	public void logToFile(String message) {
-		try {
-			FileWriter fileWriter = new FileWriter(logFile, true);
-			BufferedWriter bufferedWriter = new BufferedWriter(fileWriter);
+		try (BufferedWriter bufferedWriter = new BufferedWriter(new FileWriter(logFile, true))) {
 			bufferedWriter.write(message);
 			bufferedWriter.newLine();
-			bufferedWriter.flush();
-			bufferedWriter.close();
 		} catch (IOException ex) {
 			ex.printStackTrace();
 		}
