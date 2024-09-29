@@ -50,7 +50,7 @@ public class ChatListener implements Listener {
 		if (pluginConfig.main_settings_use_command) {
 			if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
 				if (!plugin.paper) {
-					passwordHandler.checkPassword(p, message.split(" ")[1], false);
+					passwordHandler.checkPassword(p, message.split(" ", 1)[1], false);
 				}
 				return;
 			}

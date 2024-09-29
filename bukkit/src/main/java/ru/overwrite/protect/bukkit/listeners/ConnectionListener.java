@@ -119,7 +119,7 @@ public class ConnectionListener implements Listener {
 		handlePlayerLeave(p);
 	}
 
-	@EventHandler(priority = EventPriority.HIGHEST)
+	@EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
 	public void onKick(PlayerKickEvent event) {
 		Player p = event.getPlayer();
 		handlePlayerLeave(p);
