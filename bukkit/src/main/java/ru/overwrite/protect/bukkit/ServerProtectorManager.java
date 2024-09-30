@@ -345,7 +345,7 @@ public class ServerProtectorManager extends JavaPlugin {
 				msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
 			}
 			for (Player ps : server.getOnlinePlayers()) {
-				if (ps.hasPermission("serverprotector.admin")) {
+				if (ps.hasPermission("serverprotector.admin") && p != ps) {
 					ps.sendMessage(msg);
 				}
 			}
