@@ -28,8 +28,7 @@ public class RempassSubcommand extends AbstractSubCommand {
     }
 
     private void removeAdmin(String nick) {
-        FileConfiguration dataFile;
-        dataFile = pluginConfig.getFile(plugin.path, plugin.dataFileName);
+        FileConfiguration dataFile = pluginConfig.getFile(plugin.path, plugin.dataFileName);
         if (!pluginConfig.encryption_settings_enable_encryption) {
             dataFile.set("data." + nick + ".pass", null);
             dataFile.set("data." + nick, null);

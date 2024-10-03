@@ -140,7 +140,7 @@ public class ServerProtectorManager extends JavaPlugin {
 	public void reloadConfigs() {
 		runner.runAsync(() -> {
 			reloadConfig();
-			FileConfiguration config = getConfig();
+			final FileConfiguration config = getConfig();
 			messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
 			ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
 			boolean fullPath = fileSettings.getBoolean("use-full-path", false);
@@ -156,7 +156,7 @@ public class ServerProtectorManager extends JavaPlugin {
 		pluginConfig.loadPerms(config);
 		pluginConfig.loadLists(config);
 		pluginConfig.setupExcluded(config);
-		FileConfiguration configFile = pluginConfig.getFile(path, "config.yml");
+		final FileConfiguration configFile = pluginConfig.getFile(path, "config.yml");
 		pluginConfig.loadMainSettings(config, configFile);
 		pluginConfig.loadEncryptionSettings(config, configFile);
 		pluginConfig.loadSecureSettings(config, configFile);
@@ -200,9 +200,9 @@ public class ServerProtectorManager extends JavaPlugin {
 				PluginCommand command = constructor.newInstance(config.getString("main-settings.pas-command"), this);
 				command.setExecutor(new PasCommand(this));
 				commandMap.register(getDescription().getName(), command);
-			} catch (Exception e) {
+			} catch (Exception ex) {
 				pluginLogger.info("Unable to register password command!");
-				e.printStackTrace();
+				ex.printStackTrace();
 				pluginManager.disablePlugin(this);
 			}
 		} else {

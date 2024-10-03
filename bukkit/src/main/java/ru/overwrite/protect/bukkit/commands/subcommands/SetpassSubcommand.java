@@ -37,8 +37,7 @@ public class SetpassSubcommand extends AbstractSubCommand {
     }
 
     private void addAdmin(String nick, String pas) {
-        FileConfiguration dataFile;
-        dataFile = pluginConfig.getFile(plugin.path, plugin.dataFileName);
+        FileConfiguration dataFile = pluginConfig.getFile(plugin.path, plugin.dataFileName);
         if (!pluginConfig.encryption_settings_enable_encryption) {
             dataFile.set("data." + nick + ".pass", pas);
         } else if (pluginConfig.encryption_settings_auto_encrypt_passwords) {

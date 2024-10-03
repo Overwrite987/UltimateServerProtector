@@ -16,7 +16,7 @@ public final class ServerProtector extends ServerProtectorManager {
 	public void onEnable() {
 		long startTime = System.currentTimeMillis();
 		saveDefaultConfig();
-		FileConfiguration config = getConfig();
+		final FileConfiguration config = getConfig();
 		setupLogger(config);
 		setupProxy(config);
 		loadConfigs(config);
