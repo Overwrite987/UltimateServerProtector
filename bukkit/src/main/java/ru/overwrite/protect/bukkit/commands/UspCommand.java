@@ -124,7 +124,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	private List<String> getResult(String[] args, List<String> completions) {
 		List<String> result = new ArrayList<>();
 		for (String c : completions) {
-			if (c.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
+			if (c.startsWith(args[args.length - 1].toLowerCase())) {
 				result.add(c);
 			}
 		}
