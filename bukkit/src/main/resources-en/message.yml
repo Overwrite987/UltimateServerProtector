@@ -71,7 +71,7 @@ uspmsg:
 
 # System messages
 system:
-  baseline-warn: "§6============= §c! WARNING ! §c============="
+  baseline-warn: "§6============= §c! WARNING ! §6============="
   baseline-default: "§6========================================"
   paper-1: "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"
   paper-2: "§eDownload Paper: §ahttps://papermc.io/downloads/all"
@@ -79,6 +79,8 @@ system:
   bungeecord-2: "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."
   bungeecord-3: "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"
   update-latest: "§aYou are using latest version of the plugin!"
+  update-success-1: "§aUpdate was downloaded successfully!"
+  update-success-2: "§aRestart the server to apply the update."
   update-outdated-1: "§aYou are using outdated version of the plugin!"
   update-outdated-2: "§aYou can download new version here:"
   update-outdated-3: "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"

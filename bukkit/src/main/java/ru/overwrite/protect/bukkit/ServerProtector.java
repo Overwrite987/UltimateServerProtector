@@ -42,7 +42,7 @@ public final class ServerProtector extends ServerProtectorManager {
 		if (messageFile != null) {
 			logEnableDisable(messageFile.getString("log-format.disabled"), new Date());
 		}
-		FileConfiguration config = getConfig();
+		final FileConfiguration config = getConfig();
 		if (config.getBoolean("message-settings.enable-broadcasts")) {
 			for (Player ps : server.getOnlinePlayers()) {
 				if (ps.hasPermission("serverprotector.admin") && messageFile != null) {

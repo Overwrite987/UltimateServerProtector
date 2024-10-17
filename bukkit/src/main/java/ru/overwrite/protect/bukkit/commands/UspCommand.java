@@ -28,6 +28,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 		registerSubCommand(new RempassSubcommand(plugin));
 		registerSubCommand(new RemopSubcommand(plugin));
 		registerSubCommand(new RemipSubcommand(plugin));
+		registerSubCommand(new UpdateSubcommand(plugin));
 	}
 
 	private void registerSubCommand(AbstractSubCommand subCmd) {

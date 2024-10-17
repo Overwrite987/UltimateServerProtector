@@ -71,7 +71,7 @@ uspmsg:
 
 # Системные сообщения
 system:
-  baseline-warn: "§6============= §c! ВНИМАНИЕ ! §c============="
+  baseline-warn: "§6============= §c! ВНИМАНИЕ ! §6============="
   baseline-default: "§6========================================"
   paper-1: "§eВы используете нестабильное ядро для вашего сервера Minecraft! Рекомендуется использовать §aPaper"
   paper-2: "§eСкачать Paper: §ahttps://papermc.io/downloads/all"
@@ -79,6 +79,8 @@ system:
   bungeecord-2: "§eБез этого плагина вы подвергаете себя §cопасности! §eУстановите его для дальнейшей безопасной работы."
   bungeecord-3: "§eСкачать BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"
   update-latest: "§aВы используете последнюю версию плагина!"
+  update-success-1: "§aОбновление было загружено успешно!"
+  update-success-2: "§aПерезапустите сервер, чтобы применить обновление."
   update-outdated-1: "§aВы используете устаревшую версию плагина!"
   update-outdated-2: "§aВы можете скачать новую версию здесь:"
   update-outdated-3: "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"
