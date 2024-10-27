@@ -24,8 +24,8 @@ public class MainListener implements Listener {
     private final Config pluginConfig;
 
     public MainListener(ServerProtectorManager plugin) {
-        api = plugin.getPluginAPI();
-        pluginConfig = plugin.getPluginConfig();
+        this.api = plugin.getPluginAPI();
+        this.pluginConfig = plugin.getPluginConfig();
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)

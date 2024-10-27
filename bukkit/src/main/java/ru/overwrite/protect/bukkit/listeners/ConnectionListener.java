@@ -31,9 +31,9 @@ public class ConnectionListener implements Listener {
 
     public ConnectionListener(ServerProtectorManager plugin) {
         this.plugin = plugin;
-        api = plugin.getPluginAPI();
-        pluginConfig = plugin.getPluginConfig();
-        runner = plugin.getRunner();
+        this.api = plugin.getPluginAPI();
+        this.pluginConfig = plugin.getPluginConfig();
+        this.runner = plugin.getRunner();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

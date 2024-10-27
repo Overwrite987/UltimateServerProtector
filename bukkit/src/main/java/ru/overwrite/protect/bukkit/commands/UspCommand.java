@@ -17,7 +17,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 
     public UspCommand(ServerProtectorManager plugin) {
         this.plugin = plugin;
-        pluginConfig = plugin.getPluginConfig();
+        this.pluginConfig = plugin.getPluginConfig();
         registerSubCommand(new LogoutSubcommand(plugin));
         registerSubCommand(new ReloadSubcommand(plugin));
         registerSubCommand(new RebootSubcommand(plugin));

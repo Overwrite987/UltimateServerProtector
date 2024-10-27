@@ -23,8 +23,8 @@ public class ServerProtectorAPI {
     public final Set<String> saved = new HashSet<>();
 
     public ServerProtectorAPI(@NotNull ServerProtectorManager plugin) {
-        pluginConfig = plugin.getPluginConfig();
-        logger = plugin.getPluginLogger();
+        this.pluginConfig = plugin.getPluginConfig();
+        this.logger = plugin.getPluginLogger();
     }
 
     public boolean isCaptured(@NotNull Player p) {

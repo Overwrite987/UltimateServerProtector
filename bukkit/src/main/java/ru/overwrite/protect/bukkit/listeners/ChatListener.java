@@ -20,9 +20,9 @@ public class ChatListener implements Listener {
 
     public ChatListener(ServerProtectorManager plugin) {
         this.plugin = plugin;
-        pluginConfig = plugin.getPluginConfig();
-        passwordHandler = plugin.getPasswordHandler();
-        api = plugin.getPluginAPI();
+        this.pluginConfig = plugin.getPluginConfig();
+        this.passwordHandler = plugin.getPasswordHandler();
+        this.api = plugin.getPluginAPI();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)

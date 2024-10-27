@@ -20,9 +20,9 @@ public class PasCommand implements CommandExecutor {
 
     public PasCommand(ServerProtectorManager plugin) {
         this.plugin = plugin;
-        pluginConfig = plugin.getPluginConfig();
-        passwordHandler = plugin.getPasswordHandler();
-        api = plugin.getPluginAPI();
+        this.pluginConfig = plugin.getPluginConfig();
+        this.passwordHandler = plugin.getPasswordHandler();
+        this.api = plugin.getPluginAPI();
     }
 
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
