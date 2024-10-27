@@ -69,30 +69,30 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	}
 
 	private void sendHelp(CommandSender sender, String label) {
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage, label, "serverprotector.protect");
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_logout, label, "serverprotector.protect");
-		if (!sender.hasPermission("serverprotector.admin")) {
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage, label, "protect");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_logout, label, "protect");
+		if (!sender.hasPermission("admin")) {
 			return;
 		}
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reload, label, "serverprotector.reload");
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reboot, label, "serverprotector.reboot");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reload, label, "reload");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_reboot, label, "reboot");
 		if (pluginConfig.encryption_settings_enable_encryption) {
-			sendCmdMessage(sender, pluginConfig.uspmsg_usage_encrypt, label, "serverprotector.encrypt");
+			sendCmdMessage(sender, pluginConfig.uspmsg_usage_encrypt, label, "encrypt");
 		}
 		if (!pluginConfig.main_settings_enable_admin_commands) {
 			sender.sendMessage(pluginConfig.uspmsg_otherdisabled);
 			return;
 		}
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_setpass, label, "serverprotector.setpass");
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_rempass, label, "serverprotector.rempass");
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addop, label, "serverprotector.addop");
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remop, label, "serverprotector.remop");
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addip, label, "serverprotector.addip");
-		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remip, label, "serverprotector.remip");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_setpass, label, "setpass");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_rempass, label, "rempass");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addop, label, "addop");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remop, label, "remop");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_addip, label, "addip");
+		sendCmdMessage(sender, pluginConfig.uspmsg_usage_remip, label, "remip");
 	}
 
 	private void sendCmdMessage(CommandSender sender, String msg, String label, String permission) {
-		if (sender.hasPermission(permission)) {
+		if (sender.hasPermission("serverprotector." + permission)) {
 			sender.sendMessage(msg.replace("%cmd%", label));
 		}
 	}
@@ -125,10 +125,17 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 	private List<String> getResult(String[] args, List<String> completions) {
 		List<String> result = new ArrayList<>();
 		for (String c : completions) {
-			if (c.toLowerCase().startsWith(args[args.length - 1].toLowerCase())) {
+			if (startsWithIgnoreCase(c, args[args.length - 1])) {
 				result.add(c);
 			}
 		}
 		return result;
+	}
+
+	private boolean startsWithIgnoreCase(String str, String prefix) {
+		if (str == null || prefix == null) {
+			return false;
+		}
+		return str.regionMatches(true, 0, prefix, 0, prefix.length());
 	}
 }
