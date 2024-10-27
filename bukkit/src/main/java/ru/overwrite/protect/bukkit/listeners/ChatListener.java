@@ -46,9 +46,9 @@ public class ChatListener implements Listener {
             return;
         }
         String message = e.getMessage();
-        String label = cutCommand(message).toLowerCase();
+        String label = cutCommand(message);
         if (pluginConfig.main_settings_use_command) {
-            if (label.equals("/" + pluginConfig.main_settings_pas_command)) {
+            if (label.equalsIgnoreCase("/" + pluginConfig.main_settings_pas_command)) {
                 if (!plugin.paper) {
                     passwordHandler.checkPassword(p, message.split(" ", 1)[1], false);
                 }
@@ -56,7 +56,7 @@ public class ChatListener implements Listener {
             }
         }
         for (String command : pluginConfig.allowed_commands) {
-            if (label.equals(command) || message.equalsIgnoreCase(command)) {
+            if (label.equalsIgnoreCase(command) || message.equalsIgnoreCase(command)) {
                 return;
             }
         }
