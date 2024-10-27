@@ -461,7 +461,7 @@ public class Config {
         commands_have_blacklisted_perm = commands.getStringList("have-blacklisted-perm");
         commands_not_admin_ip = commands.getStringList("not-admin-ip");
         commands_failed_pass = commands.getStringList("failed-pass");
-        commands_failed_time =commands.getStringList("failed-time");
+        commands_failed_time = commands.getStringList("failed-time");
         commands_failed_rejoin = commands.getStringList("failed-rejoin");
     }
 

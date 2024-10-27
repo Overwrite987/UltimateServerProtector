@@ -6,26 +6,26 @@ import org.bukkit.event.player.PlayerEvent;
 
 public class ServerProtectorLogoutEvent extends PlayerEvent {
 
-	private static final HandlerList HANDLERS = new HandlerList();
-	
-	private final String ip;
+    private static final HandlerList HANDLERS = new HandlerList();
 
-	public ServerProtectorLogoutEvent(Player player, String ip) {
-		super(player, true);
-		this.player = player;
-		this.ip = ip;
-	}
+    private final String ip;
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS;
-	}
+    public ServerProtectorLogoutEvent(Player player, String ip) {
+        super(player, true);
+        this.player = player;
+        this.ip = ip;
+    }
 
-	public HandlerList getHandlers() {
-		return HANDLERS;
-	}
-	
-	public String getIp() {
-		return ip;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
+
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
+
+    public String getIp() {
+        return ip;
+    }
 
 }

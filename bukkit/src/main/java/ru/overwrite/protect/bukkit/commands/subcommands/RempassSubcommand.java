@@ -13,7 +13,7 @@ public class RempassSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length > 1) {
-            if (!plugin.isAdmin(args[1]) && !plugin.isAdmin(pluginConfig.geyser_prefix+args[1])) {
+            if (!plugin.isAdmin(args[1]) && !plugin.isAdmin(pluginConfig.geyser_prefix + args[1])) {
                 sender.sendMessage(pluginConfig.uspmsg_notinconfig);
                 return true;
             }

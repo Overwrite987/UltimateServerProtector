@@ -12,29 +12,29 @@ import java.util.function.Consumer;
 
 public class PaperRunner implements Runner {
 
-	private final Plugin plugin;
-	private final AsyncScheduler asyncScheduler;
-	private final GlobalRegionScheduler globalScheduler;
+    private final Plugin plugin;
+    private final AsyncScheduler asyncScheduler;
+    private final GlobalRegionScheduler globalScheduler;
 
-	public PaperRunner(Plugin plugin) {
-		this.plugin = plugin;
-		this.asyncScheduler = plugin.getServer().getAsyncScheduler();
-		this.globalScheduler = plugin.getServer().getGlobalRegionScheduler();
-	}
+    public PaperRunner(Plugin plugin) {
+        this.plugin = plugin;
+        this.asyncScheduler = plugin.getServer().getAsyncScheduler();
+        this.globalScheduler = plugin.getServer().getGlobalRegionScheduler();
+    }
 
-	@Override
-	public void runPlayer(@NotNull Runnable task, Player player) {
-		player.getScheduler().run(plugin, toConsumer(task), null);
-	}
+    @Override
+    public void runPlayer(@NotNull Runnable task, Player player) {
+        player.getScheduler().run(plugin, toConsumer(task), null);
+    }
 
-	@Override
-	public void run(@NotNull Runnable task) {
-		globalScheduler.run(plugin, toConsumer(task));
-	}
+    @Override
+    public void run(@NotNull Runnable task) {
+        globalScheduler.run(plugin, toConsumer(task));
+    }
 
-	@Override
-	public void runAsync(@NotNull Runnable task) {
-		asyncScheduler.runNow(plugin, toConsumer(task));
+    @Override
+    public void runAsync(@NotNull Runnable task) {
+        asyncScheduler.runNow(plugin, toConsumer(task));
     }
 
     @Override

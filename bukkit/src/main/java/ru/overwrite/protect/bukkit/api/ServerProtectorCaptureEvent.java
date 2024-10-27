@@ -7,42 +7,42 @@ import org.bukkit.event.player.PlayerEvent;
 
 public class ServerProtectorCaptureEvent extends PlayerEvent implements Cancellable {
 
-	private static final HandlerList HANDLERS = new HandlerList();
-	
-	private final String ip;
+    private static final HandlerList HANDLERS = new HandlerList();
 
-	private final CaptureReason captureReason;
+    private final String ip;
 
-	private boolean isCancelled = false;
+    private final CaptureReason captureReason;
 
-	public ServerProtectorCaptureEvent(Player player, String ip, CaptureReason captureReason) {
-		super(player, true);
-		this.ip = ip;
-		this.captureReason = captureReason;
-	}
+    private boolean isCancelled = false;
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS;
-	}
+    public ServerProtectorCaptureEvent(Player player, String ip, CaptureReason captureReason) {
+        super(player, true);
+        this.ip = ip;
+        this.captureReason = captureReason;
+    }
 
-	public HandlerList getHandlers() {
-		return HANDLERS;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
-	public boolean isCancelled() {
-		return isCancelled;
-	}
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
 
-	public void setCancelled(boolean cancel) {
-		isCancelled = cancel;
-	}
-	
-	public String getIp() {
-		return ip;
-	}
+    public boolean isCancelled() {
+        return isCancelled;
+    }
 
-	public CaptureReason getCaptureReason() {
-		return captureReason;
-	}
+    public void setCancelled(boolean cancel) {
+        isCancelled = cancel;
+    }
+
+    public String getIp() {
+        return ip;
+    }
+
+    public CaptureReason getCaptureReason() {
+        return captureReason;
+    }
 
 }

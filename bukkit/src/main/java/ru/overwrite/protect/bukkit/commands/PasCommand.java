@@ -13,32 +13,32 @@ import ru.overwrite.protect.bukkit.utils.Config;
 
 public class PasCommand implements CommandExecutor {
 
-	private final ServerProtectorManager plugin;
-	private final ServerProtectorAPI api;
-	private final PasswordHandler passwordHandler;
-	private final Config pluginConfig;
+    private final ServerProtectorManager plugin;
+    private final ServerProtectorAPI api;
+    private final PasswordHandler passwordHandler;
+    private final Config pluginConfig;
 
-	public PasCommand(ServerProtectorManager plugin) {
-		this.plugin = plugin;
-		pluginConfig = plugin.getPluginConfig();
-		passwordHandler = plugin.getPasswordHandler();
-		api = plugin.getPluginAPI();
-	}
+    public PasCommand(ServerProtectorManager plugin) {
+        this.plugin = plugin;
+        pluginConfig = plugin.getPluginConfig();
+        passwordHandler = plugin.getPasswordHandler();
+        api = plugin.getPluginAPI();
+    }
 
-	public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-		if (!(sender instanceof Player p)) {
-			plugin.getPluginLogger().info(pluginConfig.msg_playeronly);
-			return true;
-		}
+    public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+        if (!(sender instanceof Player p)) {
+            plugin.getPluginLogger().info(pluginConfig.msg_playeronly);
+            return true;
+        }
         if (!api.isCaptured(p)) {
-			sender.sendMessage(pluginConfig.msg_noneed);
-			return true;
-		}
-		if (args.length == 0) {
-			sender.sendMessage(pluginConfig.msg_cantbenull);
-			return true;
-		}
-		passwordHandler.checkPassword(p, args[0], false);
-		return true;
-	}
+            sender.sendMessage(pluginConfig.msg_noneed);
+            return true;
+        }
+        if (args.length == 0) {
+            sender.sendMessage(pluginConfig.msg_cantbenull);
+            return true;
+        }
+        passwordHandler.checkPassword(p, args[0], false);
+        return true;
+    }
 }

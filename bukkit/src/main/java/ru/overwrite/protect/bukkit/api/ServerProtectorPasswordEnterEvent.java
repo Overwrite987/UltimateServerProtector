@@ -7,35 +7,35 @@ import org.bukkit.event.player.PlayerEvent;
 
 public class ServerProtectorPasswordEnterEvent extends PlayerEvent implements Cancellable {
 
-	private static final HandlerList HANDLERS = new HandlerList();
+    private static final HandlerList HANDLERS = new HandlerList();
 
-	private final String password;
+    private final String password;
 
-	private boolean isCancelled = false;
+    private boolean isCancelled = false;
 
-	public ServerProtectorPasswordEnterEvent(Player player, String password) {
-		super(player);
-		this.password = password;
-	}
+    public ServerProtectorPasswordEnterEvent(Player player, String password) {
+        super(player);
+        this.password = password;
+    }
 
-	public static HandlerList getHandlerList() {
-		return HANDLERS;
-	}
+    public static HandlerList getHandlerList() {
+        return HANDLERS;
+    }
 
-	public HandlerList getHandlers() {
-		return HANDLERS;
-	}
+    public HandlerList getHandlers() {
+        return HANDLERS;
+    }
 
-	public boolean isCancelled() {
-		return isCancelled;
-	}
+    public boolean isCancelled() {
+        return isCancelled;
+    }
 
-	public void setCancelled(boolean cancel) {
-		isCancelled = cancel;
-	}
+    public void setCancelled(boolean cancel) {
+        isCancelled = cancel;
+    }
 
-	public String getEnteredPassword() {
-		return password;
-	}
+    public String getEnteredPassword() {
+        return password;
+    }
 
 }
