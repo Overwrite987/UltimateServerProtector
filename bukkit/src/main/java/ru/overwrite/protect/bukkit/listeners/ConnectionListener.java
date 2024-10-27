@@ -90,25 +90,30 @@ public class ConnectionListener implements Listener {
 	}
 
 	private boolean isIPAllowed(String p, String ip) {
-		List<String> ips = pluginConfig.ip_whitelist.get(p);
+		final List<String> ips = pluginConfig.ip_whitelist.get(p);
 		if (ips == null || ips.isEmpty()) {
 			return false;
 		}
-		String[] ipParts = ip.split("\\.");
+		final String[] ipParts = ip.split("\\.");
 
-		return ips.stream().anyMatch(allowedIP -> {
-			String[] allowedParts = allowedIP.split("\\.");
+		for (String allowedIP : ips) {
+			final String[] allowedParts = allowedIP.split("\\.");
 			if (ipParts.length != allowedParts.length) {
-				return false;
+				continue;
 			}
 
+			boolean matches = true;
 			for (int i = 0; i < ipParts.length; i++) {
 				if (!allowedParts[i].equals("*") && !allowedParts[i].equals(ipParts[i])) {
-					return false;
+					matches = false;
+					break;
 				}
 			}
-			return true;
-		});
+			if (matches) {
+				return true;
+			}
+		}
+		return false;
 	}
 
 	public final Map<String, Integer> rejoins = new HashMap<>();
