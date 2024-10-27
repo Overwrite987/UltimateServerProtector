@@ -281,11 +281,11 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void giveEffect(Player player) {
         runner.runPlayer(() -> {
-            for (String s : pluginConfig.effect_settings_effects) {
-                String[] splittedEffect = s.split(";");
-                PotionEffectType types = PotionEffectType.getByName(splittedEffect[0].toUpperCase());
+            for (String effect : pluginConfig.effect_settings_effects) {
+                String[] splittedEffect = effect.split(";");
+                PotionEffectType type = PotionEffectType.getByName(splittedEffect[0].toUpperCase());
                 int level = splittedEffect.length > 1 ? Integer.parseInt(splittedEffect[1]) - 1 : 0;
-                player.addPotionEffect(new PotionEffect(types, 99999, level));
+                player.addPotionEffect(new PotionEffect(type, 99999, level));
             }
         }, player);
     }
@@ -322,9 +322,9 @@ public class ServerProtectorManager extends JavaPlugin {
         if (p.hasPermission("serverprotector.protect")) {
             return new CaptureReason("serverprotector.protect");
         }
-        for (String s : pluginConfig.perms) {
-            if (p.hasPermission(s)) {
-                return new CaptureReason(s);
+        for (String perm : pluginConfig.perms) {
+            if (p.hasPermission(perm)) {
+                return new CaptureReason(perm);
             }
         }
         return null;

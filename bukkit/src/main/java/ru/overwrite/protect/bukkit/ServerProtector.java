@@ -62,8 +62,8 @@ public final class ServerProtector extends ServerProtectorManager {
                 return;
             }
             PluginManager pluginManager = server.getPluginManager();
-            for (String s : forceshutdown) {
-                if (pluginManager.isPluginEnabled(s)) {
+            for (String plugin : forceshutdown) {
+                if (pluginManager.isPluginEnabled(plugin)) {
                     server.shutdown();
                 }
             }

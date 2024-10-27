@@ -13,7 +13,10 @@ public class EncryptSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (pluginConfig.encryption_settings_enable_encryption && args.length == 2) {
-            sender.sendMessage(Utils.encryptPassword(args[1], Utils.generateSalt(pluginConfig.encryption_settings_salt_length), pluginConfig.encryption_settings_encrypt_methods));
+            sender.sendMessage(
+                    Utils.encryptPassword(args[1],
+                    Utils.generateSalt(pluginConfig.encryption_settings_salt_length),
+                    pluginConfig.encryption_settings_encrypt_methods));
             return true;
         }
         return false;
