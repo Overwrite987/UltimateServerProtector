@@ -25,6 +25,7 @@ public class PasCommand implements CommandExecutor {
         this.api = plugin.getPluginAPI();
     }
 
+    @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(sender instanceof Player p)) {
             plugin.getPluginLogger().info(pluginConfig.msg_playeronly);

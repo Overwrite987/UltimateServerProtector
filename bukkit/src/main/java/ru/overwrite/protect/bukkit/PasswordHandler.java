@@ -39,11 +39,11 @@ public class PasswordHandler {
             if (enterEvent.isCancelled()) {
                 return;
             }
-            if (pluginConfig.per_player_passwords.get(p.getName()) == null) {
+            String playerPass = pluginConfig.per_player_passwords.get(p.getName());
+            if (playerPass == null) {
                 failedPassword(p);
                 return;
             }
-            String playerPass = pluginConfig.per_player_passwords.get(p.getName());
             String salt = playerPass.split(":")[0];
             String pass = pluginConfig.encryption_settings_enable_encryption
                     ? Utils.encryptPassword(input, salt, pluginConfig.encryption_settings_encrypt_methods)
@@ -57,7 +57,7 @@ public class PasswordHandler {
                     String oldgenPass = pluginConfig.encryption_settings_enable_encryption
                             ? Utils.encryptPassword(input, salt, oldEncryptMethod)
                             : input;
-                    if (oldgenPass.equals(pluginConfig.per_player_passwords.get(p.getName()))) {
+                    if (oldgenPass.equals(playerPass)) {
                         correctPassword(p);
                         return;
                     }
@@ -137,10 +137,8 @@ public class PasswordHandler {
         if (pluginConfig.logging_settings_logging_pas) {
             plugin.logAction("log-format.passed", p, new Date());
         }
-        if (pluginConfig.bossbar_settings_enable_bossbar) {
-            if (bossbars.get(playerName) != null) {
-                bossbars.get(playerName).removeAll();
-            }
+        if (pluginConfig.bossbar_settings_enable_bossbar && bossbars.get(playerName) != null) {
+            bossbars.get(playerName).removeAll();
         }
         plugin.sendAlert(p, pluginConfig.broadcasts_passed);
     }

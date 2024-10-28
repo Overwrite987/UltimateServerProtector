@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit.utils;
 
-import com.google.common.collect.ImmutableSet;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
@@ -21,6 +20,7 @@ import java.security.SecureRandom;
 import java.util.Arrays;
 import java.util.Base64;
 import java.util.List;
+import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -120,8 +120,8 @@ public final class Utils {
         });
     }
 
-    private static final ImmutableSet<String> SUPPORTED_HASH_TYPES =
-            ImmutableSet.of("SHA224", "SHA256", "SHA384", "SHA512", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
+    private static final Set<String> SUPPORTED_HASH_TYPES =
+            Set.of("SHA224", "SHA256", "SHA384", "SHA512", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
 
     public static String encryptPassword(String password, String salt, List<String> hashTypes) {
         if (hashTypes.isEmpty()) {
