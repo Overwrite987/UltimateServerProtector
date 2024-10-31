@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.commands.subcommands.*;
 import ru.overwrite.protect.bukkit.utils.configuration.Config;
+import ru.overwrite.protect.bukkit.utils.configuration.data.UspMessages;
 
 import java.util.*;
 
@@ -69,26 +70,27 @@ public class UspCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(CommandSender sender, String label) {
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usage(), label, "protect");
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageLogout(), label, "protect");
+        UspMessages uspMessages = pluginConfig.getUspMessages();
+        sendCmdMessage(sender, uspMessages.usage(), label, "protect");
+        sendCmdMessage(sender, uspMessages.usageLogout(), label, "protect");
         if (!sender.hasPermission("admin")) {
             return;
         }
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageReload(), label, "reload");
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageReboot(), label, "reboot");
+        sendCmdMessage(sender, uspMessages.usageReload(), label, "reload");
+        sendCmdMessage(sender, uspMessages.usageReboot(), label, "reboot");
         if (pluginConfig.getEncryptionSettings().enableEncryption()) {
-            sendCmdMessage(sender, pluginConfig.getUspMessages().usageEncrypt(), label, "encrypt");
+            sendCmdMessage(sender, uspMessages.usageEncrypt(), label, "encrypt");
         }
         if (!pluginConfig.getMainSettings().enableAdminCommands()) {
-            sender.sendMessage(pluginConfig.getUspMessages().otherDisabled());
+            sender.sendMessage(uspMessages.otherDisabled());
             return;
         }
-        sendCmdMessage(sender, pluginConfig.getUspMessages().setPassUsage(), label, "setpass");
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageRemPass(), label, "rempass");
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageAddOp(), label, "addop");
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageRemOp(), label, "remop");
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageAddIp(), label, "addip");
-        sendCmdMessage(sender, pluginConfig.getUspMessages().usageRemIp(), label, "remip");
+        sendCmdMessage(sender, uspMessages.setPassUsage(), label, "setpass");
+        sendCmdMessage(sender, uspMessages.usageRemPass(), label, "rempass");
+        sendCmdMessage(sender, uspMessages.usageAddOp(), label, "addop");
+        sendCmdMessage(sender, uspMessages.usageRemOp(), label, "remop");
+        sendCmdMessage(sender, uspMessages.usageAddIp(), label, "addip");
+        sendCmdMessage(sender, uspMessages.usageRemIp(), label, "remip");
     }
 
     private void sendCmdMessage(CommandSender sender, String msg, String label, String permission) {
