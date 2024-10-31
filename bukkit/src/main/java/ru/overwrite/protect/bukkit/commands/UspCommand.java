@@ -132,10 +132,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
         return result;
     }
 
-    private boolean startsWithIgnoreCase(String str, String prefix) {
-        if (str == null || prefix == null) {
-            return false;
-        }
+    private boolean startsWithIgnoreCase(@NotNull String str, @NotNull String prefix) {
         return str.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 }
