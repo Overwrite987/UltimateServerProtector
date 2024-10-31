@@ -14,17 +14,17 @@ public class RemipSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length > 2 && (args[1] != null && args[2] != null)) {
-            List<String> ipwl = pluginConfig.ip_whitelist.get(args[1]);
+            List<String> ipwl = pluginConfig.getAccessData().ipWhitelist().get(args[1]);
             if (ipwl.isEmpty()) {
-                sender.sendMessage(pluginConfig.uspmsg_playernotfound.replace("%nick%", args[1]));
+                sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", args[1]));
             }
             ipwl.remove(args[2]);
             plugin.getConfig().set("ip-whitelist." + args[1], ipwl);
             plugin.saveConfig();
-            sender.sendMessage(pluginConfig.uspmsg_ipremoved.replace("%nick%", args[1]).replace("%ip%", args[2]));
+            sender.sendMessage(pluginConfig.getUspMessages().ipRemoved().replace("%nick%", args[1]).replace("%ip%", args[2]));
             return true;
         }
-        sendCmdUsage(sender, pluginConfig.uspmsg_remipusage, label);
+        sendCmdUsage(sender, pluginConfig.getUspMessages().remIpUsage(), label);
         return true;
     }
 }

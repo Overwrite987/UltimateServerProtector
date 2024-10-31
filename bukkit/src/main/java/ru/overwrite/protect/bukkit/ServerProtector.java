@@ -10,7 +10,7 @@ import java.util.List;
 
 public final class ServerProtector extends ServerProtectorManager {
 
-    private final List<String> forceshutdown = List.of("PlugMan", "PlugManX", "PluginManager", "ServerUtils");
+    private final List<String> forceShutdown = List.of("PlugMan", "PlugManX", "PluginManager", "ServerUtils");
 
     @Override
     public void onEnable() {
@@ -21,32 +21,32 @@ public final class ServerProtector extends ServerProtectorManager {
         setupProxy(config);
         loadConfigs(config);
         PluginManager pluginManager = server.getPluginManager();
-        if (!isSafe(messageFile, pluginManager)) {
+        if (!isSafe(getMessageFile(), pluginManager)) {
             return;
         }
-        paper = checkPaper(messageFile);
+        paper = checkPaper(getMessageFile());
         registerListeners(pluginManager);
         registerCommands(pluginManager, config);
         startTasks(config);
-        logEnableDisable(messageFile.getString("log-format.enabled"), new Date(startTime));
+        logEnableDisable(getMessageFile().getString("log-format.enabled"), new Date(startTime));
         if (config.getBoolean("main-settings.enable-metrics")) {
             new Metrics(this, 13347);
         }
-        checkForUpdates(config, messageFile);
+        checkForUpdates(config, getMessageFile());
         long endTime = System.currentTimeMillis();
         getPluginLogger().info("Plugin started in " + (endTime - startTime) + " ms");
     }
 
     @Override
     public void onDisable() {
-        if (messageFile != null) {
-            logEnableDisable(messageFile.getString("log-format.disabled"), new Date());
+        if (getMessageFile() != null) {
+            logEnableDisable(getMessageFile().getString("log-format.disabled"), new Date());
         }
         final FileConfiguration config = getConfig();
         if (config.getBoolean("message-settings.enable-broadcasts")) {
             for (Player ps : server.getOnlinePlayers()) {
-                if (ps.hasPermission("serverprotector.admin") && messageFile != null) {
-                    ps.sendMessage(getPluginConfig().getMessage(messageFile.getConfigurationSection("broadcasts"),
+                if (ps.hasPermission("serverprotector.admin") && getMessageFile() != null) {
+                    ps.sendMessage(getPluginConfig().getMessage(getMessageFile().getConfigurationSection("broadcasts"),
                             "disabled"));
                 }
             }
@@ -62,7 +62,7 @@ public final class ServerProtector extends ServerProtectorManager {
                 return;
             }
             PluginManager pluginManager = server.getPluginManager();
-            for (String plugin : forceshutdown) {
+            for (String plugin : forceShutdown) {
                 if (pluginManager.isPluginEnabled(plugin)) {
                     server.shutdown();
                 }

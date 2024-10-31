@@ -28,15 +28,15 @@ public class PasCommand implements CommandExecutor {
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
         if (!(sender instanceof Player p)) {
-            plugin.getPluginLogger().info(pluginConfig.msg_playeronly);
+            plugin.getPluginLogger().info(pluginConfig.getMessages().playerOnly());
             return true;
         }
         if (!api.isCaptured(p)) {
-            sender.sendMessage(pluginConfig.msg_noneed);
+            sender.sendMessage(pluginConfig.getMessages().noNeed());
             return true;
         }
         if (args.length == 0) {
-            sender.sendMessage(pluginConfig.msg_cantbenull);
+            sender.sendMessage(pluginConfig.getMessages().cantBeNull());
             return true;
         }
         passwordHandler.checkPassword(p, args[0], false);

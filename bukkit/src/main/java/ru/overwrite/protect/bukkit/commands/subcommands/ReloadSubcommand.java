@@ -12,7 +12,7 @@ public class ReloadSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         plugin.reloadConfigs();
-        sender.sendMessage(pluginConfig.uspmsg_reloaded);
+        sender.sendMessage(pluginConfig.getUspMessages().reloaded());
         return true;
     }
 }

@@ -32,7 +32,7 @@ public class MainListener implements Listener {
     public void onMove(PlayerMoveEvent e) {
         if (api.login.isEmpty())
             return;
-        if (pluginConfig.blocking_settings_allow_orientation_change && hasChangedOrientation(e.getFrom(), e.getTo()) && !hasExplicitlyChangedBlock(e.getFrom(), e.getTo())) {
+        if (pluginConfig.getBlockingSettings().allowOrientationChange() && hasChangedOrientation(e.getFrom(), e.getTo()) && !hasExplicitlyChangedBlock(e.getFrom(), e.getTo())) {
             return;
         }
         Player p = e.getPlayer();
@@ -68,7 +68,7 @@ public class MainListener implements Listener {
         if (api.login.isEmpty())
             return;
         Player p = e.getPlayer();
-        if (pluginConfig.blocking_settings_block_item_drop) {
+        if (pluginConfig.getBlockingSettings().blockItemDrop()) {
             api.handleInteraction(p, e);
         }
     }
@@ -79,18 +79,7 @@ public class MainListener implements Listener {
             return;
         if (!(e.getEntity() instanceof Player p))
             return;
-        if (pluginConfig.blocking_settings_block_item_pickup) {
-            api.handleInteraction(p, e);
-        }
-    }
-
-    @EventHandler(ignoreCancelled = true)
-    public void onTabComplete(AsyncTabCompleteEvent e) {
-        if (api.login.isEmpty())
-            return;
-        if (!(e.getSender() instanceof Player p))
-            return;
-        if (pluginConfig.blocking_settings_block_tab_complete) {
+        if (pluginConfig.getBlockingSettings().blockItemPickup()) {
             api.handleInteraction(p, e);
         }
     }
@@ -101,7 +90,7 @@ public class MainListener implements Listener {
             return;
         if (!(e.getEntity() instanceof Player p))
             return;
-        if (pluginConfig.blocking_settings_block_damage) {
+        if (pluginConfig.getBlockingSettings().blockDamage()) {
             api.handleInteraction(p, e);
         }
     }
@@ -112,7 +101,7 @@ public class MainListener implements Listener {
             return;
         if (!(e.getDamager() instanceof Player p))
             return;
-        if (pluginConfig.blocking_settings_damaging_entity) {
+        if (pluginConfig.getBlockingSettings().blockDamagingEntity()) {
             api.handleInteraction(p, e);
         }
     }
@@ -122,7 +111,7 @@ public class MainListener implements Listener {
         if (api.login.isEmpty())
             return;
         Player p = (Player) e.getPlayer();
-        if (pluginConfig.blocking_settings_block_inventory_open) {
+        if (pluginConfig.getBlockingSettings().blockInventoryOpen()) {
             api.handleInteraction(p, e);
         }
     }

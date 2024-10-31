@@ -44,12 +44,12 @@ public class UspCommand implements CommandExecutor, TabCompleter {
         AbstractSubCommand subCommand = subCommands.get(args[0].toLowerCase());
         if (subCommand != null) {
             if (subCommand.isAdminCommand()) {
-                if (!pluginConfig.main_settings_enable_admin_commands) {
+                if (!pluginConfig.getMainSettings().enableAdminCommands()) {
                     sendHelp(sender, label);
                     return false;
                 }
-                if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
-                    sender.sendMessage(pluginConfig.uspmsg_consoleonly);
+                if (pluginConfig.getSecureSettings().onlyConsoleUsp() && !(sender instanceof ConsoleCommandSender)) {
+                    sender.sendMessage(pluginConfig.getUspMessages().consoleOnly());
                     return false;
                 }
             }
@@ -69,26 +69,26 @@ public class UspCommand implements CommandExecutor, TabCompleter {
     }
 
     private void sendHelp(CommandSender sender, String label) {
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage, label, "protect");
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_logout, label, "protect");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usage(), label, "protect");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageLogout(), label, "protect");
         if (!sender.hasPermission("admin")) {
             return;
         }
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_reload, label, "reload");
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_reboot, label, "reboot");
-        if (pluginConfig.encryption_settings_enable_encryption) {
-            sendCmdMessage(sender, pluginConfig.uspmsg_usage_encrypt, label, "encrypt");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageReload(), label, "reload");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageReboot(), label, "reboot");
+        if (pluginConfig.getEncryptionSettings().enableEncryption()) {
+            sendCmdMessage(sender, pluginConfig.getUspMessages().usageEncrypt(), label, "encrypt");
         }
-        if (!pluginConfig.main_settings_enable_admin_commands) {
-            sender.sendMessage(pluginConfig.uspmsg_otherdisabled);
+        if (!pluginConfig.getMainSettings().enableAdminCommands()) {
+            sender.sendMessage(pluginConfig.getUspMessages().otherDisabled());
             return;
         }
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_setpass, label, "setpass");
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_rempass, label, "rempass");
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_addop, label, "addop");
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_remop, label, "remop");
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_addip, label, "addip");
-        sendCmdMessage(sender, pluginConfig.uspmsg_usage_remip, label, "remip");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().setPassUsage(), label, "setpass");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageRemPass(), label, "rempass");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageAddOp(), label, "addop");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageRemOp(), label, "remop");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageAddIp(), label, "addip");
+        sendCmdMessage(sender, pluginConfig.getUspMessages().usageRemIp(), label, "remip");
     }
 
     private void sendCmdMessage(CommandSender sender, String msg, String label, String permission) {
@@ -99,7 +99,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
-        if (pluginConfig.secure_settings_only_console_usp && !(sender instanceof ConsoleCommandSender)) {
+        if (pluginConfig.getSecureSettings().onlyConsoleUsp() && !(sender instanceof ConsoleCommandSender)) {
             return Collections.emptyList();
         }
         List<String> completions = new ArrayList<>();
@@ -107,10 +107,10 @@ public class UspCommand implements CommandExecutor, TabCompleter {
             completions.add("logout");
             completions.add("reload");
             completions.add("reboot");
-            if (pluginConfig.encryption_settings_enable_encryption) {
+            if (pluginConfig.getEncryptionSettings().enableEncryption()) {
                 completions.add("encrypt");
             }
-            if (pluginConfig.main_settings_enable_admin_commands) {
+            if (pluginConfig.getMainSettings().enableAdminCommands()) {
                 completions.add("setpass");
                 completions.add("rempass");
                 completions.add("addop");

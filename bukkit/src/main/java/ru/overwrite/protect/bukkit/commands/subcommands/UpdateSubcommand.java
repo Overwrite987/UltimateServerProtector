@@ -23,12 +23,12 @@ public class UpdateSubcommand extends AbstractSubCommand {
 
     public void checkAndUpdatePlugin(CommandSender sender, ServerProtectorManager plugin) {
         Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Utils.checkUpdates(plugin, version -> {
-            sender.sendMessage(plugin.messageFile.getString("system.baseline-default", "§6========================================"));
+            sender.sendMessage(plugin.getMessageFile().getString("system.baseline-default", "§6========================================"));
 
             String currentVersion = plugin.getDescription().getVersion();
 
             if (currentVersion.equals(version)) {
-                sender.sendMessage(plugin.messageFile.getString("system.update-latest", "§aYou are using latest version of the plugin!"));
+                sender.sendMessage(plugin.getMessageFile().getString("system.update-latest", "§aYou are using latest version of the plugin!"));
             } else {
                 String currentJarName = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
                 String downloadUrl = "https://github.com/Overwrite987/UltimateServerProtector/releases/download/" + version + "/" + "UltimateServerProtector.jar";
@@ -38,13 +38,13 @@ public class UpdateSubcommand extends AbstractSubCommand {
 
                     downloadFile(downloadUrl, targetFile, sender);
 
-                    sender.sendMessage(plugin.messageFile.getString("system.update-success-1", "§aUpdate was downloaded successfully!"));
-                    sender.sendMessage(plugin.messageFile.getString("system.update-success-2", "§aRestart the server to apply the update."));
+                    sender.sendMessage(plugin.getMessageFile().getString("system.update-success-1", "§aUpdate was downloaded successfully!"));
+                    sender.sendMessage(plugin.getMessageFile().getString("system.update-success-2", "§aRestart the server to apply the update."));
                 } catch (IOException ex) {
                     sender.sendMessage("Unable to download update: " + ex.getMessage());
                 }
             }
-            sender.sendMessage(plugin.messageFile.getString("system.baseline-default", "§6========================================"));
+            sender.sendMessage(plugin.getMessageFile().getString("system.baseline-default", "§6========================================"));
         }));
     }
 

@@ -14,7 +14,7 @@ public class RebootSubcommand extends AbstractSubCommand {
     public boolean execute(CommandSender sender, String label, String[] args) {
         plugin.getRunner().cancelTasks();
         plugin.reloadConfigs();
-        plugin.time.clear();
+        plugin.getPerPlayerTime().clear();
         api.login.clear();
         api.sessions.clear();
         api.saved.clear();
@@ -24,7 +24,7 @@ public class RebootSubcommand extends AbstractSubCommand {
         passwordHandler.attempts.clear();
         FileConfiguration newconfig = plugin.getConfig();
         plugin.startTasks(newconfig);
-        sender.sendMessage(pluginConfig.uspmsg_rebooted);
+        sender.sendMessage(pluginConfig.getUspMessages().rebooted());
         return true;
     }
 }

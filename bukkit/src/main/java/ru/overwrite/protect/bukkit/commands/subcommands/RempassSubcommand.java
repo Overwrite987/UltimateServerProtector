@@ -13,30 +13,30 @@ public class RempassSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length > 1) {
-            if (!plugin.isAdmin(args[1]) && !plugin.isAdmin(pluginConfig.geyser_prefix + args[1])) {
-                sender.sendMessage(pluginConfig.uspmsg_notinconfig);
+            if (!plugin.isAdmin(args[1]) && !plugin.isAdmin(pluginConfig.getGeyserSettings().prefix() + args[1])) {
+                sender.sendMessage(pluginConfig.getUspMessages().notInConfig());
                 return true;
             }
             if (args.length < 3) {
                 removeAdmin(args[1]);
-                sender.sendMessage(pluginConfig.uspmsg_playerremoved);
+                sender.sendMessage(pluginConfig.getUspMessages().playerRemoved());
                 return true;
             }
         }
-        sendCmdUsage(sender, pluginConfig.uspmsg_rempassusage, label);
+        sendCmdUsage(sender, pluginConfig.getUspMessages().remPassUsage(), label);
         return true;
     }
 
     private void removeAdmin(String nick) {
-        FileConfiguration dataFile = pluginConfig.getFile(plugin.path, plugin.dataFileName);
-        if (!pluginConfig.encryption_settings_enable_encryption) {
+        FileConfiguration dataFile = pluginConfig.getFile(plugin.getDataFilePath(), plugin.getDataFileName());
+        if (!pluginConfig.getEncryptionSettings().enableEncryption()) {
             dataFile.set("data." + nick + ".pass", null);
             dataFile.set("data." + nick, null);
         } else {
             dataFile.set("data." + nick + ".encrypted-pass", null);
         }
         dataFile.set("data." + nick, null);
-        pluginConfig.save(plugin.path, dataFile, plugin.dataFileName);
-        plugin.dataFile = dataFile;
+        pluginConfig.save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
+        plugin.setDataFile(dataFile);
     }
 }

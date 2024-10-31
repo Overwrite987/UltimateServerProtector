@@ -31,7 +31,7 @@ public class ChatListener implements Listener {
         if (!api.isCaptured(p)) {
             return;
         }
-        if (!pluginConfig.main_settings_use_command) {
+        if (!pluginConfig.getMainSettings().useCommand()) {
             String message = e.getMessage();
             passwordHandler.checkPassword(p, message, true);
         }
@@ -47,15 +47,15 @@ public class ChatListener implements Listener {
         }
         String message = e.getMessage();
         String label = cutCommand(message);
-        if (pluginConfig.main_settings_use_command) {
-            if (label.equalsIgnoreCase("/" + pluginConfig.main_settings_pas_command)) {
-                if (!plugin.paper) {
+        if (pluginConfig.getMainSettings().useCommand()) {
+            if (label.equalsIgnoreCase("/" + pluginConfig.getMainSettings().pasCommand())) {
+                if (!plugin.isPaper()) {
                     passwordHandler.checkPassword(p, message.split(" ", 1)[1], false);
                 }
                 return;
             }
         }
-        for (String command : pluginConfig.allowed_commands) {
+        for (String command : pluginConfig.getAccessData().allowedCommands()) {
             if (label.equalsIgnoreCase(command) || message.equalsIgnoreCase(command)) {
                 return;
             }

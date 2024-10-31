@@ -30,16 +30,37 @@ public class ServerProtectorManager extends JavaPlugin {
     public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
     private final Logger pluginLogger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 
-    public boolean proxy = false;
+    boolean proxy = false;
 
-    public boolean paper;
+    protected boolean paper;
 
-    public FileConfiguration messageFile;
-    public FileConfiguration dataFile;
+    public boolean isPaper() {
+        return this.paper;
+    }
 
-    public String dataFileName;
+    private FileConfiguration messageFile;
 
-    public String path;
+    public FileConfiguration getMessageFile() {
+        return this.messageFile;
+    }
+
+    private FileConfiguration dataFile;
+
+    public void setDataFile(FileConfiguration newDataFile) {
+        this.dataFile = newDataFile;
+    }
+
+    private String dataFileName;
+
+    public String getDataFileName() {
+        return this.dataFileName;
+    }
+
+    private String dataFilePath;
+
+    public String getDataFilePath() {
+        return this.dataFilePath;
+    }
 
     private final Config pluginConfig = new Config(this);
     private final ServerProtectorAPI api = new ServerProtectorAPI(this);
@@ -47,7 +68,11 @@ public class ServerProtectorManager extends JavaPlugin {
     private final Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
     private PluginMessage pluginMessage;
 
-    public Map<String, Integer> time;
+    private Map<String, Integer> perPlayerTime;
+
+    public Map<String, Integer> getPerPlayerTime() {
+        return this.perPlayerTime;
+    }
 
     private File logFile;
 
@@ -116,10 +141,10 @@ public class ServerProtectorManager extends JavaPlugin {
     public void loadConfigs(FileConfiguration config) {
         ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
         boolean fullPath = fileSettings.getBoolean("use-full-path", false);
-        path = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+        dataFilePath = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
         dataFileName = fileSettings.getString("data-file");
-        dataFile = pluginConfig.getFile(path, dataFileName);
-        pluginConfig.save(path, dataFile, dataFileName);
+        dataFile = pluginConfig.getFile(dataFilePath, dataFileName);
+        pluginConfig.save(dataFilePath, dataFile, dataFileName);
         messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
         pluginConfig.save(getDataFolder().getAbsolutePath(), messageFile, "message.yml");
         setupPluginConfig(config);
@@ -133,19 +158,18 @@ public class ServerProtectorManager extends JavaPlugin {
             messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
             ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
             boolean fullPath = fileSettings.getBoolean("use-full-path", false);
-            path = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+            dataFilePath = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
             dataFileName = fileSettings.getString("data-file");
-            dataFile = pluginConfig.getFile(path, dataFileName);
+            dataFile = pluginConfig.getFile(dataFilePath, dataFileName);
             setupPluginConfig(config);
             pluginConfig.setupPasswords(dataFile);
         });
     }
 
     private void setupPluginConfig(FileConfiguration config) {
-        pluginConfig.loadPerms(config);
-        pluginConfig.loadLists(config);
+        pluginConfig.loadAccessData(config);
         pluginConfig.setupExcluded(config);
-        final FileConfiguration configFile = pluginConfig.getFile(path, "config.yml");
+        final FileConfiguration configFile = pluginConfig.getFile(dataFilePath, "config.yml");
         pluginConfig.loadMainSettings(config, configFile);
         pluginConfig.loadEncryptionSettings(config, configFile);
         pluginConfig.loadSecureSettings(config, configFile);
@@ -175,7 +199,7 @@ public class ServerProtectorManager extends JavaPlugin {
         pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new ConnectionListener(this), this);
         pluginManager.registerEvents(new MainListener(this), this);
-        if (paper && pluginConfig.blocking_settings_block_tab_complete) {
+        if (paper && pluginConfig.getBlockingSettings().blockTabComplete()) {
             pluginManager.registerEvents(new TabCompleteListener(this), this);
         }
     }
@@ -205,19 +229,19 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void startTasks(FileConfiguration config) {
         TaskManager taskManager = new TaskManager(this);
-        taskManager.startMainCheck(pluginConfig.main_settings_check_interval);
+        taskManager.startMainCheck(pluginConfig.getMainSettings().checkInterval());
         taskManager.startCapturesMessages(config);
-        if (pluginConfig.punish_settings_enable_time) {
-            time = new ConcurrentHashMap<>();
+        if (pluginConfig.getPunishSettings().enableTime()) {
+            perPlayerTime = new ConcurrentHashMap<>();
             taskManager.startCapturesTimer();
         }
-        if (pluginConfig.secure_settings_enable_notadmin_punish) {
+        if (pluginConfig.getSecureSettings().enableNotAdminPunish()) {
             taskManager.startAdminCheck();
         }
-        if (pluginConfig.secure_settings_enable_op_whitelist) {
+        if (pluginConfig.getSecureSettings().enableOpWhitelist()) {
             taskManager.startOpCheck();
         }
-        if (pluginConfig.secure_settings_enable_permission_blacklist) {
+        if (pluginConfig.getSecureSettings().enablePermissionBlacklist()) {
             taskManager.startPermsCheck();
         }
     }
@@ -257,7 +281,7 @@ public class ServerProtectorManager extends JavaPlugin {
         runner.run(() -> {
             for (String c : commands) {
                 server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", playerName));
-                if (pluginConfig.logging_settings_logging_command_execution) {
+                if (pluginConfig.getLoggingSettings().loggingCommandExecution()) {
                     Date date = new Date();
                     logToFile(messageFile.getString("log-format.command", "ERROR")
                             .replace("%player%", playerName)
@@ -270,7 +294,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void giveEffect(Player player) {
         runner.runPlayer(() -> {
-            for (String effect : pluginConfig.effect_settings_effects) {
+            for (String effect : pluginConfig.getEffectSettings().effects()) {
                 String[] splittedEffect = effect.split(";");
                 PotionEffectType type = PotionEffectType.getByName(splittedEffect[0].toUpperCase());
                 int level = splittedEffect.length > 1 ? Integer.parseInt(splittedEffect[1]) - 1 : 0;
@@ -280,7 +304,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void applyHide(Player p) {
-        if (pluginConfig.blocking_settings_hide_on_entering) {
+        if (pluginConfig.getBlockingSettings().hideOnEntering()) {
             runner.runPlayer(() -> {
                 for (Player onlinePlayer : server.getOnlinePlayers()) {
                     if (!onlinePlayer.equals(p)) {
@@ -289,7 +313,7 @@ public class ServerProtectorManager extends JavaPlugin {
                 }
             }, p);
         }
-        if (pluginConfig.blocking_settings_hide_other_on_entering) {
+        if (pluginConfig.getBlockingSettings().hideOtherOnEntering()) {
             runner.runPlayer(() -> {
                 for (Player onlinePlayer : server.getOnlinePlayers()) {
                     p.hidePlayer(this, onlinePlayer);
@@ -311,7 +335,7 @@ public class ServerProtectorManager extends JavaPlugin {
         if (p.hasPermission("serverprotector.protect")) {
             return new CaptureReason("serverprotector.protect");
         }
-        for (String perm : pluginConfig.perms) {
+        for (String perm : pluginConfig.getAccessData().perms()) {
             if (p.hasPermission(perm)) {
                 return new CaptureReason(perm);
             }
@@ -320,18 +344,18 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public boolean isExcluded(Player p, List<String> list) {
-        return pluginConfig.secure_settings_enable_excluded_players && list.contains(p.getName());
+        return pluginConfig.getSecureSettings().enableExcludedPlayers() && list.contains(p.getName());
     }
 
     public boolean isAdmin(String nick) {
-        return pluginConfig.per_player_passwords.containsKey(nick);
+        return pluginConfig.getPerPlayerPasswords().containsKey(nick);
     }
 
     public void sendAlert(Player p, String msg) {
-        if (pluginConfig.message_settings_enable_broadcasts) {
+        if (pluginConfig.getMessageSettings().enableBroadcasts()) {
             msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
-            if (pluginConfig.main_settings_papi_support) {
-                msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+            if (pluginConfig.getMainSettings().papiSupport()) {
+                msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.getSerializer());
             }
             for (Player ps : server.getOnlinePlayers()) {
                 if (ps.hasPermission("serverprotector.admin") && p != ps) {
@@ -342,10 +366,10 @@ public class ServerProtectorManager extends JavaPlugin {
                 pluginMessage.sendCrossProxy(p, msg);
             }
         }
-        if (pluginConfig.message_settings_enable_console_broadcasts) {
+        if (pluginConfig.getMessageSettings().enableConsoleBroadcasts()) {
             msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
-            if (pluginConfig.main_settings_papi_support) {
-                msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.serializer);
+            if (pluginConfig.getMainSettings().papiSupport()) {
+                msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.getSerializer());
             }
             server.getConsoleSender().sendMessage(msg);
         }

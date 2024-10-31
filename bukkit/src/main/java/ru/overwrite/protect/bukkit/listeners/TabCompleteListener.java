@@ -6,13 +6,16 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
+import ru.overwrite.protect.bukkit.utils.Config;
 
 public class TabCompleteListener implements Listener {
 
     private final ServerProtectorAPI api;
+    private final Config pluginConfig;
 
     public TabCompleteListener(ServerProtectorManager plugin) {
-        api = plugin.getPluginAPI();
+        this.api = plugin.getPluginAPI();
+        this.pluginConfig = plugin.getPluginConfig();
     }
 
     @EventHandler(ignoreCancelled = true)
@@ -21,6 +24,8 @@ public class TabCompleteListener implements Listener {
             return;
         if (!(e.getSender() instanceof Player p))
             return;
-        api.handleInteraction(p, e);
+        if (pluginConfig.getBlockingSettings().blockTabComplete()) {
+            api.handleInteraction(p, e);
+        }
     }
 }

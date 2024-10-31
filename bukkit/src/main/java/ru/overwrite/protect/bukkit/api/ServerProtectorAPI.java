@@ -51,7 +51,7 @@ public class ServerProtectorAPI {
     }
 
     public boolean isAuthorised(@NotNull Player p) {
-        return pluginConfig.session_settings_session ? hasSession(p)
+        return pluginConfig.getSessionSettings().session() ? hasSession(p)
                 : saved.contains(p.getName());
     }
 
@@ -68,7 +68,7 @@ public class ServerProtectorAPI {
             logger.warn("Unable to authorise " + p.getName() + " Reason: Already authorised");
             return;
         }
-        if (pluginConfig.session_settings_session) {
+        if (pluginConfig.getSessionSettings().session()) {
             sessions.put(p.getName(), Utils.getIp(p));
             return;
         }
@@ -80,7 +80,7 @@ public class ServerProtectorAPI {
             logger.warn("Unable to deauthorise " + p.getName() + " Reason: Is not authorised");
             return;
         }
-        if (pluginConfig.session_settings_session) {
+        if (pluginConfig.getSessionSettings().session()) {
             sessions.remove(p.getName(), Utils.getIp(p));
             return;
         }

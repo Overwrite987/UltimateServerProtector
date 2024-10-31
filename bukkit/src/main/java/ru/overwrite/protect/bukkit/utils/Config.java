@@ -21,172 +21,349 @@ public class Config {
         this.logger = plugin.getPluginLogger();
     }
 
-    public String serializer;
+    private String serializer;
 
-    public Set<String> perms,
-            blacklisted_perms,
-            geyser_names;
+    public String getSerializer() {
+        return this.serializer;
+    }
 
-    public Map<String, List<String>> ip_whitelist;
+    private Map<String, String> perPlayerPasswords;
 
-    public Map<String, String> per_player_passwords;
+    public Map<String, String> getPerPlayerPasswords() {
+        return this.perPlayerPasswords;
+    }
 
-    public List<String> encryption_settings_encrypt_methods;
+    private AccessData accessData;
 
-    public List<String> effect_settings_effects;
+    public AccessData getAccessData() {
+        return this.accessData;
+    }
 
-    public List<String> allowed_commands;
+    public record AccessData(
+            Set<String> perms,
+            List<String> allowedCommands,
+            List<String> opWhitelist,
+            Set<String> blacklistedPerms,
+            Map<String, List<String>> ipWhitelist
+    ) {
+    }
 
-    public List<String> op_whitelist;
+    private ExcludedPlayers excludedPlayers;
 
-    public List<String> excluded_admin_pass,
-            excluded_op_whitelist,
-            excluded_ip_whitelist,
-            excluded_blacklisted_perms;
+    public ExcludedPlayers getExcludedPlayers() {
+        return this.excludedPlayers;
+    }
 
-    public List<String> commands_not_in_config,
-            commands_not_in_opwhitelist,
-            commands_have_blacklisted_perm,
-            commands_not_admin_ip,
-            commands_failed_pass,
-            commands_failed_time,
-            commands_failed_rejoin;
+    public record ExcludedPlayers(
+            List<String> adminPass,
+            List<String> opWhitelist,
+            List<String> ipWhitelist,
+            List<String> blacklistedPerms
+    ) {
+    }
 
-    public List<List<String>> encryption_settings_old_encrypt_methods;
+    private UspMessages uspMessages;
 
-    public String[] titles_message, titles_incorrect, titles_correct;
-    public String[] sound_settings_on_capture, sound_settings_on_pas_fail, sound_settings_on_pas_correct;
+    public UspMessages getUspMessages() {
+        return this.uspMessages;
+    }
 
-    public String geyser_prefix;
+    public record UspMessages(
+            String consoleOnly,
+            String reloaded,
+            String rebooted,
+            String playerNotFound,
+            String alreadyInConfig,
+            String playerOnly,
+            String logout,
+            String notInConfig,
+            String playerAdded,
+            String playerRemoved,
+            String ipAdded,
+            String setPassUsage,
+            String addOpUsage,
+            String remOpUsage,
+            String ipRemoved,
+            String remIpUsage,
+            String addIpUsage,
+            String remPassUsage,
+            String usage,
+            String usageLogout,
+            String usageReload,
+            String usageReboot,
+            String usageEncrypt,
+            String usageSetPass,
+            String usageRemPass,
+            String usageAddOp,
+            String usageRemOp,
+            String usageAddIp,
+            String usageRemIp,
+            String otherDisabled
+    ) {
+    }
 
-    public String uspmsg_consoleonly,
-            uspmsg_reloaded,
-            uspmsg_rebooted,
-            uspmsg_playernotfound,
-            uspmsg_alreadyinconfig,
-            uspmsg_playeronly,
-            uspmsg_logout,
-            uspmsg_notinconfig,
-            uspmsg_playeradded,
-            uspmsg_playerremoved,
-            uspmsg_ipadded,
-            uspmsg_setpassusage,
-            uspmsg_addopusage,
-            uspmsg_remopusage,
-            uspmsg_ipremoved,
-            uspmsg_remipusage,
-            uspmsg_addipusage,
-            uspmsg_rempassusage,
-            uspmsg_usage,
-            uspmsg_usage_logout,
-            uspmsg_usage_reload,
-            uspmsg_usage_reboot,
-            uspmsg_usage_encrypt,
-            uspmsg_usage_setpass,
-            uspmsg_usage_rempass,
-            uspmsg_usage_addop,
-            uspmsg_usage_remop,
-            uspmsg_usage_addip,
-            uspmsg_usage_remip,
-            uspmsg_otherdisabled;
+    private Messages messages;
 
-    public String msg_message,
-            msg_incorrect,
-            msg_correct,
-            msg_noneed,
-            msg_cantbenull,
-            msg_playeronly;
+    public Messages getMessages() {
+        return this.messages;
+    }
 
-    public String broadcasts_failed,
-            broadcasts_passed,
-            broadcasts_joined,
-            broadcasts_captured;
+    public record Messages(
+            String message,
+            String incorrect,
+            String correct,
+            String noNeed,
+            String cantBeNull,
+            String playerOnly
+    ) {
+    }
 
-    public String bossbar_message,
-            bossbar_settings_bar_color,
-            bossbar_settings_bar_style;
+    private Broadcasts broadcasts;
 
-    public String main_settings_prefix,
-            main_settings_pas_command;
+    public Broadcasts getBroadcasts() {
+        return this.broadcasts;
+    }
 
-    public boolean encryption_settings_enable_encryption,
-            encryption_settings_auto_encrypt_passwords;
+    public record Broadcasts(
+            String failed,
+            String passed,
+            String joined,
+            String captured
+    ) {
+    }
 
-    public boolean blocking_settings_block_item_drop,
-            blocking_settings_block_item_pickup,
-            blocking_settings_block_tab_complete,
-            blocking_settings_block_damage,
-            blocking_settings_damaging_entity,
-            blocking_settings_block_inventory_open,
-            blocking_settings_hide_on_entering,
-            blocking_settings_hide_other_on_entering,
-            blocking_settings_allow_orientation_change;
+    private Titles titles;
 
-    public boolean main_settings_papi_support,
-            main_settings_use_command,
-            main_settings_enable_admin_commands;
+    public Titles getTitles() {
+        return this.titles;
+    }
 
-    public boolean punish_settings_enable_attempts,
-            punish_settings_enable_time,
-            punish_settings_enable_rejoin,
-            bossbar_settings_enable_bossbar;
+    public record Titles(
+            String[] message,
+            String[] incorrect,
+            String[] correct
+    ) {
+    }
 
-    public boolean secure_settings_enable_op_whitelist,
-            secure_settings_enable_notadmin_punish,
-            secure_settings_enable_permission_blacklist,
-            secure_settings_enable_ip_whitelist,
-            secure_settings_only_console_usp,
-            secure_settings_enable_excluded_players,
-            secure_settings_call_event_on_password_enter;
+    private MainSettings mainSettings;
 
-    public boolean session_settings_session,
-            session_settings_session_time_enabled;
+    public MainSettings getMainSettings() {
+        return this.mainSettings;
+    }
 
-    public boolean message_settings_send_title,
-            message_settings_enable_broadcasts,
-            message_settings_enable_console_broadcasts;
+    public record MainSettings(
+            String prefix,
+            String pasCommand,
+            boolean useCommand,
+            boolean enableAdminCommands,
+            long checkInterval,
+            boolean papiSupport
+    ) {
+    }
 
-    public boolean sound_settings_enable_sounds;
+    private EncryptionSettings encryptionSettings;
 
-    public boolean effect_settings_enable_effects;
+    public EncryptionSettings getEncryptionSettings() {
+        return this.encryptionSettings;
+    }
 
-    public boolean logging_settings_logging_pas,
-            logging_settings_logging_join,
-            logging_settings_logging_enable_disable,
-            logging_settings_logging_command_execution;
+    public record EncryptionSettings(
+            boolean enableEncryption,
+            String encryptMethod,
+            List<String> encryptMethods,
+            int saltLength,
+            boolean autoEncryptPasswords,
+            List<List<String>> oldEncryptMethods
+    ) {
+    }
 
-    public int encryption_settings_salt_length,
-            punish_settings_max_attempts, punish_settings_time, punish_settings_max_rejoins,
-            session_settings_session_time;
+    private GeyserSettings geyserSettings;
 
-    public long main_settings_check_interval;
+    public GeyserSettings getGeyserSettings() {
+        return this.geyserSettings;
+    }
+
+    public record GeyserSettings(
+            String prefix,
+            Set<String> nicknames
+    ) {
+    }
+
+    private BlockingSettings blockingSettings;
+
+    public BlockingSettings getBlockingSettings() {
+        return this.blockingSettings;
+    }
+
+    public record BlockingSettings(
+            boolean blockItemDrop,
+            boolean blockItemPickup,
+            boolean blockTabComplete,
+            boolean blockDamage,
+            boolean blockDamagingEntity,
+            boolean blockInventoryOpen,
+            boolean hideOnEntering,
+            boolean hideOtherOnEntering,
+            boolean allowOrientationChange
+    ) {
+    }
+
+    private SessionSettings sessionSettings;
+
+    public SessionSettings getSessionSettings() {
+        return this.sessionSettings;
+    }
+
+    public record SessionSettings(
+            boolean session,
+            boolean sessionTimeEnabled,
+            int sessionTime
+    ) {
+    }
+
+    private PunishSettings punishSettings;
+
+    public PunishSettings getPunishSettings() {
+        return this.punishSettings;
+    }
+
+    public record PunishSettings(
+            boolean enableAttempts,
+            int maxAttempts,
+            boolean enableTime,
+            int time,
+            boolean enableRejoin,
+            int maxRejoins
+    ) {
+    }
+
+    private SecureSettings secureSettings;
+
+    public SecureSettings getSecureSettings() {
+        return this.secureSettings;
+    }
+
+    public record SecureSettings(
+            boolean enableOpWhitelist,
+            boolean enableNotAdminPunish,
+            boolean enablePermissionBlacklist,
+            boolean enableIpWhitelist,
+            boolean onlyConsoleUsp,
+            boolean enableExcludedPlayers,
+            boolean callEventOnPasswordEnter
+    ) {
+    }
+
+    private MessageSettings messageSettings;
+
+    public MessageSettings getMessageSettings() {
+        return this.messageSettings;
+    }
+
+    public record MessageSettings(
+            boolean sendTitle,
+            boolean enableBroadcasts,
+            boolean enableConsoleBroadcasts
+    ) {
+    }
+
+    private BossbarSettings bossbarSettings;
+
+    public BossbarSettings getBossbarSettings() {
+        return this.bossbarSettings;
+    }
+
+    public record BossbarSettings(
+            boolean enableBossbar,
+            String barColor,
+            String barStyle,
+            String bossbarMessage
+    ) {
+    }
+
+    private SoundSettings soundSettings;
+
+    public SoundSettings getSoundSettings() {
+        return this.soundSettings;
+    }
+
+    public record SoundSettings(
+            boolean enableSounds,
+            String[] onCapture,
+            String[] onPasFail,
+            String[] onPasCorrect
+    ) {
+    }
+
+    private EffectSettings effectSettings;
+
+    public EffectSettings getEffectSettings() {
+        return this.effectSettings;
+    }
+
+    public record EffectSettings(
+            boolean enableEffects,
+            List<String> effects
+    ) {
+    }
+
+    private LoggingSettings loggingSettings;
+
+    public LoggingSettings getLoggingSettings() {
+        return this.loggingSettings;
+    }
+
+    public record LoggingSettings(
+            boolean loggingPas,
+            boolean loggingJoin,
+            boolean loggingEnableDisable,
+            boolean loggingCommandExecution
+    ) {
+    }
+
+    private Commands commands;
+
+    public Commands getCommands() {
+        return this.commands;
+    }
+
+    public record Commands(
+            List<String> notInConfig,
+            List<String> notInOpWhitelist,
+            List<String> haveBlacklistedPerm,
+            List<String> notAdminIp,
+            List<String> failedPass,
+            List<String> failedTime,
+            List<String> failedRejoin
+    ) {
+    }
 
     public void setupPasswords(FileConfiguration dataFile) {
-        per_player_passwords = new ConcurrentHashMap<>();
+        perPlayerPasswords = new ConcurrentHashMap<>();
         ConfigurationSection data = dataFile.getConfigurationSection("data");
         boolean shouldSave = false;
         for (String nick : data.getKeys(false)) {
             String playerNick = nick;
-            if (geyser_prefix != null && !geyser_prefix.isBlank() && geyser_names.contains(nick)) {
-                playerNick = geyser_prefix + nick;
+            if (this.geyserSettings.prefix != null && !this.geyserSettings.prefix.isBlank() && this.geyserSettings.nicknames.contains(nick)) {
+                playerNick = this.geyserSettings.prefix + nick;
             }
-            if (!encryption_settings_enable_encryption) {
-                per_player_passwords.put(playerNick, data.getString(nick + ".pass"));
+            if (!this.encryptionSettings.enableEncryption) {
+                perPlayerPasswords.put(playerNick, data.getString(nick + ".pass"));
             } else {
-                if (encryption_settings_auto_encrypt_passwords) {
+                if (this.encryptionSettings.autoEncryptPasswords) {
                     if (data.getString(nick + ".pass") != null) {
-                        String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(encryption_settings_salt_length), encryption_settings_encrypt_methods);
+                        String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(this.encryptionSettings.saltLength), this.encryptionSettings.encryptMethods);
                         dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
                         dataFile.set("data." + nick + ".pass", null);
                         shouldSave = true;
-                        plugin.dataFile = dataFile;
+                        plugin.setDataFile(dataFile);
                     }
                 }
-                per_player_passwords.put(playerNick, data.getString(nick + ".encrypted-pass"));
+                perPlayerPasswords.put(playerNick, data.getString(nick + ".encrypted-pass"));
             }
         }
         if (shouldSave) {
-            save(plugin.path, dataFile, plugin.dataFileName);
+            save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
         }
     }
 
@@ -202,16 +379,18 @@ public class Config {
             configFile.set("main-settings.enable-admin-commands", false);
             configFile.set("main-settings.check-interval", 40);
             configFile.set("main-settings.papi-support", false);
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section main-settings");
         }
         serializer = mainSettings.getString("serializer", "LEGACY").toUpperCase();
-        main_settings_prefix = mainSettings.getString("prefix", "[UltimateServerProtector]");
-        main_settings_pas_command = mainSettings.getString("pas-command", "pas");
-        main_settings_use_command = mainSettings.getBoolean("use-command", true);
-        main_settings_enable_admin_commands = mainSettings.getBoolean("enable-admin-commands", false);
-        main_settings_check_interval = mainSettings.getLong("check-interval", 40);
-        main_settings_papi_support = mainSettings.getBoolean("papi-support", false);
+        this.mainSettings = new MainSettings(
+                mainSettings.getString("prefix", "[UltimateServerProtector]"),
+                mainSettings.getString("pas-command", "pas"),
+                mainSettings.getBoolean("use-command", true),
+                mainSettings.getBoolean("enable-admin-commands", false),
+                mainSettings.getLong("check-interval", 40),
+                mainSettings.getBoolean("papi-support", false)
+        );
     }
 
     public void loadEncryptionSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -224,28 +403,36 @@ public class Config {
             configFile.set("encryption-settings.auto-encrypt-passwords", true);
             configFile.set("encryption-settings.old-encrypt-methods", Collections.emptyList());
             configFile.set("encryption-settings.encrypt-method", "");
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section encryption-settings");
         }
-        encryption_settings_enable_encryption = encryptionSettings.getBoolean("enable-encryption", false);
-        String encryptionMethod = encryptionSettings.getString("encrypt-method", "").trim();
-        encryption_settings_encrypt_methods = encryptionMethod.contains(";")
-                ? List.of(encryptionMethod.split(";"))
-                : List.of(encryptionMethod);
-        encryption_settings_old_encrypt_methods = new ArrayList<>();
-        encryption_settings_salt_length = encryptionSettings.getInt("salt-length", 24);
-        encryption_settings_auto_encrypt_passwords = encryptionSettings.getBoolean("auto-encrypt-passwords", true);
-        if (!encryption_settings_enable_encryption) {
-            return;
-        }
-        List<String> oldEncryptionMethods = encryptionSettings.getStringList("old-encrypt-methods");
+        this.encryptionSettings = new EncryptionSettings(
+                encryptionSettings.getBoolean("enable-encryption", false),
+                encryptionSettings.getString("encrypt-method", "").trim(),
+                getEncryptionMethods(encryptionSettings),
+                encryptionSettings.getInt("salt-length", 24),
+                encryptionSettings.getBoolean("auto-encrypt-passwords", true),
+                getOldEncryptionMethods(encryptionSettings)
+        );
+    }
+
+    private List<String> getEncryptionMethods(ConfigurationSection section) {
+        String encryptionMethod = section.getString("encrypt-method", "").trim();
+        return encryptionMethod.isEmpty() ? List.of() : List.of(encryptionMethod.split(";"));
+    }
+
+    private List<List<String>> getOldEncryptionMethods(ConfigurationSection section) {
+        List<List<String>> oldMethods = new ArrayList<>();
+        List<String> oldEncryptionMethods = section.getStringList("old-encrypt-methods");
+
         for (String oldEncryptionMethod : oldEncryptionMethods) {
             if (oldEncryptionMethod.contains(";")) {
-                encryption_settings_old_encrypt_methods.add(List.of(oldEncryptionMethod.trim().split(";")));
+                oldMethods.add(List.of(oldEncryptionMethod.trim().split(";")));
             } else {
-                encryption_settings_old_encrypt_methods.add(List.of(oldEncryptionMethod.trim()));
+                oldMethods.add(List.of(oldEncryptionMethod.trim()));
             }
         }
+        return oldMethods;
     }
 
     public void loadGeyserSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -255,11 +442,13 @@ public class Config {
             configFile.createSection("geyser-settings");
             configFile.set("geyser-settings.geyser-prefix", ".");
             configFile.set("geyser-settings.geyser-nicknames", List.of("test99999"));
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section geyser-settings");
         }
-        geyser_prefix = geyserSettings.getString("geyser-prefix", ".");
-        geyser_names = new HashSet<>(geyserSettings.getStringList("geyser-nicknames"));
+        this.geyserSettings = new GeyserSettings(
+                geyserSettings.getString("geyser-prefix", "."),
+                new HashSet<>(geyserSettings.getStringList("geyser-nicknames"))
+        );
     }
 
     public void loadAdditionalChecks(FileConfiguration config, FileConfiguration configFile) {
@@ -276,18 +465,20 @@ public class Config {
             configFile.set("blocking-settings.hide-on-entering", true);
             configFile.set("blocking-settings.hide-other-on-entering", true);
             configFile.set("blocking-settings.allow-orientation-change", false);
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section blocking-settings");
         }
-        blocking_settings_block_item_drop = blockingSettings.getBoolean("block-item-drop", true);
-        blocking_settings_block_item_pickup = blockingSettings.getBoolean("block-item-pickup", true);
-        blocking_settings_block_tab_complete = blockingSettings.getBoolean("block-tab-complete", true);
-        blocking_settings_block_damage = blockingSettings.getBoolean("block-damage", true);
-        blocking_settings_damaging_entity = blockingSettings.getBoolean("block-damaging-entity", true);
-        blocking_settings_block_inventory_open = blockingSettings.getBoolean("block-inventory-open", false);
-        blocking_settings_hide_on_entering = blockingSettings.getBoolean("hide-on-entering", true);
-        blocking_settings_hide_other_on_entering = blockingSettings.getBoolean("hide-other-on-entering", true);
-        blocking_settings_allow_orientation_change = blockingSettings.getBoolean("allow-orientation-change", false);
+        this.blockingSettings = new BlockingSettings(
+                blockingSettings.getBoolean("block-item-drop", true),
+                blockingSettings.getBoolean("block-item-pickup", true),
+                blockingSettings.getBoolean("block-tab-complete", true),
+                blockingSettings.getBoolean("block-damage", true),
+                blockingSettings.getBoolean("block-damaging-entity", true),
+                blockingSettings.getBoolean("block-inventory-open", false),
+                blockingSettings.getBoolean("hide-on-entering", true),
+                blockingSettings.getBoolean("hide-other-on-entering", true),
+                blockingSettings.getBoolean("allow-orientation-change", false)
+        );
     }
 
     public void loadSessionSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -298,12 +489,14 @@ public class Config {
             configFile.set("session-settings.session", true);
             configFile.set("session-settings.session-time-enabled", true);
             configFile.set("session-settings.session-time", 21600);
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section session-settings");
         }
-        session_settings_session = sessionSettings.getBoolean("session", true);
-        session_settings_session_time_enabled = sessionSettings.getBoolean("session-time-enabled", true);
-        session_settings_session_time = sessionSettings.getInt("session-time", 21600);
+        this.sessionSettings = new SessionSettings(
+                sessionSettings.getBoolean("session", true),
+                sessionSettings.getBoolean("session-time-enabled", true),
+                sessionSettings.getInt("session-time", 21600)
+        );
     }
 
     public void loadPunishSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -317,15 +510,17 @@ public class Config {
             configFile.set("punish-settings.time", 60);
             configFile.set("punish-settings.enable-rejoin", true);
             configFile.set("punish-settings.max-rejoins", 3);
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section punish-settings");
         }
-        punish_settings_enable_attempts = punishSettings.getBoolean("enable-attempts", true);
-        punish_settings_max_attempts = punishSettings.getInt("max-attempts", 3);
-        punish_settings_enable_time = punishSettings.getBoolean("enable-time", true);
-        punish_settings_time = punishSettings.getInt("time", 60);
-        punish_settings_enable_rejoin = punishSettings.getBoolean("enable-rejoin", true);
-        punish_settings_max_rejoins = punishSettings.getInt("max-rejoins", 3);
+        this.punishSettings = new PunishSettings(
+                punishSettings.getBoolean("enable-attempts", true),
+                punishSettings.getInt("max-attempts", 3),
+                punishSettings.getBoolean("enable-time", true),
+                punishSettings.getInt("time", 60),
+                punishSettings.getBoolean("enable-rejoin", true),
+                punishSettings.getInt("max-rejoins", 3)
+        );
     }
 
     public void loadSecureSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -340,16 +535,18 @@ public class Config {
             configFile.set("secure-settings.only-console-usp", false);
             configFile.set("secure-settings.enable-excluded-players", false);
             configFile.set("secure-settings.call-event-on-password-enter", false);
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section secure-settings");
         }
-        secure_settings_enable_op_whitelist = secureSettings.getBoolean("enable-op-whitelist", false);
-        secure_settings_enable_notadmin_punish = secureSettings.getBoolean("enable-notadmin-punish", false);
-        secure_settings_enable_permission_blacklist = secureSettings.getBoolean("enable-permission-blacklist", false);
-        secure_settings_enable_ip_whitelist = secureSettings.getBoolean("enable-ip-whitelist", false);
-        secure_settings_only_console_usp = secureSettings.getBoolean("only-console-usp", false);
-        secure_settings_enable_excluded_players = secureSettings.getBoolean("enable-excluded-players", false);
-        secure_settings_call_event_on_password_enter = secureSettings.getBoolean("call-event-on-password-enter", false);
+        this.secureSettings = new SecureSettings(
+                secureSettings.getBoolean("enable-op-whitelist", false),
+                secureSettings.getBoolean("enable-notadmin-punish", false),
+                secureSettings.getBoolean("enable-permission-blacklist", false),
+                secureSettings.getBoolean("enable-ip-whitelist", false),
+                secureSettings.getBoolean("only-console-usp", false),
+                secureSettings.getBoolean("enable-excluded-players", false),
+                secureSettings.getBoolean("call-event-on-password-enter", false)
+        );
     }
 
     public void loadMessageSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -360,12 +557,14 @@ public class Config {
             configFile.set("message-settings.send-titles", true);
             configFile.set("message-settings.enable-broadcasts", true);
             configFile.set("message-settings.enable-console-broadcasts", true);
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section message-settings");
         }
-        message_settings_send_title = messageSettings.getBoolean("send-titles", true);
-        message_settings_enable_broadcasts = messageSettings.getBoolean("enable-broadcasts", true);
-        message_settings_enable_console_broadcasts = messageSettings.getBoolean("enable-console-broadcasts", true);
+        this.messageSettings = new MessageSettings(
+                messageSettings.getBoolean("send-titles", true),
+                messageSettings.getBoolean("enable-broadcasts", true),
+                messageSettings.getBoolean("enable-console-broadcasts", true)
+        );
     }
 
     public void loadBossbarSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -376,17 +575,18 @@ public class Config {
             configFile.set("bossbar-settings.enable-bossbar", false);
             configFile.set("bossbar-settings.bar-color", "RED");
             configFile.set("bossbar-settings.bar-style", "SEGMENTED_12");
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section bossbar-settings");
         }
-        if (!bossbarSettings.getBoolean("enable-bossbar", true)) {
-            return;
-        }
-        bossbar_settings_enable_bossbar = bossbarSettings.getBoolean("enable-bossbar", true);
-        bossbar_settings_bar_color = bossbarSettings.getString("bar-color", "RED");
-        bossbar_settings_bar_style = bossbarSettings.getString("bar-style", "SEGMENTED_12");
-        ConfigurationSection bossbar = plugin.messageFile.getConfigurationSection("bossbar");
-        bossbar_message = getMessage(bossbar, "message");
+        ConfigurationSection bossbar = plugin.getMessageFile().getConfigurationSection("bossbar");
+        String bossbarMessage = getMessage(bossbar, "message");
+
+        this.bossbarSettings = new BossbarSettings(
+                bossbarSettings.getBoolean("enable-bossbar", true),
+                bossbarSettings.getString("bar-color", "RED"),
+                bossbarSettings.getString("bar-style", "SEGMENTED_12"),
+                bossbarMessage
+        );
     }
 
     public void loadSoundSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -394,19 +594,19 @@ public class Config {
         if (!configFile.contains("sound-settings")) {
             logger.warn("Configuration section sound-settings not found!");
             configFile.createSection("sound-settings");
-            configFile.set("sound-settings.enable-sounds", true);
-            configFile.set("sound-settings.bar-color", "RED");
-            configFile.set("sound-settings.bar-style", "SEGMENTED_12");
-            save(plugin.path, configFile, "config.yml");
+            configFile.set("sound-settings.enable-sounds", false);
+            configFile.set("sound-settings.on-capture", "ENTITY_ITEM_BREAK;1.0;1.0");
+            configFile.set("sound-settings.on-pas-fail", "ENTITY_VILLAGER_NO;1.0;1.0");
+            configFile.set("sound-settings.on-pas-correct", "ENTITY_PLAYER_LEVELUP;1.0;1.0");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section sound-settings");
         }
-        sound_settings_enable_sounds = soundSettings.getBoolean("enable-sounds");
-        if (!sound_settings_enable_sounds) {
-            return;
-        }
-        sound_settings_on_capture = soundSettings.getString("on-capture", "ENTITY_ITEM_BREAK;1.0;1.0").split(";");
-        sound_settings_on_pas_fail = soundSettings.getString("on-pas-fail", "ENTITY_VILLAGER_NO;1.0;1.0").split(";");
-        sound_settings_on_pas_correct = soundSettings.getString("on-pas-correct", "ENTITY_PLAYER_LEVELUP;1.0;1.0").split(";");
+        this.soundSettings = new SoundSettings(
+                soundSettings.getBoolean("enable-sounds"),
+                soundSettings.getString("on-capture", "ENTITY_ITEM_BREAK;1.0;1.0").split(";"),
+                soundSettings.getString("on-pas-fail", "ENTITY_VILLAGER_NO;1.0;1.0").split(";"),
+                soundSettings.getString("on-pas-correct", "ENTITY_PLAYER_LEVELUP;1.0;1.0").split(";")
+        );
     }
 
     public void loadEffects(FileConfiguration config, FileConfiguration configFile) {
@@ -416,11 +616,13 @@ public class Config {
             configFile.createSection("effect-settings");
             configFile.set("effect-settings.enable-effects", true);
             configFile.set("effect-settings.effects", List.of("BLINDNESS;3"));
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section effect-settings");
         }
-        effect_settings_enable_effects = effectSettings.getBoolean("enable-effects", true);
-        effect_settings_effects = effectSettings.getStringList("effects");
+        this.effectSettings = new EffectSettings(
+                effectSettings.getBoolean("enable-effects", true),
+                effectSettings.getStringList("effects")
+        );
     }
 
     public void loadLoggingSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -432,13 +634,15 @@ public class Config {
             configFile.set("logging-settings.logging-join", true);
             configFile.set("logging-settings.logging-enable-disable", true);
             configFile.set("logging-settings.logging-command-execution", true);
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section logging-settings");
         }
-        logging_settings_logging_pas = loggingSettings.getBoolean("logging-pas", true);
-        logging_settings_logging_join = loggingSettings.getBoolean("logging-join", true);
-        logging_settings_logging_enable_disable = loggingSettings.getBoolean("logging-enable-disable", true);
-        logging_settings_logging_command_execution = loggingSettings.getBoolean("logging-command-execution", true);
+        this.loggingSettings = new LoggingSettings(
+                loggingSettings.getBoolean("logging-pas", true),
+                loggingSettings.getBoolean("logging-join", true),
+                loggingSettings.getBoolean("logging-enable-disable", true),
+                loggingSettings.getBoolean("logging-command-execution", true)
+        );
     }
 
     public void loadFailCommands(FileConfiguration config, FileConfiguration configFile) {
@@ -453,111 +657,126 @@ public class Config {
             configFile.set("commands.failed-pass", Collections.emptyList());
             configFile.set("commands.failed-time", Collections.emptyList());
             configFile.set("commands.failed-rejoin", Collections.emptyList());
-            save(plugin.path, configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section main-settings");
         }
-        commands_not_in_config = commands.getStringList("not-in-config");
-        commands_not_in_opwhitelist = commands.getStringList("not-in-opwhitelist");
-        commands_have_blacklisted_perm = commands.getStringList("have-blacklisted-perm");
-        commands_not_admin_ip = commands.getStringList("not-admin-ip");
-        commands_failed_pass = commands.getStringList("failed-pass");
-        commands_failed_time = commands.getStringList("failed-time");
-        commands_failed_rejoin = commands.getStringList("failed-rejoin");
+        this.commands = new Commands(
+                commands.getStringList("not-in-config"),
+                commands.getStringList("not-in-opwhitelist"),
+                commands.getStringList("have-blacklisted-perm"),
+                commands.getStringList("not-admin-ip"),
+                commands.getStringList("failed-pass"),
+                commands.getStringList("failed-time"),
+                commands.getStringList("failed-rejoin")
+        );
     }
 
-    public void loadPerms(FileConfiguration config) {
-        perms = new HashSet<>(config.getStringList("permissions"));
-    }
+    public void loadAccessData(FileConfiguration config) {
+        Set<String> perms = new HashSet<>(config.getStringList("permissions"));
+        List<String> allowedCommands = config.getStringList("allowed-commands");
 
-    public void loadLists(FileConfiguration config) {
-        allowed_commands = new ArrayList<>(config.getStringList("allowed-commands"));
         ConfigurationSection secureSettings = config.getConfigurationSection("secure-settings");
+
+        List<String> opWhitelist = new ArrayList<>();
+        Set<String> blacklistedPerms = new HashSet<>();
+        Map<String, List<String>> ipWhitelist = new HashMap<>();
+
         if (secureSettings.getBoolean("enable-op-whitelist")) {
-            op_whitelist = new ArrayList<>(config.getStringList("op-whitelist"));
+            opWhitelist = config.getStringList("op-whitelist");
         }
         if (secureSettings.getBoolean("enable-permission-blacklist")) {
-            blacklisted_perms = new HashSet<>(config.getStringList("blacklisted-perms"));
+            blacklistedPerms = new HashSet<>(config.getStringList("blacklisted-perms"));
         }
         if (secureSettings.getBoolean("enable-ip-whitelist")) {
-            ip_whitelist = new HashMap<>();
-            for (String ipwl_player : config.getConfigurationSection("ip-whitelist").getKeys(false)) {
-                List<String> ips = new ArrayList<>(config.getStringList("ip-whitelist." + ipwl_player));
-                ip_whitelist.put(ipwl_player, ips);
+            for (String ipwlPlayer : config.getConfigurationSection("ip-whitelist").getKeys(false)) {
+                List<String> ips = config.getStringList("ip-whitelist." + ipwlPlayer);
+                ipWhitelist.put(ipwlPlayer, ips);
             }
         }
+        this.accessData = new AccessData(perms, allowedCommands, opWhitelist, blacklistedPerms, ipWhitelist);
     }
 
     public void setupExcluded(FileConfiguration config) {
         if (config.getBoolean("secure-settings.enable-excluded-players")) {
             ConfigurationSection excludedPlayers = config.getConfigurationSection("excluded-players");
-            excluded_admin_pass = new ArrayList<>(excludedPlayers.getStringList("admin-pass"));
-            excluded_op_whitelist = new ArrayList<>(excludedPlayers.getStringList("op-whitelist"));
-            excluded_ip_whitelist = new ArrayList<>(excludedPlayers.getStringList("ip-whitelist"));
-            excluded_blacklisted_perms = new ArrayList<>(excludedPlayers.getStringList("blacklisted-perms"));
+            this.excludedPlayers = new ExcludedPlayers(
+                    excludedPlayers.getStringList("admin-pass"),
+                    excludedPlayers.getStringList("op-whitelist"),
+                    excludedPlayers.getStringList("ip-whitelist"),
+                    excludedPlayers.getStringList("blacklisted-perms")
+            );
         }
     }
 
     public void loadUspMessages(FileConfiguration message) {
         ConfigurationSection uspmsg = message.getConfigurationSection("uspmsg");
-        uspmsg_consoleonly = getMessage(uspmsg, "consoleonly");
-        uspmsg_playeronly = getMessage(uspmsg, "playeronly");
-        uspmsg_logout = getMessage(uspmsg, "logout");
-        uspmsg_reloaded = getMessage(uspmsg, "reloaded");
-        uspmsg_rebooted = getMessage(uspmsg, "rebooted");
-        uspmsg_playernotfound = getMessage(uspmsg, "playernotfound");
-        uspmsg_alreadyinconfig = getMessage(uspmsg, "alreadyinconfig");
-        uspmsg_notinconfig = getMessage(uspmsg, "notinconfig");
-        uspmsg_playeradded = getMessage(uspmsg, "playeradded");
-        uspmsg_playerremoved = getMessage(uspmsg, "playerremoved");
-        uspmsg_ipadded = getMessage(uspmsg, "ipadded");
-        uspmsg_setpassusage = getMessage(uspmsg, "setpassusage");
-        uspmsg_addopusage = getMessage(uspmsg, "addopusage");
-        uspmsg_addipusage = getMessage(uspmsg, "addipusage");
-        uspmsg_rempassusage = getMessage(uspmsg, "rempassusage");
-        uspmsg_remopusage = getMessage(uspmsg, "remopusage");
-        uspmsg_ipremoved = getMessage(uspmsg, "ipremoved");
-        uspmsg_remipusage = getMessage(uspmsg, "remipusage");
-        uspmsg_usage = getMessage(uspmsg, "usage");
-        uspmsg_usage_logout = getMessage(uspmsg, "usage-logout");
-        uspmsg_usage_reload = getMessage(uspmsg, "usage-reload");
-        uspmsg_usage_reboot = getMessage(uspmsg, "usage-reboot");
-        uspmsg_usage_encrypt = getMessage(uspmsg, "usage-encrypt");
-        uspmsg_usage_setpass = getMessage(uspmsg, "usage-setpass");
-        uspmsg_usage_rempass = getMessage(uspmsg, "usage-rempass");
-        uspmsg_usage_addop = getMessage(uspmsg, "usage-addop");
-        uspmsg_usage_remop = getMessage(uspmsg, "usage-remop");
-        uspmsg_usage_addip = getMessage(uspmsg, "usage-addip");
-        uspmsg_usage_remip = getMessage(uspmsg, "usage-remip");
-        uspmsg_otherdisabled = getMessage(uspmsg, "otherdisabled");
+        this.uspMessages = new UspMessages(
+                getMessage(uspmsg, "consoleonly"),
+                getMessage(uspmsg, "reloaded"),
+                getMessage(uspmsg, "rebooted"),
+                getMessage(uspmsg, "playernotfound"),
+                getMessage(uspmsg, "alreadyinconfig"),
+                getMessage(uspmsg, "playeronly"),
+                getMessage(uspmsg, "logout"),
+                getMessage(uspmsg, "notinconfig"),
+                getMessage(uspmsg, "playeradded"),
+                getMessage(uspmsg, "playerremoved"),
+                getMessage(uspmsg, "ipadded"),
+                getMessage(uspmsg, "setpassusage"),
+                getMessage(uspmsg, "addopusage"),
+                getMessage(uspmsg, "remopusage"),
+                getMessage(uspmsg, "ipremoved"),
+                getMessage(uspmsg, "remipusage"),
+                getMessage(uspmsg, "addipusage"),
+                getMessage(uspmsg, "rempassusage"),
+                getMessage(uspmsg, "usage"),
+                getMessage(uspmsg, "usage-logout"),
+                getMessage(uspmsg, "usage-reload"),
+                getMessage(uspmsg, "usage-reboot"),
+                getMessage(uspmsg, "usage-encrypt"),
+                getMessage(uspmsg, "usage-setpass"),
+                getMessage(uspmsg, "usage-rempass"),
+                getMessage(uspmsg, "usage-addop"),
+                getMessage(uspmsg, "usage-remop"),
+                getMessage(uspmsg, "usage-addip"),
+                getMessage(uspmsg, "usage-remip"),
+                getMessage(uspmsg, "otherdisabled")
+        );
     }
 
     public void loadMsgMessages(FileConfiguration message) {
         ConfigurationSection msg = message.getConfigurationSection("msg");
-        msg_message = getMessage(msg, "message");
-        msg_incorrect = getMessage(msg, "incorrect");
-        msg_correct = getMessage(msg, "correct");
-        msg_noneed = getMessage(msg, "noneed");
-        msg_cantbenull = getMessage(msg, "cantbenull");
-        msg_playeronly = getMessage(msg, "playeronly");
+        this.messages = new Messages(
+                getMessage(msg, "message"),
+                getMessage(msg, "incorrect"),
+                getMessage(msg, "correct"),
+                getMessage(msg, "noneed"),
+                getMessage(msg, "cantbenull"),
+                getMessage(msg, "playeronly")
+        );
     }
 
     public void loadTitleMessages(FileConfiguration message) {
         ConfigurationSection titles = message.getConfigurationSection("titles");
-        titles_message = getMessage(titles, "message").split(";");
-        titles_incorrect = getMessage(titles, "incorrect").split(";");
-        titles_correct = getMessage(titles, "correct").split(";");
+        this.titles = new Titles(
+                getMessage(titles, "message").split(";"),
+                getMessage(titles, "incorrect").split(";"),
+                getMessage(titles, "correct").split(";")
+        );
     }
 
     public void loadBroadcastMessages(FileConfiguration message) {
         ConfigurationSection broadcasts = message.getConfigurationSection("broadcasts");
-        broadcasts_failed = getMessage(broadcasts, "failed");
-        broadcasts_passed = getMessage(broadcasts, "passed");
-        broadcasts_joined = getMessage(broadcasts, "joined");
-        broadcasts_captured = getMessage(broadcasts, "captured");
+        this.broadcasts = new Broadcasts(
+                getMessage(broadcasts, "failed"),
+                getMessage(broadcasts, "passed"),
+                getMessage(broadcasts, "joined"),
+                getMessage(broadcasts, "captured")
+        );
     }
 
     public String getMessage(ConfigurationSection section, String key) {
-        return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", main_settings_prefix), serializer);
+        return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", mainSettings.prefix), serializer);
     }
 
     public FileConfiguration getFile(String path, String fileName) {
