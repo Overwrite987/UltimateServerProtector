@@ -31,7 +31,7 @@ encryption-settings:
   # To see what the password will look like in encrypted form, you can use the command /usp encrypt <password>
   # However, if the auto-encrypt-passwords option is enabled, you can specify a regular password in the old pass: format in data.yml, and the plugin will automatically convert it.
   enable-encryption: false
-  # Password encryption method (Supported types: BASE64, MD5, SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512)
+  # Password encryption method (Supported types: BASE64, SHA224, SHA256, SHA384, SHA512, SHA3-224, SHA3-256, SHA3-384, SHA3-512)
   # BASE64 - This "encryption" does not provide data protection; it is simply a method of converting data to another format for network transmission or storage.
   # Use BASE64 only if you're afraid of "accidentally showing the file with passwords on the demo" and you don't need to specifically hide the data or to make encryption more complicated
   # SHA256 and other SHA - variations of the SHA algorithm.
