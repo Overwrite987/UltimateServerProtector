@@ -52,11 +52,9 @@ public class PasswordHandler {
                 correctPassword(p);
                 return;
             }
-            if (!pluginConfig.encryption_settings_old_encrypt_methods.isEmpty()) {
+            if (pluginConfig.encryption_settings_enable_encryption && !pluginConfig.encryption_settings_old_encrypt_methods.isEmpty()) {
                 for (List<String> oldEncryptMethod : pluginConfig.encryption_settings_old_encrypt_methods) {
-                    String oldgenPass = pluginConfig.encryption_settings_enable_encryption
-                            ? Utils.encryptPassword(input, salt, oldEncryptMethod)
-                            : input;
+                    String oldgenPass = Utils.encryptPassword(input, salt, oldEncryptMethod);
                     if (oldgenPass.equals(playerPass)) {
                         correctPassword(p);
                         return;
