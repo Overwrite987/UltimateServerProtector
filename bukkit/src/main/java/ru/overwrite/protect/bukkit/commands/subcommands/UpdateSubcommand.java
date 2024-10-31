@@ -5,10 +5,9 @@ import org.bukkit.command.CommandSender;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
+import java.io.*;
 import java.net.URL;
+import java.net.URLConnection;
 import java.nio.file.Files;
 import java.nio.file.StandardCopyOption;
 
@@ -40,7 +39,7 @@ public class UpdateSubcommand extends AbstractSubCommand {
                         File updateFolder = Bukkit.getUpdateFolderFile();
                         File targetFile = new File(updateFolder, currentJarName);
 
-                        downloadFile(downloadUrl, targetFile);
+                        downloadFile(downloadUrl, targetFile, sender);
 
                         sender.sendMessage(plugin.messageFile.getString("system.update-success-1", "§aUpdate was downloaded successfully!"));
                         sender.sendMessage(plugin.messageFile.getString("system.update-success-2", "§aRestart the server to apply the update."));
@@ -53,10 +52,31 @@ public class UpdateSubcommand extends AbstractSubCommand {
         });
     }
 
-    private void downloadFile(String urlString, File destination) throws IOException {
-        URL url = new URL(urlString);
-        try (InputStream in = url.openStream()) {
-            Files.copy(in, destination.toPath(), StandardCopyOption.REPLACE_EXISTING);
+    public void downloadFile(String fileURL, File targetFile, CommandSender sender) throws IOException {
+        URL url = new URL(fileURL);
+        URLConnection connection = url.openConnection();
+        int fileSize = connection.getContentLength();
+
+        try (BufferedInputStream in = new BufferedInputStream(connection.getInputStream());
+             FileOutputStream out = new FileOutputStream(targetFile)) {
+
+            byte[] data = new byte[1024];
+            int bytesRead;
+            int totalBytesRead = 0;
+            int lastPercentage = 0;
+
+            while ((bytesRead = in.read(data, 0, 1024)) != -1) {
+                out.write(data, 0, bytesRead);
+                totalBytesRead += bytesRead;
+                int progressPercentage = (int) ((double) totalBytesRead / fileSize * 100);
+
+                if (progressPercentage >= lastPercentage + 10) {
+                    lastPercentage = progressPercentage;
+                    int downloadedKB = totalBytesRead / 1024;
+                    int fullSizeKB = fileSize / 1024;
+                    sender.sendMessage(downloadedKB + "/" + fullSizeKB + "KB) (" + progressPercentage + "%)");
+                }
+            }
         }
     }
 }
