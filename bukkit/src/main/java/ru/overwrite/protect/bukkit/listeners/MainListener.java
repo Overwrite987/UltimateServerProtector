@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit.listeners;
 
-import com.destroystokyo.paper.event.server.AsyncTabCompleteEvent;
 import org.bukkit.Location;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -16,7 +15,7 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
-import ru.overwrite.protect.bukkit.utils.Config;
+import ru.overwrite.protect.bukkit.utils.configuration.Config;
 
 public class MainListener implements Listener {
 

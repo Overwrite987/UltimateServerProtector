@@ -1,8 +1,10 @@
-package ru.overwrite.protect.bukkit.utils;
+package ru.overwrite.protect.bukkit.utils.configuration;
 
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import ru.overwrite.protect.bukkit.utils.Utils;
+import ru.overwrite.protect.bukkit.utils.configuration.data.*;
 import ru.overwrite.protect.bukkit.utils.logging.Logger;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
@@ -33,132 +35,10 @@ public class Config {
         return this.perPlayerPasswords;
     }
 
-    private AccessData accessData;
-
-    public AccessData getAccessData() {
-        return this.accessData;
-    }
-
-    public record AccessData(
-            Set<String> perms,
-            List<String> allowedCommands,
-            List<String> opWhitelist,
-            Set<String> blacklistedPerms,
-            Map<String, List<String>> ipWhitelist
-    ) {
-    }
-
-    private ExcludedPlayers excludedPlayers;
-
-    public ExcludedPlayers getExcludedPlayers() {
-        return this.excludedPlayers;
-    }
-
-    public record ExcludedPlayers(
-            List<String> adminPass,
-            List<String> opWhitelist,
-            List<String> ipWhitelist,
-            List<String> blacklistedPerms
-    ) {
-    }
-
-    private UspMessages uspMessages;
-
-    public UspMessages getUspMessages() {
-        return this.uspMessages;
-    }
-
-    public record UspMessages(
-            String consoleOnly,
-            String reloaded,
-            String rebooted,
-            String playerNotFound,
-            String alreadyInConfig,
-            String playerOnly,
-            String logout,
-            String notInConfig,
-            String playerAdded,
-            String playerRemoved,
-            String ipAdded,
-            String setPassUsage,
-            String addOpUsage,
-            String remOpUsage,
-            String ipRemoved,
-            String remIpUsage,
-            String addIpUsage,
-            String remPassUsage,
-            String usage,
-            String usageLogout,
-            String usageReload,
-            String usageReboot,
-            String usageEncrypt,
-            String usageSetPass,
-            String usageRemPass,
-            String usageAddOp,
-            String usageRemOp,
-            String usageAddIp,
-            String usageRemIp,
-            String otherDisabled
-    ) {
-    }
-
-    private Messages messages;
-
-    public Messages getMessages() {
-        return this.messages;
-    }
-
-    public record Messages(
-            String message,
-            String incorrect,
-            String correct,
-            String noNeed,
-            String cantBeNull,
-            String playerOnly
-    ) {
-    }
-
-    private Broadcasts broadcasts;
-
-    public Broadcasts getBroadcasts() {
-        return this.broadcasts;
-    }
-
-    public record Broadcasts(
-            String failed,
-            String passed,
-            String joined,
-            String captured
-    ) {
-    }
-
-    private Titles titles;
-
-    public Titles getTitles() {
-        return this.titles;
-    }
-
-    public record Titles(
-            String[] message,
-            String[] incorrect,
-            String[] correct
-    ) {
-    }
-
     private MainSettings mainSettings;
 
     public MainSettings getMainSettings() {
         return this.mainSettings;
-    }
-
-    public record MainSettings(
-            String prefix,
-            String pasCommand,
-            boolean useCommand,
-            boolean enableAdminCommands,
-            long checkInterval,
-            boolean papiSupport
-    ) {
     }
 
     private EncryptionSettings encryptionSettings;
@@ -167,26 +47,10 @@ public class Config {
         return this.encryptionSettings;
     }
 
-    public record EncryptionSettings(
-            boolean enableEncryption,
-            String encryptMethod,
-            List<String> encryptMethods,
-            int saltLength,
-            boolean autoEncryptPasswords,
-            List<List<String>> oldEncryptMethods
-    ) {
-    }
-
     private GeyserSettings geyserSettings;
 
     public GeyserSettings getGeyserSettings() {
         return this.geyserSettings;
-    }
-
-    public record GeyserSettings(
-            String prefix,
-            Set<String> nicknames
-    ) {
     }
 
     private BlockingSettings blockingSettings;
@@ -195,30 +59,10 @@ public class Config {
         return this.blockingSettings;
     }
 
-    public record BlockingSettings(
-            boolean blockItemDrop,
-            boolean blockItemPickup,
-            boolean blockTabComplete,
-            boolean blockDamage,
-            boolean blockDamagingEntity,
-            boolean blockInventoryOpen,
-            boolean hideOnEntering,
-            boolean hideOtherOnEntering,
-            boolean allowOrientationChange
-    ) {
-    }
-
     private SessionSettings sessionSettings;
 
     public SessionSettings getSessionSettings() {
         return this.sessionSettings;
-    }
-
-    public record SessionSettings(
-            boolean session,
-            boolean sessionTimeEnabled,
-            int sessionTime
-    ) {
     }
 
     private PunishSettings punishSettings;
@@ -227,31 +71,10 @@ public class Config {
         return this.punishSettings;
     }
 
-    public record PunishSettings(
-            boolean enableAttempts,
-            int maxAttempts,
-            boolean enableTime,
-            int time,
-            boolean enableRejoin,
-            int maxRejoins
-    ) {
-    }
-
     private SecureSettings secureSettings;
 
     public SecureSettings getSecureSettings() {
         return this.secureSettings;
-    }
-
-    public record SecureSettings(
-            boolean enableOpWhitelist,
-            boolean enableNotAdminPunish,
-            boolean enablePermissionBlacklist,
-            boolean enableIpWhitelist,
-            boolean onlyConsoleUsp,
-            boolean enableExcludedPlayers,
-            boolean callEventOnPasswordEnter
-    ) {
     }
 
     private MessageSettings messageSettings;
@@ -260,25 +83,10 @@ public class Config {
         return this.messageSettings;
     }
 
-    public record MessageSettings(
-            boolean sendTitle,
-            boolean enableBroadcasts,
-            boolean enableConsoleBroadcasts
-    ) {
-    }
-
     private BossbarSettings bossbarSettings;
 
     public BossbarSettings getBossbarSettings() {
         return this.bossbarSettings;
-    }
-
-    public record BossbarSettings(
-            boolean enableBossbar,
-            String barColor,
-            String barStyle,
-            String bossbarMessage
-    ) {
     }
 
     private SoundSettings soundSettings;
@@ -287,24 +95,10 @@ public class Config {
         return this.soundSettings;
     }
 
-    public record SoundSettings(
-            boolean enableSounds,
-            String[] onCapture,
-            String[] onPasFail,
-            String[] onPasCorrect
-    ) {
-    }
-
     private EffectSettings effectSettings;
 
     public EffectSettings getEffectSettings() {
         return this.effectSettings;
-    }
-
-    public record EffectSettings(
-            boolean enableEffects,
-            List<String> effects
-    ) {
     }
 
     private LoggingSettings loggingSettings;
@@ -313,29 +107,46 @@ public class Config {
         return this.loggingSettings;
     }
 
-    public record LoggingSettings(
-            boolean loggingPas,
-            boolean loggingJoin,
-            boolean loggingEnableDisable,
-            boolean loggingCommandExecution
-    ) {
-    }
-
     private Commands commands;
 
     public Commands getCommands() {
         return this.commands;
     }
 
-    public record Commands(
-            List<String> notInConfig,
-            List<String> notInOpWhitelist,
-            List<String> haveBlacklistedPerm,
-            List<String> notAdminIp,
-            List<String> failedPass,
-            List<String> failedTime,
-            List<String> failedRejoin
-    ) {
+    private AccessData accessData;
+
+    public AccessData getAccessData() {
+        return this.accessData;
+    }
+
+    private ExcludedPlayers excludedPlayers;
+
+    public ExcludedPlayers getExcludedPlayers() {
+        return this.excludedPlayers;
+    }
+
+    private UspMessages uspMessages;
+
+    public UspMessages getUspMessages() {
+        return this.uspMessages;
+    }
+
+    private Messages messages;
+
+    public Messages getMessages() {
+        return this.messages;
+    }
+
+    private Titles titles;
+
+    public Titles getTitles() {
+        return this.titles;
+    }
+
+    private Broadcasts broadcasts;
+
+    public Broadcasts getBroadcasts() {
+        return this.broadcasts;
     }
 
     public void setupPasswords(FileConfiguration dataFile) {
@@ -344,15 +155,15 @@ public class Config {
         boolean shouldSave = false;
         for (String nick : data.getKeys(false)) {
             String playerNick = nick;
-            if (this.geyserSettings.prefix != null && !this.geyserSettings.prefix.isBlank() && this.geyserSettings.nicknames.contains(nick)) {
-                playerNick = this.geyserSettings.prefix + nick;
+            if (this.geyserSettings.prefix() != null && !this.geyserSettings.prefix().isBlank() && this.geyserSettings.nicknames().contains(nick)) {
+                playerNick = this.geyserSettings.prefix() + nick;
             }
-            if (!this.encryptionSettings.enableEncryption) {
+            if (!this.encryptionSettings.enableEncryption()) {
                 perPlayerPasswords.put(playerNick, data.getString(nick + ".pass"));
             } else {
-                if (this.encryptionSettings.autoEncryptPasswords) {
+                if (this.encryptionSettings.autoEncryptPasswords()) {
                     if (data.getString(nick + ".pass") != null) {
-                        String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(this.encryptionSettings.saltLength), this.encryptionSettings.encryptMethods);
+                        String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(this.encryptionSettings.saltLength()), this.encryptionSettings.encryptMethods());
                         dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
                         dataFile.set("data." + nick + ".pass", null);
                         shouldSave = true;
@@ -776,7 +587,7 @@ public class Config {
     }
 
     public String getMessage(ConfigurationSection section, String key) {
-        return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", mainSettings.prefix), serializer);
+        return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", mainSettings.prefix()), serializer);
     }
 
     public FileConfiguration getFile(String path, String fileName) {

@@ -1,0 +1,35 @@
+package ru.overwrite.protect.bukkit.utils.configuration.data;
+
+public record UspMessages(
+        String consoleOnly,
+        String reloaded,
+        String rebooted,
+        String playerNotFound,
+        String alreadyInConfig,
+        String playerOnly,
+        String logout,
+        String notInConfig,
+        String playerAdded,
+        String playerRemoved,
+        String ipAdded,
+        String setPassUsage,
+        String addOpUsage,
+        String remOpUsage,
+        String ipRemoved,
+        String remIpUsage,
+        String addIpUsage,
+        String remPassUsage,
+        String usage,
+        String usageLogout,
+        String usageReload,
+        String usageReboot,
+        String usageEncrypt,
+        String usageSetPass,
+        String usageRemPass,
+        String usageAddOp,
+        String usageRemOp,
+        String usageAddIp,
+        String usageRemIp,
+        String otherDisabled
+) {
+}

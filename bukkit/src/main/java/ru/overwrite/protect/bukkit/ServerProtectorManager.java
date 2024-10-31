@@ -17,6 +17,7 @@ import ru.overwrite.protect.bukkit.commands.*;
 import ru.overwrite.protect.bukkit.listeners.*;
 import ru.overwrite.protect.bukkit.task.*;
 import ru.overwrite.protect.bukkit.utils.*;
+import ru.overwrite.protect.bukkit.utils.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.logging.*;
 
 import java.io.*;
