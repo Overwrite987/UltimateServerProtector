@@ -1,4 +1,4 @@
-[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/overwrite987/ultimateserverprotector?style=flat-square)](https://www.codefactor.io/repository/github/overwrite987/ultimateserverprotector)
+# UltimateServerProtector [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/overwrite987/ultimateserverprotector?style=flat-square)](https://www.codefactor.io/repository/github/overwrite987/ultimateserverprotector)
 
 **• This is an  incredibly lightweight plugin, that add an "admin-password" to your server.**
 
