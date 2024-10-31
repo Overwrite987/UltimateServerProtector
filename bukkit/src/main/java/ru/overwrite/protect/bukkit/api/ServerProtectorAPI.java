@@ -9,7 +9,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 
 import org.jetbrains.annotations.NotNull;
-import ru.overwrite.protect.bukkit.Logger;
+import ru.overwrite.protect.bukkit.utils.logging.Logger;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;

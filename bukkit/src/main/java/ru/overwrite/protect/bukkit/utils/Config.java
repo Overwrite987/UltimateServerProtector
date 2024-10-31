@@ -3,7 +3,7 @@ package ru.overwrite.protect.bukkit.utils;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
-import ru.overwrite.protect.bukkit.Logger;
+import ru.overwrite.protect.bukkit.utils.logging.Logger;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 import java.io.File;

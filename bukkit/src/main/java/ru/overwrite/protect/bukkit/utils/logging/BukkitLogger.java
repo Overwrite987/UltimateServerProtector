@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit.utils.logging;
 
-import ru.overwrite.protect.bukkit.Logger;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 public class BukkitLogger implements Logger {
