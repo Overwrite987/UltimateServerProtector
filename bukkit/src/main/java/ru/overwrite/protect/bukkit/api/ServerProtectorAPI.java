@@ -98,7 +98,7 @@ public final class ServerProtectorAPI {
         return !sessions.isEmpty() && sessions.containsKey(player.getName()) && sessions.get(player.getName()).equals(ip);
     }
 
-    public final void authorisePlayer(@NotNull Player player) {
+    public void authorisePlayer(@NotNull Player player) {
         if (!isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
             return;
@@ -114,7 +114,7 @@ public final class ServerProtectorAPI {
         saved.add(player.getName());
     }
 
-    public final void deauthorisePlayer(@NotNull Player player) {
+    public void deauthorisePlayer(@NotNull Player player) {
         if (!isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to deauthorise " + player.getName() + " Reason: Action not allowed");
             return;
