@@ -36,7 +36,7 @@ public final class TaskManager {
     public void startMainCheck(long interval) {
         runner.runPeriodicalAsync(() -> {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (pluginConfig.getExcludedPlayers() == null || plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
+                if (pluginConfig.getExcludedPlayers() != null && plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
                     continue;
                 }
                 if (api.isCaptured(p)) {
