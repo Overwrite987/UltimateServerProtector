@@ -163,19 +163,21 @@ public class ServerProtectorAPI {
                 frames.map(StackWalker.StackFrame::getDeclaringClass)
                         .collect(Collectors.toList())
         );
-        Class<?> cls = callStack.get(2);
+        String className = callStack.get(2).getName();
 
-        if (cls.getPackageName().startsWith("ru.overwrite.protect")) {
+        if (className.startsWith("ru.overwrite.protect.bukkit")) {
             return true;
         }
         if (pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()) {
+            logger.warn("Found illegal method call from " + className);
             return false;
         }
         for (String allowed : pluginConfig.getApiSettings().allowedAuthApiCallsPackages()) {
-            if (cls.getPackageName().startsWith(allowed)) {
+            if (className.startsWith(allowed)) {
                 return true;
             }
         }
+        logger.warn("Found illegal method call from " + className);
         return false;
     }
 }
