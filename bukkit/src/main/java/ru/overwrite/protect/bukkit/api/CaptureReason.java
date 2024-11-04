@@ -1,4 +1,4 @@
-package ru.overwrite.protect.bukkit.api.events;
+package ru.overwrite.protect.bukkit.api;
 
 public record CaptureReason(String permission) {
 
