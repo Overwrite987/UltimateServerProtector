@@ -12,10 +12,10 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
-public class ServerProtectorAPI {
+public final class ServerProtectorAPI {
 
     private final Config pluginConfig;
-    private final Logger logger;
+    private final Logger pluginLogger;
 
     private final Set<String> captured = new HashSet<>();
     private final Map<String, String> sessions = new HashMap<>();
@@ -23,7 +23,7 @@ public class ServerProtectorAPI {
 
     public ServerProtectorAPI(@NotNull ServerProtectorManager plugin) {
         this.pluginConfig = plugin.getPluginConfig();
-        this.logger = plugin.getPluginLogger();
+        this.pluginLogger = plugin.getPluginLogger();
     }
 
     public boolean isAnybodyCaptured() {
@@ -46,7 +46,7 @@ public class ServerProtectorAPI {
 
     public void capturePlayer(@NotNull Player player) {
         if (isCaptured(player)) {
-            logger.warn("Unable to capture " + player.getName() + " Reason: Already captured");
+            pluginLogger.warn("Unable to capture " + player.getName() + " Reason: Already captured");
             return;
         }
         this.captured.add(player.getName());
@@ -54,7 +54,7 @@ public class ServerProtectorAPI {
 
     public void capturePlayer(@NotNull String playerName) {
         if (isCaptured(playerName)) {
-            logger.warn("Unable to capture " + playerName + " Reason: Already captured");
+            pluginLogger.warn("Unable to capture " + playerName + " Reason: Already captured");
             return;
         }
         this.captured.add(playerName);
@@ -62,11 +62,11 @@ public class ServerProtectorAPI {
 
     public void uncapturePlayer(@NotNull Player player) {
         if (!isCalledFromAllowedApplication()) {
-            logger.warn("Unable to uncapture " + player.getName() + " Reason: Action not allowed");
+            pluginLogger.warn("Unable to uncapture " + player.getName() + " Reason: Action not allowed");
             return;
         }
         if (!isCaptured(player)) {
-            logger.warn("Unable to uncapture " + player.getName() + " Reason: Not captured");
+            pluginLogger.warn("Unable to uncapture " + player.getName() + " Reason: Not captured");
             return;
         }
         this.captured.remove(player.getName());
@@ -74,11 +74,11 @@ public class ServerProtectorAPI {
 
     public void uncapturePlayer(@NotNull String playerName) {
         if (!isCalledFromAllowedApplication()) {
-            logger.warn("Unable to uncapture " + playerName + " Reason: Action not allowed");
+            pluginLogger.warn("Unable to uncapture " + playerName + " Reason: Action not allowed");
             return;
         }
         if (!isCaptured(playerName)) {
-            logger.warn("Unable to uncapture " + playerName + " Reason: Not captured");
+            pluginLogger.warn("Unable to uncapture " + playerName + " Reason: Not captured");
             return;
         }
         this.captured.remove(playerName);
@@ -98,13 +98,13 @@ public class ServerProtectorAPI {
         return !sessions.isEmpty() && sessions.containsKey(player.getName()) && sessions.get(player.getName()).equals(ip);
     }
 
-    public void authorisePlayer(@NotNull Player player) {
+    public final void authorisePlayer(@NotNull Player player) {
         if (!isCalledFromAllowedApplication()) {
-            logger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
+            pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
             return;
         }
         if (isAuthorised(player)) {
-            logger.warn("Unable to authorise " + player.getName() + " Reason: Already authorised");
+            pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Already authorised");
             return;
         }
         if (pluginConfig.getSessionSettings().session()) {
@@ -114,13 +114,13 @@ public class ServerProtectorAPI {
         saved.add(player.getName());
     }
 
-    public void deauthorisePlayer(@NotNull Player player) {
+    public final void deauthorisePlayer(@NotNull Player player) {
         if (!isCalledFromAllowedApplication()) {
-            logger.warn("Unable to deauthorise " + player.getName() + " Reason: Action not allowed");
+            pluginLogger.warn("Unable to deauthorise " + player.getName() + " Reason: Action not allowed");
             return;
         }
         if (!isAuthorised(player)) {
-            logger.warn("Unable to deauthorise " + player.getName() + " Reason: Is not authorised");
+            pluginLogger.warn("Unable to deauthorise " + player.getName() + " Reason: Is not authorised");
             return;
         }
         if (pluginConfig.getSessionSettings().session()) {
@@ -169,7 +169,7 @@ public class ServerProtectorAPI {
             return true;
         }
         if (pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()) {
-            logger.warn("Found illegal method call from " + className);
+            pluginLogger.warn("Found illegal method call from " + className);
             return false;
         }
         for (String allowed : pluginConfig.getApiSettings().allowedAuthApiCallsPackages()) {
@@ -177,7 +177,7 @@ public class ServerProtectorAPI {
                 return true;
             }
         }
-        logger.warn("Found illegal method call from " + className);
+        pluginLogger.warn("Found illegal method call from " + className);
         return false;
     }
 }

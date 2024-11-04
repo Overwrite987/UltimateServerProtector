@@ -16,7 +16,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class PasswordHandler {
+public final class PasswordHandler {
 
     private final ServerProtectorManager plugin;
     private final ServerProtectorAPI api;
