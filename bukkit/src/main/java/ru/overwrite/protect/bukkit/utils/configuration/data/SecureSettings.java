@@ -6,7 +6,6 @@ public record SecureSettings(
         boolean enablePermissionBlacklist,
         boolean enableIpWhitelist,
         boolean onlyConsoleUsp,
-        boolean enableExcludedPlayers,
-        boolean callEventOnPasswordEnter
+        boolean enableExcludedPlayers
 ) {
 }

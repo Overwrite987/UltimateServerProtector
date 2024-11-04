@@ -29,7 +29,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onMove(PlayerMoveEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         if (pluginConfig.getBlockingSettings().allowOrientationChange() && hasChangedOrientation(e.getFrom(), e.getTo()) && !hasExplicitlyChangedBlock(e.getFrom(), e.getTo())) {
             return;
@@ -48,7 +48,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         Player p = e.getPlayer();
         api.handleInteraction(p, e);
@@ -56,7 +56,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         Player p = e.getPlayer();
         api.handleInteraction(p, e);
@@ -64,7 +64,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         Player p = e.getPlayer();
         if (pluginConfig.getBlockingSettings().blockItemDrop()) {
@@ -74,7 +74,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemPickup(EntityPickupItemEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         if (!(e.getEntity() instanceof Player p))
             return;
@@ -85,7 +85,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         if (!(e.getEntity() instanceof Player p))
             return;
@@ -96,7 +96,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         if (!(e.getDamager() instanceof Player p))
             return;
@@ -107,7 +107,7 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         Player p = (Player) e.getPlayer();
         if (pluginConfig.getBlockingSettings().blockInventoryOpen()) {

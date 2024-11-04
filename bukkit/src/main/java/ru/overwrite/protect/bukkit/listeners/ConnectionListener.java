@@ -10,9 +10,9 @@ import org.bukkit.event.player.PlayerLoginEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
-import ru.overwrite.protect.bukkit.api.CaptureReason;
+import ru.overwrite.protect.bukkit.api.events.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
-import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
+import ru.overwrite.protect.bukkit.api.events.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.task.Runner;
 import ru.overwrite.protect.bukkit.utils.configuration.Config;
 
@@ -50,15 +50,17 @@ public class ConnectionListener implements Listener {
                 String ip = e.getAddress().getHostAddress();
                 if (pluginConfig.getSecureSettings().enableIpWhitelist()) {
                     if (!isIPAllowed(playerName, ip)) {
-                        if (pluginConfig.getExcludedPlayers() != null &&  !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().ipWhitelist())) {
+                        if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().ipWhitelist())) {
                             plugin.checkFail(playerName, pluginConfig.getCommands().notAdminIp());
                         }
                     }
                 }
                 if (pluginConfig.getSessionSettings().session() && !api.hasSession(p, ip)) {
-                    if (pluginConfig.getExcludedPlayers() != null &&  !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
+                    if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
                         ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip, captureReason);
-                        captureEvent.callEvent();
+                        if (pluginConfig.getApiSettings().callEventOnCapture()) {
+                            captureEvent.callEvent();
+                        }
                         if (captureEvent.isCancelled()) {
                             return;
                         }
@@ -116,7 +118,7 @@ public class ConnectionListener implements Listener {
         return false;
     }
 
-    public final Map<String, Integer> rejoins = new HashMap<>();
+    private final Map<String, Integer> rejoins = new HashMap<>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
@@ -140,12 +142,12 @@ public class ConnectionListener implements Listener {
                 rejoins.put(playerName, rejoins.getOrDefault(playerName, 0) + 1);
                 if (isMaxRejoins(playerName)) {
                     rejoins.remove(playerName);
-                    plugin.checkFail(p.getName(), pluginConfig.getCommands().failedRejoin());
+                    plugin.checkFail(playerName, pluginConfig.getCommands().failedRejoin());
                 }
             }
         }
         plugin.getPerPlayerTime().remove(playerName);
-        api.saved.remove(playerName);
+        api.unsavePlayer(playerName);
     }
 
     private boolean isMaxRejoins(String playerName) {

@@ -20,7 +20,7 @@ public class TabCompleteListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onTabComplete(AsyncTabCompleteEvent e) {
-        if (api.login.isEmpty())
+        if (!api.isAnybodyCaptured())
             return;
         if (!(e.getSender() instanceof Player p))
             return;

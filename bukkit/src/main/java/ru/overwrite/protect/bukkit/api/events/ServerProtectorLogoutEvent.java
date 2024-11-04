@@ -1,4 +1,4 @@
-package ru.overwrite.protect.bukkit.api;
+package ru.overwrite.protect.bukkit.api.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;

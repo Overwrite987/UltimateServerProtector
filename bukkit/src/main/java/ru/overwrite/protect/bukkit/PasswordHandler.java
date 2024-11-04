@@ -5,9 +5,9 @@ import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
-import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordEnterEvent;
-import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordFailEvent;
-import ru.overwrite.protect.bukkit.api.ServerProtectorPasswordSuccessEvent;
+import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordEnterEvent;
+import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordFailEvent;
+import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordSuccessEvent;
 import ru.overwrite.protect.bukkit.utils.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
@@ -21,19 +21,28 @@ public class PasswordHandler {
     private final ServerProtectorManager plugin;
     private final ServerProtectorAPI api;
     private final Config pluginConfig;
-    public final Map<String, Integer> attempts = new HashMap<>();
-    public final Map<String, BossBar> bossbars = new HashMap<>();
+    private final Map<String, Integer> attempts = new HashMap<>();
+
+    public Map<String, Integer> getAttempts() {
+        return this.attempts;
+    }
+
+    private final Map<String, BossBar> bossbars = new HashMap<>();
+
+    public Map<String, BossBar> getBossbars() {
+        return this.bossbars;
+    }
 
     public PasswordHandler(ServerProtectorManager plugin) {
         this.plugin = plugin;
-        pluginConfig = plugin.getPluginConfig();
-        api = plugin.getPluginAPI();
+        this.pluginConfig = plugin.getPluginConfig();
+        this.api = plugin.getPluginAPI();
     }
 
     public void checkPassword(Player p, String input, boolean resync) {
         Runnable run = () -> {
             ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(p, input);
-            if (pluginConfig.getSecureSettings().callEventOnPasswordEnter()) {
+            if (pluginConfig.getApiSettings().callEventOnPasswordEnter()) {
                 enterEvent.callEvent();
             }
             if (enterEvent.isCancelled()) {
@@ -80,6 +89,9 @@ public class PasswordHandler {
     }
 
     public void failedPassword(Player p) {
+        if (!api.isCalledFromAllowedApplication()) {
+            return;
+        }
         String playerName = p.getName();
         if (pluginConfig.getPunishSettings().enableAttempts()) {
             attempts.put(playerName, attempts.getOrDefault(playerName, 0) + 1);
@@ -103,6 +115,9 @@ public class PasswordHandler {
     }
 
     public void correctPassword(Player p) {
+        if (!api.isCalledFromAllowedApplication()) {
+            return;
+        }
         ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(p);
         successEvent.callEvent();
         if (successEvent.isCancelled()) {

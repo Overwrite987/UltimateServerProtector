@@ -77,6 +77,12 @@ public class Config {
         return this.secureSettings;
     }
 
+    private ApiSettings apiSettings;
+
+    public ApiSettings getApiSettings() {
+        return this.apiSettings;
+    }
+
     private MessageSettings messageSettings;
 
     public MessageSettings getMessageSettings() {
@@ -192,6 +198,7 @@ public class Config {
             configFile.set("main-settings.papi-support", false);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section main-settings");
+            mainSettings = configFile.getConfigurationSection("main-settings");
         }
         serializer = mainSettings.getString("serializer", "LEGACY").toUpperCase();
         this.mainSettings = new MainSettings(
@@ -216,6 +223,7 @@ public class Config {
             configFile.set("encryption-settings.encrypt-method", "");
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section encryption-settings");
+            encryptionSettings = configFile.getConfigurationSection("encryption-settings");
         }
         this.encryptionSettings = new EncryptionSettings(
                 encryptionSettings.getBoolean("enable-encryption", false),
@@ -255,6 +263,7 @@ public class Config {
             configFile.set("geyser-settings.geyser-nicknames", List.of("test99999"));
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section geyser-settings");
+            geyserSettings = configFile.getConfigurationSection("geyser-settings");
         }
         this.geyserSettings = new GeyserSettings(
                 geyserSettings.getString("geyser-prefix", "."),
@@ -278,6 +287,7 @@ public class Config {
             configFile.set("blocking-settings.allow-orientation-change", false);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section blocking-settings");
+            blockingSettings = configFile.getConfigurationSection("blocking-settings");
         }
         this.blockingSettings = new BlockingSettings(
                 blockingSettings.getBoolean("block-item-drop", true),
@@ -302,6 +312,7 @@ public class Config {
             configFile.set("session-settings.session-time", 21600);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section session-settings");
+            sessionSettings = configFile.getConfigurationSection("session-settings");
         }
         this.sessionSettings = new SessionSettings(
                 sessionSettings.getBoolean("session", true),
@@ -323,6 +334,7 @@ public class Config {
             configFile.set("punish-settings.max-rejoins", 3);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section punish-settings");
+            punishSettings = configFile.getConfigurationSection("punish-settings");
         }
         this.punishSettings = new PunishSettings(
                 punishSettings.getBoolean("enable-attempts", true),
@@ -345,9 +357,9 @@ public class Config {
             configFile.set("secure-settings.enable-ip-whitelist", false);
             configFile.set("secure-settings.only-console-usp", false);
             configFile.set("secure-settings.enable-excluded-players", false);
-            configFile.set("secure-settings.call-event-on-password-enter", false);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section secure-settings");
+            secureSettings = configFile.getConfigurationSection("secure-settings");
         }
         this.secureSettings = new SecureSettings(
                 secureSettings.getBoolean("enable-op-whitelist", false),
@@ -355,8 +367,26 @@ public class Config {
                 secureSettings.getBoolean("enable-permission-blacklist", false),
                 secureSettings.getBoolean("enable-ip-whitelist", false),
                 secureSettings.getBoolean("only-console-usp", false),
-                secureSettings.getBoolean("enable-excluded-players", false),
-                secureSettings.getBoolean("call-event-on-password-enter", false)
+                secureSettings.getBoolean("enable-excluded-players", false)
+        );
+    }
+
+    public void loadApiSettings(FileConfiguration config, FileConfiguration configFile) {
+        ConfigurationSection apiSettings = config.getConfigurationSection("api-settings");
+        if (!configFile.contains("api-settings")) {
+            logger.warn("Configuration section api-settings not found!");
+            configFile.createSection("api-settings");
+            configFile.set("api-settings.call-event-on-capture", false);
+            configFile.set("api-settings.call-event-on-password-enter", false);
+            configFile.set("api-settings.allowed-auth-api-calls-packages", Collections.emptyList());
+            save(plugin.getDataFilePath(), configFile, "config.yml");
+            logger.info("Created section api-settings");
+            apiSettings = configFile.getConfigurationSection("api-settings");
+        }
+        this.apiSettings = new ApiSettings(
+                apiSettings.getBoolean("call-event-on-capture", false),
+                apiSettings.getBoolean("call-event-on-password-enter", false),
+                apiSettings.getStringList("allowed-auth-api-calls-packages")
         );
     }
 
@@ -370,6 +400,7 @@ public class Config {
             configFile.set("message-settings.enable-console-broadcasts", true);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section message-settings");
+            messageSettings = configFile.getConfigurationSection("message-settings");
         }
         this.messageSettings = new MessageSettings(
                 messageSettings.getBoolean("send-titles", true),
@@ -388,6 +419,7 @@ public class Config {
             configFile.set("bossbar-settings.bar-style", "SEGMENTED_12");
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section bossbar-settings");
+            bossbarSettings = configFile.getConfigurationSection("bossbar-settings");
         }
         ConfigurationSection bossbar = plugin.getMessageFile().getConfigurationSection("bossbar");
         String bossbarMessage = getMessage(bossbar, "message");
@@ -411,6 +443,7 @@ public class Config {
             configFile.set("sound-settings.on-pas-correct", "ENTITY_PLAYER_LEVELUP;1.0;1.0");
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section sound-settings");
+            soundSettings = configFile.getConfigurationSection("sound-settings");
         }
         this.soundSettings = new SoundSettings(
                 soundSettings.getBoolean("enable-sounds"),
@@ -429,6 +462,7 @@ public class Config {
             configFile.set("effect-settings.effects", List.of("BLINDNESS;3"));
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section effect-settings");
+            effectSettings = configFile.getConfigurationSection("effect-settings");
         }
         this.effectSettings = new EffectSettings(
                 effectSettings.getBoolean("enable-effects", true),
@@ -447,6 +481,7 @@ public class Config {
             configFile.set("logging-settings.logging-command-execution", true);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section logging-settings");
+            loggingSettings = configFile.getConfigurationSection("logging-settings");
         }
         this.loggingSettings = new LoggingSettings(
                 loggingSettings.getBoolean("logging-pas", true),
@@ -470,6 +505,7 @@ public class Config {
             configFile.set("commands.failed-rejoin", Collections.emptyList());
             save(plugin.getDataFilePath(), configFile, "config.yml");
             logger.info("Created section main-settings");
+            commands = configFile.getConfigurationSection("commands");
         }
         this.commands = new Commands(
                 commands.getStringList("not-in-config"),

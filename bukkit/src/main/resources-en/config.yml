@@ -136,8 +136,16 @@ secure-settings:
   shutdown-on-disable-only-if-plugman: true
   # Allow certain players to enter the game without an admin password (disabled by default and unsafe)
   enable-excluded-players: false
-  # Should the plugin call ServerProtectorPasswordEnterEvent on password entering? (Disabled by default for security reasons)
+
+# Api settings
+api-settings:
+  # Should ServerProtectorCaptureEvent be triggered? (Disabled by default for security reasons)
+  call-event-on-capture: false
+  # Should ServerProtectorPasswordEnterEvent be triggered when the player enters a password? (Disabled by default for security reasons)
   call-event-on-password-enter: false
+  # From which packages is the invocation of authorization methods allowed from the API?
+  # Calls to API methods from other packages will be blocked. (By default, only calls from our plugin are allowed)
+  allowed-auth-api-calls-packages: []
 
 # Message display settings
 message-settings:

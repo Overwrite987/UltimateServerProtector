@@ -9,9 +9,9 @@ import org.bukkit.entity.Player;
 
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
-import ru.overwrite.protect.bukkit.api.CaptureReason;
+import ru.overwrite.protect.bukkit.api.events.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
-import ru.overwrite.protect.bukkit.api.ServerProtectorCaptureEvent;
+import ru.overwrite.protect.bukkit.api.events.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.utils.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
@@ -36,7 +36,7 @@ public final class TaskManager {
     public void startMainCheck(long interval) {
         runner.runPeriodicalAsync(() -> {
             for (Player p : Bukkit.getOnlinePlayers()) {
-                if (pluginConfig.getExcludedPlayers() != null && plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
+                if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
                     continue;
                 }
                 if (api.isCaptured(p)) {
@@ -48,7 +48,9 @@ public final class TaskManager {
                 }
                 if (!api.isAuthorised(p)) {
                     ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, Utils.getIp(p), captureReason);
-                    captureEvent.callEvent();
+                    if (pluginConfig.getApiSettings().callEventOnCapture()) {
+                        captureEvent.callEvent();
+                    }
                     if (captureEvent.isCancelled()) {
                         continue;
                     }
@@ -71,7 +73,7 @@ public final class TaskManager {
 
     public void startAdminCheck() {
         runner.runPeriodicalAsync(() -> {
-            if (api.login.isEmpty())
+            if (!api.isAnybodyCaptured())
                 return;
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (api.isCaptured(p) && !plugin.isAdmin(p.getName())) {
@@ -83,7 +85,7 @@ public final class TaskManager {
 
     public void startCapturesMessages(FileConfiguration config) {
         runner.runPeriodicalAsync(() -> {
-            if (api.login.isEmpty())
+            if (!api.isAnybodyCaptured())
                 return;
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (api.isCaptured(p)) {
@@ -101,7 +103,7 @@ public final class TaskManager {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.isOp()
                         && !this.pluginConfig.getAccessData().opWhitelist().contains(p.getName())
-                        && (pluginConfig.getExcludedPlayers() != null && !plugin.isExcluded(p, this.pluginConfig.getExcludedPlayers().opWhitelist()))) {
+                        && (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, this.pluginConfig.getExcludedPlayers().opWhitelist()))) {
                     plugin.checkFail(p.getName(), pluginConfig.getCommands().notInOpWhitelist());
                 }
             }
@@ -113,7 +115,7 @@ public final class TaskManager {
             for (Player p : Bukkit.getOnlinePlayers()) {
                 for (String badperm : this.pluginConfig.getAccessData().blacklistedPerms()) {
                     if (p.hasPermission(badperm)
-                            && (pluginConfig.getExcludedPlayers() != null && !plugin.isExcluded(p, this.pluginConfig.getExcludedPlayers().blacklistedPerms()))) {
+                            && (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, this.pluginConfig.getExcludedPlayers().blacklistedPerms()))) {
                         plugin.checkFail(p.getName(), pluginConfig.getCommands().haveBlacklistedPerm());
                     }
                 }
@@ -123,7 +125,7 @@ public final class TaskManager {
 
     public void startCapturesTimer() {
         runner.runPeriodicalAsync(() -> {
-            if (api.login.isEmpty())
+            if (!api.isAnybodyCaptured())
                 return;
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (!api.isCaptured(p)) {
@@ -139,25 +141,25 @@ public final class TaskManager {
                                 BarColor.valueOf(this.pluginConfig.getBossbarSettings().barColor()),
                                 BarStyle.valueOf(this.pluginConfig.getBossbarSettings().barStyle()));
                         bossbar.addPlayer(p);
-                        passwordHandler.bossbars.put(playerName, bossbar);
+                        passwordHandler.getBossbars().put(playerName, bossbar);
                     }
                 } else {
                     plugin.getPerPlayerTime().compute(playerName, (k, currentTime) -> currentTime + 1);
                     int newTime = plugin.getPerPlayerTime().get(playerName);
-                    if (this.pluginConfig.getBossbarSettings().enableBossbar() && passwordHandler.bossbars.get(playerName) != null) {
-                        passwordHandler.bossbars.get(playerName).setTitle(this.pluginConfig.getBossbarSettings().bossbarMessage()
+                    if (this.pluginConfig.getBossbarSettings().enableBossbar() && passwordHandler.getBossbars().get(playerName) != null) {
+                        passwordHandler.getBossbars().get(playerName).setTitle(this.pluginConfig.getBossbarSettings().bossbarMessage()
                                 .replace("%time%", Integer.toString(this.pluginConfig.getPunishSettings().time() - newTime)));
                         double percents = (this.pluginConfig.getPunishSettings().time() - newTime)
                                 / (double) this.pluginConfig.getPunishSettings().time();
                         if (percents > 0) {
-                            passwordHandler.bossbars.get(playerName).setProgress(percents);
-                            passwordHandler.bossbars.get(playerName).addPlayer(p);
+                            passwordHandler.getBossbars().get(playerName).setProgress(percents);
+                            passwordHandler.getBossbars().get(playerName).addPlayer(p);
                         }
                     }
                 }
                 if (!noTimeLeft(playerName) && this.pluginConfig.getPunishSettings().enableTime()) {
                     plugin.checkFail(playerName, pluginConfig.getCommands().failedTime());
-                    passwordHandler.bossbars.get(playerName).removePlayer(p);
+                    passwordHandler.getBossbars().get(playerName).removePlayer(p);
                 }
             }
         }, 0L, 20L);

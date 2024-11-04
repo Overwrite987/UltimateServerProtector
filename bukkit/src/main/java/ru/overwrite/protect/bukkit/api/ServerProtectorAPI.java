@@ -1,9 +1,7 @@
 package ru.overwrite.protect.bukkit.api;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
+import java.util.stream.Collectors;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
@@ -18,78 +16,166 @@ public class ServerProtectorAPI {
 
     private final Config pluginConfig;
     private final Logger logger;
-    public final Set<String> login = new HashSet<>();
-    public final Map<String, String> sessions = new HashMap<>();
-    public final Set<String> saved = new HashSet<>();
+
+    private final Set<String> captured = new HashSet<>();
+    private final Map<String, String> sessions = new HashMap<>();
+    private final Set<String> saved = new HashSet<>();
 
     public ServerProtectorAPI(@NotNull ServerProtectorManager plugin) {
         this.pluginConfig = plugin.getPluginConfig();
         this.logger = plugin.getPluginLogger();
     }
 
-    public boolean isCaptured(@NotNull Player p) {
-        if (this.login.isEmpty()) {
+    public boolean isAnybodyCaptured() {
+        return !this.captured.isEmpty();
+    }
+
+    public boolean isCaptured(@NotNull Player player) {
+        if (!isAnybodyCaptured()) {
             return false;
         }
-        return this.login.contains(p.getName());
+        return this.captured.contains(player.getName());
     }
 
-    public void capturePlayer(@NotNull Player p) {
-        if (isCaptured(p)) {
-            logger.warn("Unable to capture " + p.getName() + " Reason: Already captured");
+    public boolean isCaptured(@NotNull String playerName) {
+        if (!isAnybodyCaptured()) {
+            return false;
+        }
+        return this.captured.contains(playerName);
+    }
+
+    public void capturePlayer(@NotNull Player player) {
+        if (isCaptured(player)) {
+            logger.warn("Unable to capture " + player.getName() + " Reason: Already captured");
             return;
         }
-        this.login.add(p.getName());
+        this.captured.add(player.getName());
     }
 
-    public void uncapturePlayer(@NotNull Player p) {
-        if (!isCaptured(p)) {
-            logger.warn("Unable to uncapture " + p.getName() + " Reason: Not captured");
+    public void capturePlayer(@NotNull String playerName) {
+        if (isCaptured(playerName)) {
+            logger.warn("Unable to capture " + playerName + " Reason: Already captured");
             return;
         }
-        this.login.remove(p.getName());
+        this.captured.add(playerName);
     }
 
-    public boolean isAuthorised(@NotNull Player p) {
-        return pluginConfig.getSessionSettings().session() ? hasSession(p)
-                : saved.contains(p.getName());
+    public void uncapturePlayer(@NotNull Player player) {
+        if (!isCalledFromAllowedApplication()) {
+            logger.warn("Unable to uncapture " + player.getName() + " Reason: Action not allowed");
+            return;
+        }
+        if (!isCaptured(player)) {
+            logger.warn("Unable to uncapture " + player.getName() + " Reason: Not captured");
+            return;
+        }
+        this.captured.remove(player.getName());
     }
 
-    public boolean hasSession(@NotNull Player p) {
-        return !sessions.isEmpty() && sessions.containsKey(p.getName()) && sessions.get(p.getName()).equals(Utils.getIp(p));
+    public void uncapturePlayer(@NotNull String playerName) {
+        if (!isCalledFromAllowedApplication()) {
+            logger.warn("Unable to uncapture " + playerName + " Reason: Action not allowed");
+            return;
+        }
+        if (!isCaptured(playerName)) {
+            logger.warn("Unable to uncapture " + playerName + " Reason: Not captured");
+            return;
+        }
+        this.captured.remove(playerName);
     }
 
-    public boolean hasSession(@NotNull Player p, @NotNull String ip) {
-        return !sessions.isEmpty() && sessions.containsKey(p.getName()) && sessions.get(p.getName()).equals(ip);
+    public boolean isAuthorised(@NotNull Player player) {
+        return pluginConfig.getSessionSettings().session() ?
+                hasSession(player) :
+                saved.contains(player.getName());
     }
 
-    public void authorisePlayer(@NotNull Player p) {
-        if (isAuthorised(p)) {
-            logger.warn("Unable to authorise " + p.getName() + " Reason: Already authorised");
+    public boolean hasSession(@NotNull Player player) {
+        return !sessions.isEmpty() && sessions.containsKey(player.getName()) && sessions.get(player.getName()).equals(Utils.getIp(player));
+    }
+
+    public boolean hasSession(@NotNull Player player, @NotNull String ip) {
+        return !sessions.isEmpty() && sessions.containsKey(player.getName()) && sessions.get(player.getName()).equals(ip);
+    }
+
+    public void authorisePlayer(@NotNull Player player) {
+        if (!isCalledFromAllowedApplication()) {
+            logger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
+            return;
+        }
+        if (isAuthorised(player)) {
+            logger.warn("Unable to authorise " + player.getName() + " Reason: Already authorised");
             return;
         }
         if (pluginConfig.getSessionSettings().session()) {
-            sessions.put(p.getName(), Utils.getIp(p));
+            sessions.put(player.getName(), Utils.getIp(player));
             return;
         }
-        saved.add(p.getName());
+        saved.add(player.getName());
     }
 
-    public void deauthorisePlayer(@NotNull Player p) {
-        if (!isAuthorised(p)) {
-            logger.warn("Unable to deauthorise " + p.getName() + " Reason: Is not authorised");
+    public void deauthorisePlayer(@NotNull Player player) {
+        if (!isCalledFromAllowedApplication()) {
+            logger.warn("Unable to deauthorise " + player.getName() + " Reason: Action not allowed");
+            return;
+        }
+        if (!isAuthorised(player)) {
+            logger.warn("Unable to deauthorise " + player.getName() + " Reason: Is not authorised");
             return;
         }
         if (pluginConfig.getSessionSettings().session()) {
-            sessions.remove(p.getName(), Utils.getIp(p));
+            sessions.remove(player.getName(), Utils.getIp(player));
             return;
         }
-        saved.remove(p.getName());
+        saved.remove(player.getName());
     }
 
-    public void handleInteraction(@NotNull Player p, Cancellable e) {
-        if (isCaptured(p)) {
+    public void unsavePlayer(@NotNull Player player) {
+        saved.remove(player.getName());
+    }
+
+    public void unsavePlayer(@NotNull String playerName) {
+        saved.remove(playerName);
+    }
+
+    public void handleInteraction(@NotNull Player player, Cancellable e) {
+        if (isCaptured(player)) {
             e.setCancelled(true);
         }
+    }
+
+    public void clearCaptured() {
+        this.captured.clear();
+    }
+
+    public void clearSessions() {
+        this.sessions.clear();
+    }
+
+    public void clearSaved() {
+        this.saved.clear();
+    }
+
+    public boolean isCalledFromAllowedApplication() {
+        StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+
+        List<Class<?>> callStack = walker.walk(frames ->
+                frames.map(StackWalker.StackFrame::getDeclaringClass)
+                        .collect(Collectors.toList())
+        );
+        Class<?> cls = callStack.get(2);
+
+        if (cls.getPackageName().startsWith("ru.overwrite.protect")) {
+            return true;
+        }
+        if (pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()) {
+            return false;
+        }
+        for (String allowed : pluginConfig.getApiSettings().allowedAuthApiCallsPackages()) {
+            if (cls.getPackageName().startsWith(allowed)) {
+                return true;
+            }
+        }
+        return false;
     }
 }
