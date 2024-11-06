@@ -8,7 +8,7 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordEnterEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordFailEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordSuccessEvent;
-import ru.overwrite.protect.bukkit.utils.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;

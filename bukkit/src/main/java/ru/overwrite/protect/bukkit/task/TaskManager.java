@@ -12,7 +12,7 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorCaptureEvent;
-import ru.overwrite.protect.bukkit.utils.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.Date;

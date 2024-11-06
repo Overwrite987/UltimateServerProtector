@@ -1,4 +1,4 @@
-package ru.overwrite.protect.bukkit.utils.configuration.data;
+package ru.overwrite.protect.bukkit.configuration.data;
 
 public record MessageSettings(
         boolean sendTitle,

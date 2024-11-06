@@ -9,7 +9,7 @@ import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.utils.logging.Logger;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
-import ru.overwrite.protect.bukkit.utils.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 public final class ServerProtectorAPI {

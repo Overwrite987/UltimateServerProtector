@@ -9,7 +9,7 @@ import org.bukkit.event.player.PlayerCommandPreprocessEvent;
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
-import ru.overwrite.protect.bukkit.utils.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.Config;
 
 public class ChatListener implements Listener {
 

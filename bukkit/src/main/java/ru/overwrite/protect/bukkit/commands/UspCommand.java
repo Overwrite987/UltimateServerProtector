@@ -4,8 +4,8 @@ import org.bukkit.command.*;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.commands.subcommands.*;
-import ru.overwrite.protect.bukkit.utils.configuration.Config;
-import ru.overwrite.protect.bukkit.utils.configuration.data.UspMessages;
+import ru.overwrite.protect.bukkit.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.data.UspMessages;
 
 import java.util.*;
 
