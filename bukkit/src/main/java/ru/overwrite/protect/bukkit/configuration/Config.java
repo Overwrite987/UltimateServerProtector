@@ -35,126 +35,6 @@ public final class Config {
         return this.perPlayerPasswords;
     }
 
-    private MainSettings mainSettings;
-
-    public MainSettings getMainSettings() {
-        return this.mainSettings;
-    }
-
-    private EncryptionSettings encryptionSettings;
-
-    public EncryptionSettings getEncryptionSettings() {
-        return this.encryptionSettings;
-    }
-
-    private GeyserSettings geyserSettings;
-
-    public GeyserSettings getGeyserSettings() {
-        return this.geyserSettings;
-    }
-
-    private BlockingSettings blockingSettings;
-
-    public BlockingSettings getBlockingSettings() {
-        return this.blockingSettings;
-    }
-
-    private SessionSettings sessionSettings;
-
-    public SessionSettings getSessionSettings() {
-        return this.sessionSettings;
-    }
-
-    private PunishSettings punishSettings;
-
-    public PunishSettings getPunishSettings() {
-        return this.punishSettings;
-    }
-
-    private SecureSettings secureSettings;
-
-    public SecureSettings getSecureSettings() {
-        return this.secureSettings;
-    }
-
-    private ApiSettings apiSettings;
-
-    public ApiSettings getApiSettings() {
-        return this.apiSettings;
-    }
-
-    private MessageSettings messageSettings;
-
-    public MessageSettings getMessageSettings() {
-        return this.messageSettings;
-    }
-
-    private BossbarSettings bossbarSettings;
-
-    public BossbarSettings getBossbarSettings() {
-        return this.bossbarSettings;
-    }
-
-    private SoundSettings soundSettings;
-
-    public SoundSettings getSoundSettings() {
-        return this.soundSettings;
-    }
-
-    private EffectSettings effectSettings;
-
-    public EffectSettings getEffectSettings() {
-        return this.effectSettings;
-    }
-
-    private LoggingSettings loggingSettings;
-
-    public LoggingSettings getLoggingSettings() {
-        return this.loggingSettings;
-    }
-
-    private Commands commands;
-
-    public Commands getCommands() {
-        return this.commands;
-    }
-
-    private AccessData accessData;
-
-    public AccessData getAccessData() {
-        return this.accessData;
-    }
-
-    private ExcludedPlayers excludedPlayers;
-
-    public ExcludedPlayers getExcludedPlayers() {
-        return this.excludedPlayers;
-    }
-
-    private UspMessages uspMessages;
-
-    public UspMessages getUspMessages() {
-        return this.uspMessages;
-    }
-
-    private Messages messages;
-
-    public Messages getMessages() {
-        return this.messages;
-    }
-
-    private Titles titles;
-
-    public Titles getTitles() {
-        return this.titles;
-    }
-
-    private Broadcasts broadcasts;
-
-    public Broadcasts getBroadcasts() {
-        return this.broadcasts;
-    }
-
     public void setupPasswords(FileConfiguration dataFile) {
         perPlayerPasswords = new ConcurrentHashMap<>();
         ConfigurationSection data = dataFile.getConfigurationSection("data");
@@ -184,6 +64,12 @@ public final class Config {
         }
     }
 
+    private MainSettings mainSettings;
+
+    public MainSettings getMainSettings() {
+        return this.mainSettings;
+    }
+
     public void loadMainSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection mainSettings = config.getConfigurationSection("main-settings");
         if (!configFile.contains("main-settings")) {
@@ -209,6 +95,12 @@ public final class Config {
                 mainSettings.getLong("check-interval", 40),
                 mainSettings.getBoolean("papi-support", false)
         );
+    }
+
+    private EncryptionSettings encryptionSettings;
+
+    public EncryptionSettings getEncryptionSettings() {
+        return this.encryptionSettings;
     }
 
     public void loadEncryptionSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -254,6 +146,12 @@ public final class Config {
         return oldMethods;
     }
 
+    private GeyserSettings geyserSettings;
+
+    public GeyserSettings getGeyserSettings() {
+        return this.geyserSettings;
+    }
+
     public void loadGeyserSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection geyserSettings = config.getConfigurationSection("geyser-settings");
         if (!configFile.contains("geyser-settings")) {
@@ -269,6 +167,12 @@ public final class Config {
                 geyserSettings.getString("geyser-prefix", "."),
                 new HashSet<>(geyserSettings.getStringList("geyser-nicknames"))
         );
+    }
+
+    private BlockingSettings blockingSettings;
+
+    public BlockingSettings getBlockingSettings() {
+        return this.blockingSettings;
     }
 
     public void loadAdditionalChecks(FileConfiguration config, FileConfiguration configFile) {
@@ -302,6 +206,12 @@ public final class Config {
         );
     }
 
+    private SessionSettings sessionSettings;
+
+    public SessionSettings getSessionSettings() {
+        return this.sessionSettings;
+    }
+
     public void loadSessionSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection sessionSettings = config.getConfigurationSection("session-settings");
         if (!configFile.contains("session-settings")) {
@@ -319,6 +229,12 @@ public final class Config {
                 sessionSettings.getBoolean("session-time-enabled", true),
                 sessionSettings.getInt("session-time", 21600)
         );
+    }
+
+    private PunishSettings punishSettings;
+
+    public PunishSettings getPunishSettings() {
+        return this.punishSettings;
     }
 
     public void loadPunishSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -346,6 +262,12 @@ public final class Config {
         );
     }
 
+    private SecureSettings secureSettings;
+
+    public SecureSettings getSecureSettings() {
+        return this.secureSettings;
+    }
+
     public void loadSecureSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection secureSettings = config.getConfigurationSection("secure-settings");
         if (!configFile.contains("secure-settings")) {
@@ -371,6 +293,12 @@ public final class Config {
         );
     }
 
+    private ApiSettings apiSettings;
+
+    public ApiSettings getApiSettings() {
+        return this.apiSettings;
+    }
+
     public void loadApiSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection apiSettings = config.getConfigurationSection("api-settings");
         if (!configFile.contains("api-settings")) {
@@ -390,6 +318,12 @@ public final class Config {
         );
     }
 
+    private MessageSettings messageSettings;
+
+    public MessageSettings getMessageSettings() {
+        return this.messageSettings;
+    }
+
     public void loadMessageSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
         if (!configFile.contains("message-settings")) {
@@ -407,6 +341,12 @@ public final class Config {
                 messageSettings.getBoolean("enable-broadcasts", true),
                 messageSettings.getBoolean("enable-console-broadcasts", true)
         );
+    }
+
+    private BossbarSettings bossbarSettings;
+
+    public BossbarSettings getBossbarSettings() {
+        return this.bossbarSettings;
     }
 
     public void loadBossbarSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -432,6 +372,12 @@ public final class Config {
         );
     }
 
+    private SoundSettings soundSettings;
+
+    public SoundSettings getSoundSettings() {
+        return this.soundSettings;
+    }
+
     public void loadSoundSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection soundSettings = config.getConfigurationSection("sound-settings");
         if (!configFile.contains("sound-settings")) {
@@ -453,6 +399,12 @@ public final class Config {
         );
     }
 
+    private EffectSettings effectSettings;
+
+    public EffectSettings getEffectSettings() {
+        return this.effectSettings;
+    }
+
     public void loadEffects(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection effectSettings = config.getConfigurationSection("effect-settings");
         if (!configFile.contains("effect-settings")) {
@@ -468,6 +420,12 @@ public final class Config {
                 effectSettings.getBoolean("enable-effects", true),
                 effectSettings.getStringList("effects")
         );
+    }
+
+    private LoggingSettings loggingSettings;
+
+    public LoggingSettings getLoggingSettings() {
+        return this.loggingSettings;
     }
 
     public void loadLoggingSettings(FileConfiguration config, FileConfiguration configFile) {
@@ -489,6 +447,12 @@ public final class Config {
                 loggingSettings.getBoolean("logging-enable-disable", true),
                 loggingSettings.getBoolean("logging-command-execution", true)
         );
+    }
+
+    private Commands commands;
+
+    public Commands getCommands() {
+        return this.commands;
     }
 
     public void loadFailCommands(FileConfiguration config, FileConfiguration configFile) {
@@ -518,6 +482,12 @@ public final class Config {
         );
     }
 
+    private AccessData accessData;
+
+    public AccessData getAccessData() {
+        return this.accessData;
+    }
+
     public void loadAccessData(FileConfiguration config) {
         Set<String> perms = new HashSet<>(config.getStringList("permissions"));
         List<String> allowedCommands = config.getStringList("allowed-commands");
@@ -543,6 +513,12 @@ public final class Config {
         this.accessData = new AccessData(perms, allowedCommands, opWhitelist, blacklistedPerms, ipWhitelist);
     }
 
+    private ExcludedPlayers excludedPlayers;
+
+    public ExcludedPlayers getExcludedPlayers() {
+        return this.excludedPlayers;
+    }
+
     public void setupExcluded(FileConfiguration config) {
         if (config.getBoolean("secure-settings.enable-excluded-players")) {
             ConfigurationSection excludedPlayers = config.getConfigurationSection("excluded-players");
@@ -553,6 +529,12 @@ public final class Config {
                     excludedPlayers.getStringList("blacklisted-perms")
             );
         }
+    }
+
+    private UspMessages uspMessages;
+
+    public UspMessages getUspMessages() {
+        return this.uspMessages;
     }
 
     public void loadUspMessages(FileConfiguration message) {
@@ -591,6 +573,12 @@ public final class Config {
         );
     }
 
+    private Messages messages;
+
+    public Messages getMessages() {
+        return this.messages;
+    }
+
     public void loadMsgMessages(FileConfiguration message) {
         ConfigurationSection msg = message.getConfigurationSection("msg");
         this.messages = new Messages(
@@ -603,6 +591,12 @@ public final class Config {
         );
     }
 
+    private Titles titles;
+
+    public Titles getTitles() {
+        return this.titles;
+    }
+
     public void loadTitleMessages(FileConfiguration message) {
         ConfigurationSection titles = message.getConfigurationSection("titles");
         this.titles = new Titles(
@@ -610,6 +604,12 @@ public final class Config {
                 getMessage(titles, "incorrect").split(";"),
                 getMessage(titles, "correct").split(";")
         );
+    }
+
+    private Broadcasts broadcasts;
+
+    public Broadcasts getBroadcasts() {
+        return this.broadcasts;
     }
 
     public void loadBroadcastMessages(FileConfiguration message) {
