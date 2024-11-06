@@ -156,6 +156,18 @@ public final class ServerProtectorAPI {
         this.saved.clear();
     }
 
+    private static final boolean ALLOW_UNSAFE_CALLS;
+
+    static {
+        boolean allow = false;
+        try {
+            String rawDelay = System.getProperty("USP.allowUnsafeCalls");
+            if (rawDelay != null) allow = Boolean.valueOf(rawDelay);
+        } catch (Exception ignored) {
+        }
+        ALLOW_UNSAFE_CALLS = allow;
+    }
+
     public boolean isCalledFromAllowedApplication() {
         StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
 
@@ -168,7 +180,7 @@ public final class ServerProtectorAPI {
         if (className.startsWith("ru.overwrite.protect.bukkit")) {
             return true;
         }
-        if (pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()) {
+        if (!ALLOW_UNSAFE_CALLS || pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()){
             pluginLogger.warn("Found illegal method call from " + className);
             return false;
         }
