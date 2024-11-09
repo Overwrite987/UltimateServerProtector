@@ -123,12 +123,12 @@ public final class PasswordHandler {
         if (successEvent.isCancelled()) {
             return;
         }
-        api.uncapturePlayer(p);
+        String playerName = p.getName();
+        api.uncapturePlayer(playerName);
         p.sendMessage(pluginConfig.getMessages().correct());
         if (pluginConfig.getMessageSettings().sendTitle()) {
             Utils.sendTitleMessage(pluginConfig.getTitles().correct(), p);
         }
-        String playerName = p.getName();
         plugin.getPerPlayerTime().remove(playerName);
         if (pluginConfig.getSoundSettings().enableSounds()) {
             Utils.sendSound(pluginConfig.getSoundSettings().onPasCorrect(), p);

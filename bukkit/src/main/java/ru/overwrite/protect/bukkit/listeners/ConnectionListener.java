@@ -40,13 +40,13 @@ public class ConnectionListener implements Listener {
     public void onLogin(PlayerLoginEvent e) {
         Player p = e.getPlayer();
         runner.runAsync(() -> {
+            String playerName = p.getName();
             CaptureReason captureReason = plugin.checkPermissions(p);
-            if (api.isCaptured(p) && captureReason == null) {
-                api.uncapturePlayer(p);
+            if (api.isCaptured(playerName) && captureReason == null) {
+                api.uncapturePlayer(playerName);
                 return;
             }
             if (captureReason != null) {
-                String playerName = p.getName();
                 String ip = e.getAddress().getHostAddress();
                 if (pluginConfig.getSecureSettings().enableIpWhitelist()) {
                     if (!isIPAllowed(playerName, ip)) {
@@ -64,7 +64,7 @@ public class ConnectionListener implements Listener {
                         if (captureEvent.isCancelled()) {
                             return;
                         }
-                        api.capturePlayer(p);
+                        api.capturePlayer(playerName);
                     }
                 }
             }
