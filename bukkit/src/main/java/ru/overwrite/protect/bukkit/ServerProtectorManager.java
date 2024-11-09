@@ -32,7 +32,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
     boolean proxy = false;
 
-    protected boolean paper;
+    private boolean paper;
 
     public boolean isPaper() {
         return this.paper;
@@ -102,15 +102,14 @@ public class ServerProtectorManager extends JavaPlugin {
         return runner;
     }
 
-    public boolean checkPaper(FileConfiguration messageFile) {
+    public void checkPaper(FileConfiguration messageFile) {
         if (server.getName().equals("CraftBukkit")) {
             pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
             pluginLogger.info(messageFile.getString("system.paper-1", "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"));
             pluginLogger.info(messageFile.getString("system.paper-2", "§eDownload Paper: §ahttps://papermc.io/downloads/all"));
             pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-            return false;
         }
-        return true;
+        this.paper = true;
     }
 
     public boolean isSafe(FileConfiguration messageFile, PluginManager pluginManager) {
@@ -215,8 +214,7 @@ public class ServerProtectorManager extends JavaPlugin {
                 command.setExecutor(new PasCommand(this));
                 commandMap.register(getDescription().getName(), command);
             } catch (Exception ex) {
-                pluginLogger.info("Unable to register password command!");
-                ex.printStackTrace();
+                pluginLogger.info("Unable to register password command! " + ex.getMessage());
                 pluginManager.disablePlugin(this);
             }
         } else {
@@ -252,10 +250,10 @@ public class ServerProtectorManager extends JavaPlugin {
         if (!dataFolder.exists() && !dataFolder.mkdirs()) {
             throw new RuntimeException("Unable to create data folder");
         }
-        ConfigurationSection file_settings = config.getConfigurationSection("file-settings");
-        boolean fullPath = file_settings.getBoolean("use-full-path");
-        String logFilePath = fullPath ? file_settings.getString("log-file-path") : dataFolder.getPath();
-        logFile = new File(logFilePath, file_settings.getString("log-file"));
+        ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
+        boolean fullPath = fileSettings.getBoolean("use-full-path");
+        String logFilePath = fullPath ? fileSettings.getString("log-file-path") : dataFolder.getPath();
+        logFile = new File(logFilePath, fileSettings.getString("log-file"));
     }
 
     public void checkForUpdates(FileConfiguration config, FileConfiguration messageFile) {
