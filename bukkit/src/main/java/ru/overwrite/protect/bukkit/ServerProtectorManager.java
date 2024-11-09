@@ -31,7 +31,11 @@ public class ServerProtectorManager extends JavaPlugin {
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("'['dd-MM-yyyy']' HH:mm:ss -");
     private final Logger pluginLogger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 
-    boolean proxy = false;
+    private boolean proxy;
+
+    public boolean isProxy() {
+        return this.proxy;
+    }
 
     private boolean paper;
 
