@@ -278,13 +278,13 @@ public class ServerProtectorManager extends JavaPlugin {
             return;
         }
         runner.run(() -> {
-            for (String c : commands) {
-                server.dispatchCommand(server.getConsoleSender(), c.replace("%player%", playerName));
+            for (String command : commands) {
+                server.dispatchCommand(server.getConsoleSender(), command.replace("%player%", playerName));
                 if (pluginConfig.getLoggingSettings().loggingCommandExecution()) {
                     Date date = new Date();
                     logToFile(messageFile.getString("log-format.command", "ERROR")
                             .replace("%player%", playerName)
-                            .replace("%cmd%", c)
+                            .replace("%cmd%", command)
                             .replace("%date%", DATE_FORMAT.format(date)));
                 }
             }
