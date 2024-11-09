@@ -5,7 +5,7 @@ import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public final class ServerProtector extends ServerProtectorManager {
@@ -28,7 +28,7 @@ public final class ServerProtector extends ServerProtectorManager {
         registerListeners(pluginManager);
         registerCommands(pluginManager, config);
         startTasks(config);
-        logEnableDisable(getMessageFile().getString("log-format.enabled"), new Date(startTime));
+        logEnableDisable(getMessageFile().getString("log-format.enabled"), LocalDateTime.now());
         if (config.getBoolean("main-settings.enable-metrics")) {
             new Metrics(this, 13347);
         }
@@ -40,7 +40,7 @@ public final class ServerProtector extends ServerProtectorManager {
     @Override
     public void onDisable() {
         if (getMessageFile() != null) {
-            logEnableDisable(getMessageFile().getString("log-format.disabled"), new Date());
+            logEnableDisable(getMessageFile().getString("log-format.disabled"), LocalDateTime.now());
         }
         final FileConfiguration config = getConfig();
         if (config.getBoolean("message-settings.enable-broadcasts")) {

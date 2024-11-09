@@ -11,7 +11,7 @@ import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordSuccessEven
 import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -109,7 +109,7 @@ public final class PasswordHandler {
             Utils.sendSound(pluginConfig.getSoundSettings().onPasFail(), p);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction("log-format.failed", p, new Date());
+            plugin.logAction("log-format.failed", p, LocalDateTime.now());
         }
         plugin.sendAlert(p, pluginConfig.getBroadcasts().failed());
     }
@@ -148,7 +148,7 @@ public final class PasswordHandler {
             }, pluginConfig.getSessionSettings().sessionTime() * 20L);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction("log-format.passed", p, new Date());
+            plugin.logAction("log-format.passed", p, LocalDateTime.now());
         }
         if (pluginConfig.getBossbarSettings().enableBossbar() && bossbars.get(playerName) != null) {
             bossbars.get(playerName).removeAll();

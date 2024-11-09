@@ -3,7 +3,6 @@ package ru.overwrite.protect.bukkit.utils;
 import net.kyori.adventure.text.Component;
 import net.kyori.adventure.text.minimessage.MiniMessage;
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
-import net.md_5.bungee.api.ChatColor;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.entity.Player;
@@ -24,8 +23,6 @@ import java.util.Set;
 import java.util.function.Consumer;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
-
-import static net.md_5.bungee.api.ChatColor.COLOR_CHAR;
 
 public final class Utils {
 
@@ -79,6 +76,8 @@ public final class Utils {
         p.playSound(p.getLocation(), sound, volume, pitch);
     }
 
+    private static final char COLOR_CHAR = '§';
+
     public static String colorize(String message, String serializer) {
         return switch (serializer) {
             case "LEGACY" -> {
@@ -98,7 +97,7 @@ public final class Utils {
                     }
                     message = matcher.appendTail(builder).toString();
                 }
-                yield ChatColor.translateAlternateColorCodes('&', message);
+                yield message.replace('&', COLOR_CHAR); // The fastest approach, even if it looks like crap
             }
             case "MINIMESSAGE" -> {
                 Component component = MiniMessage.miniMessage().deserialize(message);

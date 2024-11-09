@@ -21,13 +21,14 @@ import ru.overwrite.protect.bukkit.utils.logging.*;
 
 import java.io.*;
 import java.lang.reflect.Constructor;
-import java.text.SimpleDateFormat;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerProtectorManager extends JavaPlugin {
 
-    public static final SimpleDateFormat DATE_FORMAT = new SimpleDateFormat("[dd-MM-yyy] HH:mm:ss -");
+    private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("'['dd-MM-yyyy']' HH:mm:ss -");
     private final Logger pluginLogger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
 
     boolean proxy = false;
@@ -281,11 +282,11 @@ public class ServerProtectorManager extends JavaPlugin {
             for (String command : commands) {
                 server.dispatchCommand(server.getConsoleSender(), command.replace("%player%", playerName));
                 if (pluginConfig.getLoggingSettings().loggingCommandExecution()) {
-                    Date date = new Date();
+                    LocalDateTime date = LocalDateTime.now();
                     logToFile(messageFile.getString("log-format.command", "ERROR")
                             .replace("%player%", playerName)
                             .replace("%cmd%", command)
-                            .replace("%date%", DATE_FORMAT.format(date)));
+                            .replace("%date%", date.format(TIME_FORMATTER)));
                 }
             }
         });
@@ -321,9 +322,9 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void logEnableDisable(String msg, Date date) {
+    public void logEnableDisable(String msg, LocalDateTime date) {
         if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
-            logToFile(msg.replace("%date%", DATE_FORMAT.format(date)));
+            logToFile(msg.replace("%date%", date.format(TIME_FORMATTER)));
         }
     }
 
@@ -374,12 +375,12 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void logAction(String key, Player player, Date date) {
+    public void logAction(String key, Player player, LocalDateTime date) {
         runner.runAsync(() ->
                 logToFile(messageFile.getString(key, "ERROR: " + key + " does not exist!")
                         .replace("%player%", player.getName())
                         .replace("%ip%", Utils.getIp(player))
-                        .replace("%date%", DATE_FORMAT.format(date)))
+                        .replace("%date%", date.format(TIME_FORMATTER)))
         );
     }
 

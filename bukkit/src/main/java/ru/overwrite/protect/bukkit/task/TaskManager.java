@@ -15,7 +15,7 @@ import ru.overwrite.protect.bukkit.api.events.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 
 public final class TaskManager {
 
@@ -63,7 +63,7 @@ public final class TaskManager {
                     }
                     plugin.applyHide(p);
                     if (pluginConfig.getLoggingSettings().loggingPas()) {
-                        plugin.logAction("log-format.captured", p, new Date());
+                        plugin.logAction("log-format.captured", p, LocalDateTime.now());
                     }
                     plugin.sendAlert(p, pluginConfig.getBroadcasts().captured());
                 }

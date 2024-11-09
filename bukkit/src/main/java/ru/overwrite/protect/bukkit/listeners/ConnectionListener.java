@@ -16,7 +16,7 @@ import ru.overwrite.protect.bukkit.api.events.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.task.Runner;
 import ru.overwrite.protect.bukkit.configuration.Config;
 
-import java.util.Date;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -84,7 +84,7 @@ public class ConnectionListener implements Listener {
                     plugin.applyHide(p);
                 }
                 if (pluginConfig.getLoggingSettings().loggingJoin()) {
-                    plugin.logAction("log-format.joined", p, new Date());
+                    plugin.logAction("log-format.joined", p, LocalDateTime.now());
                 }
                 plugin.sendAlert(p, pluginConfig.getBroadcasts().joined());
             }
