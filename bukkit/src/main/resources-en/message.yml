@@ -14,16 +14,6 @@ broadcasts:
   joined: "%prefix% &fAdmin &3%player% &fjoined the game! &fIP: &c%ip%"
   captured: "%prefix% &fPlayer &3%player% &fwas detected with admin-permissions! &fIP: &c%ip%"
   disabled: "%prefix% &6&lWARNING! &fPlugin has been disabled!"
-  
-# Log format 
-log-format:
-  enabled: "%date% [UltimateServerProtector - plugin enabled]"
-  disabled: "%date% [UltimateServerProtector - plugin disabled]"
-  failed: "%date% Admin %player% entered admin password incorrectly! IP: %ip%"
-  passed: "%date% Admin %player% sucsessfully logged in! IP: %ip%"
-  joined: "%date% Admin %player% joined the game. IP: %ip%"
-  captured: "%date% Player %player% was detected with admin-permissions! IP: %ip%"
-  command: "%date% Plugin executed command: %cmd%"
  
 # Titles (format - title;subtitle;fadein;stay;fadeout)
 titles:
@@ -68,6 +58,16 @@ uspmsg:
   otherdisabled: |- 
     &7Other commands are disabled.
     &7To enable them, set &6enable-admin-commands: &atrue
+
+# Log format
+log-format:
+  enabled: "%date% [UltimateServerProtector - plugin enabled]"
+  disabled: "%date% [UltimateServerProtector - plugin disabled]"
+  failed: "%date% Admin %player% entered admin password incorrectly! IP: %ip%"
+  passed: "%date% Admin %player% sucsessfully logged in! IP: %ip%"
+  joined: "%date% Admin %player% joined the game. IP: %ip%"
+  captured: "%date% Player %player% was detected with admin-permissions! IP: %ip%"
+  command: "%date% Plugin executed command: %cmd%"
 
 # System messages
 system:

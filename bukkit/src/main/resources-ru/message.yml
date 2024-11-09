@@ -14,16 +14,6 @@ broadcasts:
   joined: '%prefix% &fАдминистратор &3%player% &fвошел в игру. &fIP адрес: &c%ip%'
   captured: '%prefix% &fИгрок &3%player% &fбыл пойман с админ-правами! &fIP адрес: &c%ip%'
   disabled: '%prefix% &6&lВнимание! &fПлагин был отключен!'
-
-# Как сообщения будут отображаться в логах
-log-format:
-  enabled: '%date% [UltimateServerProtector - плагин включён]'
-  disabled: '%date% [UltimateServerProtector - плагин выключён]'
-  failed: '%date% Администратор %player% ввел админ-пас неудачно! IP адрес: %ip%'
-  passed: '%date% Администратор %player% ввел админ-пас успешно! IP адрес: %ip%'
-  joined: '%date% Администратор %player% вошел в игру. IP адрес: %ip%'
-  captured: '%date% Игрок %player% был пойман с админ-правами! IP адрес: %ip%'
-  command: '%date% Плагин исполнил команду: %cmd%'
   
 # Сообщения которые будут высвечиваться на экране
 titles:
@@ -68,6 +58,16 @@ uspmsg:
   otherdisabled: |- 
     &7Прочие команды отключены.
     &7Для их включения выставьте &6enable-admin-commands: &atrue
+
+# Как сообщения будут отображаться в логах
+log-format:
+  enabled: '%date% [UltimateServerProtector - плагин включён]'
+  disabled: '%date% [UltimateServerProtector - плагин выключён]'
+  failed: '%date% Администратор %player% ввел админ-пас неудачно! IP адрес: %ip%'
+  passed: '%date% Администратор %player% ввел админ-пас успешно! IP адрес: %ip%'
+  joined: '%date% Администратор %player% вошел в игру. IP адрес: %ip%'
+  captured: '%date% Игрок %player% был пойман с админ-правами! IP адрес: %ip%'
+  command: '%date% Плагин исполнил команду: %cmd%'
 
 # Системные сообщения
 system:
