@@ -21,6 +21,7 @@ public final class PasswordHandler {
     private final ServerProtectorManager plugin;
     private final ServerProtectorAPI api;
     private final Config pluginConfig;
+
     private final Map<String, Integer> attempts = new HashMap<>();
 
     public Map<String, Integer> getAttempts() {
@@ -109,7 +110,7 @@ public final class PasswordHandler {
             Utils.sendSound(pluginConfig.getSoundSettings().onPasFail(), p);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction("log-format.failed", p, LocalDateTime.now());
+            plugin.logAction(pluginConfig.getLogFormats().failed(), p, LocalDateTime.now());
         }
         plugin.sendAlert(p, pluginConfig.getBroadcasts().failed());
     }
@@ -148,7 +149,7 @@ public final class PasswordHandler {
             }, pluginConfig.getSessionSettings().sessionTime() * 20L);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction("log-format.passed", p, LocalDateTime.now());
+            plugin.logAction(pluginConfig.getLogFormats().passed(), p, LocalDateTime.now());
         }
         if (pluginConfig.getBossbarSettings().enableBossbar() && bossbars.get(playerName) != null) {
             bossbars.get(playerName).removeAll();

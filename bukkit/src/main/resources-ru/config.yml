@@ -140,8 +140,6 @@ secure-settings:
   only-console-usp: false
   # Выключать ли сервер, если отключается плагин
   shutdown-on-disable: true
-  # Выключать ли сервер только если включены плугмано-подобные плагины
-  shutdown-on-disable-only-if-plugman: true
   # Разрешить ли ряду игроков входить в игру без админ пароля (отключено по умолчанию и небезопасно)
   enable-excluded-players: false
 

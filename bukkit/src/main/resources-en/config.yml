@@ -132,8 +132,6 @@ secure-settings:
   only-console-usp: false
   # Shutdown the server if the plugin is disabled
   shutdown-on-disable: true
-  # Whether to shut down the server only if plugman-like plugins are enabled
-  shutdown-on-disable-only-if-plugman: true
   # Allow certain players to enter the game without an admin password (disabled by default and unsafe)
   enable-excluded-players: false
 

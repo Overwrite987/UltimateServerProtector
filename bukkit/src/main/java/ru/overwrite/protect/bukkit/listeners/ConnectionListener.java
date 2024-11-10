@@ -4,10 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerJoinEvent;
-import org.bukkit.event.player.PlayerKickEvent;
-import org.bukkit.event.player.PlayerLoginEvent;
-import org.bukkit.event.player.PlayerQuitEvent;
+import org.bukkit.event.player.*;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
@@ -37,19 +34,27 @@ public class ConnectionListener implements Listener {
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
+    public void onPreLogin(AsyncPlayerPreLoginEvent e) {
+        if (!plugin.isSafe()) {
+            plugin.logUnsafe();
+            e.setLoginResult(AsyncPlayerPreLoginEvent.Result.KICK_OTHER);
+        }
+    }
+
+    @EventHandler(priority = EventPriority.LOWEST)
     public void onLogin(PlayerLoginEvent e) {
         Player p = e.getPlayer();
         runner.runAsync(() -> {
-            String playerName = p.getName();
+            final String playerName = p.getName();
             CaptureReason captureReason = plugin.checkPermissions(p);
             if (api.isCaptured(playerName) && captureReason == null) {
                 api.uncapturePlayer(playerName);
                 return;
             }
             if (captureReason != null) {
-                String ip = e.getAddress().getHostAddress();
+                final String ip = e.getAddress().getHostAddress();
                 if (pluginConfig.getSecureSettings().enableIpWhitelist()) {
-                    if (!isIPAllowed(playerName, ip)) {
+                    if (!isIPAllowed(ip, pluginConfig.getAccessData().ipWhitelist().get(playerName))) {
                         if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().ipWhitelist())) {
                             plugin.checkFail(playerName, pluginConfig.getCommands().notAdminIp());
                         }
@@ -84,37 +89,44 @@ public class ConnectionListener implements Listener {
                     plugin.applyHide(p);
                 }
                 if (pluginConfig.getLoggingSettings().loggingJoin()) {
-                    plugin.logAction("log-format.joined", p, LocalDateTime.now());
+                    plugin.logAction(pluginConfig.getLogFormats().joined(), p, LocalDateTime.now());
                 }
                 plugin.sendAlert(p, pluginConfig.getBroadcasts().joined());
             }
         });
     }
 
-    private boolean isIPAllowed(String p, String ip) {
-        final List<String> ips = pluginConfig.getAccessData().ipWhitelist().get(p);
-        if (ips == null || ips.isEmpty()) {
+    private boolean isIPAllowed(String playerIp, List<String> allowedIps) {
+        if (allowedIps == null || allowedIps.isEmpty()) {
             return false;
         }
-        final String[] ipParts = ip.split("\\.");
 
-        for (String allowedIP : ips) {
-            final String[] allowedParts = allowedIP.split("\\.");
-            if (ipParts.length != allowedParts.length) {
+        outer:
+        for (int i = 0; i < allowedIps.size(); i++) {
+            final String allowedIp = allowedIps.get(i);
+            int playerIpLength = playerIp.length();
+            int allowedIpLength = allowedIp.length();
+
+            if (playerIpLength != allowedIpLength && !allowedIp.contains("*")) {
                 continue;
             }
 
-            boolean matches = true;
-            for (int i = 0; i < ipParts.length; i++) {
-                if (!allowedParts[i].equals("*") && !allowedParts[i].equals(ipParts[i])) {
-                    matches = false;
-                    break;
+            for (int n = 0; n < allowedIpLength; n++) {
+                char currentChar = allowedIp.charAt(n);
+                if (currentChar == '*') {
+                    return true;
+                }
+
+                if (n >= playerIpLength || currentChar != playerIp.charAt(n)) {
+                    continue outer;
                 }
             }
-            if (matches) {
+
+            if (playerIpLength == allowedIpLength) {
                 return true;
             }
         }
+
         return false;
     }
 

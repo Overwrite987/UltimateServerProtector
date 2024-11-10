@@ -63,7 +63,7 @@ public final class TaskManager {
                     }
                     plugin.applyHide(p);
                     if (pluginConfig.getLoggingSettings().loggingPas()) {
-                        plugin.logAction("log-format.captured", p, LocalDateTime.now());
+                        plugin.logAction(pluginConfig.getLogFormats().captured(), p, LocalDateTime.now());
                     }
                     plugin.sendAlert(p, pluginConfig.getBroadcasts().captured());
                 }

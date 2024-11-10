@@ -29,7 +29,10 @@ import java.util.concurrent.ConcurrentHashMap;
 public class ServerProtectorManager extends JavaPlugin {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("'['dd-MM-yyyy']' HH:mm:ss -");
-    private final Logger pluginLogger = Utils.FOLIA ? new PaperLogger(this) : new BukkitLogger(this);
+
+    private final Logger pluginLogger = Utils.FOLIA ?
+            new PaperLogger(this) :
+            new BukkitLogger(this);
 
     private boolean proxy;
 
@@ -71,6 +74,7 @@ public class ServerProtectorManager extends JavaPlugin {
     private final ServerProtectorAPI api = new ServerProtectorAPI(this);
     private final PasswordHandler passwordHandler = new PasswordHandler(this);
     private final Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
+
     private PluginMessage pluginMessage;
 
     private Map<String, Integer> perPlayerTime;
@@ -95,10 +99,6 @@ public class ServerProtectorManager extends JavaPlugin {
         return passwordHandler;
     }
 
-    public PluginMessage getPluginMessage() {
-        return pluginMessage;
-    }
-
     public Logger getPluginLogger() {
         return pluginLogger;
     }
@@ -107,30 +107,40 @@ public class ServerProtectorManager extends JavaPlugin {
         return runner;
     }
 
-    public void checkPaper(FileConfiguration messageFile) {
+    public void checkPaper() {
         if (server.getName().equals("CraftBukkit")) {
-            pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-            pluginLogger.info(messageFile.getString("system.paper-1", "§eYou are using an unstable core for your MC server! It's recommended to use §aPaper"));
-            pluginLogger.info(messageFile.getString("system.paper-2", "§eDownload Paper: §ahttps://papermc.io/downloads/all"));
-            pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
+            pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
+            pluginLogger.info(pluginConfig.getSystemMessages().paper1());
+            pluginLogger.info(pluginConfig.getSystemMessages().paper2());
+            pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
         }
         this.paper = true;
     }
 
-    public boolean isSafe(FileConfiguration messageFile, PluginManager pluginManager) {
+    private boolean safe;
+
+    public boolean isSafe() {
+        return safe;
+    }
+
+    public void checkSafe(PluginManager pluginManager) {
         if (server.spigot().getConfig().getBoolean("settings.bungeecord")) {
             if (pluginManager.isPluginEnabled("BungeeGuard") || pluginManager.isPluginEnabled("SafeNET")) {
-                return true;
+                this.safe = true;
+                return;
             }
-            pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-            pluginLogger.info(messageFile.getString("system.bungeecord-1", "§eYou have the §6bungeecord setting §aenabled§e, but the §6BungeeGuard §eplugin is not installed!"));
-            pluginLogger.info(messageFile.getString("system.bungeecord-2", "§eWithout this plugin, you are exposed to §csecurity risks! §eInstall it for further safe operation."));
-            pluginLogger.info(messageFile.getString("system.bungeecord-3", "§eDownload BungeeGuard: §ahttps://www.spigotmc.org/resources/bungeeguard.79601/"));
-            pluginLogger.info(messageFile.getString("system.baseline-warn", "§6============= §c! WARNING ! §c============="));
-            server.shutdown();
-            return false;
+            logUnsafe();
+            return;
         }
-        return true;
+        this.safe = true;
+    }
+
+    public void logUnsafe() {
+        pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
+        pluginLogger.info(pluginConfig.getSystemMessages().bungeecord1());
+        pluginLogger.info(pluginConfig.getSystemMessages().bungeecord2());
+        pluginLogger.info(pluginConfig.getSystemMessages().bungeecord3());
+        pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
     }
 
     public void setupProxy(FileConfiguration config) {
@@ -190,7 +200,9 @@ public class ServerProtectorManager extends JavaPlugin {
         pluginConfig.loadFailCommands(config, configFile);
         pluginConfig.loadMsgMessages(messageFile);
         pluginConfig.loadUspMessages(messageFile);
-        ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
+        pluginConfig.loadLogFormats(messageFile);
+        pluginConfig.loadSystemMessages(messageFile);
+        final ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
         if (messageSettings.getBoolean("send-titles")) {
             pluginConfig.loadTitleMessages(messageFile);
         }
@@ -261,20 +273,20 @@ public class ServerProtectorManager extends JavaPlugin {
         logFile = new File(logFilePath, fileSettings.getString("log-file"));
     }
 
-    public void checkForUpdates(FileConfiguration config, FileConfiguration messageFile) {
+    public void checkForUpdates(FileConfiguration config) {
         if (!config.getBoolean("main-settings.update-checker")) {
             return;
         }
         Utils.checkUpdates(this, version -> {
-            pluginLogger.info(messageFile.getString("system.baseline-default", "§6========================================"));
+            pluginLogger.info(pluginConfig.getSystemMessages().baselineDefault());
             if (getDescription().getVersion().equals(version)) {
-                pluginLogger.info(messageFile.getString("system.update-latest", "§aYou are using latest version of the plugin!"));
+                pluginLogger.info(pluginConfig.getSystemMessages().updateLatest());
             } else {
-                pluginLogger.info(messageFile.getString("system.update-outdated-1", "§aYou are using outdated version of the plugin!"));
-                pluginLogger.info(messageFile.getString("system.update-outdated-2", "§aYou can download new version here:"));
-                pluginLogger.info(messageFile.getString("system.update-outdated-3", "§bgithub.com/Overwrite987/UltimateServerProtector/releases/"));
+                pluginLogger.info(pluginConfig.getSystemMessages().updateOutdated1());
+                pluginLogger.info(pluginConfig.getSystemMessages().updateOutdated2());
+                pluginLogger.info(pluginConfig.getSystemMessages().updateOutdated3());
             }
-            pluginLogger.info(messageFile.getString("system.baseline-default", "§6========================================"));
+            pluginLogger.info(pluginConfig.getSystemMessages().baselineDefault());
         });
     }
 
@@ -287,7 +299,7 @@ public class ServerProtectorManager extends JavaPlugin {
                 server.dispatchCommand(server.getConsoleSender(), command.replace("%player%", playerName));
                 if (pluginConfig.getLoggingSettings().loggingCommandExecution()) {
                     LocalDateTime date = LocalDateTime.now();
-                    logToFile(messageFile.getString("log-format.command", "ERROR")
+                    logToFile(pluginConfig.getLogFormats().command()
                             .replace("%player%", playerName)
                             .replace("%cmd%", command)
                             .replace("%date%", date.format(TIME_FORMATTER)));
@@ -379,9 +391,9 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void logAction(String key, Player player, LocalDateTime date) {
+    public void logAction(String message, Player player, LocalDateTime date) {
         runner.runAsync(() ->
-                logToFile(messageFile.getString(key, "ERROR: " + key + " does not exist!")
+                logToFile(message
                         .replace("%player%", player.getName())
                         .replace("%ip%", Utils.getIp(player))
                         .replace("%date%", date.format(TIME_FORMATTER)))

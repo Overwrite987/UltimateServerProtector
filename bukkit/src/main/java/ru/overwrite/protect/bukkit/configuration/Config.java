@@ -618,11 +618,59 @@ public final class Config {
                 getMessage(broadcasts, "failed"),
                 getMessage(broadcasts, "passed"),
                 getMessage(broadcasts, "joined"),
-                getMessage(broadcasts, "captured")
+                getMessage(broadcasts, "captured"),
+                getMessage(broadcasts, "disabled")
+        );
+    }
+
+    private LogMessages logMessages;
+
+    public LogMessages getLogFormats() {
+        return this.logMessages;
+    }
+
+    public void loadLogFormats(FileConfiguration message) {
+        ConfigurationSection logMessages = message.getConfigurationSection("log-format");
+        this.logMessages = new LogMessages(
+                getMessage(logMessages, "enabled"),
+                getMessage(logMessages, "disabled"),
+                getMessage(logMessages, "failed"),
+                getMessage(logMessages, "passed"),
+                getMessage(logMessages, "joined"),
+                getMessage(logMessages, "captured"),
+                getMessage(logMessages, "command")
+        );
+    }
+
+    private SystemMessages systemMessages;
+
+    public SystemMessages getSystemMessages() {
+        return this.systemMessages;
+    }
+
+    public void loadSystemMessages(FileConfiguration message) {
+        ConfigurationSection system = message.getConfigurationSection("system");
+        this.systemMessages = new SystemMessages(
+                getMessage(system, "baseline-warn"),
+                getMessage(system, "baseline-default"),
+                getMessage(system, "paper-1"),
+                getMessage(system, "paper-2"),
+                getMessage(system, "bungeecord-1"),
+                getMessage(system, "bungeecord-2"),
+                getMessage(system, "bungeecord-3"),
+                getMessage(system, "update-latest"),
+                getMessage(system, "update-success-1"),
+                getMessage(system, "update-success-2"),
+                getMessage(system, "update-outdated-1"),
+                getMessage(system, "update-outdated-2"),
+                getMessage(system, "update-outdated-3")
         );
     }
 
     public String getMessage(ConfigurationSection section, String key) {
+        if (section == null) {
+            return Utils.colorize("&4&lERROR&r: " + key + " does not exist!", serializer);
+        }
         return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", mainSettings.prefix()), serializer);
     }
 
