@@ -1,17 +1,17 @@
 package ru.overwrite.protect.bukkit.task;
 
 import org.bukkit.entity.Player;
-import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
+import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 @SuppressWarnings("deprecation")
 public class BukkitRunner implements Runner {
 
-    private final Plugin plugin;
+    private final ServerProtectorManager plugin;
     private final BukkitScheduler scheduler;
 
-    public BukkitRunner(Plugin plugin) {
+    public BukkitRunner(ServerProtectorManager plugin) {
         this.plugin = plugin;
         this.scheduler = plugin.getServer().getScheduler();
     }
@@ -53,6 +53,9 @@ public class BukkitRunner implements Runner {
 
     @Override
     public void cancelTasks() {
+        if (!plugin.getPluginAPI().isCalledFromAllowedApplication()) {
+            return;
+        }
         scheduler.cancelTasks(plugin);
     }
 }
