@@ -42,5 +42,4 @@ public class PluginMessage implements PluginMessageListener {
         out.writeUTF(message);
         player.sendPluginMessage(plugin, "BungeeCord", out.toByteArray());
     }
-
 }
