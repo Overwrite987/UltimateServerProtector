@@ -80,7 +80,7 @@ public final class TaskManager {
                     plugin.checkFail(p.getName(), pluginConfig.getCommands().notInConfig());
                 }
             }
-        }, 0L, 20L);
+        }, 5L, 20L);
     }
 
     public void startCapturesMessages(FileConfiguration config) {
@@ -95,7 +95,7 @@ public final class TaskManager {
                     }
                 }
             }
-        }, 0L, config.getInt("message-settings.delay") * 20L);
+        }, 5L, config.getInt("message-settings.delay") * 20L);
     }
 
     public void startOpCheck() {
@@ -107,7 +107,7 @@ public final class TaskManager {
                     plugin.checkFail(p.getName(), pluginConfig.getCommands().notInOpWhitelist());
                 }
             }
-        }, 0L, 20L);
+        }, 5L, 20L);
     }
 
     public void startPermsCheck() {
@@ -162,7 +162,7 @@ public final class TaskManager {
                     passwordHandler.getBossbars().get(playerName).removePlayer(p);
                 }
             }
-        }, 0L, 20L);
+        }, 5L, 20L);
     }
 
     private boolean noTimeLeft(String playerName) {
