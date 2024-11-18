@@ -106,7 +106,7 @@ public class UspCommand implements CommandExecutor, TabCompleter {
     @Override
     public List<String> onTabComplete(@NotNull CommandSender sender, @NotNull Command command, @NotNull String alias, String[] args) {
         if (pluginConfig.getSecureSettings().onlyConsoleUsp() && !(sender instanceof ConsoleCommandSender)) {
-            return Collections.emptyList();
+            return List.of();
         }
         List<String> completions = new ArrayList<>();
         if (args.length == 1) {
