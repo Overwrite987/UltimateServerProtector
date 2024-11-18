@@ -37,8 +37,7 @@ public final class ServerProtector extends ServerProtectorManager {
         if (getMessageFile() != null) {
             logEnableDisable(getPluginConfig().getLogFormats().disabled(), LocalDateTime.now());
         }
-        final FileConfiguration config = getConfig();
-        if (config.getBoolean("message-settings.enable-broadcasts")) {
+        if (getPluginConfig().getMessageSettings().enableBroadcasts()) {
             for (Player ps : server.getOnlinePlayers()) {
                 if (ps.hasPermission("serverprotector.admin") && getMessageFile() != null) {
                     ps.sendMessage(getPluginConfig().getBroadcasts().disabled());
@@ -50,7 +49,7 @@ public final class ServerProtector extends ServerProtectorManager {
             server.getMessenger().unregisterOutgoingPluginChannel(this);
             server.getMessenger().unregisterIncomingPluginChannel(this);
         }
-        if (config.getBoolean("secure-settings.shutdown-on-disable")) {
+        if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
             server.shutdown();
         }
     }
