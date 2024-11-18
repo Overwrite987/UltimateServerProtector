@@ -11,7 +11,7 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.configuration.Config;
 
-public class PasCommand implements CommandExecutor {
+public final class PasCommand implements CommandExecutor {
 
     private final ServerProtectorManager plugin;
     private final ServerProtectorAPI api;

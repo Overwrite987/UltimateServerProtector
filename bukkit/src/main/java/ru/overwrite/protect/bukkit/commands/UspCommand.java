@@ -9,7 +9,7 @@ import ru.overwrite.protect.bukkit.configuration.data.UspMessages;
 
 import java.util.*;
 
-public class UspCommand implements CommandExecutor, TabCompleter {
+public final class UspCommand implements CommandExecutor, TabCompleter {
 
     private final ServerProtectorManager plugin;
     private final Config pluginConfig;
