@@ -4,6 +4,7 @@ import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class ServerProtectorPasswordEnterEvent extends PlayerEvent implements Cancellable {
 
@@ -22,6 +23,8 @@ public class ServerProtectorPasswordEnterEvent extends PlayerEvent implements Ca
         return HANDLERS;
     }
 
+    @NotNull
+    @Override
     public HandlerList getHandlers() {
         return HANDLERS;
     }
@@ -31,9 +34,10 @@ public class ServerProtectorPasswordEnterEvent extends PlayerEvent implements Ca
     }
 
     public void setCancelled(boolean cancel) {
-        isCancelled = cancel;
+        this.isCancelled = cancel;
     }
 
+    @NotNull
     public String getEnteredPassword() {
         return password;
     }

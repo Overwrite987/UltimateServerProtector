@@ -3,6 +3,7 @@ package ru.overwrite.protect.bukkit.api.events;
 import org.bukkit.entity.Player;
 import org.bukkit.event.HandlerList;
 import org.bukkit.event.player.PlayerEvent;
+import org.jetbrains.annotations.NotNull;
 
 public class ServerProtectorLogoutEvent extends PlayerEvent {
 
@@ -16,14 +17,18 @@ public class ServerProtectorLogoutEvent extends PlayerEvent {
         this.ip = ip;
     }
 
+    @NotNull
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
 
+    @NotNull
+    @Override
     public HandlerList getHandlers() {
         return HANDLERS;
     }
 
+    @NotNull
     public String getIp() {
         return ip;
     }
