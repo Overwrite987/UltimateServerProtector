@@ -51,7 +51,7 @@ public final class PasswordHandler {
             }
             String playerPass = pluginConfig.getPerPlayerPasswords().get(p.getName());
             if (playerPass == null) {
-                failedPassword(p);
+                this.failedPassword(p);
                 return;
             }
             String salt = playerPass.split(":")[0];
@@ -59,19 +59,19 @@ public final class PasswordHandler {
                     ? Utils.encryptPassword(input, salt, pluginConfig.getEncryptionSettings().encryptMethods())
                     : input;
             if (pass.equals(playerPass)) {
-                correctPassword(p);
+                this.correctPassword(p);
                 return;
             }
             if (pluginConfig.getEncryptionSettings().enableEncryption() && !pluginConfig.getEncryptionSettings().oldEncryptMethods().isEmpty()) {
                 for (List<String> oldEncryptMethod : pluginConfig.getEncryptionSettings().oldEncryptMethods()) {
                     String oldgenPass = Utils.encryptPassword(input, salt, oldEncryptMethod);
                     if (oldgenPass.equals(playerPass)) {
-                        correctPassword(p);
+                        this.correctPassword(p);
                         return;
                     }
                 }
             }
-            failedPassword(p);
+            this.failedPassword(p);
             if (pluginConfig.getPunishSettings().enableAttempts() && isAttemptsMax(p.getName())) {
                 plugin.checkFail(p.getName(), pluginConfig.getCommands().failedPass());
             }
