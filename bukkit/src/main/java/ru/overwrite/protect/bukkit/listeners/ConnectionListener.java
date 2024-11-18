@@ -60,7 +60,7 @@ public class ConnectionListener implements Listener {
                         }
                     }
                 }
-                if (pluginConfig.getSessionSettings().session() && !api.hasSession(p, ip)) {
+                if (pluginConfig.getSessionSettings().session() && !api.hasSession(playerName, ip)) {
                     if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
                         ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip, captureReason);
                         if (pluginConfig.getApiSettings().callEventOnCapture()) {

@@ -98,6 +98,10 @@ public final class ServerProtectorAPI {
         return !sessions.isEmpty() && sessions.containsKey(player.getName()) && sessions.get(player.getName()).equals(ip);
     }
 
+    public boolean hasSession(@NotNull String playerName, @NotNull String ip) {
+        return !sessions.isEmpty() && sessions.containsKey(playerName) && sessions.get(playerName).equals(ip);
+    }
+
     public void authorisePlayer(@NotNull Player player) {
         if (!isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
