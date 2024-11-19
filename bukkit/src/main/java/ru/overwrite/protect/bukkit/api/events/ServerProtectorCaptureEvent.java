@@ -38,6 +38,7 @@ public class ServerProtectorCaptureEvent extends PlayerEvent implements Cancella
         return isCancelled;
     }
 
+    @Override
     public void setCancelled(boolean cancel) {
         this.isCancelled = cancel;
     }

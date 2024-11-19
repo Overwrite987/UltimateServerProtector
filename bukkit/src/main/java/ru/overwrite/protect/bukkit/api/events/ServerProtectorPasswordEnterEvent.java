@@ -30,10 +30,12 @@ public class ServerProtectorPasswordEnterEvent extends PlayerEvent implements Ca
         return HANDLERS;
     }
 
+    @Override
     public boolean isCancelled() {
         return isCancelled;
     }
 
+    @Override
     public void setCancelled(boolean cancel) {
         this.isCancelled = cancel;
     }
