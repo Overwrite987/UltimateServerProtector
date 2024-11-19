@@ -19,6 +19,7 @@ public class ServerProtectorPasswordEnterEvent extends PlayerEvent implements Ca
         this.password = password;
     }
 
+    @NotNull
     public static HandlerList getHandlerList() {
         return HANDLERS;
     }
