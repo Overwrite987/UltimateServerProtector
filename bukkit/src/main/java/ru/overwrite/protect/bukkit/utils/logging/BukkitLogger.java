@@ -10,10 +10,12 @@ public class BukkitLogger implements Logger {
         this.plugin = plugin;
     }
 
+    @Override
     public void info(String msg) {
         plugin.getLogger().info(msg);
     }
 
+    @Override
     public void warn(String msg) {
         plugin.getLogger().warning(msg);
     }

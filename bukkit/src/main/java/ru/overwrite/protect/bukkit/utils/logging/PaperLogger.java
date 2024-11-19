@@ -13,10 +13,12 @@ public class PaperLogger implements Logger {
         this.plugin = plugin;
     }
 
+    @Override
     public void info(String msg) {
         plugin.getComponentLogger().info(legacySection.deserialize(msg));
     }
 
+    @Override
     public void warn(String msg) {
         plugin.getComponentLogger().warn(legacySection.deserialize(msg));
     }
