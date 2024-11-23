@@ -373,9 +373,9 @@ public class ServerProtectorManager extends JavaPlugin {
             if (pluginConfig.getMainSettings().papiSupport()) {
                 msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.getSerializer());
             }
-            for (Player ps : server.getOnlinePlayers()) {
-                if (ps.hasPermission("serverprotector.admin") && p != ps) {
-                    ps.sendMessage(msg);
+            for (Player onlinePlayer : server.getOnlinePlayers()) {
+                if (onlinePlayer.hasPermission("serverprotector.admin") && p != onlinePlayer) {
+                    onlinePlayer.sendMessage(msg);
                 }
             }
             if (proxy) {

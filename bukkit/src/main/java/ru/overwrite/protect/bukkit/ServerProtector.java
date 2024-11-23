@@ -38,9 +38,9 @@ public final class ServerProtector extends ServerProtectorManager {
             logEnableDisable(getPluginConfig().getLogFormats().disabled(), LocalDateTime.now());
         }
         if (getPluginConfig().getMessageSettings().enableBroadcasts()) {
-            for (Player ps : server.getOnlinePlayers()) {
-                if (ps.hasPermission("serverprotector.admin") && getMessageFile() != null) {
-                    ps.sendMessage(getPluginConfig().getBroadcasts().disabled());
+            for (Player onlinePlayer : server.getOnlinePlayers()) {
+                if (onlinePlayer.hasPermission("serverprotector.admin") && getMessageFile() != null) {
+                    onlinePlayer.sendMessage(getPluginConfig().getBroadcasts().disabled());
                 }
             }
         }
