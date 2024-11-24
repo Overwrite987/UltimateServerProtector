@@ -35,6 +35,9 @@ public final class TaskManager {
 
     public void startMainCheck(long interval) {
         runner.runPeriodicalAsync(() -> {
+            if (Bukkit.getOnlinePlayers().isEmpty()) {
+                return;
+            }
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (pluginConfig.getExcludedPlayers() != null && plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
                     continue;
@@ -100,6 +103,9 @@ public final class TaskManager {
 
     public void startOpCheck() {
         runner.runPeriodicalAsync(() -> {
+            if (Bukkit.getOnlinePlayers().isEmpty()) {
+                return;
+            }
             for (Player p : Bukkit.getOnlinePlayers()) {
                 if (p.isOp()
                         && !pluginConfig.getAccessData().opWhitelist().contains(p.getName())
@@ -112,6 +118,9 @@ public final class TaskManager {
 
     public void startPermsCheck() {
         runner.runPeriodicalAsync(() -> {
+            if (Bukkit.getOnlinePlayers().isEmpty()) {
+                return;
+            }
             for (Player p : Bukkit.getOnlinePlayers()) {
                 for (String badperm : pluginConfig.getAccessData().blacklistedPerms()) {
                     if (p.hasPermission(badperm) &&
