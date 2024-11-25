@@ -34,12 +34,6 @@ public class ServerProtectorManager extends JavaPlugin {
             new PaperLogger(this) :
             new BukkitLogger(this);
 
-    private boolean proxy;
-
-    public boolean isProxy() {
-        return this.proxy;
-    }
-
     private boolean paper;
 
     public boolean isPaper() {
@@ -76,6 +70,10 @@ public class ServerProtectorManager extends JavaPlugin {
     private final Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
 
     private PluginMessage pluginMessage;
+
+    public PluginMessage getPluginMessage() {
+        return pluginMessage;
+    }
 
     private Map<String, Integer> perPlayerTime;
 
@@ -148,7 +146,6 @@ public class ServerProtectorManager extends JavaPlugin {
             server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
             pluginMessage = new PluginMessage(this);
             server.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pluginMessage);
-            proxy = true;
         }
     }
 
@@ -378,7 +375,7 @@ public class ServerProtectorManager extends JavaPlugin {
                     onlinePlayer.sendMessage(msg);
                 }
             }
-            if (proxy) {
+            if (this.pluginMessage != null) {
                 pluginMessage.sendCrossProxy(p, msg);
             }
         }

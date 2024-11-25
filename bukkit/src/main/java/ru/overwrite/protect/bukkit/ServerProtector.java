@@ -45,7 +45,7 @@ public final class ServerProtector extends ServerProtectorManager {
             }
         }
         getRunner().cancelTasks();
-        if (isProxy()) {
+        if (getPluginMessage() != null) {
             server.getMessenger().unregisterOutgoingPluginChannel(this);
             server.getMessenger().unregisterIncomingPluginChannel(this);
         }
