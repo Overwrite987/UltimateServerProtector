@@ -111,6 +111,7 @@ public class ServerProtectorManager extends JavaPlugin {
             pluginLogger.info(pluginConfig.getSystemMessages().paper1());
             pluginLogger.info(pluginConfig.getSystemMessages().paper2());
             pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
+            return;
         }
         this.paper = true;
     }
