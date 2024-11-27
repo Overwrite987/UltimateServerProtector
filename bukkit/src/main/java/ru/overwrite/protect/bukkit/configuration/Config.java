@@ -23,12 +23,6 @@ public final class Config {
         this.pluginLogger = plugin.getPluginLogger();
     }
 
-    private String serializer;
-
-    public String getSerializer() {
-        return this.serializer;
-    }
-
     private Map<String, String> perPlayerPasswords;
 
     public Map<String, String> getPerPlayerPasswords() {
@@ -86,7 +80,6 @@ public final class Config {
             pluginLogger.info("Created section main-settings");
             mainSettings = configFile.getConfigurationSection("main-settings");
         }
-        serializer = mainSettings.getString("serializer", "LEGACY").toUpperCase();
         this.mainSettings = new MainSettings(
                 mainSettings.getString("prefix", "[UltimateServerProtector]"),
                 mainSettings.getString("pas-command", "pas"),
@@ -669,9 +662,9 @@ public final class Config {
 
     public String getMessage(ConfigurationSection section, String key) {
         if (section == null) {
-            return Utils.colorize("&4&lERROR&r: " + key + " does not exist!", serializer);
+            return Utils.COLORIZER.colorize("&4&lERROR&r: " + key + " does not exist!");
         }
-        return Utils.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", mainSettings.prefix()), serializer);
+        return Utils.COLORIZER.colorize(section.getString(key, "&4&lERROR&r: " + key + " does not exist!").replace("%prefix%", mainSettings.prefix()));
     }
 
     public FileConfiguration getFile(String path, String fileName) {

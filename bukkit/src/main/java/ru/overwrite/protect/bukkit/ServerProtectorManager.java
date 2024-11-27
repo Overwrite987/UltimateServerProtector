@@ -151,6 +151,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void loadConfigs(FileConfiguration config) {
+        Utils.setupColorizer(config.getConfigurationSection("main-settings"));
         ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
         boolean fullPath = fileSettings.getBoolean("use-full-path", false);
         dataFilePath = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
@@ -167,6 +168,7 @@ public class ServerProtectorManager extends JavaPlugin {
         runner.runAsync(() -> {
             reloadConfig();
             final FileConfiguration config = getConfig();
+            Utils.setupColorizer(config.getConfigurationSection("main-settings"));
             messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
             ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
             boolean fullPath = fileSettings.getBoolean("use-full-path", false);
@@ -369,7 +371,7 @@ public class ServerProtectorManager extends JavaPlugin {
         if (pluginConfig.getMessageSettings().enableBroadcasts()) {
             msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
             if (pluginConfig.getMainSettings().papiSupport()) {
-                msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.getSerializer());
+                msg = PAPIUtils.parsePlaceholders(p, msg);
             }
             for (Player onlinePlayer : server.getOnlinePlayers()) {
                 if (onlinePlayer.hasPermission("serverprotector.admin") && p != onlinePlayer) {
@@ -383,7 +385,7 @@ public class ServerProtectorManager extends JavaPlugin {
         if (pluginConfig.getMessageSettings().enableConsoleBroadcasts()) {
             msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
             if (pluginConfig.getMainSettings().papiSupport()) {
-                msg = PAPIUtils.parsePlaceholders(p, msg, pluginConfig.getSerializer());
+                msg = PAPIUtils.parsePlaceholders(p, msg);
             }
             server.getConsoleSender().sendMessage(msg);
         }

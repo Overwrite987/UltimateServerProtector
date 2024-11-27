@@ -1,12 +1,11 @@
 package ru.overwrite.protect.bukkit.utils;
 
-import net.kyori.adventure.text.Component;
-import net.kyori.adventure.text.minimessage.MiniMessage;
-import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.utils.color.*;
 
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -21,13 +20,10 @@ import java.util.Base64;
 import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
 
 public final class Utils {
 
     public static final int SUB_VERSION = Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
-    private static final Pattern HEX_PATTERN = Pattern.compile("&#([a-fA-F\\d]{6})");
 
     public static final boolean FOLIA;
 
@@ -40,6 +36,17 @@ public final class Utils {
             folia = false;
         }
         FOLIA = folia;
+    }
+
+    public static Colorizer COLORIZER;
+
+    public static void setupColorizer(ConfigurationSection mainSettings) {
+        COLORIZER = switch (mainSettings.getString("serializer", "LEGACY").toUpperCase()) {
+            case "MINIMESSAGE" -> new MiniMessageColorizer();
+            case "LEGACY" -> SUB_VERSION >= 16 ? new LegacyColorizer() : new VanillaColorizer();
+            case "LEGACY_ADVANCED" -> new LegacyAdvancedColorizer();
+            default -> new VanillaColorizer();
+        };
     }
 
     public static String getIp(Player player) {
@@ -76,35 +83,31 @@ public final class Utils {
         p.playSound(p.getLocation(), sound, volume, pitch);
     }
 
-    private static final char COLOR_CHAR = '§';
+    public static final char COLOR_CHAR = '§';
 
-    public static String colorize(String message, String serializer) {
-        return switch (serializer) {
-            case "LEGACY" -> {
-                if (SUB_VERSION >= 16) {
-                    Matcher matcher = HEX_PATTERN.matcher(message);
-                    StringBuilder builder = new StringBuilder(message.length() + 32);
-                    while (matcher.find()) {
-                        String group = matcher.group(1);
-                        matcher.appendReplacement(builder,
-                                COLOR_CHAR + "x" +
-                                        COLOR_CHAR + group.charAt(0) +
-                                        COLOR_CHAR + group.charAt(1) +
-                                        COLOR_CHAR + group.charAt(2) +
-                                        COLOR_CHAR + group.charAt(3) +
-                                        COLOR_CHAR + group.charAt(4) +
-                                        COLOR_CHAR + group.charAt(5));
-                    }
-                    message = matcher.appendTail(builder).toString();
-                }
-                yield message.replace('&', COLOR_CHAR); // The fastest approach, even if it looks like crap
+    public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
+        char[] b = textToTranslate.toCharArray();
+
+        for (int i = 0, length = b.length - 1; i < length; ++i) {
+            if (b[i] == altColorChar && isValidColorCharacter(b[i + 1])) {
+                b[i++] = COLOR_CHAR;
+                b[i] |= 0x20;
             }
-            case "MINIMESSAGE" -> {
-                Component component = MiniMessage.miniMessage().deserialize(message);
-                yield LegacyComponentSerializer.legacySection().serialize(component);
-            }
-            default -> message;
-        };
+        }
+
+        return new String(b);
+    }
+
+    private static boolean isValidColorCharacter(char c) {
+        return (c >= '0' && c <= '9') ||
+                (c >= 'a' && c <= 'f') ||
+                c == 'r' ||
+                (c >= 'k' && c <= 'o') ||
+                c == 'x' ||
+                (c >= 'A' && c <= 'F') ||
+                c == 'R' ||
+                (c >= 'K' && c <= 'O') ||
+                c == 'X';
     }
 
     public static void checkUpdates(ServerProtectorManager plugin, Consumer<String> consumer) {
