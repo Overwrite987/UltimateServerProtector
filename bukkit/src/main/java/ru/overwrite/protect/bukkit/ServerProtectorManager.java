@@ -143,7 +143,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void setupProxy(FileConfiguration config) {
-        if (config.getBoolean("main-settings.proxy")) {
+        if (config.getBoolean("main-settings.proxy", false)) {
             server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
             pluginMessage = new PluginMessage(this);
             server.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pluginMessage);
@@ -274,7 +274,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void checkForUpdates(FileConfiguration config) {
-        if (!config.getBoolean("main-settings.update-checker")) {
+        if (!config.getBoolean("main-settings.update-checker", true)) {
             return;
         }
         Utils.checkUpdates(this, version -> {
@@ -339,7 +339,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void logEnableDisable(String msg, LocalDateTime date) {
-        if (getConfig().getBoolean("logging-settings.logging-enable-disable")) {
+        if (getConfig().getBoolean("logging-settings.logging-enable-disable", true)) {
             logToFile(msg.replace("%date%", date.format(TIME_FORMATTER)));
         }
     }
