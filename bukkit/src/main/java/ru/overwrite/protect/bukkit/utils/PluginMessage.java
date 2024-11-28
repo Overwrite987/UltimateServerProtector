@@ -11,7 +11,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.messaging.PluginMessageListener;
 
-public class PluginMessage implements PluginMessageListener {
+public final class PluginMessage implements PluginMessageListener {
 
     private final ServerProtectorManager plugin;
 
