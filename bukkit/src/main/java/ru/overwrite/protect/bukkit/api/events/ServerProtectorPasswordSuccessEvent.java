@@ -34,7 +34,7 @@ public class ServerProtectorPasswordSuccessEvent extends PlayerEvent implements 
 
     @Override
     public void setCancelled(boolean cancel) {
-        isCancelled = cancel;
+        this.isCancelled = cancel;
     }
 
 }
