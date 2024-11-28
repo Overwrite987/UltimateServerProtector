@@ -152,7 +152,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void loadConfigs(FileConfiguration config) {
         Utils.setupColorizer(config.getConfigurationSection("main-settings"));
-        ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
+        final ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
         boolean fullPath = fileSettings.getBoolean("use-full-path", false);
         dataFilePath = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
         dataFileName = fileSettings.getString("data-file");
@@ -170,7 +170,7 @@ public class ServerProtectorManager extends JavaPlugin {
             final FileConfiguration config = getConfig();
             Utils.setupColorizer(config.getConfigurationSection("main-settings"));
             messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
-            ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
+            final ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
             boolean fullPath = fileSettings.getBoolean("use-full-path", false);
             dataFilePath = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
             dataFileName = fileSettings.getString("data-file");
@@ -222,12 +222,12 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void registerCommands(PluginManager pluginManager, FileConfiguration config) {
-        if (config.getBoolean("main-settings.use-command") && paper) {
+        if (config.getBoolean("main-settings.use-command", true) && paper) {
             try {
                 CommandMap commandMap = server.getCommandMap();
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
-                PluginCommand command = constructor.newInstance(config.getString("main-settings.pas-command"), this);
+                PluginCommand command = constructor.newInstance(config.getString("main-settings.pas-command", "pas"), this);
                 command.setExecutor(new PasCommand(this));
                 commandMap.register(getDescription().getName(), command);
             } catch (Exception ex) {
