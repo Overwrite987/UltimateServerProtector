@@ -27,13 +27,13 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
-        Player p = e.getPlayer();
-        if (!api.isCaptured(p)) {
+        Player player = e.getPlayer();
+        if (!api.isCaptured(player)) {
             return;
         }
         if (!pluginConfig.getMainSettings().useCommand()) {
             String message = e.getMessage();
-            passwordHandler.checkPassword(p, message, true);
+            passwordHandler.checkPassword(player, message, true);
         }
         e.setCancelled(true);
         e.setMessage("");
@@ -41,8 +41,8 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
-        Player p = e.getPlayer();
-        if (!api.isCaptured(p)) {
+        Player player = e.getPlayer();
+        if (!api.isCaptured(player)) {
             return;
         }
         String message = e.getMessage();
@@ -50,7 +50,7 @@ public class ChatListener implements Listener {
         if (pluginConfig.getMainSettings().useCommand()) {
             if (label.equalsIgnoreCase("/" + pluginConfig.getMainSettings().pasCommand())) {
                 if (!plugin.isPaper()) {
-                    passwordHandler.checkPassword(p, message.split(" ", 1)[1], false);
+                    passwordHandler.checkPassword(player, message.split(" ", 1)[1], false);
                 }
                 return;
             }

@@ -43,10 +43,10 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLogin(PlayerLoginEvent e) {
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
         runner.runAsync(() -> {
-            final String playerName = p.getName();
-            CaptureReason captureReason = plugin.checkPermissions(p);
+            final String playerName = player.getName();
+            CaptureReason captureReason = plugin.checkPermissions(player);
             if (api.isCaptured(playerName) && captureReason == null) {
                 api.uncapturePlayer(playerName);
                 return;
@@ -55,14 +55,14 @@ public class ConnectionListener implements Listener {
                 final String ip = e.getAddress().getHostAddress();
                 if (pluginConfig.getSecureSettings().enableIpWhitelist()) {
                     if (!isIPAllowed(ip, pluginConfig.getAccessData().ipWhitelist().get(playerName))) {
-                        if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().ipWhitelist())) {
+                        if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(player, pluginConfig.getExcludedPlayers().ipWhitelist())) {
                             plugin.checkFail(playerName, pluginConfig.getCommands().notAdminIp());
                         }
                     }
                 }
                 if (pluginConfig.getSessionSettings().session() && !api.hasSession(playerName, ip)) {
-                    if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
-                        ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, ip, captureReason);
+                    if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(player, pluginConfig.getExcludedPlayers().adminPass())) {
+                        ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(player, ip, captureReason);
                         if (pluginConfig.getApiSettings().callEventOnCapture()) {
                             captureEvent.callEvent();
                         }
@@ -78,20 +78,20 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent e) {
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
         runner.runAsync(() -> {
-            CaptureReason captureReason = plugin.checkPermissions(p);
+            CaptureReason captureReason = plugin.checkPermissions(player);
             if (captureReason != null) {
-                if (api.isCaptured(p)) {
+                if (api.isCaptured(player)) {
                     if (pluginConfig.getEffectSettings().enableEffects()) {
-                        plugin.giveEffect(p);
+                        plugin.giveEffect(player);
                     }
-                    plugin.applyHide(p);
+                    plugin.applyHide(player);
                 }
                 if (pluginConfig.getLoggingSettings().loggingJoin()) {
-                    plugin.logAction(pluginConfig.getLogFormats().joined(), p, LocalDateTime.now());
+                    plugin.logAction(pluginConfig.getLogFormats().joined(), player, LocalDateTime.now());
                 }
-                plugin.sendAlert(p, pluginConfig.getBroadcasts().joined());
+                plugin.sendAlert(player, pluginConfig.getBroadcasts().joined());
             }
         });
     }
@@ -134,21 +134,21 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
-        Player p = event.getPlayer();
-        handlePlayerLeave(p);
+        Player player = event.getPlayer();
+        handlePlayerLeave(player);
     }
 
     @EventHandler(priority = EventPriority.HIGHEST, ignoreCancelled = true)
     public void onKick(PlayerKickEvent event) {
-        Player p = event.getPlayer();
-        handlePlayerLeave(p);
+        Player player = event.getPlayer();
+        handlePlayerLeave(player);
     }
 
-    private void handlePlayerLeave(Player p) {
-        String playerName = p.getName();
-        if (api.isCaptured(p)) {
-            for (PotionEffect effect : p.getActivePotionEffects()) {
-                p.removePotionEffect(effect.getType());
+    private void handlePlayerLeave(Player player) {
+        String playerName = player.getName();
+        if (api.isCaptured(player)) {
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
             }
             if (pluginConfig.getPunishSettings().enableRejoin()) {
                 rejoins.put(playerName, rejoins.getOrDefault(playerName, 0) + 1);

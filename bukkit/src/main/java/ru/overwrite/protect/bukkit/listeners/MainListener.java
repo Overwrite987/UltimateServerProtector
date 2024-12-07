@@ -34,8 +34,8 @@ public class MainListener implements Listener {
         if (pluginConfig.getBlockingSettings().allowOrientationChange() && hasChangedOrientation(e.getFrom(), e.getTo()) && !hasExplicitlyChangedBlock(e.getFrom(), e.getTo())) {
             return;
         }
-        Player p = e.getPlayer();
-        api.handleInteraction(p, e);
+        Player player = e.getPlayer();
+        api.handleInteraction(player, e);
     }
 
     private boolean hasChangedOrientation(Location from, Location to) {
@@ -50,25 +50,25 @@ public class MainListener implements Listener {
     public void onPlayerInteract(PlayerInteractEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        Player p = e.getPlayer();
-        api.handleInteraction(p, e);
+        Player player = e.getPlayer();
+        api.handleInteraction(player, e);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        Player p = e.getPlayer();
-        api.handleInteraction(p, e);
+        Player player = e.getPlayer();
+        api.handleInteraction(player, e);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        Player p = e.getPlayer();
+        Player player = e.getPlayer();
         if (pluginConfig.getBlockingSettings().blockItemDrop()) {
-            api.handleInteraction(p, e);
+            api.handleInteraction(player, e);
         }
     }
 
@@ -76,10 +76,10 @@ public class MainListener implements Listener {
     public void onItemPickup(EntityPickupItemEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        if (!(e.getEntity() instanceof Player p))
+        if (!(e.getEntity() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockItemPickup()) {
-            api.handleInteraction(p, e);
+            api.handleInteraction(player, e);
         }
     }
 
@@ -87,10 +87,10 @@ public class MainListener implements Listener {
     public void onPlayerDamage(EntityDamageEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        if (!(e.getEntity() instanceof Player p))
+        if (!(e.getEntity() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockDamage()) {
-            api.handleInteraction(p, e);
+            api.handleInteraction(player, e);
         }
     }
 
@@ -98,10 +98,10 @@ public class MainListener implements Listener {
     public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        if (!(e.getDamager() instanceof Player p))
+        if (!(e.getDamager() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockDamagingEntity()) {
-            api.handleInteraction(p, e);
+            api.handleInteraction(player, e);
         }
     }
 
@@ -109,9 +109,9 @@ public class MainListener implements Listener {
     public void onInventoryOpen(InventoryOpenEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        Player p = (Player) e.getPlayer();
+        Player player = (Player) e.getPlayer();
         if (pluginConfig.getBlockingSettings().blockInventoryOpen()) {
-            api.handleInteraction(p, e);
+            api.handleInteraction(player, e);
         }
     }
 }

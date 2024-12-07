@@ -5,7 +5,7 @@ import org.bukkit.entity.Player;
 
 public final class PAPIUtils {
 
-    public static String parsePlaceholders(Player p, String message) {
-        return Utils.COLORIZER.colorize(PlaceholderAPI.setPlaceholders(p, message));
+    public static String parsePlaceholders(Player player, String message) {
+        return Utils.COLORIZER.colorize(PlaceholderAPI.setPlaceholders(player, message));
     }
 }

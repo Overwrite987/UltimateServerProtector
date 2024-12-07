@@ -53,7 +53,7 @@ public final class Utils {
         return player.getAddress().getAddress().getHostAddress();
     }
 
-    public static void sendTitleMessage(String[] titleMessages, Player p) {
+    public static void sendTitleMessage(String[] titleMessages, Player player) {
         if (titleMessages.length == 0) {
             return;
         }
@@ -66,10 +66,10 @@ public final class Utils {
         int fadeIn = titleMessages.length >= 3 ? Integer.parseInt(titleMessages[2]) : 10;
         int stay = titleMessages.length >= 4 ? Integer.parseInt(titleMessages[3]) : 70;
         int fadeOut = titleMessages.length == 5 ? Integer.parseInt(titleMessages[4]) : 20;
-        p.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
+        player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
     }
 
-    public static void sendSound(String[] soundArgs, Player p) {
+    public static void sendSound(String[] soundArgs, Player player) {
         if (soundArgs.length == 0) {
             return;
         }
@@ -80,7 +80,7 @@ public final class Utils {
         Sound sound = Sound.valueOf(soundArgs[0]);
         float volume = soundArgs.length >= 2 ? Float.parseFloat(soundArgs[1]) : 1.0f;
         float pitch = soundArgs.length == 3 ? Float.parseFloat(soundArgs[2]) : 1.0f;
-        p.playSound(p.getLocation(), sound, volume, pitch);
+        player.playSound(player.getLocation(), sound, volume, pitch);
     }
 
     public static final char COLOR_CHAR = '§';

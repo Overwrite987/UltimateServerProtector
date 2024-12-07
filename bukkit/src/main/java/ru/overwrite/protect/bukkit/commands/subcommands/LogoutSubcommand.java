@@ -14,16 +14,16 @@ public class LogoutSubcommand extends AbstractSubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player player)) {
             sender.sendMessage(pluginConfig.getUspMessages().playerOnly());
             return false;
         }
-        if (api.isAuthorised(p)) {
+        if (api.isAuthorised(player)) {
             plugin.getRunner().run(() -> {
-                new ServerProtectorLogoutEvent(p, Utils.getIp(p)).callEvent();
-                api.deauthorisePlayer(p);
+                new ServerProtectorLogoutEvent(player, Utils.getIp(player)).callEvent();
+                api.deauthorisePlayer(player);
             });
-            p.kickPlayer(pluginConfig.getUspMessages().logout());
+            player.kickPlayer(pluginConfig.getUspMessages().logout());
             return true;
         }
         return false;

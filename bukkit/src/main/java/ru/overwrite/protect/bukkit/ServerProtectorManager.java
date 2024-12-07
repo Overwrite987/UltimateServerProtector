@@ -319,22 +319,22 @@ public class ServerProtectorManager extends JavaPlugin {
         }, player);
     }
 
-    public void applyHide(Player p) {
+    public void applyHide(Player player) {
         if (pluginConfig.getBlockingSettings().hideOnEntering()) {
             runner.runPlayer(() -> {
                 for (Player onlinePlayer : server.getOnlinePlayers()) {
-                    if (!onlinePlayer.equals(p)) {
-                        onlinePlayer.hidePlayer(this, p);
+                    if (!onlinePlayer.equals(player)) {
+                        onlinePlayer.hidePlayer(this, player);
                     }
                 }
-            }, p);
+            }, player);
         }
         if (pluginConfig.getBlockingSettings().hideOtherOnEntering()) {
             runner.runPlayer(() -> {
                 for (Player onlinePlayer : server.getOnlinePlayers()) {
-                    p.hidePlayer(this, onlinePlayer);
+                    player.hidePlayer(this, onlinePlayer);
                 }
-            }, p);
+            }, player);
         }
     }
 
@@ -344,48 +344,48 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public CaptureReason checkPermissions(Player p) {
-        if (p.isOp()) {
+    public CaptureReason checkPermissions(Player player) {
+        if (player.isOp()) {
             return new CaptureReason(null);
         }
-        if (p.hasPermission("serverprotector.protect")) {
+        if (player.hasPermission("serverprotector.protect")) {
             return new CaptureReason("serverprotector.protect");
         }
         for (String perm : pluginConfig.getAccessData().perms()) {
-            if (p.hasPermission(perm)) {
+            if (player.hasPermission(perm)) {
                 return new CaptureReason(perm);
             }
         }
         return null;
     }
 
-    public boolean isExcluded(Player p, List<String> list) {
-        return pluginConfig.getSecureSettings().enableExcludedPlayers() && list.contains(p.getName());
+    public boolean isExcluded(Player player, List<String> list) {
+        return pluginConfig.getSecureSettings().enableExcludedPlayers() && list.contains(player.getName());
     }
 
     public boolean isAdmin(String nick) {
         return pluginConfig.getPerPlayerPasswords().containsKey(nick);
     }
 
-    public void sendAlert(Player p, String msg) {
+    public void sendAlert(Player player, String msg) {
         if (pluginConfig.getMessageSettings().enableBroadcasts()) {
-            msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
+            msg = msg.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
             if (pluginConfig.getMainSettings().papiSupport()) {
-                msg = PAPIUtils.parsePlaceholders(p, msg);
+                msg = PAPIUtils.parsePlaceholders(player, msg);
             }
             for (Player onlinePlayer : server.getOnlinePlayers()) {
-                if (onlinePlayer.hasPermission("serverprotector.admin") && p != onlinePlayer) {
+                if (onlinePlayer.hasPermission("serverprotector.admin") && player != onlinePlayer) {
                     onlinePlayer.sendMessage(msg);
                 }
             }
             if (this.pluginMessage != null) {
-                pluginMessage.sendCrossProxy(p, msg);
+                pluginMessage.sendCrossProxy(player, msg);
             }
         }
         if (pluginConfig.getMessageSettings().enableConsoleBroadcasts()) {
-            msg = msg.replace("%player%", p.getName()).replace("%ip%", Utils.getIp(p));
+            msg = msg.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
             if (pluginConfig.getMainSettings().papiSupport()) {
-                msg = PAPIUtils.parsePlaceholders(p, msg);
+                msg = PAPIUtils.parsePlaceholders(player, msg);
             }
             server.getConsoleSender().sendMessage(msg);
         }

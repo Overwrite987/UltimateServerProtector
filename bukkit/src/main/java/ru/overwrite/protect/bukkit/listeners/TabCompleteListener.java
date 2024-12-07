@@ -22,10 +22,10 @@ public class TabCompleteListener implements Listener {
     public void onTabComplete(AsyncTabCompleteEvent e) {
         if (!api.isAnybodyCaptured())
             return;
-        if (!(e.getSender() instanceof Player p))
+        if (!(e.getSender() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockTabComplete()) {
-            api.handleInteraction(p, e);
+            api.handleInteraction(player, e);
         }
     }
 }

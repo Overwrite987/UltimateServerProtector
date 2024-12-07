@@ -40,18 +40,18 @@ public final class PasswordHandler {
         this.api = plugin.getPluginAPI();
     }
 
-    public void checkPassword(Player p, String input, boolean resync) {
+    public void checkPassword(Player player, String input, boolean resync) {
         Runnable run = () -> {
-            ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(p, input);
+            ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(player, input);
             if (pluginConfig.getApiSettings().callEventOnPasswordEnter()) {
                 enterEvent.callEvent();
             }
             if (enterEvent.isCancelled()) {
                 return;
             }
-            String playerPass = pluginConfig.getPerPlayerPasswords().get(p.getName());
+            String playerPass = pluginConfig.getPerPlayerPasswords().get(player.getName());
             if (playerPass == null) {
-                this.failedPassword(p);
+                this.failedPassword(player);
                 return;
             }
             String salt = playerPass.split(":")[0];
@@ -59,25 +59,25 @@ public final class PasswordHandler {
                     ? Utils.encryptPassword(input, salt, pluginConfig.getEncryptionSettings().encryptMethods())
                     : input;
             if (pass.equals(playerPass)) {
-                this.correctPassword(p);
+                this.correctPassword(player);
                 return;
             }
             if (pluginConfig.getEncryptionSettings().enableEncryption() && !pluginConfig.getEncryptionSettings().oldEncryptMethods().isEmpty()) {
                 for (List<String> oldEncryptMethod : pluginConfig.getEncryptionSettings().oldEncryptMethods()) {
                     String oldgenPass = Utils.encryptPassword(input, salt, oldEncryptMethod);
                     if (oldgenPass.equals(playerPass)) {
-                        this.correctPassword(p);
+                        this.correctPassword(player);
                         return;
                     }
                 }
             }
-            this.failedPassword(p);
-            if (pluginConfig.getPunishSettings().enableAttempts() && isAttemptsMax(p.getName())) {
-                plugin.checkFail(p.getName(), pluginConfig.getCommands().failedPass());
+            this.failedPassword(player);
+            if (pluginConfig.getPunishSettings().enableAttempts() && isAttemptsMax(player.getName())) {
+                plugin.checkFail(player.getName(), pluginConfig.getCommands().failedPass());
             }
         };
         if (resync) {
-            plugin.getRunner().runPlayer(run, p);
+            plugin.getRunner().runPlayer(run, player);
         } else {
             run.run();
         }
@@ -89,85 +89,85 @@ public final class PasswordHandler {
         return attempts.get(playerName) >= pluginConfig.getPunishSettings().maxAttempts();
     }
 
-    public void failedPassword(Player p) {
+    public void failedPassword(Player player) {
         if (!api.isCalledFromAllowedApplication()) {
             return;
         }
-        String playerName = p.getName();
+        String playerName = player.getName();
         if (pluginConfig.getPunishSettings().enableAttempts()) {
             attempts.put(playerName, attempts.getOrDefault(playerName, 0) + 1);
         }
-        ServerProtectorPasswordFailEvent failEvent = new ServerProtectorPasswordFailEvent(p, attempts.get(playerName));
+        ServerProtectorPasswordFailEvent failEvent = new ServerProtectorPasswordFailEvent(player, attempts.get(playerName));
         failEvent.callEvent();
         if (failEvent.isCancelled()) {
             return;
         }
-        p.sendMessage(pluginConfig.getMessages().incorrect());
+        player.sendMessage(pluginConfig.getMessages().incorrect());
         if (pluginConfig.getMessageSettings().sendTitle()) {
-            Utils.sendTitleMessage(pluginConfig.getTitles().incorrect(), p);
+            Utils.sendTitleMessage(pluginConfig.getTitles().incorrect(), player);
         }
         if (pluginConfig.getSoundSettings().enableSounds()) {
-            Utils.sendSound(pluginConfig.getSoundSettings().onPasFail(), p);
+            Utils.sendSound(pluginConfig.getSoundSettings().onPasFail(), player);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction(pluginConfig.getLogFormats().failed(), p, LocalDateTime.now());
+            plugin.logAction(pluginConfig.getLogFormats().failed(), player, LocalDateTime.now());
         }
-        plugin.sendAlert(p, pluginConfig.getBroadcasts().failed());
+        plugin.sendAlert(player, pluginConfig.getBroadcasts().failed());
     }
 
-    public void correctPassword(Player p) {
+    public void correctPassword(Player player) {
         if (!api.isCalledFromAllowedApplication()) {
             return;
         }
-        ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(p);
+        ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(player);
         successEvent.callEvent();
         if (successEvent.isCancelled()) {
             return;
         }
-        String playerName = p.getName();
+        String playerName = player.getName();
         api.uncapturePlayer(playerName);
-        p.sendMessage(pluginConfig.getMessages().correct());
+        player.sendMessage(pluginConfig.getMessages().correct());
         if (pluginConfig.getMessageSettings().sendTitle()) {
-            Utils.sendTitleMessage(pluginConfig.getTitles().correct(), p);
+            Utils.sendTitleMessage(pluginConfig.getTitles().correct(), player);
         }
         plugin.getPerPlayerTime().remove(playerName);
         if (pluginConfig.getSoundSettings().enableSounds()) {
-            Utils.sendSound(pluginConfig.getSoundSettings().onPasCorrect(), p);
+            Utils.sendSound(pluginConfig.getSoundSettings().onPasCorrect(), player);
         }
         if (pluginConfig.getEffectSettings().enableEffects()) {
-            for (PotionEffect effect : p.getActivePotionEffects()) {
-                p.removePotionEffect(effect.getType());
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
             }
         }
-        this.showPlayer(p);
-        api.authorisePlayer(p);
+        this.showPlayer(player);
+        api.authorisePlayer(player);
         if (pluginConfig.getSessionSettings().sessionTimeEnabled()) {
             plugin.getRunner().runDelayedAsync(() -> {
-                if (!api.isAuthorised(p)) {
-                    api.deauthorisePlayer(p);
+                if (!api.isAuthorised(player)) {
+                    api.deauthorisePlayer(player);
                 }
             }, pluginConfig.getSessionSettings().sessionTime() * 20L);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction(pluginConfig.getLogFormats().passed(), p, LocalDateTime.now());
+            plugin.logAction(pluginConfig.getLogFormats().passed(), player, LocalDateTime.now());
         }
         if (pluginConfig.getBossbarSettings().enableBossbar() && bossbars.get(playerName) != null) {
             bossbars.get(playerName).removeAll();
         }
-        plugin.sendAlert(p, pluginConfig.getBroadcasts().passed());
+        plugin.sendAlert(player, pluginConfig.getBroadcasts().passed());
     }
 
-    private void showPlayer(Player p) {
+    private void showPlayer(Player player) {
         if (pluginConfig.getBlockingSettings().hideOnEntering()) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (!onlinePlayer.equals(p)) {
-                    onlinePlayer.showPlayer(plugin, p);
+                if (!onlinePlayer.equals(player)) {
+                    onlinePlayer.showPlayer(plugin, player);
                 }
             }
         }
         if (pluginConfig.getBlockingSettings().hideOtherOnEntering()) {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                p.showPlayer(plugin, onlinePlayer);
+                player.showPlayer(plugin, onlinePlayer);
             }
         }
     }

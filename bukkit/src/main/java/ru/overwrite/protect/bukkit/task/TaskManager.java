@@ -37,37 +37,37 @@ public final class TaskManager {
             if (Bukkit.getOnlinePlayers().isEmpty()) {
                 return;
             }
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (pluginConfig.getExcludedPlayers() != null && plugin.isExcluded(p, pluginConfig.getExcludedPlayers().adminPass())) {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (pluginConfig.getExcludedPlayers() != null && plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().adminPass())) {
                     continue;
                 }
-                if (api.isCaptured(p)) {
+                if (api.isCaptured(onlinePlayer)) {
                     continue;
                 }
-                CaptureReason captureReason = plugin.checkPermissions(p);
+                CaptureReason captureReason = plugin.checkPermissions(onlinePlayer);
                 if (captureReason == null) {
                     continue;
                 }
-                if (!api.isAuthorised(p)) {
-                    ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(p, Utils.getIp(p), captureReason);
+                if (!api.isAuthorised(onlinePlayer)) {
+                    ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(onlinePlayer, Utils.getIp(onlinePlayer), captureReason);
                     if (pluginConfig.getApiSettings().callEventOnCapture()) {
                         captureEvent.callEvent();
                     }
                     if (captureEvent.isCancelled()) {
                         continue;
                     }
-                    api.capturePlayer(p);
+                    api.capturePlayer(onlinePlayer);
                     if (pluginConfig.getSoundSettings().enableSounds()) {
-                        Utils.sendSound(pluginConfig.getSoundSettings().onCapture(), p);
+                        Utils.sendSound(pluginConfig.getSoundSettings().onCapture(), onlinePlayer);
                     }
                     if (pluginConfig.getEffectSettings().enableEffects()) {
-                        plugin.giveEffect(p);
+                        plugin.giveEffect(onlinePlayer);
                     }
-                    plugin.applyHide(p);
+                    plugin.applyHide(onlinePlayer);
                     if (pluginConfig.getLoggingSettings().loggingPas()) {
-                        plugin.logAction(pluginConfig.getLogFormats().captured(), p, LocalDateTime.now());
+                        plugin.logAction(pluginConfig.getLogFormats().captured(), onlinePlayer, LocalDateTime.now());
                     }
-                    plugin.sendAlert(p, pluginConfig.getBroadcasts().captured());
+                    plugin.sendAlert(onlinePlayer, pluginConfig.getBroadcasts().captured());
                 }
             }
         }, 20L, interval >= 0 ? interval : 40L);
@@ -77,9 +77,9 @@ public final class TaskManager {
         runner.runPeriodicalAsync(() -> {
             if (!api.isAnybodyCaptured())
                 return;
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (api.isCaptured(p) && !plugin.isAdmin(p.getName())) {
-                    plugin.checkFail(p.getName(), pluginConfig.getCommands().notInConfig());
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (api.isCaptured(onlinePlayer) && !plugin.isAdmin(onlinePlayer.getName())) {
+                    plugin.checkFail(onlinePlayer.getName(), pluginConfig.getCommands().notInConfig());
                 }
             }
         }, 5L, 20L);
@@ -89,11 +89,11 @@ public final class TaskManager {
         runner.runPeriodicalAsync(() -> {
             if (!api.isAnybodyCaptured())
                 return;
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (api.isCaptured(p)) {
-                    p.sendMessage(pluginConfig.getMessages().message());
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (api.isCaptured(onlinePlayer)) {
+                    onlinePlayer.sendMessage(pluginConfig.getMessages().message());
                     if (pluginConfig.getMessageSettings().sendTitle()) {
-                        Utils.sendTitleMessage(pluginConfig.getTitles().message(), p);
+                        Utils.sendTitleMessage(pluginConfig.getTitles().message(), onlinePlayer);
                     }
                 }
             }
@@ -105,11 +105,11 @@ public final class TaskManager {
             if (Bukkit.getOnlinePlayers().isEmpty()) {
                 return;
             }
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (p.isOp()
-                        && !pluginConfig.getAccessData().opWhitelist().contains(p.getName())
-                        && (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().opWhitelist()))) {
-                    plugin.checkFail(p.getName(), pluginConfig.getCommands().notInOpWhitelist());
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (onlinePlayer.isOp()
+                        && !pluginConfig.getAccessData().opWhitelist().contains(onlinePlayer.getName())
+                        && (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().opWhitelist()))) {
+                    plugin.checkFail(onlinePlayer.getName(), pluginConfig.getCommands().notInOpWhitelist());
                 }
             }
         }, 5L, 20L);
@@ -120,11 +120,11 @@ public final class TaskManager {
             if (Bukkit.getOnlinePlayers().isEmpty()) {
                 return;
             }
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                for (String badperm : pluginConfig.getAccessData().blacklistedPerms()) {
-                    if (p.hasPermission(badperm) &&
-                            (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(p, pluginConfig.getExcludedPlayers().blacklistedPerms()))) {
-                        plugin.checkFail(p.getName(), pluginConfig.getCommands().haveBlacklistedPerm());
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                for (String blacklistedPerm : pluginConfig.getAccessData().blacklistedPerms()) {
+                    if (onlinePlayer.hasPermission(blacklistedPerm) &&
+                            (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().blacklistedPerms()))) {
+                        plugin.checkFail(onlinePlayer.getName(), pluginConfig.getCommands().haveBlacklistedPerm());
                     }
                 }
             }
@@ -135,11 +135,11 @@ public final class TaskManager {
         runner.runPeriodicalAsync(() -> {
             if (!api.isAnybodyCaptured())
                 return;
-            for (Player p : Bukkit.getOnlinePlayers()) {
-                if (!api.isCaptured(p)) {
+            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+                if (!api.isCaptured(onlinePlayer)) {
                     return;
                 }
-                String playerName = p.getName();
+                String playerName = onlinePlayer.getName();
                 if (!plugin.getPerPlayerTime().containsKey(playerName)) {
                     plugin.getPerPlayerTime().put(playerName, 0);
                     if (pluginConfig.getBossbarSettings().enableBossbar()) {
@@ -148,7 +148,7 @@ public final class TaskManager {
                                         .replace("%time%", Integer.toString(pluginConfig.getPunishSettings().time())),
                                 BarColor.valueOf(pluginConfig.getBossbarSettings().barColor()),
                                 BarStyle.valueOf(pluginConfig.getBossbarSettings().barStyle()));
-                        bossbar.addPlayer(p);
+                        bossbar.addPlayer(onlinePlayer);
                         passwordHandler.getBossbars().put(playerName, bossbar);
                     }
                 } else {
@@ -161,13 +161,13 @@ public final class TaskManager {
                                 / (double) pluginConfig.getPunishSettings().time();
                         if (percents > 0) {
                             passwordHandler.getBossbars().get(playerName).setProgress(percents);
-                            passwordHandler.getBossbars().get(playerName).addPlayer(p);
+                            passwordHandler.getBossbars().get(playerName).addPlayer(onlinePlayer);
                         }
                     }
                 }
                 if (!noTimeLeft(playerName) && pluginConfig.getPunishSettings().enableTime()) {
                     plugin.checkFail(playerName, pluginConfig.getCommands().failedTime());
-                    passwordHandler.getBossbars().get(playerName).removePlayer(p);
+                    passwordHandler.getBossbars().get(playerName).removePlayer(onlinePlayer);
                 }
             }
         }, 5L, 20L);

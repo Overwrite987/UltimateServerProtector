@@ -26,11 +26,11 @@ public final class PasCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
-        if (!(sender instanceof Player p)) {
+        if (!(sender instanceof Player player)) {
             plugin.getPluginLogger().info(pluginConfig.getMessages().playerOnly());
             return true;
         }
-        if (!api.isCaptured(p)) {
+        if (!api.isCaptured(player)) {
             sender.sendMessage(pluginConfig.getMessages().noNeed());
             return true;
         }
@@ -38,7 +38,7 @@ public final class PasCommand implements CommandExecutor {
             sender.sendMessage(pluginConfig.getMessages().cantBeNull());
             return true;
         }
-        passwordHandler.checkPassword(p, args[0], false);
+        passwordHandler.checkPassword(player, args[0], false);
         return true;
     }
 }
