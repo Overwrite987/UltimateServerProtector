@@ -3,7 +3,6 @@ package ru.overwrite.protect.bukkit;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
-import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordEnterEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordFailEvent;
