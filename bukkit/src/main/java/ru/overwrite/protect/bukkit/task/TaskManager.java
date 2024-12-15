@@ -61,7 +61,7 @@ public final class TaskManager {
                         Utils.sendSound(pluginConfig.getSoundSettings().onCapture(), onlinePlayer);
                     }
                     if (pluginConfig.getEffectSettings().enableEffects()) {
-                        plugin.giveEffect(onlinePlayer);
+                        plugin.giveEffects(onlinePlayer);
                     }
                     plugin.applyHide(onlinePlayer);
                     if (pluginConfig.getLoggingSettings().loggingPas()) {

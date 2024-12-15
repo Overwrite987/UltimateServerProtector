@@ -84,7 +84,7 @@ public class ConnectionListener implements Listener {
             if (captureReason != null) {
                 if (api.isCaptured(player)) {
                     if (pluginConfig.getEffectSettings().enableEffects()) {
-                        plugin.giveEffect(player);
+                        plugin.giveEffects(player);
                     }
                     plugin.applyHide(player);
                 }

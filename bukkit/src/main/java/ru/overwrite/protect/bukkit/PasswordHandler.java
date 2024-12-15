@@ -135,9 +135,7 @@ public final class PasswordHandler {
             Utils.sendSound(pluginConfig.getSoundSettings().onPasCorrect(), player);
         }
         if (pluginConfig.getEffectSettings().enableEffects()) {
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-                player.removePotionEffect(effect.getType());
-            }
+            plugin.removeEffects(player);
         }
         this.showPlayer(player);
         api.authorisePlayer(player);
