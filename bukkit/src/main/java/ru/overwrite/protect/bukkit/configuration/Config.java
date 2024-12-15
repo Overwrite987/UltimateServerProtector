@@ -3,6 +3,8 @@ package ru.overwrite.protect.bukkit.configuration;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
+import org.bukkit.potion.PotionEffect;
+import org.bukkit.potion.PotionEffectType;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.configuration.data.*;
 import ru.overwrite.protect.bukkit.utils.Utils;
@@ -409,10 +411,26 @@ public final class Config {
             pluginLogger.info("Created section effect-settings");
             effectSettings = configFile.getConfigurationSection("effect-settings");
         }
+        List<PotionEffect> effectList = getEffectList(effectSettings.getStringList("effects"));
         this.effectSettings = new EffectSettings(
                 effectSettings.getBoolean("enable-effects", true),
-                effectSettings.getStringList("effects")
+                effectList
         );
+    }
+
+    private List<PotionEffect> getEffectList(List<String> effects) {
+        if (effects.isEmpty()) {
+            return List.of();
+        }
+        List<PotionEffect> effectList = new ArrayList<>(effects.size());
+        for (String effect : effects) {
+            int separatorIndex = effect.indexOf(';');
+            String effectName = separatorIndex > 0 ? effect.substring(0, separatorIndex) : effect;
+            PotionEffectType type = PotionEffectType.getByName(effectName.toUpperCase());
+            int level = separatorIndex > 0 ? Integer.parseInt(effect.substring(separatorIndex + 1)) - 1 : 0;
+            effectList.add(new PotionEffect(type, Integer.MAX_VALUE, level));
+        }
+        return effectList;
     }
 
     private LoggingSettings loggingSettings;

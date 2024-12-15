@@ -10,20 +10,26 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
-import ru.overwrite.protect.bukkit.api.*;
+import ru.overwrite.protect.bukkit.api.CaptureReason;
+import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.commands.*;
+import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.listeners.*;
 import ru.overwrite.protect.bukkit.task.*;
 import ru.overwrite.protect.bukkit.utils.*;
-import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.logging.*;
 
-import java.io.*;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 public class ServerProtectorManager extends JavaPlugin {
@@ -308,25 +314,31 @@ public class ServerProtectorManager extends JavaPlugin {
         });
     }
 
+    private final Map<String, Collection<PotionEffect>> oldEffects = new HashMap<>();
+
     public void giveEffects(Player player) {
         runner.runPlayer(() -> {
-            for (String effect : pluginConfig.getEffectSettings().effects()) {
-                int separatorIndex = effect.indexOf(';');
-                String effectName = separatorIndex > 0 ? effect.substring(0, separatorIndex) : effect;
-                PotionEffectType type = PotionEffectType.getByName(effectName.toUpperCase());
-                int level = separatorIndex > 0 ? Integer.parseInt(effect.substring(separatorIndex + 1)) - 1 : 0;
-                player.addPotionEffect(new PotionEffect(type, Integer.MAX_VALUE, level));
+            if (!player.getActivePotionEffects().isEmpty()) {
+                oldEffects.put(player.getName(), player.getActivePotionEffects());
+            }
+            player.addPotionEffects(pluginConfig.getEffectSettings().effects());
+            for (PotionEffect effect : pluginConfig.getEffectSettings().effects()) {
+                player.addPotionEffect(effect);
             }
         }, player);
     }
 
     public void removeEffects(Player player) {
         runner.runPlayer(() -> {
-            for (String effect : pluginConfig.getEffectSettings().effects()) {
-                int separatorIndex = effect.indexOf(';');
-                String effectName = separatorIndex > 0 ? effect.substring(0, separatorIndex) : effect;
-                PotionEffectType type = PotionEffectType.getByName(effectName.toUpperCase());
-                player.removePotionEffect(type);
+            for (PotionEffect effect : pluginConfig.getEffectSettings().effects()) {
+                player.removePotionEffect(effect.getType());
+            }
+            if (oldEffects.isEmpty()) {
+                return;
+            }
+            Collection<PotionEffect> effects = oldEffects.get(player.getName());
+            if (effects != null) {
+                player.addPotionEffects(effects);
             }
         }, player);
     }
