@@ -299,7 +299,7 @@ public final class Config {
         if (!configFile.contains("api-settings")) {
             pluginLogger.warn("Configuration section api-settings not found!");
             configFile.createSection("api-settings");
-            configFile.set("api-settings.call-event-on-capture", false);
+            configFile.set("api-settings.allow-cancel-capture-event", false);
             configFile.set("api-settings.call-event-on-password-enter", false);
             configFile.set("api-settings.allowed-auth-api-calls-packages", Collections.emptyList());
             save(plugin.getDataFilePath(), configFile, "config.yml");
@@ -307,7 +307,7 @@ public final class Config {
             apiSettings = configFile.getConfigurationSection("api-settings");
         }
         this.apiSettings = new ApiSettings(
-                apiSettings.getBoolean("call-event-on-capture", false),
+                apiSettings.getBoolean("allow-cancel-capture-event", false),
                 apiSettings.getBoolean("call-event-on-password-enter", false),
                 apiSettings.getStringList("allowed-auth-api-calls-packages")
         );

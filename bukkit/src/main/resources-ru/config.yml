@@ -146,8 +146,8 @@ secure-settings:
 
 # Настройки работы апи
 api-settings:
-  # Вызывать ли ServerProtectorCaptureEvent (Отключено по умолчанию в целях безопасности)
-  call-event-on-capture: false
+  # Разрешить ли отменить ServerProtectorCaptureEvent (Отключено по умолчанию в целях безопасности)
+  allow-cancel-capture-event: false
   # Вызывать ли ServerProtectorPasswordEnterEvent при вводе пароля игроком? (Отключено по умолчанию в целях безопасности)
   call-event-on-password-enter: false
   # Из каких пакетов разрешен вызов методов авторизации из апи?

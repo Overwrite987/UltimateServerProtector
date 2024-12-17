@@ -138,8 +138,8 @@ secure-settings:
 
 # Api settings
 api-settings:
-  # Should ServerProtectorCaptureEvent be triggered? (Disabled by default for security reasons)
-  call-event-on-capture: false
+  # Whether to allow canceling ServerProtectorCaptureEvent? (Disabled by default for security reasons)
+  allow-cancel-capture-event: false
   # Should ServerProtectorPasswordEnterEvent be triggered when the player enters a password? (Disabled by default for security reasons)
   call-event-on-password-enter: false
   # From which packages is the invocation of authorization methods allowed from the API?
