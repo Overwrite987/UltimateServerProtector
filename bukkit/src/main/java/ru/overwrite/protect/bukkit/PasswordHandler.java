@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit;
 
+import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
@@ -21,22 +22,16 @@ public final class PasswordHandler {
     private final ServerProtectorAPI api;
     private final Config pluginConfig;
 
+    @Getter
     private final Map<String, Integer> attempts = new HashMap<>();
 
-    public Map<String, Integer> getAttempts() {
-        return this.attempts;
-    }
-
+    @Getter
     private final Map<String, BossBar> bossbars = new HashMap<>();
-
-    public Map<String, BossBar> getBossbars() {
-        return this.bossbars;
-    }
 
     public PasswordHandler(ServerProtectorManager plugin) {
         this.plugin = plugin;
         this.pluginConfig = plugin.getPluginConfig();
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
     }
 
     public void checkPassword(Player player, String input, boolean resync) {
@@ -109,7 +104,7 @@ public final class PasswordHandler {
             Utils.sendSound(pluginConfig.getSoundSettings().onPasFail(), player);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction(pluginConfig.getLogFormats().failed(), player, LocalDateTime.now());
+            plugin.logAction(pluginConfig.getLogMessages().failed(), player, LocalDateTime.now());
         }
         plugin.sendAlert(player, pluginConfig.getBroadcasts().failed());
     }
@@ -146,7 +141,7 @@ public final class PasswordHandler {
             }, pluginConfig.getSessionSettings().sessionTime() * 20L);
         }
         if (pluginConfig.getLoggingSettings().loggingPas()) {
-            plugin.logAction(pluginConfig.getLogFormats().passed(), player, LocalDateTime.now());
+            plugin.logAction(pluginConfig.getLogMessages().passed(), player, LocalDateTime.now());
         }
         if (pluginConfig.getBossbarSettings().enableBossbar() && bossbars.get(playerName) != null) {
             bossbars.get(playerName).removeAll();

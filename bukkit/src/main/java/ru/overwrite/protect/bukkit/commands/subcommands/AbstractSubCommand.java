@@ -19,7 +19,7 @@ public abstract class AbstractSubCommand implements SubCommand {
 
     protected AbstractSubCommand(ServerProtectorManager plugin, String name, String permission, boolean adminCommand) {
         this.plugin = plugin;
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
         this.pluginConfig = plugin.getPluginConfig();
         this.passwordHandler = plugin.getPasswordHandler();
         this.name = name;

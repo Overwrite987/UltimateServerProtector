@@ -26,7 +26,7 @@ public final class TaskManager {
 
     public TaskManager(ServerProtectorManager plugin) {
         this.plugin = plugin;
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
         this.passwordHandler = plugin.getPasswordHandler();
         this.pluginConfig = plugin.getPluginConfig();
         this.runner = plugin.getRunner();
@@ -62,7 +62,7 @@ public final class TaskManager {
                     }
                     plugin.applyHide(onlinePlayer);
                     if (pluginConfig.getLoggingSettings().loggingPas()) {
-                        plugin.logAction(pluginConfig.getLogFormats().captured(), onlinePlayer, LocalDateTime.now());
+                        plugin.logAction(pluginConfig.getLogMessages().captured(), onlinePlayer, LocalDateTime.now());
                     }
                     plugin.sendAlert(onlinePlayer, pluginConfig.getBroadcasts().captured());
                 }

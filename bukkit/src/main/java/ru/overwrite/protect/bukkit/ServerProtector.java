@@ -23,7 +23,7 @@ public final class ServerProtector extends ServerProtectorManager {
         registerListeners(pluginManager);
         registerCommands(pluginManager, config);
         startTasks(config);
-        logEnableDisable(getPluginConfig().getLogFormats().enabled(), LocalDateTime.now());
+        logEnableDisable(getPluginConfig().getLogMessages().enabled(), LocalDateTime.now());
         if (config.getBoolean("main-settings.enable-metrics", true)) {
             new Metrics(this, 13347);
         }
@@ -35,7 +35,7 @@ public final class ServerProtector extends ServerProtectorManager {
     @Override
     public void onDisable() {
         if (getMessageFile() != null) {
-            logEnableDisable(getPluginConfig().getLogFormats().disabled(), LocalDateTime.now());
+            logEnableDisable(getPluginConfig().getLogMessages().disabled(), LocalDateTime.now());
         }
         if (getPluginConfig().getMessageSettings().enableBroadcasts()) {
             for (Player onlinePlayer : server.getOnlinePlayers()) {

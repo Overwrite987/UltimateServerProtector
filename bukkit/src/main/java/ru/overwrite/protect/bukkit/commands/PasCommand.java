@@ -21,7 +21,7 @@ public final class PasCommand implements CommandExecutor {
         this.plugin = plugin;
         this.pluginConfig = plugin.getPluginConfig();
         this.passwordHandler = plugin.getPasswordHandler();
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
     }
 
     @Override

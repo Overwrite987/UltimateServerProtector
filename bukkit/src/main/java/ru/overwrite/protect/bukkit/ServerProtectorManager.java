@@ -1,5 +1,8 @@
 package ru.overwrite.protect.bukkit;
 
+import lombok.AccessLevel;
+import lombok.Getter;
+import lombok.Setter;
 import org.bukkit.Server;
 import org.bukkit.command.CommandMap;
 import org.bukkit.command.PluginCommand;
@@ -32,6 +35,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
+@Getter
 public class ServerProtectorManager extends JavaPlugin {
 
     private static final DateTimeFormatter TIME_FORMATTER = DateTimeFormatter.ofPattern("'['dd-MM-yyyy']' HH:mm:ss -");
@@ -42,34 +46,12 @@ public class ServerProtectorManager extends JavaPlugin {
 
     private boolean paper;
 
-    public boolean isPaper() {
-        return this.paper;
-    }
-
     private FileConfiguration messageFile;
 
-    public FileConfiguration getMessageFile() {
-        return this.messageFile;
-    }
-
+    @Setter
     private FileConfiguration dataFile;
-
-    public void setDataFile(FileConfiguration newDataFile) {
-        this.dataFile = newDataFile;
-    }
-
     private String dataFileName;
-
-    public String getDataFileName() {
-        return this.dataFileName;
-    }
-
     private String dataFilePath;
-
-    public String getDataFilePath() {
-        return this.dataFilePath;
-    }
-
     private final Config pluginConfig = new Config(this);
     private final ServerProtectorAPI api = new ServerProtectorAPI(this);
     private final PasswordHandler passwordHandler = new PasswordHandler(this);
@@ -77,39 +59,13 @@ public class ServerProtectorManager extends JavaPlugin {
 
     private PluginMessage pluginMessage;
 
-    public PluginMessage getPluginMessage() {
-        return pluginMessage;
-    }
-
     private Map<String, Integer> perPlayerTime;
 
-    public Map<String, Integer> getPerPlayerTime() {
-        return this.perPlayerTime;
-    }
-
+    @Getter(AccessLevel.NONE)
     private File logFile;
 
+    @Getter(AccessLevel.NONE)
     public final Server server = getServer();
-
-    public Config getPluginConfig() {
-        return pluginConfig;
-    }
-
-    public ServerProtectorAPI getPluginAPI() {
-        return api;
-    }
-
-    public PasswordHandler getPasswordHandler() {
-        return passwordHandler;
-    }
-
-    public Logger getPluginLogger() {
-        return pluginLogger;
-    }
-
-    public Runner getRunner() {
-        return runner;
-    }
 
     public void checkPaper() {
         if (server.getName().equals("CraftBukkit")) {
@@ -122,11 +78,8 @@ public class ServerProtectorManager extends JavaPlugin {
         this.paper = true;
     }
 
+    @Getter
     private boolean safe;
-
-    public boolean isSafe() {
-        return safe;
-    }
 
     public void checkSafe(PluginManager pluginManager) {
         if (server.spigot().getConfig().getBoolean("settings.bungeecord")) {
@@ -305,7 +258,7 @@ public class ServerProtectorManager extends JavaPlugin {
                 server.dispatchCommand(server.getConsoleSender(), command.replace("%player%", playerName));
                 if (pluginConfig.getLoggingSettings().loggingCommandExecution()) {
                     LocalDateTime date = LocalDateTime.now();
-                    logToFile(pluginConfig.getLogFormats().command()
+                    logToFile(pluginConfig.getLogMessages().command()
                             .replace("%player%", playerName)
                             .replace("%cmd%", command)
                             .replace("%date%", date.format(TIME_FORMATTER)));
@@ -314,6 +267,7 @@ public class ServerProtectorManager extends JavaPlugin {
         });
     }
 
+    @Getter(AccessLevel.NONE)
     private final Map<String, Collection<PotionEffect>> oldEffects = new HashMap<>();
 
     public void giveEffects(Player player) {

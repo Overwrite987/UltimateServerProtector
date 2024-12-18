@@ -59,7 +59,7 @@ public class PaperRunner implements Runner {
 
     @Override
     public void cancelTasks() {
-        if (!plugin.getPluginAPI().isCalledFromAllowedApplication()) {
+        if (!plugin.getApi().isCalledFromAllowedApplication()) {
             return;
         }
         globalScheduler.cancelTasks(plugin);

@@ -14,7 +14,7 @@ public class TabCompleteListener implements Listener {
     private final Config pluginConfig;
 
     public TabCompleteListener(ServerProtectorManager plugin) {
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
         this.pluginConfig = plugin.getPluginConfig();
     }
 

@@ -23,7 +23,7 @@ public class MainListener implements Listener {
     private final Config pluginConfig;
 
     public MainListener(ServerProtectorManager plugin) {
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
         this.pluginConfig = plugin.getPluginConfig();
     }
 

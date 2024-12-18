@@ -28,7 +28,7 @@ public class ConnectionListener implements Listener {
 
     public ConnectionListener(ServerProtectorManager plugin) {
         this.plugin = plugin;
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
         this.pluginConfig = plugin.getPluginConfig();
         this.runner = plugin.getRunner();
     }
@@ -86,7 +86,7 @@ public class ConnectionListener implements Listener {
                     plugin.applyHide(player);
                 }
                 if (pluginConfig.getLoggingSettings().loggingJoin()) {
-                    plugin.logAction(pluginConfig.getLogFormats().joined(), player, LocalDateTime.now());
+                    plugin.logAction(pluginConfig.getLogMessages().joined(), player, LocalDateTime.now());
                 }
                 plugin.sendAlert(player, pluginConfig.getBroadcasts().joined());
             }

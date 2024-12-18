@@ -22,7 +22,7 @@ public class ChatListener implements Listener {
         this.plugin = plugin;
         this.pluginConfig = plugin.getPluginConfig();
         this.passwordHandler = plugin.getPasswordHandler();
-        this.api = plugin.getPluginAPI();
+        this.api = plugin.getApi();
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
