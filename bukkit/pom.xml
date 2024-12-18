@@ -7,7 +7,7 @@
     <parent>
         <groupId>ru.overwrite.protect</groupId>
         <artifactId>ultimateserverprotector-project</artifactId>
-        <version>33.1</version>
+        <version>33.2</version>
     </parent>
     <artifactId>bukkit-plugin</artifactId>
     <packaging>jar</packaging>
@@ -106,6 +106,13 @@
             <groupId>me.clip</groupId>
             <artifactId>placeholderapi</artifactId>
             <version>2.11.6</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>org.projectlombok</groupId>
+            <artifactId>lombok</artifactId>
+            <version>RELEASE</version>
+            <optional>true</optional>
             <scope>provided</scope>
         </dependency>
     </dependencies>
