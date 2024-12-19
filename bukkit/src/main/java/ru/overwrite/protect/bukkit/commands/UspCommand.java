@@ -1,6 +1,7 @@
 package ru.overwrite.protect.bukkit.commands;
 
 import org.bukkit.command.*;
+import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.commands.subcommands.*;
@@ -131,14 +132,10 @@ public final class UspCommand implements CommandExecutor, TabCompleter {
     private List<String> getResult(String[] args, List<String> completions) {
         List<String> result = new ArrayList<>();
         for (String c : completions) {
-            if (startsWithIgnoreCase(c, args[args.length - 1])) {
+            if (StringUtil.startsWithIgnoreCase(c, args[args.length - 1])) {
                 result.add(c);
             }
         }
         return result;
-    }
-
-    private boolean startsWithIgnoreCase(@NotNull String str, @NotNull String prefix) {
-        return str.regionMatches(true, 0, prefix, 0, prefix.length());
     }
 }
