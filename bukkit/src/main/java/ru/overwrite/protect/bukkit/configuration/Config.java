@@ -99,7 +99,7 @@ public final class Config {
             configFile.set("encryption-settings.encrypt-method", "");
             configFile.set("encryption-settings.salt-length", 24);
             configFile.set("encryption-settings.auto-encrypt-passwords", true);
-            configFile.set("encryption-settings.old-encrypt-methods", Collections.emptyList());
+            configFile.set("encryption-settings.old-encrypt-methods", List.of());
             configFile.set("encryption-settings.encrypt-method", "");
             save(plugin.getDataFilePath(), configFile, "config.yml");
             pluginLogger.info("Created section encryption-settings");
@@ -270,7 +270,7 @@ public final class Config {
             configFile.createSection("api-settings");
             configFile.set("api-settings.allow-cancel-capture-event", false);
             configFile.set("api-settings.call-event-on-password-enter", false);
-            configFile.set("api-settings.allowed-auth-api-calls-packages", Collections.emptyList());
+            configFile.set("api-settings.allowed-auth-api-calls-packages", List.of());
             save(plugin.getDataFilePath(), configFile, "config.yml");
             pluginLogger.info("Created section api-settings");
             apiSettings = configFile.getConfigurationSection("api-settings");
@@ -416,13 +416,13 @@ public final class Config {
         if (!configFile.contains("commands")) {
             pluginLogger.warn("Configuration section commands not found!");
             configFile.createSection("commands");
-            configFile.set("commands.not-in-config", Collections.emptyList());
-            configFile.set("commands.not-in-opwhitelist", Collections.emptyList());
-            configFile.set("commands.have-blacklisted-perm", Collections.emptyList());
-            configFile.set("commands.not-admin-ip", Collections.emptyList());
-            configFile.set("commands.failed-pass", Collections.emptyList());
-            configFile.set("commands.failed-time", Collections.emptyList());
-            configFile.set("commands.failed-rejoin", Collections.emptyList());
+            configFile.set("commands.not-in-config", List.of());
+            configFile.set("commands.not-in-opwhitelist", List.of());
+            configFile.set("commands.have-blacklisted-perm", List.of());
+            configFile.set("commands.not-admin-ip", List.of());
+            configFile.set("commands.failed-pass", List.of());
+            configFile.set("commands.failed-time", List.of());
+            configFile.set("commands.failed-rejoin", List.of());
             save(plugin.getDataFilePath(), configFile, "config.yml");
             pluginLogger.info("Created section main-settings");
             commands = configFile.getConfigurationSection("commands");
