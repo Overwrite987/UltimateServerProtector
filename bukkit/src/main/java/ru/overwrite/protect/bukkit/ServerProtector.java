@@ -1,9 +1,11 @@
 package ru.overwrite.protect.bukkit;
 
 import org.bstats.bukkit.Metrics;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginManager;
+import org.bukkit.plugin.messaging.Messenger;
 
 import java.time.LocalDateTime;
 
@@ -14,6 +16,7 @@ public final class ServerProtector extends ServerProtectorManager {
         long startTime = System.currentTimeMillis();
         saveDefaultConfig();
         final FileConfiguration config = getConfig();
+        final ConfigurationSection mainSettings = config.getConfigurationSection("main-settings");
         setupLogger(config);
         setupProxy(config);
         loadConfigs(config);
@@ -21,13 +24,13 @@ public final class ServerProtector extends ServerProtectorManager {
         checkSafe(pluginManager);
         checkPaper();
         registerListeners(pluginManager);
-        registerCommands(pluginManager, config);
+        registerCommands(pluginManager, mainSettings);
         startTasks(config);
         logEnableDisable(getPluginConfig().getLogMessages().enabled(), LocalDateTime.now());
-        if (config.getBoolean("main-settings.enable-metrics", true)) {
+        if (mainSettings.getBoolean("enable-metrics", true)) {
             new Metrics(this, 13347);
         }
-        checkForUpdates(config);
+        checkForUpdates(mainSettings);
         long endTime = System.currentTimeMillis();
         getPluginLogger().info("Plugin started in " + (endTime - startTime) + " ms");
     }
@@ -46,8 +49,9 @@ public final class ServerProtector extends ServerProtectorManager {
         }
         getRunner().cancelTasks();
         if (getPluginMessage() != null) {
-            server.getMessenger().unregisterOutgoingPluginChannel(this);
-            server.getMessenger().unregisterIncomingPluginChannel(this);
+            Messenger messenger = server.getMessenger();
+            messenger.unregisterOutgoingPluginChannel(this);
+            messenger.unregisterIncomingPluginChannel(this);
         }
         if (getConfig().getBoolean("secure-settings.shutdown-on-disable")) {
             server.shutdown();

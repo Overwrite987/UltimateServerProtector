@@ -181,13 +181,13 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void registerCommands(PluginManager pluginManager, FileConfiguration config) {
-        if (config.getBoolean("main-settings.use-command", true) && paper) {
+    public void registerCommands(PluginManager pluginManager, ConfigurationSection mainSettings) {
+        if (mainSettings.getBoolean("use-command", true) && paper) {
             try {
                 CommandMap commandMap = server.getCommandMap();
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
                 constructor.setAccessible(true);
-                PluginCommand command = constructor.newInstance(config.getString("main-settings.pas-command", "pas"), this);
+                PluginCommand command = constructor.newInstance(mainSettings.getString("pas-command", "pas"), this);
                 command.setExecutor(new PasCommand(this));
                 commandMap.register(getDescription().getName(), command);
             } catch (Exception ex) {
@@ -233,8 +233,8 @@ public class ServerProtectorManager extends JavaPlugin {
         logFile = new File(logFilePath, fileSettings.getString("log-file"));
     }
 
-    public void checkForUpdates(FileConfiguration config) {
-        if (!config.getBoolean("main-settings.update-checker", true)) {
+    public void checkForUpdates(ConfigurationSection mainSettings) {
+        if (!mainSettings.getBoolean("update-checker", true)) {
             return;
         }
         Utils.checkUpdates(this, version -> {
