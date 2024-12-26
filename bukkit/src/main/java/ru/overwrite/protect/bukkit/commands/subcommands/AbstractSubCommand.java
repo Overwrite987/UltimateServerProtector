@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit.commands.subcommands;
 
+import lombok.Getter;
 import org.bukkit.command.CommandSender;
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
@@ -8,8 +9,11 @@ import ru.overwrite.protect.bukkit.configuration.Config;
 
 public abstract class AbstractSubCommand implements SubCommand {
 
+    @Getter
     protected final String name;
+    @Getter
     protected final String permission;
+    @Getter
     protected final boolean adminCommand;
 
     protected final ServerProtectorManager plugin;
@@ -25,18 +29,6 @@ public abstract class AbstractSubCommand implements SubCommand {
         this.name = name;
         this.permission = permission;
         this.adminCommand = adminCommand;
-    }
-
-    public String getName() {
-        return this.name;
-    }
-
-    public String getPermission() {
-        return this.permission;
-    }
-
-    public boolean isAdminCommand() {
-        return adminCommand;
     }
 
     protected void sendCmdUsage(CommandSender sender, String msg, String label) {
