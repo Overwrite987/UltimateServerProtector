@@ -35,8 +35,8 @@ public class ChatListener implements Listener {
             String message = e.getMessage();
             passwordHandler.checkPassword(player, message, true);
         }
-        e.setCancelled(true);
         e.setMessage("");
+        e.setCancelled(true);
     }
 
     @EventHandler(priority = EventPriority.LOWEST)
