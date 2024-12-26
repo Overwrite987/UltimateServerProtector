@@ -22,7 +22,7 @@ public class UpdateSubcommand extends AbstractSubCommand {
     }
 
     public void checkAndUpdatePlugin(CommandSender sender, ServerProtectorManager plugin) {
-        Bukkit.getScheduler().runTaskAsynchronously(plugin, () -> Utils.checkUpdates(plugin, version -> {
+        plugin.getRunner().runAsync(() -> Utils.checkUpdates(plugin, version -> {
             sender.sendMessage(pluginConfig.getSystemMessages().baselineDefault());
 
             String currentVersion = plugin.getDescription().getVersion();
