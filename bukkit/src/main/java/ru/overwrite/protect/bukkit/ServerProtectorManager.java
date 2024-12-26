@@ -34,6 +34,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
 @Getter
 public class ServerProtectorManager extends JavaPlugin {
@@ -383,5 +384,30 @@ public class ServerProtectorManager extends JavaPlugin {
         } catch (IOException ex) {
             ex.printStackTrace();
         }
+    }
+
+    public boolean isCalledFromAllowedApplication() {
+        StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
+
+        List<Class<?>> callStack = walker.walk(frames ->
+                frames.map(StackWalker.StackFrame::getDeclaringClass)
+                        .collect(Collectors.toList())
+        );
+        String className = callStack.get(2).getName();
+
+        if (className.startsWith("ru.overwrite.protect.bukkit")) {
+            return true;
+        }
+        if (pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()) {
+            pluginLogger.warn("Found illegal method call from " + className);
+            return false;
+        }
+        for (String allowed : pluginConfig.getApiSettings().allowedAuthApiCallsPackages()) {
+            if (className.startsWith(allowed)) {
+                return true;
+            }
+        }
+        pluginLogger.warn("Found illegal method call from " + className);
+        return false;
     }
 }

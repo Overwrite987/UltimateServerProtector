@@ -53,7 +53,7 @@ public class BukkitRunner implements Runner {
 
     @Override
     public void cancelTasks() {
-        if (!plugin.getApi().isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             return;
         }
         scheduler.cancelTasks(plugin);

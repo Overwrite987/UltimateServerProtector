@@ -9,9 +9,10 @@ import ru.overwrite.protect.bukkit.utils.Utils;
 import ru.overwrite.protect.bukkit.utils.logging.Logger;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public final class ServerProtectorAPI {
+
+    private final ServerProtectorManager plugin;
 
     private final Config pluginConfig;
     private final Logger pluginLogger;
@@ -21,6 +22,7 @@ public final class ServerProtectorAPI {
     private final Set<String> saved = new HashSet<>();
 
     public ServerProtectorAPI(@NotNull ServerProtectorManager plugin) {
+        this.plugin = plugin;
         this.pluginConfig = plugin.getPluginConfig();
         this.pluginLogger = plugin.getPluginLogger();
     }
@@ -60,7 +62,7 @@ public final class ServerProtectorAPI {
     }
 
     public void uncapturePlayer(@NotNull Player player) {
-        if (!isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to uncapture " + player.getName() + " Reason: Action not allowed");
             return;
         }
@@ -72,7 +74,7 @@ public final class ServerProtectorAPI {
     }
 
     public void uncapturePlayer(@NotNull String playerName) {
-        if (!isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to uncapture " + playerName + " Reason: Action not allowed");
             return;
         }
@@ -126,7 +128,7 @@ public final class ServerProtectorAPI {
     }
 
     public void authorisePlayer(@NotNull Player player) {
-        if (!isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
             return;
         }
@@ -142,7 +144,7 @@ public final class ServerProtectorAPI {
     }
 
     public void authorisePlayer(@NotNull Player player, @NotNull String ip) {
-        if (!isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
             return;
         }
@@ -158,7 +160,7 @@ public final class ServerProtectorAPI {
     }
 
     public void authorisePlayer(@NotNull String playerName, @NotNull String ip) {
-        if (!isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to authorise " + playerName + " Reason: Action not allowed");
             return;
         }
@@ -174,7 +176,7 @@ public final class ServerProtectorAPI {
     }
 
     public void deauthorisePlayer(@NotNull Player player) {
-        if (!isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to deauthorise " + player.getName() + " Reason: Action not allowed");
             return;
         }
@@ -213,30 +215,5 @@ public final class ServerProtectorAPI {
 
     public void clearSaved() {
         this.saved.clear();
-    }
-
-    public boolean isCalledFromAllowedApplication() {
-        StackWalker walker = StackWalker.getInstance(StackWalker.Option.RETAIN_CLASS_REFERENCE);
-
-        List<Class<?>> callStack = walker.walk(frames ->
-                frames.map(StackWalker.StackFrame::getDeclaringClass)
-                        .collect(Collectors.toList())
-        );
-        String className = callStack.get(2).getName();
-
-        if (className.startsWith("ru.overwrite.protect.bukkit")) {
-            return true;
-        }
-        if (pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()) {
-            pluginLogger.warn("Found illegal method call from " + className);
-            return false;
-        }
-        for (String allowed : pluginConfig.getApiSettings().allowedAuthApiCallsPackages()) {
-            if (className.startsWith(allowed)) {
-                return true;
-            }
-        }
-        pluginLogger.warn("Found illegal method call from " + className);
-        return false;
     }
 }

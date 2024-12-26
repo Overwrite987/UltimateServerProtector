@@ -83,7 +83,7 @@ public final class PasswordHandler {
     }
 
     public void failedPassword(Player player) {
-        if (!api.isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             return;
         }
         String playerName = player.getName();
@@ -109,7 +109,7 @@ public final class PasswordHandler {
     }
 
     public void correctPassword(Player player) {
-        if (!api.isCalledFromAllowedApplication()) {
+        if (!plugin.isCalledFromAllowedApplication()) {
             return;
         }
         ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(player);
