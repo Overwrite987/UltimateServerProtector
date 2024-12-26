@@ -89,16 +89,40 @@ public final class ServerProtectorAPI {
                 saved.contains(player.getName());
     }
 
+    public boolean isAuthorised(@NotNull Player player, @NotNull String ip) {
+        return pluginConfig.getSessionSettings().session() ?
+                hasSession(player, ip) :
+                saved.contains(player.getName());
+    }
+
+    public boolean isAuthorised(@NotNull String playerName, @NotNull String ip) {
+        return pluginConfig.getSessionSettings().session() ?
+                hasSession(playerName, ip) :
+                saved.contains(playerName);
+    }
+
     public boolean hasSession(@NotNull Player player) {
-        return !sessions.isEmpty() && sessions.containsKey(player.getName()) && sessions.get(player.getName()).equals(Utils.getIp(player));
+        if (sessions.isEmpty()) {
+            return false;
+        }
+        String sessionIp = sessions.get(player.getName());
+        return sessionIp != null && sessionIp.equals(Utils.getIp(player));
     }
 
     public boolean hasSession(@NotNull Player player, @NotNull String ip) {
-        return !sessions.isEmpty() && sessions.containsKey(player.getName()) && sessions.get(player.getName()).equals(ip);
+        if (sessions.isEmpty()) {
+            return false;
+        }
+        String sessionIp = sessions.get(player.getName());
+        return sessionIp != null && sessionIp.equals(ip);
     }
 
     public boolean hasSession(@NotNull String playerName, @NotNull String ip) {
-        return !sessions.isEmpty() && sessions.containsKey(playerName) && sessions.get(playerName).equals(ip);
+        if (sessions.isEmpty()) {
+            return false;
+        }
+        String sessionIp = sessions.get(playerName);
+        return sessionIp != null && sessionIp.equals(ip);
     }
 
     public void authorisePlayer(@NotNull Player player) {
@@ -117,6 +141,38 @@ public final class ServerProtectorAPI {
         saved.add(player.getName());
     }
 
+    public void authorisePlayer(@NotNull Player player, @NotNull String ip) {
+        if (!isCalledFromAllowedApplication()) {
+            pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Action not allowed");
+            return;
+        }
+        if (isAuthorised(player)) {
+            pluginLogger.warn("Unable to authorise " + player.getName() + " Reason: Already authorised");
+            return;
+        }
+        if (pluginConfig.getSessionSettings().session()) {
+            sessions.put(player.getName(), ip);
+            return;
+        }
+        saved.add(player.getName());
+    }
+
+    public void authorisePlayer(@NotNull String playerName, @NotNull String ip) {
+        if (!isCalledFromAllowedApplication()) {
+            pluginLogger.warn("Unable to authorise " + playerName + " Reason: Action not allowed");
+            return;
+        }
+        if (isAuthorised(playerName, ip)) {
+            pluginLogger.warn("Unable to authorise " + playerName + " Reason: Already authorised");
+            return;
+        }
+        if (pluginConfig.getSessionSettings().session()) {
+            sessions.put(playerName, ip);
+            return;
+        }
+        saved.add(playerName);
+    }
+
     public void deauthorisePlayer(@NotNull Player player) {
         if (!isCalledFromAllowedApplication()) {
             pluginLogger.warn("Unable to deauthorise " + player.getName() + " Reason: Action not allowed");
@@ -127,7 +183,7 @@ public final class ServerProtectorAPI {
             return;
         }
         if (pluginConfig.getSessionSettings().session()) {
-            sessions.remove(player.getName(), Utils.getIp(player));
+            sessions.remove(player.getName());
             return;
         }
         saved.remove(player.getName());
