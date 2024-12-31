@@ -55,7 +55,8 @@ public class ChatListener implements Listener {
                 return;
             }
         }
-        for (String command : pluginConfig.getAccessData().allowedCommands()) {
+        for (int i = 0; i < pluginConfig.getAccessData().allowedCommands().size(); i++) {
+            final String command = pluginConfig.getAccessData().allowedCommands().get(i);
             if (label.equalsIgnoreCase(command) || message.equalsIgnoreCase(command)) {
                 return;
             }
