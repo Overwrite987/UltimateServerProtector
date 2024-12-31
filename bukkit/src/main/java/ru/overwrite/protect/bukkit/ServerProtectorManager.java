@@ -15,12 +15,23 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
-import ru.overwrite.protect.bukkit.commands.*;
+import ru.overwrite.protect.bukkit.commands.PasCommand;
+import ru.overwrite.protect.bukkit.commands.UspCommand;
 import ru.overwrite.protect.bukkit.configuration.Config;
-import ru.overwrite.protect.bukkit.listeners.*;
-import ru.overwrite.protect.bukkit.task.*;
-import ru.overwrite.protect.bukkit.utils.*;
-import ru.overwrite.protect.bukkit.utils.logging.*;
+import ru.overwrite.protect.bukkit.listeners.ChatListener;
+import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
+import ru.overwrite.protect.bukkit.listeners.MainListener;
+import ru.overwrite.protect.bukkit.listeners.TabCompleteListener;
+import ru.overwrite.protect.bukkit.task.BukkitRunner;
+import ru.overwrite.protect.bukkit.task.PaperRunner;
+import ru.overwrite.protect.bukkit.task.Runner;
+import ru.overwrite.protect.bukkit.task.TaskManager;
+import ru.overwrite.protect.bukkit.utils.PAPIUtils;
+import ru.overwrite.protect.bukkit.utils.PluginMessage;
+import ru.overwrite.protect.bukkit.utils.Utils;
+import ru.overwrite.protect.bukkit.utils.logging.BukkitLogger;
+import ru.overwrite.protect.bukkit.utils.logging.Logger;
+import ru.overwrite.protect.bukkit.utils.logging.PaperLogger;
 
 import java.io.BufferedWriter;
 import java.io.File;
@@ -285,7 +296,9 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void removeEffects(Player player) {
         runner.runPlayer(() -> {
-            player.clearActivePotionEffects();
+            for (PotionEffect effect : player.getActivePotionEffects()) {
+                player.removePotionEffect(effect.getType());
+            }
             if (oldEffects.isEmpty()) {
                 return;
             }
