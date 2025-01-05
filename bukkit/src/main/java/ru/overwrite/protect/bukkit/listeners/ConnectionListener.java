@@ -43,8 +43,8 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onLogin(PlayerLoginEvent e) {
-        Player player = e.getPlayer();
         runner.runAsync(() -> {
+            Player player = e.getPlayer();
             final String playerName = player.getName();
             CaptureReason captureReason = plugin.checkPermissions(player);
             if (api.isCaptured(playerName) && captureReason == null) {
@@ -62,6 +62,7 @@ public class ConnectionListener implements Listener {
                 }
                 if (pluginConfig.getSessionSettings().session() && !api.hasSession(playerName, ip)) {
                     if (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(player, pluginConfig.getExcludedPlayers().adminPass())) {
+                        player.loadData();
                         ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(player, ip, captureReason);
                         captureEvent.callEvent();
                         if (pluginConfig.getApiSettings().allowCancelCaptureEvent() && captureEvent.isCancelled()) {
@@ -76,8 +77,8 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent e) {
-        Player player = e.getPlayer();
         runner.runAsync(() -> {
+            Player player = e.getPlayer();
             CaptureReason captureReason = plugin.checkPermissions(player);
             if (captureReason != null) {
                 if (api.isCaptured(player)) {
