@@ -71,7 +71,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
     private PluginMessage pluginMessage;
 
-    private final Map<String, Integer> perPlayerTime = new ConcurrentHashMap<>();;
+    private final Map<String, Integer> perPlayerTime = new ConcurrentHashMap<>();
 
     @Getter(AccessLevel.NONE)
     private File logFile;
