@@ -71,7 +71,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
     private PluginMessage pluginMessage;
 
-    private Map<String, Integer> perPlayerTime;
+    private final Map<String, Integer> perPlayerTime = new ConcurrentHashMap<>();;
 
     @Getter(AccessLevel.NONE)
     private File logFile;
@@ -219,7 +219,6 @@ public class ServerProtectorManager extends JavaPlugin {
         taskManager.startMainCheck(pluginConfig.getMainSettings().checkInterval());
         taskManager.startCapturesMessages(config);
         if (pluginConfig.getPunishSettings().enableTime()) {
-            perPlayerTime = new ConcurrentHashMap<>();
             taskManager.startCapturesTimer();
         }
         if (pluginConfig.getSecureSettings().enableNotAdminPunish()) {
