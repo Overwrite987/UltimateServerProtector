@@ -6,7 +6,7 @@ import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 
 @SuppressWarnings("deprecation")
-public class BukkitRunner implements Runner {
+public final class BukkitRunner implements Runner {
 
     private final ServerProtectorManager plugin;
     private final BukkitScheduler scheduler;

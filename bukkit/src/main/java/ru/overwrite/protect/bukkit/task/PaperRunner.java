@@ -10,7 +10,7 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;
 
-public class PaperRunner implements Runner {
+public final class PaperRunner implements Runner {
 
     private final ServerProtectorManager plugin;
     private final AsyncScheduler asyncScheduler;
