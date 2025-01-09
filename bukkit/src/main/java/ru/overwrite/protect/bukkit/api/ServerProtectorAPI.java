@@ -66,11 +66,9 @@ public final class ServerProtectorAPI {
             pluginLogger.warn("Unable to uncapture " + player.getName() + " Reason: Action not allowed");
             return;
         }
-        if (!isCaptured(player)) {
+        if (!this.captured.remove(player.getName())) {
             pluginLogger.warn("Unable to uncapture " + player.getName() + " Reason: Not captured");
-            return;
         }
-        this.captured.remove(player.getName());
     }
 
     public void uncapturePlayer(@NotNull String playerName) {
@@ -78,11 +76,9 @@ public final class ServerProtectorAPI {
             pluginLogger.warn("Unable to uncapture " + playerName + " Reason: Action not allowed");
             return;
         }
-        if (!isCaptured(playerName)) {
+        if (!this.captured.remove(playerName)) {
             pluginLogger.warn("Unable to uncapture " + playerName + " Reason: Not captured");
-            return;
         }
-        this.captured.remove(playerName);
     }
 
     public boolean isAuthorised(@NotNull Player player) {
