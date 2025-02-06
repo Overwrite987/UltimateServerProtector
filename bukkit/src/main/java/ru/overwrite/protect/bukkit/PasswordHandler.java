@@ -93,7 +93,8 @@ public final class PasswordHandler {
             attempts.put(playerName, attempts.getOrDefault(playerName, 0) + 1);
         }
         ServerProtectorPasswordFailEvent failEvent = new ServerProtectorPasswordFailEvent(player, attempts.get(playerName));
-        if (!failEvent.callEvent()) {
+        failEvent.callEvent();
+        if (failEvent.isCancelled()) {
             return;
         }
         player.sendMessage(pluginConfig.getMessages().incorrect());
@@ -114,7 +115,8 @@ public final class PasswordHandler {
             return;
         }
         ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(player);
-        if (!successEvent.callEvent()) {
+        successEvent.callEvent();
+        if (successEvent.isCancelled()) {
             return;
         }
         String playerName = player.getName();
