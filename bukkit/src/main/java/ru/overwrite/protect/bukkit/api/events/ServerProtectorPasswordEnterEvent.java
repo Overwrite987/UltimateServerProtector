@@ -2,22 +2,19 @@ package ru.overwrite.protect.bukkit.api.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
-public class ServerProtectorPasswordEnterEvent extends Event implements Cancellable {
+public class ServerProtectorPasswordEnterEvent extends ServerProtectorPlayerEvent implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
-
-    private final Player player;
 
     private final String password;
 
     private boolean isCancelled = false;
 
     public ServerProtectorPasswordEnterEvent(Player player, String password) {
-        super(false);
+        super(player);
         this.player = player;
         this.password = password;
     }
@@ -41,11 +38,6 @@ public class ServerProtectorPasswordEnterEvent extends Event implements Cancella
     @Override
     public void setCancelled(boolean cancel) {
         this.isCancelled = cancel;
-    }
-
-    @NotNull
-    public final Player getPlayer() {
-        return this.player;
     }
 
     @NotNull

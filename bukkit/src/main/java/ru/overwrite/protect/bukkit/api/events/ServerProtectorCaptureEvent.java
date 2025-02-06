@@ -2,16 +2,13 @@ package ru.overwrite.protect.bukkit.api.events;
 
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
-import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
 
-public class ServerProtectorCaptureEvent extends Event implements Cancellable {
+public class ServerProtectorCaptureEvent extends ServerProtectorPlayerEvent implements Cancellable {
 
     private static final HandlerList HANDLERS = new HandlerList();
-
-    private final Player player;
 
     private final String ip;
 
@@ -20,7 +17,7 @@ public class ServerProtectorCaptureEvent extends Event implements Cancellable {
     private boolean isCancelled = false;
 
     public ServerProtectorCaptureEvent(Player player, String ip, CaptureReason captureReason) {
-        super(true);
+        super(player, true);
         this.player = player;
         this.ip = ip;
         this.captureReason = captureReason;
@@ -45,11 +42,6 @@ public class ServerProtectorCaptureEvent extends Event implements Cancellable {
     @Override
     public void setCancelled(boolean cancel) {
         this.isCancelled = cancel;
-    }
-
-    @NotNull
-    public final Player getPlayer() {
-        return this.player;
     }
 
     @NotNull
