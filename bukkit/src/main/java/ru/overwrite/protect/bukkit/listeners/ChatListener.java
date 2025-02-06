@@ -27,6 +27,8 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onChat(AsyncPlayerChatEvent e) {
+        if (!api.isAnybodyCaptured())
+            return;
         Player player = e.getPlayer();
         if (!api.isCaptured(player)) {
             return;
@@ -41,6 +43,8 @@ public class ChatListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onCommand(PlayerCommandPreprocessEvent e) {
+        if (!api.isAnybodyCaptured())
+            return;
         Player player = e.getPlayer();
         if (!api.isCaptured(player)) {
             return;
