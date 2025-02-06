@@ -57,6 +57,7 @@ public final class Config {
                     plugin.setDataFile(dataFile);
                 }
             }
+            perPlayerPasswords.put(playerNick, data.getString(nick + ".encrypted-pass"));
         }
         if (shouldSave) {
             save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
