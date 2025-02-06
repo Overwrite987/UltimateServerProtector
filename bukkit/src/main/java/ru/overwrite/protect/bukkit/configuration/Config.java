@@ -39,23 +39,23 @@ public final class Config {
         ConfigurationSection data = dataFile.getConfigurationSection("data");
         boolean shouldSave = false;
         for (String nick : data.getKeys(false)) {
-            String playerNick = nick;
-            if (this.geyserSettings.prefix() != null && !this.geyserSettings.prefix().isBlank() && this.geyserSettings.nicknames().contains(nick)) {
-                playerNick = this.geyserSettings.prefix() + nick;
-            }
+            String playerNick = (this.geyserSettings.prefix() != null &&
+                    !this.geyserSettings.prefix().isBlank() &&
+                    this.geyserSettings.nicknames().contains(nick))
+                    ? this.geyserSettings.prefix() + nick
+                    : nick;
             if (!this.encryptionSettings.enableEncryption()) {
                 perPlayerPasswords.put(playerNick, data.getString(nick + ".pass"));
-            } else {
-                if (this.encryptionSettings.autoEncryptPasswords()) {
-                    if (data.getString(nick + ".pass") != null) {
-                        String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(this.encryptionSettings.saltLength()), this.encryptionSettings.encryptMethods());
-                        dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
-                        dataFile.set("data." + nick + ".pass", null);
-                        shouldSave = true;
-                        plugin.setDataFile(dataFile);
-                    }
+                continue;
+            }
+            if (this.encryptionSettings.autoEncryptPasswords()) {
+                if (data.getString(nick + ".pass") != null) {
+                    String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(this.encryptionSettings.saltLength()), this.encryptionSettings.encryptMethods());
+                    dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
+                    dataFile.set("data." + nick + ".pass", null);
+                    shouldSave = true;
+                    plugin.setDataFile(dataFile);
                 }
-                perPlayerPasswords.put(playerNick, data.getString(nick + ".encrypted-pass"));
             }
         }
         if (shouldSave) {
@@ -456,7 +456,7 @@ public final class Config {
             opWhitelist = config.getStringList("op-whitelist");
         }
         if (secureSettings.getBoolean("enable-permission-blacklist")) {
-            blacklistedPerms = new HashSet<>(config.getStringList("blacklisted-perms"));
+            blacklistedPerms.addAll(config.getStringList("blacklisted-perms"));
         }
         if (secureSettings.getBoolean("enable-ip-whitelist")) {
             for (String ipwlPlayer : config.getConfigurationSection("ip-whitelist").getKeys(false)) {
