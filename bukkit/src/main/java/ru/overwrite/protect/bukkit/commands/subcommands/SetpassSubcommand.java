@@ -5,6 +5,7 @@ import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.configuration.data.EncryptionSettings;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 public class SetpassSubcommand extends AbstractSubCommand {
@@ -42,10 +43,11 @@ public class SetpassSubcommand extends AbstractSubCommand {
 
     private void addAdmin(String nick, String pas) {
         FileConfiguration dataFile = pluginConfig.getFile(plugin.getDataFilePath(), plugin.getDataFileName());
-        if (!pluginConfig.getEncryptionSettings().enableEncryption()) {
+        EncryptionSettings encryptionSettings = pluginConfig.getEncryptionSettings();
+        if (!encryptionSettings.enableEncryption()) {
             dataFile.set("data." + nick + ".pass", pas);
-        } else if (pluginConfig.getEncryptionSettings().autoEncryptPasswords()) {
-            String encryptedPas = Utils.encryptPassword(pas, Utils.generateSalt(pluginConfig.getEncryptionSettings().saltLength()), pluginConfig.getEncryptionSettings().encryptMethods());
+        } else if (encryptionSettings.autoEncryptPasswords()) {
+            String encryptedPas = Utils.encryptPassword(pas, Utils.generateSalt(encryptionSettings.saltLength()), encryptionSettings.encryptMethods());
             dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
         } else {
             dataFile.set("data." + nick + ".encrypted-pass", pas);
