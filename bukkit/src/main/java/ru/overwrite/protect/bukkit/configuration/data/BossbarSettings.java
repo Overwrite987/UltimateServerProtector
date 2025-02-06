@@ -1,9 +1,12 @@
 package ru.overwrite.protect.bukkit.configuration.data;
 
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
+
 public record BossbarSettings(
         boolean enableBossbar,
-        String barColor,
-        String barStyle,
+        BarColor barColor,
+        BarStyle barStyle,
         String bossbarMessage
 ) {
 }

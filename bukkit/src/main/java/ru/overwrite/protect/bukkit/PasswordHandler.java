@@ -142,6 +142,7 @@ public final class PasswordHandler {
         }
         if (pluginConfig.getBossbarSettings().enableBossbar() && bossbars.get(playerName) != null) {
             bossbars.get(playerName).removeAll();
+            bossbars.remove(playerName);
         }
         plugin.sendAlert(player, pluginConfig.getBroadcasts().passed());
     }

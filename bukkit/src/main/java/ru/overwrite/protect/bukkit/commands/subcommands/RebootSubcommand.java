@@ -21,6 +21,7 @@ public class RebootSubcommand extends AbstractSubCommand {
         for (String playerName : passwordHandler.getBossbars().keySet()) {
             passwordHandler.getBossbars().get(playerName).removeAll();
         }
+        passwordHandler.getBossbars().clear();
         passwordHandler.getAttempts().clear();
         FileConfiguration newconfig = plugin.getConfig();
         plugin.startTasks(newconfig);

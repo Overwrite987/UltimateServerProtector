@@ -2,6 +2,8 @@ package ru.overwrite.protect.bukkit.configuration;
 
 import lombok.AccessLevel;
 import lombok.Getter;
+import org.bukkit.boss.BarColor;
+import org.bukkit.boss.BarStyle;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.configuration.file.YamlConfiguration;
@@ -322,8 +324,8 @@ public final class Config {
 
         this.bossbarSettings = new BossbarSettings(
                 bossbarSettings.getBoolean("enable-bossbar", true),
-                bossbarSettings.getString("bar-color", "RED"),
-                bossbarSettings.getString("bar-style", "SEGMENTED_12"),
+                BarColor.valueOf(bossbarSettings.getString("bar-color", "RED")),
+                BarStyle.valueOf(bossbarSettings.getString("bar-style", "SEGMENTED_12")),
                 bossbarMessage
         );
     }

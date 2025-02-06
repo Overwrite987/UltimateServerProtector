@@ -1,8 +1,6 @@
 package ru.overwrite.protect.bukkit.task;
 
 import org.bukkit.Bukkit;
-import org.bukkit.boss.BarColor;
-import org.bukkit.boss.BarStyle;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
@@ -144,22 +142,23 @@ public final class TaskManager {
                         BossBar bossbar = Bukkit.createBossBar(
                                 pluginConfig.getBossbarSettings().bossbarMessage()
                                         .replace("%time%", Integer.toString(pluginConfig.getPunishSettings().time())),
-                                BarColor.valueOf(pluginConfig.getBossbarSettings().barColor()),
-                                BarStyle.valueOf(pluginConfig.getBossbarSettings().barStyle()));
+                                pluginConfig.getBossbarSettings().barColor(),
+                                pluginConfig.getBossbarSettings().barStyle());
                         bossbar.addPlayer(onlinePlayer);
                         passwordHandler.getBossbars().put(playerName, bossbar);
                     }
                 } else {
                     plugin.getPerPlayerTime().compute(playerName, (k, currentTime) -> currentTime + 1);
                     int newTime = plugin.getPerPlayerTime().get(playerName);
-                    if (pluginConfig.getBossbarSettings().enableBossbar() && passwordHandler.getBossbars().get(playerName) != null) {
-                        passwordHandler.getBossbars().get(playerName).setTitle(pluginConfig.getBossbarSettings().bossbarMessage()
+                    BossBar bossBar = passwordHandler.getBossbars().get(playerName);
+                    if (pluginConfig.getBossbarSettings().enableBossbar() && bossBar != null) {
+                        bossBar.setTitle(pluginConfig.getBossbarSettings().bossbarMessage()
                                 .replace("%time%", Integer.toString(pluginConfig.getPunishSettings().time() - newTime)));
                         double percents = (pluginConfig.getPunishSettings().time() - newTime)
                                 / (double) pluginConfig.getPunishSettings().time();
                         if (percents > 0) {
-                            passwordHandler.getBossbars().get(playerName).setProgress(percents);
-                            passwordHandler.getBossbars().get(playerName).addPlayer(onlinePlayer);
+                            bossBar.setProgress(percents);
+                            bossBar.addPlayer(onlinePlayer);
                         }
                     }
                 }
