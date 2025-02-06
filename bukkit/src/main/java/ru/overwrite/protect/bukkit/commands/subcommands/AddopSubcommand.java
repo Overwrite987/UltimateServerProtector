@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.util.List;
 
@@ -16,19 +17,25 @@ public class AddopSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length > 1) {
-            OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
-            if (targetPlayer == null) {
-                sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", args[1]));
-                return true;
+            String nickname = args[1];
+
+            if (plugin.isPaper() && Utils.SUB_VERSION >= 16) {
+                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(nickname);
+                if (targetPlayer == null) {
+                    sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", nickname));
+                    return true;
+                }
+                nickname = targetPlayer.getName();
             }
-            String nickname = targetPlayer.getName();
-            List<String> wl = pluginConfig.getAccessData().opWhitelist();
-            wl.add(nickname);
-            plugin.getConfig().set("op-whitelist", wl);
+
+            List<String> whitelist = pluginConfig.getAccessData().opWhitelist();
+            whitelist.add(nickname);
+            plugin.getConfig().set("op-whitelist", whitelist);
             plugin.saveConfig();
             sender.sendMessage(pluginConfig.getUspMessages().playerAdded().replace("%nick%", nickname));
             return true;
         }
+
         sendCmdUsage(sender, pluginConfig.getUspMessages().addOpUsage(), label);
         return true;
     }

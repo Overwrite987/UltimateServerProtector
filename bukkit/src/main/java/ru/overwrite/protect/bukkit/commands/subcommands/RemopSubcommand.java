@@ -16,14 +16,11 @@ public class RemopSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length > 1) {
-            OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
-            if (targetPlayer == null) {
-                sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", args[1]));
-                return true;
-            }
-            String nickname = targetPlayer.getName();
+            String nickname = args[1];
             List<String> wl = pluginConfig.getAccessData().opWhitelist();
-            wl.remove(nickname);
+            if (!wl.remove(nickname)) {
+                sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", nickname));
+            }
             plugin.getConfig().set("op-whitelist", wl);
             plugin.saveConfig();
             sender.sendMessage(pluginConfig.getUspMessages().playerRemoved().replace("%nick%", nickname));

@@ -16,12 +16,16 @@ public class SetpassSubcommand extends AbstractSubCommand {
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
         if (args.length > 1) {
-            OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(args[1]);
-            if (targetPlayer == null) {
-                sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", args[1]));
-                return true;
+            String nickname = args[1];
+
+            if (plugin.isPaper() && Utils.SUB_VERSION >= 16) {
+                OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(nickname);
+                if (targetPlayer == null) {
+                    sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", nickname));
+                    return true;
+                }
+                nickname = targetPlayer.getName();
             }
-            String nickname = targetPlayer.getName();
             if (plugin.isAdmin(nickname)) {
                 sender.sendMessage(pluginConfig.getUspMessages().alreadyInConfig());
                 return true;
