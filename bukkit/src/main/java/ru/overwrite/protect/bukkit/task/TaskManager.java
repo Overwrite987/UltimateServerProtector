@@ -134,7 +134,7 @@ public final class TaskManager {
             if (!api.isAnybodyCaptured())
                 return;
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (!api.isCaptured(onlinePlayer)) {
+                if (onlinePlayer.isDead() || !api.isCaptured(onlinePlayer)) {
                     return;
                 }
                 String playerName = onlinePlayer.getName();
