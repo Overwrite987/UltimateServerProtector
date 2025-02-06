@@ -18,6 +18,7 @@ import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.commands.PasCommand;
 import ru.overwrite.protect.bukkit.commands.UspCommand;
 import ru.overwrite.protect.bukkit.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.data.SystemMessages;
 import ru.overwrite.protect.bukkit.listeners.ChatListener;
 import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
 import ru.overwrite.protect.bukkit.listeners.MainListener;
@@ -81,10 +82,11 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void checkPaper() {
         if (server.getName().equals("CraftBukkit")) {
-            pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
-            pluginLogger.info(pluginConfig.getSystemMessages().paper1());
-            pluginLogger.info(pluginConfig.getSystemMessages().paper2());
-            pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
+            SystemMessages systemMessages = pluginConfig.getSystemMessages();
+            pluginLogger.info(systemMessages.baselineWarn());
+            pluginLogger.info(systemMessages.paper1());
+            pluginLogger.info(systemMessages.paper2());
+            pluginLogger.info(systemMessages.baselineWarn());
             return;
         }
         this.paper = true;
@@ -106,11 +108,12 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void logUnsafe() {
-        pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
-        pluginLogger.info(pluginConfig.getSystemMessages().bungeecord1());
-        pluginLogger.info(pluginConfig.getSystemMessages().bungeecord2());
-        pluginLogger.info(pluginConfig.getSystemMessages().bungeecord3());
-        pluginLogger.info(pluginConfig.getSystemMessages().baselineWarn());
+        SystemMessages systemMessages = pluginConfig.getSystemMessages();
+        pluginLogger.info(systemMessages.baselineWarn());
+        pluginLogger.info(systemMessages.bungeecord1());
+        pluginLogger.info(systemMessages.bungeecord2());
+        pluginLogger.info(systemMessages.bungeecord3());
+        pluginLogger.info(systemMessages.baselineWarn());
     }
 
     public void setupProxy(FileConfiguration config) {
@@ -248,15 +251,16 @@ public class ServerProtectorManager extends JavaPlugin {
             return;
         }
         Utils.checkUpdates(this, version -> {
-            pluginLogger.info(pluginConfig.getSystemMessages().baselineDefault());
+            SystemMessages systemMessages = pluginConfig.getSystemMessages();
+            pluginLogger.info(systemMessages.baselineDefault());
             if (getDescription().getVersion().equals(version)) {
-                pluginLogger.info(pluginConfig.getSystemMessages().updateLatest());
+                pluginLogger.info(systemMessages.updateLatest());
             } else {
-                pluginLogger.info(pluginConfig.getSystemMessages().updateOutdated1());
-                pluginLogger.info(pluginConfig.getSystemMessages().updateOutdated2());
-                pluginLogger.info(pluginConfig.getSystemMessages().updateOutdated3());
+                pluginLogger.info(systemMessages.updateOutdated1());
+                pluginLogger.info(systemMessages.updateOutdated2());
+                pluginLogger.info(systemMessages.updateOutdated3());
             }
-            pluginLogger.info(pluginConfig.getSystemMessages().baselineDefault());
+            pluginLogger.info(systemMessages.baselineDefault());
         });
     }
 

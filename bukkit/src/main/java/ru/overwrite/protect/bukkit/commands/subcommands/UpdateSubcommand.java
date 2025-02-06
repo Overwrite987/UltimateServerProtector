@@ -3,6 +3,7 @@ package ru.overwrite.protect.bukkit.commands.subcommands;
 import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.configuration.data.SystemMessages;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.io.*;
@@ -23,12 +24,13 @@ public class UpdateSubcommand extends AbstractSubCommand {
 
     public void checkAndUpdatePlugin(CommandSender sender, ServerProtectorManager plugin) {
         plugin.getRunner().runAsync(() -> Utils.checkUpdates(plugin, version -> {
-            sender.sendMessage(pluginConfig.getSystemMessages().baselineDefault());
+            SystemMessages systemMessages = pluginConfig.getSystemMessages();
+            sender.sendMessage(systemMessages.baselineDefault());
 
             String currentVersion = plugin.getDescription().getVersion();
 
             if (currentVersion.equals(version)) {
-                sender.sendMessage(pluginConfig.getSystemMessages().updateLatest());
+                sender.sendMessage(systemMessages.updateLatest());
             } else {
                 String currentJarName = new File(plugin.getClass().getProtectionDomain().getCodeSource().getLocation().getPath()).getName();
                 String downloadUrl = "https://github.com/Overwrite987/UltimateServerProtector/releases/download/" + version + "/" + "UltimateServerProtector.jar";
@@ -38,13 +40,13 @@ public class UpdateSubcommand extends AbstractSubCommand {
 
                     downloadFile(downloadUrl, targetFile, sender);
 
-                    sender.sendMessage(pluginConfig.getSystemMessages().updateSuccess1());
+                    sender.sendMessage(systemMessages.updateSuccess1());
                     sender.sendMessage(pluginConfig.getSystemMessages().updateSuccess2());
                 } catch (IOException ex) {
                     sender.sendMessage("Unable to download update: " + ex.getMessage());
                 }
             }
-            sender.sendMessage(pluginConfig.getSystemMessages().baselineDefault());
+            sender.sendMessage(systemMessages.baselineDefault());
         }));
     }
 

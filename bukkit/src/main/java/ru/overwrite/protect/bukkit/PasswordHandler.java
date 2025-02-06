@@ -9,6 +9,7 @@ import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordEnterEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordFailEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordSuccessEvent;
 import ru.overwrite.protect.bukkit.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.data.EncryptionSettings;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.time.LocalDateTime;
@@ -48,16 +49,17 @@ public final class PasswordHandler {
                 this.failedPassword(player);
                 return;
             }
+            EncryptionSettings encryptionSettings = pluginConfig.getEncryptionSettings();
             String salt = playerPass.split(":")[0];
-            String pass = pluginConfig.getEncryptionSettings().enableEncryption()
-                    ? Utils.encryptPassword(input, salt, pluginConfig.getEncryptionSettings().encryptMethods())
+            String pass = encryptionSettings.enableEncryption()
+                    ? Utils.encryptPassword(input, salt, encryptionSettings.encryptMethods())
                     : input;
             if (pass.equals(playerPass)) {
                 this.correctPassword(player);
                 return;
             }
-            if (pluginConfig.getEncryptionSettings().enableEncryption() && !pluginConfig.getEncryptionSettings().oldEncryptMethods().isEmpty()) {
-                for (List<String> oldEncryptMethod : pluginConfig.getEncryptionSettings().oldEncryptMethods()) {
+            if (encryptionSettings.enableEncryption() && !encryptionSettings.oldEncryptMethods().isEmpty()) {
+                for (List<String> oldEncryptMethod : encryptionSettings.oldEncryptMethods()) {
                     String oldgenPass = Utils.encryptPassword(input, salt, oldEncryptMethod);
                     if (oldgenPass.equals(playerPass)) {
                         this.correctPassword(player);

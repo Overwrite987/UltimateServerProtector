@@ -10,6 +10,7 @@ import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.data.BossbarSettings;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.time.LocalDateTime;
@@ -131,6 +132,8 @@ public final class TaskManager {
         runner.runPeriodicalAsync(() -> {
             if (!api.isAnybodyCaptured())
                 return;
+            BossbarSettings bossbarSettings = pluginConfig.getBossbarSettings();
+            int time = pluginConfig.getPunishSettings().time();
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.isDead() || !api.isCaptured(onlinePlayer)) {
                     return;
@@ -138,39 +141,32 @@ public final class TaskManager {
                 String playerName = onlinePlayer.getName();
                 if (!plugin.getPerPlayerTime().containsKey(playerName)) {
                     plugin.getPerPlayerTime().put(playerName, 0);
-                    if (pluginConfig.getBossbarSettings().enableBossbar()) {
+                    if (bossbarSettings.enableBossbar()) {
                         BossBar bossbar = Bukkit.createBossBar(
-                                pluginConfig.getBossbarSettings().bossbarMessage()
-                                        .replace("%time%", Integer.toString(pluginConfig.getPunishSettings().time())),
-                                pluginConfig.getBossbarSettings().barColor(),
-                                pluginConfig.getBossbarSettings().barStyle());
+                                bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(time)),
+                                bossbarSettings.barColor(),
+                                bossbarSettings.barStyle());
                         bossbar.addPlayer(onlinePlayer);
                         passwordHandler.getBossbars().put(playerName, bossbar);
                     }
                 } else {
-                    plugin.getPerPlayerTime().compute(playerName, (k, currentTime) -> currentTime + 1);
-                    int newTime = plugin.getPerPlayerTime().get(playerName);
+                    int newTime = plugin.getPerPlayerTime().compute(playerName, (k, currentTime) -> currentTime + 1);
                     BossBar bossBar = passwordHandler.getBossbars().get(playerName);
-                    if (pluginConfig.getBossbarSettings().enableBossbar() && bossBar != null) {
-                        bossBar.setTitle(pluginConfig.getBossbarSettings().bossbarMessage()
-                                .replace("%time%", Integer.toString(pluginConfig.getPunishSettings().time() - newTime)));
-                        double percents = (pluginConfig.getPunishSettings().time() - newTime)
-                                / (double) pluginConfig.getPunishSettings().time();
+                    if (bossbarSettings.enableBossbar() && bossBar != null) {
+                        bossBar.setTitle(bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(time - newTime)));
+                        double percents = (time - newTime)
+                                / (double) time;
                         if (percents > 0) {
                             bossBar.setProgress(percents);
                             bossBar.addPlayer(onlinePlayer);
                         }
                     }
-                }
-                if (!noTimeLeft(playerName) && pluginConfig.getPunishSettings().enableTime()) {
-                    plugin.checkFail(playerName, pluginConfig.getCommands().failedTime());
-                    passwordHandler.getBossbars().get(playerName).removePlayer(onlinePlayer);
+                    if (time - newTime <= 0) {
+                        plugin.checkFail(playerName, pluginConfig.getCommands().failedTime());
+                        passwordHandler.getBossbars().get(playerName).removePlayer(onlinePlayer);
+                    }
                 }
             }
         }, 5L, 20L);
-    }
-
-    private boolean noTimeLeft(String playerName) {
-        return !plugin.getPerPlayerTime().containsKey(playerName) || plugin.getPerPlayerTime().get(playerName) < pluginConfig.getPunishSettings().time();
     }
 }
