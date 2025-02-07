@@ -20,8 +20,6 @@ public class TabCompleteListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onTabComplete(AsyncTabCompleteEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         if (!(e.getSender() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockTabComplete()) {
