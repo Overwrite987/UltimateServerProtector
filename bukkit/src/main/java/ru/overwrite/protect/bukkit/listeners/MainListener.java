@@ -48,24 +48,18 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteract(PlayerInteractEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         Player player = e.getPlayer();
         api.handleInteraction(player, e);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerInteractEntity(PlayerInteractEntityEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         Player player = e.getPlayer();
         api.handleInteraction(player, e);
     }
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemDrop(PlayerDropItemEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         Player player = e.getPlayer();
         if (pluginConfig.getBlockingSettings().blockItemDrop()) {
             api.handleInteraction(player, e);
@@ -74,8 +68,6 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onItemPickup(EntityPickupItemEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         if (!(e.getEntity() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockItemPickup()) {
@@ -85,8 +77,6 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamage(EntityDamageEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         if (!(e.getEntity() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockDamage()) {
@@ -96,8 +86,6 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onPlayerDamageEntity(EntityDamageByEntityEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         if (!(e.getDamager() instanceof Player player))
             return;
         if (pluginConfig.getBlockingSettings().blockDamagingEntity()) {
@@ -107,8 +95,6 @@ public class MainListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST, ignoreCancelled = true)
     public void onInventoryOpen(InventoryOpenEvent e) {
-        if (!api.isAnybodyCaptured())
-            return;
         Player player = (Player) e.getPlayer();
         if (pluginConfig.getBlockingSettings().blockInventoryOpen()) {
             api.handleInteraction(player, e);
