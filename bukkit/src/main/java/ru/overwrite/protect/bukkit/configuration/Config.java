@@ -99,11 +99,11 @@ public final class Config {
         if (!configFile.contains("encryption-settings")) {
             pluginLogger.warn("Configuration section encryption-settings not found!");
             ConfigurationSection section = configFile.createSection("encryption-settings");
+            section.set("enable-encryption", false);
             section.set("encrypt-method", "");
+            section.set("old-encrypt-methods", List.of());
             section.set("salt-length", 24);
             section.set("auto-encrypt-passwords", true);
-            section.set("old-encrypt-methods", List.of());
-            section.set("encrypt-method", "");
             save(plugin.getDataFilePath(), configFile, "config.yml");
             pluginLogger.info("Created section encryption-settings");
             encryptionSettings = configFile.getConfigurationSection("encryption-settings");
