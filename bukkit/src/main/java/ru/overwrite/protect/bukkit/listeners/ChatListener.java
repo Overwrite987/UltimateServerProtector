@@ -11,6 +11,8 @@ import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.configuration.Config;
 
+import java.util.List;
+
 public class ChatListener implements Listener {
 
     private final ServerProtectorManager plugin;
@@ -55,8 +57,9 @@ public class ChatListener implements Listener {
                 return;
             }
         }
-        for (int i = 0; i < pluginConfig.getAccessData().allowedCommands().size(); i++) {
-            final String command = pluginConfig.getAccessData().allowedCommands().get(i);
+        List<String> allowedCommands = pluginConfig.getAccessData().allowedCommands();
+        for (int i = 0; i < allowedCommands.size(); i++) {
+            final String command = allowedCommands.get(i);
             if (label.equalsIgnoreCase(command) || message.equalsIgnoreCase(command)) {
                 return;
             }
