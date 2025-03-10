@@ -3,6 +3,7 @@ package ru.overwrite.protect.bukkit.commands.subcommands;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.FileConfiguration;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.configuration.data.UspMessages;
 
 public class RempassSubcommand extends AbstractSubCommand {
 
@@ -12,18 +13,19 @@ public class RempassSubcommand extends AbstractSubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
+        UspMessages uspMessages = pluginConfig.getUspMessages();
         if (args.length > 1) {
             if (!plugin.isAdmin(args[1]) && !plugin.isAdmin(pluginConfig.getGeyserSettings().prefix() + args[1])) {
-                sender.sendMessage(pluginConfig.getUspMessages().notInConfig());
+                sender.sendMessage(uspMessages.notInConfig());
                 return true;
             }
             if (args.length < 3) {
                 removeAdmin(args[1]);
-                sender.sendMessage(pluginConfig.getUspMessages().playerRemoved());
+                sender.sendMessage(uspMessages.playerRemoved());
                 return true;
             }
         }
-        sendCmdUsage(sender, pluginConfig.getUspMessages().remPassUsage(), label);
+        sendCmdUsage(sender, uspMessages.remPassUsage(), label);
         return true;
     }
 

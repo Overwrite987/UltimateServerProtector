@@ -41,7 +41,7 @@ public class UpdateSubcommand extends AbstractSubCommand {
                     downloadFile(downloadUrl, targetFile, sender);
 
                     sender.sendMessage(systemMessages.updateSuccess1());
-                    sender.sendMessage(pluginConfig.getSystemMessages().updateSuccess2());
+                    sender.sendMessage(systemMessages.updateSuccess2());
                 } catch (IOException ex) {
                     sender.sendMessage("Unable to download update: " + ex.getMessage());
                 }

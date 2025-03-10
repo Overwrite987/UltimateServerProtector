@@ -4,6 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.configuration.data.UspMessages;
 
 import java.util.List;
 
@@ -15,18 +16,19 @@ public class RemopSubcommand extends AbstractSubCommand {
 
     @Override
     public boolean execute(CommandSender sender, String label, String[] args) {
+        UspMessages uspMessages = pluginConfig.getUspMessages();
         if (args.length > 1) {
             String nickname = args[1];
             List<String> wl = pluginConfig.getAccessData().opWhitelist();
             if (!wl.remove(nickname)) {
-                sender.sendMessage(pluginConfig.getUspMessages().playerNotFound().replace("%nick%", nickname));
+                sender.sendMessage(uspMessages.playerNotFound().replace("%nick%", nickname));
             }
             plugin.getConfig().set("op-whitelist", wl);
             plugin.saveConfig();
-            sender.sendMessage(pluginConfig.getUspMessages().playerRemoved().replace("%nick%", nickname));
+            sender.sendMessage(uspMessages.playerRemoved().replace("%nick%", nickname));
             return true;
         }
-        sendCmdUsage(sender, pluginConfig.getUspMessages().remOpUsage(), label);
+        sendCmdUsage(sender, uspMessages.remOpUsage(), label);
         return true;
     }
 }
