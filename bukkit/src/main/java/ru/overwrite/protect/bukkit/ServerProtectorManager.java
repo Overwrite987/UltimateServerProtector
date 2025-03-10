@@ -198,7 +198,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void registerCommands(PluginManager pluginManager, ConfigurationSection mainSettings) {
-        if (mainSettings.getBoolean("use-command", true) && paper) {
+        if (paper && mainSettings.getBoolean("use-command", true)) {
             try {
                 CommandMap commandMap = server.getCommandMap();
                 Constructor<PluginCommand> constructor = PluginCommand.class.getDeclaredConstructor(String.class, Plugin.class);
