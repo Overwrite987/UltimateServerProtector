@@ -216,7 +216,6 @@ public class ServerProtectorManager extends JavaPlugin {
         PluginCommand uspCommand = getCommand("ultimateserverprotector");
         UspCommand uspCommandClass = new UspCommand(this);
         uspCommand.setExecutor(uspCommandClass);
-        uspCommand.setTabCompleter(uspCommandClass);
     }
 
     public void startTasks(FileConfiguration config) {

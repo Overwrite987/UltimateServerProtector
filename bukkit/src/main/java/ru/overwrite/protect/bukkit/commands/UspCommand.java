@@ -10,7 +10,7 @@ import ru.overwrite.protect.bukkit.configuration.data.UspMessages;
 
 import java.util.*;
 
-public final class UspCommand implements CommandExecutor, TabCompleter {
+public final class UspCommand implements TabExecutor {
 
     private final ServerProtectorManager plugin;
     private final Config pluginConfig;
@@ -108,7 +108,7 @@ public final class UspCommand implements CommandExecutor, TabCompleter {
         if (pluginConfig.getSecureSettings().onlyConsoleUsp() && !(sender instanceof ConsoleCommandSender)) {
             return List.of();
         }
-        List<String> completions = new ArrayList<>();
+        final List<String> completions = new ArrayList<>();
         if (args.length == 1) {
             completions.add("logout");
             completions.add("reload");
