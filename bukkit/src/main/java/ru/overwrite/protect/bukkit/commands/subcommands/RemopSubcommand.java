@@ -1,7 +1,5 @@
 package ru.overwrite.protect.bukkit.commands.subcommands;
 
-import org.bukkit.Bukkit;
-import org.bukkit.OfflinePlayer;
 import org.bukkit.command.CommandSender;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.configuration.data.UspMessages;

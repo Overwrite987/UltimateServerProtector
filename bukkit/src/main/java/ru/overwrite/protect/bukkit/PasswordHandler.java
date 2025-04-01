@@ -9,6 +9,7 @@ import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordEnterEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordFailEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordSuccessEvent;
 import ru.overwrite.protect.bukkit.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.data.BlockingSettings;
 import ru.overwrite.protect.bukkit.configuration.data.EncryptionSettings;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
@@ -152,15 +153,15 @@ public final class PasswordHandler {
     }
 
     private void showPlayer(Player player) {
-        if (pluginConfig.getBlockingSettings().hideOnEntering()) {
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (!onlinePlayer.equals(player)) {
-                    onlinePlayer.showPlayer(plugin, player);
-                }
-            }
+        BlockingSettings blockingSettings = pluginConfig.getBlockingSettings();
+        if (!blockingSettings.hideOnEntering() && !blockingSettings.hideOtherOnEntering()) {
+            return;
         }
-        if (pluginConfig.getBlockingSettings().hideOtherOnEntering()) {
-            for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+        for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
+            if (blockingSettings.hideOnEntering()) {
+                onlinePlayer.showPlayer(plugin, player);
+            }
+            if (blockingSettings.hideOtherOnEntering()) {
                 player.showPlayer(plugin, onlinePlayer);
             }
         }

@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit.utils;
 
+import lombok.experimental.UtilityClass;
 import org.bukkit.Bukkit;
 import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
@@ -21,11 +22,12 @@ import java.util.List;
 import java.util.Set;
 import java.util.function.Consumer;
 
-public final class Utils {
+@UtilityClass
+public class Utils {
 
-    public static final int SUB_VERSION = Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
+    public final int SUB_VERSION = Integer.parseInt(Bukkit.getBukkitVersion().split("-")[0].split("\\.")[1]);
 
-    public static final boolean FOLIA;
+    public final boolean FOLIA;
 
     static {
         boolean folia;
@@ -38,9 +40,9 @@ public final class Utils {
         FOLIA = folia;
     }
 
-    public static Colorizer COLORIZER;
+    public Colorizer COLORIZER;
 
-    public static void setupColorizer(ConfigurationSection mainSettings) {
+    public void setupColorizer(ConfigurationSection mainSettings) {
         COLORIZER = switch (mainSettings.getString("serializer", "LEGACY").toUpperCase()) {
             case "MINIMESSAGE" -> new MiniMessageColorizer();
             case "LEGACY" -> SUB_VERSION >= 16 ? new LegacyColorizer() : new VanillaColorizer();
@@ -49,11 +51,11 @@ public final class Utils {
         };
     }
 
-    public static String getIp(Player player) {
+    public String getIp(Player player) {
         return player.getAddress().getAddress().getHostAddress();
     }
 
-    public static void sendTitleMessage(String[] titleMessages, Player player) {
+    public void sendTitleMessage(String[] titleMessages, Player player) {
         if (titleMessages.length == 0) {
             return;
         }
@@ -69,7 +71,7 @@ public final class Utils {
         player.sendTitle(title, subtitle, fadeIn, stay, fadeOut);
     }
 
-    public static void sendSound(String[] soundArgs, Player player) {
+    public void sendSound(String[] soundArgs, Player player) {
         if (soundArgs.length == 0) {
             return;
         }
@@ -83,9 +85,9 @@ public final class Utils {
         player.playSound(player.getLocation(), sound, volume, pitch);
     }
 
-    public static final char COLOR_CHAR = '§';
+    public final char COLOR_CHAR = '§';
 
-    public static String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
+    public String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
         final char[] b = textToTranslate.toCharArray();
 
         for (int i = 0, length = b.length - 1; i < length; ++i) {
@@ -98,7 +100,7 @@ public final class Utils {
         return new String(b);
     }
 
-    private static boolean isValidColorCharacter(char c) {
+    private boolean isValidColorCharacter(char c) {
         return (c >= '0' && c <= '9') ||
                 (c >= 'a' && c <= 'f') ||
                 c == 'r' ||
@@ -110,7 +112,7 @@ public final class Utils {
                 c == 'X';
     }
 
-    public static void checkUpdates(ServerProtectorManager plugin, Consumer<String> consumer) {
+    public void checkUpdates(ServerProtectorManager plugin, Consumer<String> consumer) {
         plugin.getRunner().runDelayedAsync(() -> {
             try (BufferedReader reader = new BufferedReader(new InputStreamReader(
                     new URL("https://raw.githubusercontent.com/Overwrite987/UltimateServerProtector/master/VERSION")
@@ -122,10 +124,10 @@ public final class Utils {
         }, 10);
     }
 
-    private static final Set<String> SUPPORTED_HASH_TYPES =
+    private final Set<String> SUPPORTED_HASH_TYPES =
             Set.of("SHA224", "SHA256", "SHA384", "SHA512", "SHA-224", "SHA-256", "SHA-384", "SHA-512", "SHA3-224", "SHA3-256", "SHA3-384", "SHA3-512");
 
-    public static String encryptPassword(String password, String salt, List<String> hashTypes) {
+    public String encryptPassword(String password, String salt, List<String> hashTypes) {
         if (hashTypes.isEmpty()) {
             return password;
         }
@@ -157,19 +159,19 @@ public final class Utils {
         return salted ? salt + ":" + encryptedPassword : encryptedPassword;
     }
 
-    private static final SecureRandom random = new SecureRandom();
+    private final SecureRandom random = new SecureRandom();
 
-    public static String generateSalt(int length) {
+    public String generateSalt(int length) {
         byte[] saltBytes = new byte[(int) Math.ceil((double) length * 3 / 4)];
         random.nextBytes(saltBytes);
         return Base64.getEncoder().encodeToString(saltBytes);
     }
 
-    private static String encodeToBase64(String str) {
+    private String encodeToBase64(String str) {
         return Base64.getEncoder().encodeToString(str.getBytes(StandardCharsets.UTF_8));
     }
 
-    private static String encryptToHash(String str, String algorithm) {
+    private String encryptToHash(String str, String algorithm) {
         try {
             MessageDigest digest = MessageDigest.getInstance(algorithm);
             byte[] hash = digest.digest(str.getBytes(StandardCharsets.UTF_8));
@@ -180,7 +182,7 @@ public final class Utils {
         }
     }
 
-    private static String bytesToHexString(byte[] bytes) {
+    private String bytesToHexString(byte[] bytes) {
         StringBuilder hexString = new StringBuilder();
         for (byte b : bytes) {
             String hex = Integer.toHexString(0xff & b);

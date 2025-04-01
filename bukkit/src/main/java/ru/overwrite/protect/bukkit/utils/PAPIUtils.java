@@ -1,11 +1,13 @@
 package ru.overwrite.protect.bukkit.utils;
 
+import lombok.experimental.UtilityClass;
 import me.clip.placeholderapi.PlaceholderAPI;
 import org.bukkit.entity.Player;
 
-public final class PAPIUtils {
+@UtilityClass
+public class PAPIUtils {
 
-    public static String parsePlaceholders(Player player, String message) {
+    public String parsePlaceholders(Player player, String message) {
         return Utils.COLORIZER.colorize(PlaceholderAPI.setPlaceholders(player, message));
     }
 }

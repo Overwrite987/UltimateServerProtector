@@ -12,12 +12,14 @@ import org.bukkit.entity.Player;
 import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+import org.bukkit.plugin.messaging.Messenger;
 import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.commands.PasCommand;
 import ru.overwrite.protect.bukkit.commands.UspCommand;
 import ru.overwrite.protect.bukkit.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.data.BlockingSettings;
 import ru.overwrite.protect.bukkit.configuration.data.SystemMessages;
 import ru.overwrite.protect.bukkit.listeners.ChatListener;
 import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
@@ -120,9 +122,10 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void setupProxy(FileConfiguration config) {
         if (config.getBoolean("main-settings.proxy", false)) {
-            server.getMessenger().registerOutgoingPluginChannel(this, "BungeeCord");
+            Messenger messenger = server.getMessenger();
+            messenger.registerOutgoingPluginChannel(this, "BungeeCord");
             pluginMessage = new PluginMessage(this);
-            server.getMessenger().registerIncomingPluginChannel(this, "BungeeCord", pluginMessage);
+            messenger.registerIncomingPluginChannel(this, "BungeeCord", pluginMessage);
         }
     }
 
@@ -292,17 +295,12 @@ public class ServerProtectorManager extends JavaPlugin {
                 oldEffects.put(player.getName(), player.getActivePotionEffects());
             }
             player.addPotionEffects(pluginConfig.getEffectSettings().effects());
-            for (PotionEffect effect : pluginConfig.getEffectSettings().effects()) {
-                player.addPotionEffect(effect);
-            }
         }, player);
     }
 
     public void removeEffects(Player player) {
         runner.runPlayer(() -> {
-            for (PotionEffect effect : player.getActivePotionEffects()) {
-                player.removePotionEffect(effect.getType());
-            }
+            player.clearActivePotionEffects();
             if (oldEffects.isEmpty()) {
                 return;
             }
@@ -314,22 +312,20 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void applyHide(Player player) {
-        if (pluginConfig.getBlockingSettings().hideOnEntering()) {
-            runner.runPlayer(() -> {
-                for (Player onlinePlayer : server.getOnlinePlayers()) {
-                    if (!onlinePlayer.equals(player)) {
-                        onlinePlayer.hidePlayer(this, player);
-                    }
+        runner.runPlayer(() -> {
+            BlockingSettings blockingSettings = pluginConfig.getBlockingSettings();
+            if (!blockingSettings.hideOnEntering() && !blockingSettings.hideOtherOnEntering()) {
+                return;
+            }
+            for (Player onlinePlayer : server.getOnlinePlayers()) {
+                if (blockingSettings.hideOnEntering()) {
+                    onlinePlayer.hidePlayer(this, player);
                 }
-            }, player);
-        }
-        if (pluginConfig.getBlockingSettings().hideOtherOnEntering()) {
-            runner.runPlayer(() -> {
-                for (Player onlinePlayer : server.getOnlinePlayers()) {
+                if (blockingSettings.hideOtherOnEntering()) {
                     player.hidePlayer(this, onlinePlayer);
                 }
-            }, player);
-        }
+            }
+        }, player);
     }
 
     public void logEnableDisable(String msg, LocalDateTime date) {
