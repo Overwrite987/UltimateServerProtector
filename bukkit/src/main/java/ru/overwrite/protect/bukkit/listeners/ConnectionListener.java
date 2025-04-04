@@ -162,8 +162,7 @@ public class ConnectionListener implements Listener {
     }
 
     private boolean isMaxRejoins(String playerName) {
-        if (!rejoins.containsKey(playerName))
-            return false;
-        return rejoins.get(playerName) > pluginConfig.getPunishSettings().maxRejoins();
+        Integer rejoinCount = rejoins.get(playerName);
+        return rejoinCount != null && rejoins.get(playerName) > pluginConfig.getPunishSettings().maxRejoins();
     }
 }
