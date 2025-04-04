@@ -300,7 +300,9 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public void removeEffects(Player player) {
         runner.runPlayer(() -> {
-            player.clearActivePotionEffects();
+            for (PotionEffect effect : player.getActivePotionEffects()) { // Old versions compatibility
+                player.removePotionEffect(effect.getType());
+            }
             if (oldEffects.isEmpty()) {
                 return;
             }

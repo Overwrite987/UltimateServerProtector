@@ -146,21 +146,22 @@ public class ConnectionListener implements Listener {
     private void handlePlayerLeave(Player player) {
         String playerName = player.getName();
         if (api.isCaptured(player)) {
-            player.clearActivePotionEffects();
+            for (PotionEffect effect : player.getActivePotionEffects()) { // Old versions compatibility
+                player.removePotionEffect(effect.getType());
+            }
             if (pluginConfig.getPunishSettings().enableRejoin()) {
-                rejoins.put(playerName, rejoins.getOrDefault(playerName, 0) + 1);
-                if (isMaxRejoins(playerName)) {
-                    rejoins.remove(playerName);
-                    plugin.checkFail(playerName, pluginConfig.getCommands().failedRejoin());
-                }
+                handleRejoin(playerName);
             }
         }
         plugin.getPerPlayerTime().remove(playerName);
         api.unsavePlayer(playerName);
     }
 
-    private boolean isMaxRejoins(String playerName) {
-        Integer rejoinCount = rejoins.get(playerName);
-        return rejoinCount != null && rejoins.get(playerName) > pluginConfig.getPunishSettings().maxRejoins();
+    private void handleRejoin(String playerName) {
+        int attempts = rejoins.merge(playerName, 1, Integer::sum);
+        if (attempts > pluginConfig.getPunishSettings().maxRejoins()) {
+            plugin.checkFail(playerName, pluginConfig.getCommands().failedRejoin());
+            rejoins.remove(playerName);
+        }
     }
 }
