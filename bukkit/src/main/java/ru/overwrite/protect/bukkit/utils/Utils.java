@@ -56,7 +56,7 @@ public class Utils {
     }
 
     public void sendTitleMessage(String[] titleMessages, Player player) {
-        if (titleMessages.length == 0) {
+        if (titleMessages[0].isEmpty()) {
             return;
         }
         if (titleMessages.length > 5) {
@@ -72,7 +72,7 @@ public class Utils {
     }
 
     public void sendSound(String[] soundArgs, Player player) {
-        if (soundArgs.length == 0) {
+        if (soundArgs[0].isEmpty()) {
             return;
         }
         if (soundArgs.length > 3) {
