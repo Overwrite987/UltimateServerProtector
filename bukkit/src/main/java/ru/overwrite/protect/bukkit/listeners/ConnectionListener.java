@@ -90,7 +90,9 @@ public class ConnectionListener implements Listener {
                 if (pluginConfig.getLoggingSettings().loggingJoin()) {
                     plugin.logAction(pluginConfig.getLogMessages().joined(), player, LocalDateTime.now());
                 }
-                plugin.sendAlert(player, pluginConfig.getBroadcasts().joined());
+                if (pluginConfig.getBroadcasts() != null) {
+                    plugin.sendAlert(player, pluginConfig.getBroadcasts().joined());
+                }
             }
         });
     }

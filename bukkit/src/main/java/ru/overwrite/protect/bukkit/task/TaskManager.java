@@ -64,7 +64,9 @@ public final class TaskManager {
                     if (pluginConfig.getLoggingSettings().loggingPas()) {
                         plugin.logAction(pluginConfig.getLogMessages().captured(), onlinePlayer, LocalDateTime.now());
                     }
-                    plugin.sendAlert(onlinePlayer, pluginConfig.getBroadcasts().captured());
+                    if (pluginConfig.getBroadcasts() != null) {
+                        plugin.sendAlert(onlinePlayer, pluginConfig.getBroadcasts().captured());
+                    }
                 }
             }
         }, 20L, interval >= 0 ? interval : 40L);

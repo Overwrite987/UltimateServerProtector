@@ -83,22 +83,59 @@ public class LegacyAdvancedColorizer implements Colorizer {
         return false;
     }
 
-    private boolean isValidHexCode(char[] chars, int start, int length) {
-        for (int i = start; i < start + length; i++) {
-            char tmp = chars[i];
-            if (!((tmp >= '0' && tmp <= '9') || (tmp >= 'a' && tmp <= 'f') || (tmp >= 'A' && tmp <= 'F'))) {
+    private static final boolean[] HEX_CHARS = new boolean[128];
+
+    static {
+        for (char c = '0'; c <= '9'; c++) {
+            HEX_CHARS[c] = true;
+        }
+        for (char c = 'a'; c <= 'f'; c++) {
+            HEX_CHARS[c] = true;
+        }
+        for (char c = 'A'; c <= 'F'; c++) {
+            HEX_CHARS[c] = true;
+        }
+    }
+
+    public boolean isValidHexCode(char[] chars, int start, int length) {
+        int end = start + length;
+        for (int i = start; i < end; i++) {
+            char c = chars[i];
+            if (!HEX_CHARS[c]) {
                 return false;
             }
         }
         return true;
     }
 
-    private boolean isValidColorCharacter(char c) {
-        return switch (c) {
-            case '0', '1', '2', '3', '4', '5', '6', '7', '8', '9', 'a', 'b', 'c', 'd', 'e', 'f', 'A', 'B', 'C', 'D',
-                 'E', 'F', 'r', 'R', 'k', 'K', 'l', 'L', 'm', 'M', 'n', 'N', 'o', 'O' -> true;
-            default -> false;
+    private static final boolean[] COLOR_CHARS_FLAGS = new boolean[128];
+
+    static {
+        for (char c = '0'; c <= '9'; c++) {
+            COLOR_CHARS_FLAGS[c] = true;
+        }
+
+        for (char c = 'a'; c <= 'f'; c++) {
+            COLOR_CHARS_FLAGS[c] = true;
+        }
+
+        for (char c = 'A'; c <= 'F'; c++) {
+            COLOR_CHARS_FLAGS[c] = true;
+        }
+
+        int[] specialSymbols = {
+                'r', 'R',
+                'k', 'l', 'm', 'n', 'o',
+                'K', 'L', 'M', 'N', 'O'
         };
+
+        for (int sym : specialSymbols) {
+            COLOR_CHARS_FLAGS[sym] = true;
+        }
+    }
+
+    public static boolean isValidColorCharacter(char c) {
+        return COLOR_CHARS_FLAGS[c];
     }
 
     private void appendRemainingColorTags(StringBuilder builder, boolean isColor, boolean isHashtag, boolean isDoubleTag) {

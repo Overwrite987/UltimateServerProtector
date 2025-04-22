@@ -108,7 +108,9 @@ public final class PasswordHandler {
         if (pluginConfig.getLoggingSettings().loggingPas()) {
             plugin.logAction(pluginConfig.getLogMessages().failed(), player, LocalDateTime.now());
         }
-        plugin.sendAlert(player, pluginConfig.getBroadcasts().failed());
+        if (pluginConfig.getBroadcasts() != null) {
+            plugin.sendAlert(player, pluginConfig.getBroadcasts().failed());
+        }
     }
 
     public void correctPassword(Player player) {
@@ -149,7 +151,9 @@ public final class PasswordHandler {
             bossbars.get(playerName).removeAll();
             bossbars.remove(playerName);
         }
-        plugin.sendAlert(player, pluginConfig.getBroadcasts().passed());
+        if (pluginConfig.getBroadcasts() != null) {
+            plugin.sendAlert(player, pluginConfig.getBroadcasts().passed());
+        }
     }
 
     private void showPlayer(Player player) {
