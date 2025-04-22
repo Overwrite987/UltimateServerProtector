@@ -96,7 +96,6 @@ public class ServerProtectorManager extends JavaPlugin {
         this.paper = true;
     }
 
-    @Getter
     private boolean safe;
 
     public void checkSafe(PluginManager pluginManager) {
@@ -413,11 +412,12 @@ public class ServerProtectorManager extends JavaPlugin {
         if (className.startsWith("ru.overwrite.protect.bukkit")) {
             return true;
         }
-        if (pluginConfig.getApiSettings().allowedAuthApiCallsPackages().isEmpty()) {
+        List<String> allowedAuthApiCallsPackages = pluginConfig.getApiSettings().allowedAuthApiCallsPackages();
+        if (allowedAuthApiCallsPackages.isEmpty()) {
             pluginLogger.warn("Found illegal method call from " + className);
             return false;
         }
-        for (String allowed : pluginConfig.getApiSettings().allowedAuthApiCallsPackages()) {
+        for (String allowed : allowedAuthApiCallsPackages) {
             if (className.startsWith(allowed)) {
                 return true;
             }
