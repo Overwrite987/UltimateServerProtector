@@ -359,11 +359,11 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void sendAlert(Player player, String msg) {
+        msg = msg.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
+        if (pluginConfig.getMainSettings().papiSupport()) {
+            msg = PAPIUtils.parsePlaceholders(player, msg);
+        }
         if (pluginConfig.getMessageSettings().enableBroadcasts()) {
-            msg = msg.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
-            if (pluginConfig.getMainSettings().papiSupport()) {
-                msg = PAPIUtils.parsePlaceholders(player, msg);
-            }
             for (Player onlinePlayer : server.getOnlinePlayers()) {
                 if (onlinePlayer.hasPermission("serverprotector.admin") && player != onlinePlayer) {
                     onlinePlayer.sendMessage(msg);
@@ -374,10 +374,6 @@ public class ServerProtectorManager extends JavaPlugin {
             }
         }
         if (pluginConfig.getMessageSettings().enableConsoleBroadcasts()) {
-            msg = msg.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
-            if (pluginConfig.getMainSettings().papiSupport()) {
-                msg = PAPIUtils.parsePlaceholders(player, msg);
-            }
             server.getConsoleSender().sendMessage(msg);
         }
     }
