@@ -40,10 +40,10 @@ uspmsg:
   ipadded: '&aIPs %ip% successfully added.'
   setpassusage: '&f/%cmd% setpass (nick) (password)'
   addopusage: '&f/%cmd% addop (nick)'
-  addipusage: '&f/%cmd% addip (ip)'
+  addipusage: '&f/%cmd% addip (IPs)'
   rempassusage: '&f/%cmd% rempass (nick)'
   remopusage: '&f/%cmd% remop (nick)'
-  remipusage: '&f/%cmd% rempip (ip)'
+  remipusage: '&f/%cmd% rempip (IPs)'
   usage: '&7&l> &7Usage:'
   usage-logout: '&6/%cmd% logout&7 - end your session'
   usage-reload: '&6/%cmd% reload&7 - reload the config'
@@ -53,8 +53,8 @@ uspmsg:
   usage-rempass: '&6/%cmd% rempass (nick) &7- remove player password'
   usage-addop: '&6/%cmd% addop (nick) &7- add player to op whitelist'
   usage-remop: '&6/%cmd% remop (nick) &7- remove player from op whitelist'
-  usage-addip: '&6/%cmd% addip (nick) (ip) &7- add player and their ip to ip whitelist'
-  usage-remip: '&6/%cmd% remip (nick) (ip) &7- remove player and their ip from ip whitelist'
+  usage-addip: '&6/%cmd% addip (nick) (IPs) &7- add player and their ip to ip whitelist'
+  usage-remip: '&6/%cmd% remip (nick) (IPs) &7- remove player and their ip from ip whitelist'
   otherdisabled: |- 
     &7Other commands are disabled.
     &7To enable them, set &6enable-admin-commands: &atrue
