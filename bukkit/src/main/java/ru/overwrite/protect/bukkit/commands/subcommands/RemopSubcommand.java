@@ -20,6 +20,7 @@ public class RemopSubcommand extends AbstractSubCommand {
             List<String> wl = pluginConfig.getAccessData().opWhitelist();
             if (!wl.remove(nickname)) {
                 sender.sendMessage(uspMessages.playerNotFound().replace("%nick%", nickname));
+                return true;
             }
             plugin.getConfig().set("op-whitelist", wl);
             plugin.saveConfig();
