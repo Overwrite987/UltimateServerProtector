@@ -52,7 +52,7 @@ public class ChatListener implements Listener {
         if (pluginConfig.getMainSettings().useCommand()) {
             if (label.equalsIgnoreCase("/" + pluginConfig.getMainSettings().pasCommand())) {
                 if (!plugin.isPaper()) {
-                    passwordHandler.checkPassword(player, message.split(" ", 1)[1], false);
+                    passwordHandler.checkPassword(player, cutArguments(message), false);
                 }
                 return;
             }
@@ -70,5 +70,10 @@ public class ChatListener implements Listener {
     private String cutCommand(String str) {
         int index = str.indexOf(' ');
         return index == -1 ? str : str.substring(0, index);
+    }
+
+    private String cutArguments(String str) {
+        int index = str.indexOf(' ');
+        return index == -1 ? str : str.substring(index + 1);
     }
 }
