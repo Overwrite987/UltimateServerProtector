@@ -37,7 +37,7 @@ uspmsg:
   notinconfig: '&cДанный аккаунт не находится в конфиге'
   playeradded: '&aИгрок %nick% успешно добавлен'
   playerremoved: '&aИгрок успешно удалён'
-  ipadded: '&aIP %ip% успешно добавлен'
+  ipadded: '&aIP %ip% успешно добавлены'
   setpassusage: '&f/%cmd% setpass (ник) (пароль)'
   addopusage: '&f/%cmd% addop (ник)'
   addipusage: '&f/%cmd% addip (ip)'

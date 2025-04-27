@@ -37,7 +37,7 @@ uspmsg:
   notinconfig: '&cThis account is not in the config.'
   playeradded: '&aPlayer %nick% successfully added.'
   playerremoved: '&aPlayer successfully removed.'
-  ipadded: '&aIP %ip% successfully added.'
+  ipadded: '&aIPs %ip% successfully added.'
   setpassusage: '&f/%cmd% setpass (nick) (password)'
   addopusage: '&f/%cmd% addop (nick)'
   addipusage: '&f/%cmd% addip (ip)'
