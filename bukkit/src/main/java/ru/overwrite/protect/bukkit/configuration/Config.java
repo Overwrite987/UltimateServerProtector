@@ -78,6 +78,7 @@ public final class Config {
             section.set("enable-admin-commands", false);
             section.set("check-interval", 40);
             section.set("papi-support", false);
+            section.set("suppress-api-warnings", false);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             pluginLogger.info("Created section main-settings");
             mainSettings = configFile.getConfigurationSection("main-settings");
@@ -88,7 +89,8 @@ public final class Config {
                 mainSettings.getBoolean("use-command", true),
                 mainSettings.getBoolean("enable-admin-commands", false),
                 mainSettings.getLong("check-interval", 40),
-                mainSettings.getBoolean("papi-support", false)
+                mainSettings.getBoolean("papi-support", false),
+                mainSettings.getBoolean("suppress-api-warnings", false)
         );
     }
 

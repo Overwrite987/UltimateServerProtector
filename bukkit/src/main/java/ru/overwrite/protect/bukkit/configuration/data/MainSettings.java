@@ -6,6 +6,7 @@ public record MainSettings(
         boolean useCommand,
         boolean enableAdminCommands,
         long checkInterval,
-        boolean papiSupport
+        boolean papiSupport,
+        boolean suppressApiWarnings
 ) {
 }

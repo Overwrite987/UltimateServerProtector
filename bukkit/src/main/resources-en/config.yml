@@ -24,6 +24,10 @@ main-settings:
   # Should PlaceholderAPI be supported in plugin messages?
   # Applies only to messages involving a player
   papi-support: false
+  # Should we suppress API warnings?
+  # This will disable all warnings from API if something went wrong
+  # Only change this if you know what you're doing!
+  suppress-api-warnings: false
 
 # Encryption settings
 encryption-settings:
