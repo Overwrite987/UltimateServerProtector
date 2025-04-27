@@ -112,7 +112,6 @@ public final class Config {
         }
         this.encryptionSettings = new EncryptionSettings(
                 encryptionSettings.getBoolean("enable-encryption", false),
-                encryptionSettings.getString("encrypt-method", "").trim(),
                 getEncryptionMethods(encryptionSettings),
                 encryptionSettings.getInt("salt-length", 24),
                 encryptionSettings.getBoolean("auto-encrypt-passwords", true),

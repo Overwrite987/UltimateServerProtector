@@ -4,7 +4,6 @@ import java.util.List;
 
 public record EncryptionSettings(
         boolean enableEncryption,
-        String encryptMethod,
         List<String> encryptMethods,
         int saltLength,
         boolean autoEncryptPasswords,
