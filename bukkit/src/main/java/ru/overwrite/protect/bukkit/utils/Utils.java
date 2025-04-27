@@ -174,7 +174,7 @@ public class Utils {
             return bytesToHexString(hash);
         } catch (NoSuchAlgorithmException ex) {
             ex.printStackTrace();
-            return null;
+            return str;
         }
     }
 
