@@ -16,9 +16,12 @@ public class EncryptSubcommand extends AbstractSubCommand {
         EncryptionSettings encryptionSettings = pluginConfig.getEncryptionSettings();
         if (encryptionSettings.enableEncryption() && args.length == 2) {
             sender.sendMessage(
-                    Utils.encryptPassword(args[1],
-                    Utils.generateSalt(encryptionSettings.saltLength()),
-                    encryptionSettings.encryptMethods()));
+                    Utils.encryptPassword(
+                            args[1],
+                            Utils.generateSalt(encryptionSettings.saltLength()),
+                            encryptionSettings.encryptMethods()
+                    )
+            );
             return true;
         }
         return false;

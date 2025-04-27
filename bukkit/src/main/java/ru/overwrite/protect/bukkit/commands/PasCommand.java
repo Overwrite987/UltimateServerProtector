@@ -9,6 +9,7 @@ import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.configuration.Config;
+import ru.overwrite.protect.bukkit.configuration.data.Messages;
 
 public final class PasCommand implements CommandExecutor {
 
@@ -26,16 +27,17 @@ public final class PasCommand implements CommandExecutor {
 
     @Override
     public boolean onCommand(@NotNull CommandSender sender, @NotNull Command cmd, @NotNull String label, String[] args) {
+        Messages messages = pluginConfig.getMessages();
         if (!(sender instanceof Player player)) {
-            plugin.getPluginLogger().info(pluginConfig.getMessages().playerOnly());
+            plugin.getPluginLogger().info(messages.playerOnly());
             return true;
         }
         if (!api.isCaptured(player)) {
-            sender.sendMessage(pluginConfig.getMessages().noNeed());
+            sender.sendMessage(messages.noNeed());
             return true;
         }
         if (args.length == 0) {
-            sender.sendMessage(pluginConfig.getMessages().cantBeNull());
+            sender.sendMessage(messages.cantBeNull());
             return true;
         }
         passwordHandler.checkPassword(player, args[0], false);

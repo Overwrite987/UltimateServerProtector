@@ -20,7 +20,6 @@ public class SetpassSubcommand extends AbstractSubCommand {
         UspMessages uspMessages = pluginConfig.getUspMessages();
         if (args.length > 1) {
             String nickname = args[1];
-
             if (Utils.SUB_VERSION >= 16) {
                 OfflinePlayer targetPlayer = Bukkit.getOfflinePlayerIfCached(nickname);
                 if (targetPlayer == null) {

@@ -20,7 +20,7 @@ public final class UspCommand implements TabExecutor {
     public UspCommand(ServerProtectorManager plugin) {
         this.plugin = plugin;
         this.pluginConfig = plugin.getPluginConfig();
-        registerSubCommands(plugin);
+        this.registerSubCommands(plugin);
     }
 
     private void registerSubCommands(ServerProtectorManager plugin) {
