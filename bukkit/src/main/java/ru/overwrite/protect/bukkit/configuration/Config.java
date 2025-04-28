@@ -135,7 +135,7 @@ public final class Config {
                 oldMethods.add(List.of(oldEncryptionMethod.trim()));
             }
         }
-        return oldMethods;
+        return List.copyOf(oldMethods);
     }
 
     private GeyserSettings geyserSettings;
@@ -153,7 +153,7 @@ public final class Config {
         }
         this.geyserSettings = new GeyserSettings(
                 geyserSettings.getString("geyser-prefix", "."),
-                new HashSet<>(geyserSettings.getStringList("geyser-nicknames"))
+                Set.copyOf(geyserSettings.getStringList("geyser-nicknames"))
         );
     }
 
@@ -282,7 +282,7 @@ public final class Config {
         this.apiSettings = new ApiSettings(
                 apiSettings.getBoolean("allow-cancel-capture-event", false),
                 apiSettings.getBoolean("call-event-on-password-enter", false),
-                apiSettings.getStringList("allowed-auth-api-calls-packages")
+                List.copyOf(apiSettings.getStringList("allowed-auth-api-calls-packages"))
         );
     }
 
@@ -389,7 +389,7 @@ public final class Config {
                 effectList.add(new PotionEffect(type, Integer.MAX_VALUE, level));
             }
         }
-        return effectList;
+        return List.copyOf(effectList);
     }
 
     private LoggingSettings loggingSettings;
@@ -434,41 +434,48 @@ public final class Config {
             commands = configFile.getConfigurationSection("commands");
         }
         this.commands = new Commands(
-                commands.getStringList("not-in-config"),
-                commands.getStringList("not-in-opwhitelist"),
-                commands.getStringList("have-blacklisted-perm"),
-                commands.getStringList("not-admin-ip"),
-                commands.getStringList("failed-pass"),
-                commands.getStringList("failed-time"),
-                commands.getStringList("failed-rejoin")
+                List.copyOf(commands.getStringList("not-in-config")),
+                List.copyOf(commands.getStringList("not-in-opwhitelist")),
+                List.copyOf(commands.getStringList("have-blacklisted-perm")),
+                List.copyOf(commands.getStringList("not-admin-ip")),
+                List.copyOf(commands.getStringList("failed-pass")),
+                List.copyOf(commands.getStringList("failed-time")),
+                List.copyOf(commands.getStringList("failed-rejoin"))
         );
     }
 
     private AccessData accessData;
 
     public void loadAccessData(FileConfiguration config) {
-        Set<String> perms = new HashSet<>(config.getStringList("permissions"));
-        List<String> allowedCommands = config.getStringList("allowed-commands");
+        Set<String> perms = Set.copyOf(config.getStringList("permissions"));
+        List<String> allowedCommands = List.copyOf(config.getStringList("allowed-commands"));
 
         ConfigurationSection secureSettings = config.getConfigurationSection("secure-settings");
 
-        List<String> opWhitelist = new ArrayList<>();
-        Set<String> blacklistedPerms = new HashSet<>();
-        Map<String, List<String>> ipWhitelist = new HashMap<>();
+        List<String> opWhitelist = List.of();
+        Set<String> blacklistedPerms = Set.of();
+        Map<String, List<String>> ipWhitelist = Map.of();
 
         if (secureSettings.getBoolean("enable-op-whitelist")) {
-            opWhitelist = config.getStringList("op-whitelist");
+            opWhitelist = List.copyOf(config.getStringList("op-whitelist"));
         }
         if (secureSettings.getBoolean("enable-permission-blacklist")) {
-            blacklistedPerms.addAll(config.getStringList("blacklisted-perms"));
+            blacklistedPerms = Set.copyOf(config.getStringList("blacklisted-perms"));
         }
         if (secureSettings.getBoolean("enable-ip-whitelist")) {
+            Map<String, List<String>> ipWhitelistTemp = new HashMap<>();
             for (String ipwlPlayer : config.getConfigurationSection("ip-whitelist").getKeys(false)) {
-                List<String> ips = config.getStringList("ip-whitelist." + ipwlPlayer);
-                ipWhitelist.put(ipwlPlayer, ips);
+                List<String> ips = List.copyOf(config.getStringList("ip-whitelist." + ipwlPlayer));
+                ipWhitelistTemp.put(ipwlPlayer, ips);
             }
+            ipWhitelist = Map.copyOf(ipWhitelistTemp);
         }
-        this.accessData = new AccessData(perms, allowedCommands, opWhitelist, blacklistedPerms, ipWhitelist);
+        this.accessData = new AccessData(
+                perms,
+                allowedCommands,
+                opWhitelist,
+                blacklistedPerms,
+                ipWhitelist);
     }
 
     private ExcludedPlayers excludedPlayers;
@@ -477,10 +484,10 @@ public final class Config {
         if (config.getBoolean("secure-settings.enable-excluded-players")) {
             ConfigurationSection excludedPlayers = config.getConfigurationSection("excluded-players");
             this.excludedPlayers = new ExcludedPlayers(
-                    excludedPlayers.getStringList("admin-pass"),
-                    excludedPlayers.getStringList("op-whitelist"),
-                    excludedPlayers.getStringList("ip-whitelist"),
-                    excludedPlayers.getStringList("blacklisted-perms")
+                    List.copyOf(excludedPlayers.getStringList("admin-pass")),
+                    List.copyOf(excludedPlayers.getStringList("op-whitelist")),
+                    List.copyOf(excludedPlayers.getStringList("ip-whitelist")),
+                    List.copyOf(excludedPlayers.getStringList("blacklisted-perms"))
             );
         }
     }
