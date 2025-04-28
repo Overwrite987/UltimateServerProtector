@@ -413,7 +413,8 @@ public class ServerProtectorManager extends JavaPlugin {
             pluginLogger.warn("Found illegal method call from " + className);
             return false;
         }
-        for (String allowed : allowedAuthApiCallsPackages) {
+        for (int i = 0; i < allowedAuthApiCallsPackages.size(); i++) {
+            String allowed = allowedAuthApiCallsPackages.get(i);
             if (className.startsWith(allowed)) {
                 return true;
             }
