@@ -14,6 +14,7 @@ import ru.overwrite.protect.bukkit.configuration.data.BossbarSettings;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.time.LocalDateTime;
+import java.util.Map;
 
 public final class TaskManager {
 
@@ -141,8 +142,9 @@ public final class TaskManager {
                     return;
                 }
                 String playerName = onlinePlayer.getName();
-                if (!plugin.getPerPlayerTime().containsKey(playerName)) {
-                    plugin.getPerPlayerTime().put(playerName, 0);
+                Map<String, Integer> perPlayerTime = plugin.getPerPlayerTime();
+                if (!perPlayerTime.containsKey(playerName)) {
+                    perPlayerTime.put(playerName, 0);
                     if (bossbarSettings.enableBossbar()) {
                         BossBar bossbar = Bukkit.createBossBar(
                                 bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(time)),
@@ -152,7 +154,7 @@ public final class TaskManager {
                         passwordHandler.getBossbars().put(playerName, bossbar);
                     }
                 } else {
-                    int newTime = plugin.getPerPlayerTime().compute(playerName, (k, currentTime) -> currentTime + 1);
+                    int newTime = perPlayerTime.compute(playerName, (k, currentTime) -> currentTime + 1);
                     BossBar bossBar = passwordHandler.getBossbars().get(playerName);
                     if (bossbarSettings.enableBossbar() && bossBar != null) {
                         bossBar.setTitle(bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(time - newTime)));

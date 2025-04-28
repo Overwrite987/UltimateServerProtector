@@ -147,8 +147,9 @@ public final class PasswordHandler {
         if (pluginConfig.getLoggingSettings().loggingPas()) {
             plugin.logAction(pluginConfig.getLogMessages().passed(), player, LocalDateTime.now());
         }
-        if (pluginConfig.getBossbarSettings().enableBossbar() && bossbars.get(playerName) != null) {
-            bossbars.get(playerName).removeAll();
+        BossBar playerBossBar;
+        if (pluginConfig.getBossbarSettings().enableBossbar() && (playerBossBar = bossbars.get(playerName)) != null) {
+            playerBossBar.removeAll();
             bossbars.remove(playerName);
         }
         if (pluginConfig.getBroadcasts() != null) {
