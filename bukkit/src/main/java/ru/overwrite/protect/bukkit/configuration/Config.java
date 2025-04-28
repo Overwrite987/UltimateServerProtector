@@ -17,7 +17,6 @@ import ru.overwrite.protect.bukkit.utils.logging.Logger;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
-import java.util.concurrent.ConcurrentHashMap;
 
 @Getter
 public final class Config {
@@ -35,9 +34,9 @@ public final class Config {
     private Map<String, String> perPlayerPasswords;
 
     public void setupPasswords(FileConfiguration dataFile) {
-        perPlayerPasswords = new ConcurrentHashMap<>();
         ConfigurationSection data = dataFile.getConfigurationSection("data");
         boolean shouldSave = false;
+        Map<String, String> perPlayerPasswords = new HashMap<>();
         for (String nick : data.getKeys(false)) {
             String playerNick = (this.geyserSettings.prefix() != null &&
                     !this.geyserSettings.prefix().isBlank() &&
@@ -59,6 +58,7 @@ public final class Config {
             }
             perPlayerPasswords.put(playerNick, data.getString(nick + ".encrypted-pass"));
         }
+        this.perPlayerPasswords = Map.copyOf(perPlayerPasswords);
         if (shouldSave) {
             save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
         }

@@ -47,7 +47,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 @Getter
@@ -74,7 +73,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
     private PluginMessage pluginMessage;
 
-    private final Map<String, Integer> perPlayerTime = new ConcurrentHashMap<>();
+    private final Map<String, Integer> perPlayerTime = new HashMap<>();
 
     @Getter(AccessLevel.NONE)
     private File logFile;
