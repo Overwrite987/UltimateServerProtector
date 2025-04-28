@@ -385,7 +385,9 @@ public final class Config {
             String effectName = separatorIndex > 0 ? effect.substring(0, separatorIndex) : effect;
             PotionEffectType type = PotionEffectType.getByName(effectName.toUpperCase());
             int level = separatorIndex > 0 ? Integer.parseInt(effect.substring(separatorIndex + 1)) - 1 : 0;
-            effectList.add(new PotionEffect(type, Integer.MAX_VALUE, level));
+            if (type != null) {
+                effectList.add(new PotionEffect(type, Integer.MAX_VALUE, level));
+            }
         }
         return effectList;
     }
