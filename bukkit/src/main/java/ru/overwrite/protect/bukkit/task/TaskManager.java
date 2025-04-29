@@ -75,8 +75,9 @@ public final class TaskManager {
 
     public void startAdminCheck() {
         runner.runPeriodicalAsync(() -> {
-            if (!api.isAnybodyCaptured())
+            if (!api.isAnybodyCaptured()) {
                 return;
+            }
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (api.isCaptured(onlinePlayer) && !plugin.isAdmin(onlinePlayer.getName())) {
                     plugin.checkFail(onlinePlayer.getName(), pluginConfig.getCommands().notInConfig());
@@ -87,8 +88,9 @@ public final class TaskManager {
 
     public void startCapturesMessages(FileConfiguration config) {
         runner.runPeriodicalAsync(() -> {
-            if (!api.isAnybodyCaptured())
+            if (!api.isAnybodyCaptured()) {
                 return;
+            }
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (api.isCaptured(onlinePlayer)) {
                     onlinePlayer.sendMessage(pluginConfig.getMessages().message());
@@ -133,8 +135,9 @@ public final class TaskManager {
 
     public void startCapturesTimer() {
         runner.runPeriodicalAsync(() -> {
-            if (!api.isAnybodyCaptured())
+            if (!api.isAnybodyCaptured()) {
                 return;
+            }
             BossbarSettings bossbarSettings = pluginConfig.getBossbarSettings();
             int time = pluginConfig.getPunishSettings().time();
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
