@@ -38,7 +38,7 @@ public final class TaskManager {
                 return;
             }
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
-                if (pluginConfig.getExcludedPlayers() != null && plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().adminPass())) {
+                if (plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().adminPass())) {
                     continue;
                 }
                 if (api.isCaptured(onlinePlayer)) {
@@ -110,7 +110,7 @@ public final class TaskManager {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.isOp()
                         && !pluginConfig.getAccessData().opWhitelist().contains(onlinePlayer.getName())
-                        && (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().opWhitelist()))) {
+                        && !plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().opWhitelist())) {
                     plugin.checkFail(onlinePlayer.getName(), pluginConfig.getCommands().notInOpWhitelist());
                 }
             }
@@ -125,7 +125,7 @@ public final class TaskManager {
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 for (String blacklistedPerm : pluginConfig.getAccessData().blacklistedPerms()) {
                     if (onlinePlayer.hasPermission(blacklistedPerm) &&
-                            (pluginConfig.getExcludedPlayers() == null || !plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().blacklistedPerms()))) {
+                            !plugin.isExcluded(onlinePlayer, pluginConfig.getExcludedPlayers().blacklistedPerms())) {
                         plugin.checkFail(onlinePlayer.getName(), pluginConfig.getCommands().haveBlacklistedPerm());
                     }
                 }

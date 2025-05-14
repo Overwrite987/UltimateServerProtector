@@ -260,8 +260,7 @@ public final class Config {
                 secureSettings.getBoolean("enable-notadmin-punish", false),
                 secureSettings.getBoolean("enable-permission-blacklist", false),
                 secureSettings.getBoolean("enable-ip-whitelist", false),
-                secureSettings.getBoolean("only-console-usp", false),
-                secureSettings.getBoolean("enable-excluded-players", false)
+                secureSettings.getBoolean("only-console-usp", false)
         );
     }
 
