@@ -350,7 +350,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public boolean isExcluded(Player player, List<String> list) {
-        return pluginConfig.getExcludedPlayers() != null && list.contains(player.getName());
+        return pluginConfig.getSecureSettings().enableExcludedPlayers() && !list.isEmpty() && list.contains(player.getName());
     }
 
     public boolean isAdmin(String nick) {

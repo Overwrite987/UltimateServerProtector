@@ -5,6 +5,7 @@ public record SecureSettings(
         boolean enableNotAdminPunish,
         boolean enablePermissionBlacklist,
         boolean enableIpWhitelist,
-        boolean onlyConsoleUsp
+        boolean onlyConsoleUsp,
+        boolean enableExcludedPlayers
 ) {
 }

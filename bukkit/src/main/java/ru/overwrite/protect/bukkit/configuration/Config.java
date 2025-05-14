@@ -260,7 +260,8 @@ public final class Config {
                 secureSettings.getBoolean("enable-notadmin-punish", false),
                 secureSettings.getBoolean("enable-permission-blacklist", false),
                 secureSettings.getBoolean("enable-ip-whitelist", false),
-                secureSettings.getBoolean("only-console-usp", false)
+                secureSettings.getBoolean("only-console-usp", false),
+                secureSettings.getBoolean("enable-excluded-players", false)
         );
     }
 
@@ -480,15 +481,13 @@ public final class Config {
     private ExcludedPlayers excludedPlayers;
 
     public void setupExcluded(FileConfiguration config) {
-        if (config.getBoolean("secure-settings.enable-excluded-players")) {
-            ConfigurationSection excludedPlayers = config.getConfigurationSection("excluded-players");
-            this.excludedPlayers = new ExcludedPlayers(
-                    List.copyOf(excludedPlayers.getStringList("admin-pass")),
-                    List.copyOf(excludedPlayers.getStringList("op-whitelist")),
-                    List.copyOf(excludedPlayers.getStringList("ip-whitelist")),
-                    List.copyOf(excludedPlayers.getStringList("blacklisted-perms"))
-            );
-        }
+        ConfigurationSection excludedPlayers = config.getConfigurationSection("excluded-players");
+        this.excludedPlayers = new ExcludedPlayers(
+                List.copyOf(excludedPlayers.getStringList("admin-pass")),
+                List.copyOf(excludedPlayers.getStringList("op-whitelist")),
+                List.copyOf(excludedPlayers.getStringList("ip-whitelist")),
+                List.copyOf(excludedPlayers.getStringList("blacklisted-perms"))
+        );
     }
 
     private UspMessages uspMessages;
