@@ -51,9 +51,9 @@ public final class PasswordHandler {
                 return;
             }
             EncryptionSettings encryptionSettings = pluginConfig.getEncryptionSettings();
-            String salt = playerPass.split(":")[0];
+            String salt = null;
             String pass = encryptionSettings.enableEncryption()
-                    ? Utils.encryptPassword(input, salt, encryptionSettings.encryptMethods())
+                    ? Utils.encryptPassword(input, salt = playerPass.split(":")[0], encryptionSettings.encryptMethods())
                     : input;
             if (pass.equals(playerPass)) {
                 this.correctPassword(player);
