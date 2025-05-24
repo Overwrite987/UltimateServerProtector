@@ -20,6 +20,7 @@ import ru.overwrite.protect.bukkit.commands.PasCommand;
 import ru.overwrite.protect.bukkit.commands.UspCommand;
 import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.configuration.data.BlockingSettings;
+import ru.overwrite.protect.bukkit.configuration.data.SecureSettings;
 import ru.overwrite.protect.bukkit.configuration.data.SystemMessages;
 import ru.overwrite.protect.bukkit.listeners.ChatListener;
 import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
@@ -226,13 +227,14 @@ public class ServerProtectorManager extends JavaPlugin {
         if (pluginConfig.getPunishSettings().enableTime()) {
             taskManager.startCapturesTimer();
         }
-        if (pluginConfig.getSecureSettings().enableNotAdminPunish()) {
+        SecureSettings secureSettings = pluginConfig.getSecureSettings();
+        if (secureSettings.enableNotAdminPunish()) {
             taskManager.startAdminCheck();
         }
-        if (pluginConfig.getSecureSettings().enableOpWhitelist()) {
+        if (secureSettings.enableOpWhitelist()) {
             taskManager.startOpCheck();
         }
-        if (pluginConfig.getSecureSettings().enablePermissionBlacklist()) {
+        if (secureSettings.enablePermissionBlacklist()) {
             taskManager.startPermsCheck();
         }
     }
