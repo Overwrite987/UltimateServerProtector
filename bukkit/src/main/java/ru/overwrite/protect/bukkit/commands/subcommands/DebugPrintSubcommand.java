@@ -26,14 +26,11 @@ public class DebugPrintSubcommand extends AbstractSubCommand {
                 logger.info("§6Access data: " + pluginConfig.getAccessData().toString());
                 logger.info("§eAPI settings: " + pluginConfig.getApiSettings().toString());
                 logger.info("§6Blocking settings: " + pluginConfig.getBlockingSettings().toString());
-                logger.info("§eBossbar settings: " + pluginConfig.getBossbarSettings().toString());
-                logger.info("§6Broadcasts: " + pluginConfig.getBroadcasts().toString());
                 logger.info("§eCommands: " + pluginConfig.getCommands().toString());
                 logger.info("§6Effect settings: " + pluginConfig.getEffectSettings().toString());
                 logger.info("§eEncryption settings: " + pluginConfig.getEncryptionSettings().toString());
                 logger.info("§6Geyser settings: " + pluginConfig.getGeyserSettings().toString());
                 logger.info("§eLogging settings: " + pluginConfig.getLoggingSettings().toString());
-                logger.info("§6Log messages: " + pluginConfig.getLogMessages().toString());
                 logger.info("§eMain settings: " + pluginConfig.getMainSettings().toString());
                 logger.info("§6Messages: " + pluginConfig.getMessages().toString());
                 logger.info("§eMessage settings: " + pluginConfig.getMessageSettings().toString());
@@ -41,9 +38,6 @@ public class DebugPrintSubcommand extends AbstractSubCommand {
                 logger.info("§eSecure settings: " + pluginConfig.getSecureSettings().toString());
                 logger.info("§6Session settings: " + pluginConfig.getSessionSettings().toString());
                 logger.info("§eSound settings: " + pluginConfig.getSoundSettings().toString());
-                logger.info("§6System messages: " + pluginConfig.getSystemMessages().toString());
-                logger.info("§eTitles: " + pluginConfig.getTitles().toString());
-                logger.info("§6Usp messages: " + pluginConfig.getUspMessages().toString());
                 logger.info(pluginConfig.getSystemMessages().baselineDefault());
                 break;
             case "checkplayer":
