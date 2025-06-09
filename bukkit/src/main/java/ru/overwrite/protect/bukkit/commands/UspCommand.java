@@ -130,7 +130,12 @@ public final class UspCommand implements TabExecutor {
                 completions.add("remop");
                 completions.add("addip");
                 completions.add("remip");
+                completions.add("debug");
             }
+        }
+        if (args.length == 2 && args[1].equalsIgnoreCase("debug")) {
+            completions.add("printconfigdata");
+            completions.add("checkplayer");
         }
         return getResult(args, completions);
     }

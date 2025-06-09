@@ -6,8 +6,6 @@ import org.bukkit.entity.Player;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.utils.logging.Logger;
 
-import java.util.List;
-
 public class DebugPrintSubcommand extends AbstractSubCommand {
 
     public DebugPrintSubcommand(ServerProtectorManager plugin) {
@@ -22,71 +20,31 @@ public class DebugPrintSubcommand extends AbstractSubCommand {
             return true;
         }
         switch (args[1]) {
-            case "printexcluded":
-                logger.info(pluginConfig.getExcludedPlayers().toString());
-                break;
-            case "printaccess":
-                logger.info(pluginConfig.getAccessData().toString());
-                break;
-            case "printapi":
-                logger.info(pluginConfig.getApiSettings().toString());
-                break;
-            case "printblocking":
-                logger.info(pluginConfig.getBlockingSettings().toString());
-                break;
-            case "printbossbar":
-                logger.info(pluginConfig.getBossbarSettings().toString());
-                break;
-            case "printbroadcasts":
-                logger.info(pluginConfig.getBroadcasts().toString());
-                break;
-            case "printcommands":
-                logger.info(pluginConfig.getCommands().toString());
-                break;
-            case "printeffects":
-                logger.info(pluginConfig.getEffectSettings().toString());
-                break;
-            case "printencryption":
-                logger.info(pluginConfig.getEncryptionSettings().toString());
-                break;
-            case "printgeyser":
-                logger.info(pluginConfig.getGeyserSettings().toString());
-                break;
-            case "printlogging":
-                logger.info(pluginConfig.getLoggingSettings().toString());
-                break;
-            case "printlogmessages":
-                logger.info(pluginConfig.getLogMessages().toString());
-                break;
-            case "printmain":
-                logger.info(pluginConfig.getMainSettings().toString());
-                break;
-            case "printmessages":
-                logger.info(pluginConfig.getMessages().toString());
-                break;
-            case "printmessagesettings":
-                logger.info(pluginConfig.getMessageSettings().toString());
-                break;
-            case "printpunish":
-                logger.info(pluginConfig.getPunishSettings().toString());
-                break;
-            case "printsecure":
-                logger.info(pluginConfig.getSecureSettings().toString());
-                break;
-            case "printsession":
-                logger.info(pluginConfig.getSessionSettings().toString());
-                break;
-            case "printsound":
-                logger.info(pluginConfig.getSoundSettings().toString());
-                break;
-            case "printsystemmessages":
-                logger.info(pluginConfig.getSystemMessages().toString());
-                break;
-            case "printtitles":
-                logger.info(pluginConfig.getTitles().toString());
-                break;
-            case "printusp":
-                logger.info(pluginConfig.getUspMessages().toString());
+            case "printconfigdata":
+                logger.info(pluginConfig.getSystemMessages().baselineDefault());
+                logger.info("§eExcluded players: " + pluginConfig.getExcludedPlayers().toString());
+                logger.info("§6Access data: " + pluginConfig.getAccessData().toString());
+                logger.info("§eAPI settings: " + pluginConfig.getApiSettings().toString());
+                logger.info("§6Blocking settings: " + pluginConfig.getBlockingSettings().toString());
+                logger.info("§eBossbar settings: " + pluginConfig.getBossbarSettings().toString());
+                logger.info("§6Broadcasts: " + pluginConfig.getBroadcasts().toString());
+                logger.info("§eCommands: " + pluginConfig.getCommands().toString());
+                logger.info("§6Effect settings: " + pluginConfig.getEffectSettings().toString());
+                logger.info("§eEncryption settings: " + pluginConfig.getEncryptionSettings().toString());
+                logger.info("§6Geyser settings: " + pluginConfig.getGeyserSettings().toString());
+                logger.info("§eLogging settings: " + pluginConfig.getLoggingSettings().toString());
+                logger.info("§6Log messages: " + pluginConfig.getLogMessages().toString());
+                logger.info("§eMain settings: " + pluginConfig.getMainSettings().toString());
+                logger.info("§6Messages: " + pluginConfig.getMessages().toString());
+                logger.info("§eMessage settings: " + pluginConfig.getMessageSettings().toString());
+                logger.info("§6Punish settings: " + pluginConfig.getPunishSettings().toString());
+                logger.info("§eSecure settings: " + pluginConfig.getSecureSettings().toString());
+                logger.info("§6Session settings: " + pluginConfig.getSessionSettings().toString());
+                logger.info("§eSound settings: " + pluginConfig.getSoundSettings().toString());
+                logger.info("§6System messages: " + pluginConfig.getSystemMessages().toString());
+                logger.info("§eTitles: " + pluginConfig.getTitles().toString());
+                logger.info("§6Usp messages: " + pluginConfig.getUspMessages().toString());
+                logger.info(pluginConfig.getSystemMessages().baselineDefault());
                 break;
             case "checkplayer":
                 if (args.length < 3) {
@@ -109,6 +67,7 @@ public class DebugPrintSubcommand extends AbstractSubCommand {
                     logger.info("§6Is excluded from blacklistedPerms: " + plugin.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().blacklistedPerms()));
                     logger.info("§6Is excluded from alerts: " + plugin.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().alert()));
                 }
+                break;
             default:
                 sender.sendMessage("§cUnknown type: " + args[1]);
                 return false;
