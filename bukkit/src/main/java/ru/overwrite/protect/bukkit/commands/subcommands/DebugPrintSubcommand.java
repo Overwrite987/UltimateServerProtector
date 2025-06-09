@@ -32,7 +32,6 @@ public class DebugPrintSubcommand extends AbstractSubCommand {
                 logger.info("§6Geyser settings: " + pluginConfig.getGeyserSettings().toString());
                 logger.info("§eLogging settings: " + pluginConfig.getLoggingSettings().toString());
                 logger.info("§eMain settings: " + pluginConfig.getMainSettings().toString());
-                logger.info("§6Messages: " + pluginConfig.getMessages().toString());
                 logger.info("§eMessage settings: " + pluginConfig.getMessageSettings().toString());
                 logger.info("§6Punish settings: " + pluginConfig.getPunishSettings().toString());
                 logger.info("§eSecure settings: " + pluginConfig.getSecureSettings().toString());
