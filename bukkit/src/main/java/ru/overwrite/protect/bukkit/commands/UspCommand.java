@@ -1,6 +1,9 @@
 package ru.overwrite.protect.bukkit.commands;
 
-import org.bukkit.command.*;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.command.ConsoleCommandSender;
+import org.bukkit.command.TabExecutor;
 import org.bukkit.util.StringUtil;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
@@ -8,7 +11,10 @@ import ru.overwrite.protect.bukkit.commands.subcommands.*;
 import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.configuration.data.UspMessages;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 public final class UspCommand implements TabExecutor {
 
@@ -35,6 +41,7 @@ public final class UspCommand implements TabExecutor {
         registerSubCommand(new RemopSubcommand(plugin));
         registerSubCommand(new RemipSubcommand(plugin));
         registerSubCommand(new UpdateSubcommand(plugin));
+        registerSubCommand(new DebugPrintSubcommand(plugin));
     }
 
     private void registerSubCommand(AbstractSubCommand subCmd) {
