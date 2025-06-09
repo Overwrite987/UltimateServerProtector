@@ -320,3 +320,7 @@ excluded-players:
   blacklisted-perms:
     - test99999
     - test123123
+  # Players who will be allowed to join without alert
+  alert:
+    - test99999
+    - test123123

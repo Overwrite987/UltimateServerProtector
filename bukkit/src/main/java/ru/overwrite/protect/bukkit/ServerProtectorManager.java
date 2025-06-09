@@ -360,6 +360,9 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void sendAlert(Player player, String msg) {
+        if (this.isExcluded(player, pluginConfig.getExcludedPlayers().alert())) {
+            return;
+        }
         msg = msg.replace("%player%", player.getName()).replace("%ip%", Utils.getIp(player));
         if (pluginConfig.getMainSettings().papiSupport()) {
             msg = PAPIUtils.parsePlaceholders(player, msg);

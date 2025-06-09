@@ -6,6 +6,7 @@ public record ExcludedPlayers(
         List<String> adminPass,
         List<String> opWhitelist,
         List<String> ipWhitelist,
-        List<String> blacklistedPerms
+        List<String> blacklistedPerms,
+        List<String> alert
 ) {
 }

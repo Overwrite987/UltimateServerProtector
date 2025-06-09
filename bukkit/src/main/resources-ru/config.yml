@@ -330,3 +330,7 @@ excluded-players:
   blacklisted-perms:
     - test99999
     - test123123
+  # Игроки, которые будут заходить без оповещения
+  alert:
+    - test99999
+    - test123123

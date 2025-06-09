@@ -486,7 +486,8 @@ public final class Config {
                 List.copyOf(excludedPlayers.getStringList("admin-pass")),
                 List.copyOf(excludedPlayers.getStringList("op-whitelist")),
                 List.copyOf(excludedPlayers.getStringList("ip-whitelist")),
-                List.copyOf(excludedPlayers.getStringList("blacklisted-perms"))
+                List.copyOf(excludedPlayers.getStringList("blacklisted-perms")),
+                List.copyOf(excludedPlayers.getStringList("alert"))
         );
     }
 
