@@ -121,21 +121,28 @@ public final class Config {
 
     private List<String> getEncryptionMethods(ConfigurationSection section) {
         String encryptionMethod = section.getString("encrypt-method", "").trim();
-        return encryptionMethod.isEmpty() ? List.of() : List.of(encryptionMethod.split(";"));
+        if (encryptionMethod.isEmpty()) {
+            return List.of();
+        }
+        return parseEncryptionMethod(encryptionMethod);
     }
 
     private List<List<String>> getOldEncryptionMethods(ConfigurationSection section) {
-        List<List<String>> oldMethods = new ArrayList<>();
         List<String> oldEncryptionMethods = section.getStringList("old-encrypt-methods");
-
-        for (String oldEncryptionMethod : oldEncryptionMethods) {
-            if (oldEncryptionMethod.contains(";")) {
-                oldMethods.add(List.of(oldEncryptionMethod.trim().split(";")));
-            } else {
-                oldMethods.add(List.of(oldEncryptionMethod.trim()));
-            }
+        List<List<String>> result = new ArrayList<>(oldEncryptionMethods.size());
+        for (String encryptionMethod : oldEncryptionMethods) {
+            result.add(parseEncryptionMethod(encryptionMethod));
         }
-        return List.copyOf(oldMethods);
+        return List.copyOf(result);
+    }
+
+    private List<String> parseEncryptionMethod(String encryptionMethod) {
+        String[] parts = encryptionMethod.split(";");
+        List<String> methods = new ArrayList<>(parts.length);
+        for (String part : parts) {
+            methods.add(part.trim().toUpperCase());
+        }
+        return List.copyOf(methods);
     }
 
     private GeyserSettings geyserSettings;

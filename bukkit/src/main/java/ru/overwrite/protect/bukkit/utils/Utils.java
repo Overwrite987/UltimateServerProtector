@@ -130,7 +130,7 @@ public class Utils {
         String encryptedPassword = password;
         boolean salted = false;
         for (String hashType : hashTypes) {
-            switch (hashType.toUpperCase()) {
+            switch (hashType) {
                 case "BASE64": {
                     encryptedPassword = encodeToBase64(encryptedPassword);
                     break;
@@ -144,7 +144,7 @@ public class Utils {
                     break;
                 }
                 default: {
-                    if (SUPPORTED_HASH_TYPES.contains(hashType.toUpperCase())) {
+                    if (SUPPORTED_HASH_TYPES.contains(hashType)) {
                         encryptedPassword = encryptToHash(encryptedPassword, hashType);
                     } else {
                         throw new IllegalArgumentException("Unsupported hash type: " + hashType);
