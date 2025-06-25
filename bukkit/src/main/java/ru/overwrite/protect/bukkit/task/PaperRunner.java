@@ -23,7 +23,7 @@ public final class PaperRunner implements Runner {
     }
 
     @Override
-    public void runPlayer(@NotNull Runnable task, Player player) {
+    public void runPlayer(@NotNull Runnable task, @NotNull Player player) {
         player.getScheduler().run(plugin, toConsumer(task), null);
     }
 
