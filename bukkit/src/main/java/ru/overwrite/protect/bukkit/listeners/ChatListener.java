@@ -53,6 +53,7 @@ public class ChatListener implements Listener {
             if (label.equalsIgnoreCase("/" + pluginConfig.getMainSettings().pasCommand())) {
                 if (!plugin.isPaper()) {
                     passwordHandler.checkPassword(player, cutArguments(message), false);
+                    e.setCancelled(true);
                 }
                 return;
             }
