@@ -142,7 +142,7 @@ public final class TaskManager {
             int time = pluginConfig.getPunishSettings().time();
             for (Player onlinePlayer : Bukkit.getOnlinePlayers()) {
                 if (onlinePlayer.isDead() || !api.isCaptured(onlinePlayer)) {
-                    return;
+                    continue;
                 }
                 String playerName = onlinePlayer.getName();
                 Object2IntOpenHashMap<String> perPlayerTime = plugin.getPerPlayerTime();
