@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit.task;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
@@ -14,7 +15,6 @@ import ru.overwrite.protect.bukkit.configuration.data.BossbarSettings;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.time.LocalDateTime;
-import java.util.Map;
 
 public final class TaskManager {
 
@@ -145,7 +145,7 @@ public final class TaskManager {
                     return;
                 }
                 String playerName = onlinePlayer.getName();
-                Map<String, Integer> perPlayerTime = plugin.getPerPlayerTime();
+                Object2IntOpenHashMap<String> perPlayerTime = plugin.getPerPlayerTime();
                 if (!perPlayerTime.containsKey(playerName)) {
                     perPlayerTime.put(playerName, 0);
                     if (bossbarSettings.enableBossbar()) {
@@ -157,7 +157,7 @@ public final class TaskManager {
                         passwordHandler.getBossbars().put(playerName, bossbar);
                     }
                 } else {
-                    int newTime = perPlayerTime.compute(playerName, (k, currentTime) -> currentTime + 1);
+                    int newTime = perPlayerTime.addTo(playerName, 1);
                     BossBar bossBar = passwordHandler.getBossbars().get(playerName);
                     if (bossbarSettings.enableBossbar() && bossBar != null) {
                         bossBar.setTitle(bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(time - newTime)));

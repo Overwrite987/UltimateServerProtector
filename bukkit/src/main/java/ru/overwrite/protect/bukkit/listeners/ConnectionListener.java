@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit.listeners;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -14,9 +15,7 @@ import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.task.Runner;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class ConnectionListener implements Listener {
 
@@ -131,7 +130,7 @@ public class ConnectionListener implements Listener {
         return false;
     }
 
-    private final Map<String, Integer> rejoins = new HashMap<>();
+    private final Object2IntOpenHashMap<String> rejoins = new Object2IntOpenHashMap<>();
 
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
@@ -155,15 +154,15 @@ public class ConnectionListener implements Listener {
                 handleRejoin(playerName);
             }
         }
-        plugin.getPerPlayerTime().remove(playerName);
+        plugin.getPerPlayerTime().removeInt(playerName);
         api.unsavePlayer(playerName);
     }
 
     private void handleRejoin(String playerName) {
-        int attempts = rejoins.merge(playerName, 1, Integer::sum);
+        int attempts = rejoins.addTo(playerName, 1);
         if (attempts > pluginConfig.getPunishSettings().maxRejoins()) {
             plugin.checkFail(playerName, pluginConfig.getCommands().failedRejoin());
-            rejoins.remove(playerName);
+            rejoins.removeInt(playerName);
         }
     }
 }
