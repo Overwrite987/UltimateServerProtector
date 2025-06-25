@@ -146,32 +146,34 @@ public final class TaskManager {
                 }
                 String playerName = onlinePlayer.getName();
                 Object2IntOpenHashMap<String> perPlayerTime = plugin.getPerPlayerTime();
-                if (!perPlayerTime.containsKey(playerName)) {
-                    perPlayerTime.put(playerName, 0);
-                    if (bossbarSettings.enableBossbar()) {
-                        BossBar bossbar = Bukkit.createBossBar(
+                int newTime = perPlayerTime.addTo(playerName, 1);
+                BossBar bossBar = null;
+                if (bossbarSettings.enableBossbar()) {
+                    bossBar = passwordHandler.getBossbars().get(playerName);
+                    if (bossBar == null) {
+                        bossBar = Bukkit.createBossBar(
                                 bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(time)),
                                 bossbarSettings.barColor(),
-                                bossbarSettings.barStyle());
-                        bossbar.addPlayer(onlinePlayer);
-                        passwordHandler.getBossbars().put(playerName, bossbar);
+                                bossbarSettings.barStyle()
+                        );
+                        passwordHandler.getBossbars().put(playerName, bossBar);
                     }
-                } else {
-                    int newTime = perPlayerTime.addTo(playerName, 1);
-                    BossBar bossBar = passwordHandler.getBossbars().get(playerName);
-                    if (bossbarSettings.enableBossbar() && bossBar != null) {
-                        bossBar.setTitle(bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(time - newTime)));
-                        double percents = (time - newTime)
-                                / (double) time;
-                        if (percents > 0) {
-                            bossBar.setProgress(percents);
-                            bossBar.addPlayer(onlinePlayer);
-                        }
+
+                    int remaining = time - newTime;
+                    bossBar.setTitle(bossbarSettings.bossbarMessage().replace("%time%", Integer.toString(remaining)));
+
+                    double percents = remaining / (double) time;
+                    if (percents > 0) {
+                        bossBar.setProgress(percents);
+                        bossBar.addPlayer(onlinePlayer);
                     }
-                    if (time - newTime <= 0) {
-                        plugin.checkFail(playerName, pluginConfig.getCommands().failedTime());
-                        passwordHandler.getBossbars().get(playerName).removePlayer(onlinePlayer);
+                }
+                if (time - newTime <= 0) {
+                    plugin.checkFail(playerName, pluginConfig.getCommands().failedTime());
+                    if (bossBar != null) {
+                        bossBar.removePlayer(onlinePlayer);
                     }
+                    perPlayerTime.removeInt(playerName);  // Сброс счетчика
                 }
             }
         }, 5L, 20L);
