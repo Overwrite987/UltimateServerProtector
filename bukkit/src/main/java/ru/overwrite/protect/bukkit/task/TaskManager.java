@@ -173,7 +173,7 @@ public final class TaskManager {
                     if (bossBar != null) {
                         bossBar.removePlayer(onlinePlayer);
                     }
-                    perPlayerTime.removeInt(playerName);  // Сброс счетчика
+                    perPlayerTime.removeInt(playerName);
                 }
             }
         }, 5L, 20L);
