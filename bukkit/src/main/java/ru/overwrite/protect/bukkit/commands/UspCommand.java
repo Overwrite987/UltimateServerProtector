@@ -133,7 +133,7 @@ public final class UspCommand implements TabExecutor {
                 completions.add("debug");
             }
         }
-        if (args.length == 2 && args[1].equalsIgnoreCase("debug")) {
+        if (args.length == 2 && args[0].equalsIgnoreCase("debug")) {
             completions.add("printconfigdata");
             completions.add("checkplayer");
         }
