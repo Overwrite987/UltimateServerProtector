@@ -81,7 +81,7 @@ public final class PasswordHandler {
     }
 
     private boolean isAttemptsMax(String playerName) {
-        int playerAttempts = attempts.getOrDefault(playerName, 0);
+        int playerAttempts = attempts.getInt(playerName);
         return playerAttempts >= pluginConfig.getPunishSettings().maxAttempts();
     }
 
