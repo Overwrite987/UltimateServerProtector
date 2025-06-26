@@ -47,28 +47,30 @@ public class ConnectionListener implements Listener {
         runner.runAsync(() -> {
             final String playerName = player.getName();
             CaptureReason captureReason = plugin.checkPermissions(player);
-            if (api.isCaptured(playerName) && captureReason == null) {
-                api.uncapturePlayer(playerName);
+            if (captureReason == null) {
+                if (api.isCaptured(playerName)) {
+                    api.uncapturePlayer(playerName);
+                }
                 return;
             }
-            if (captureReason != null) {
-                final String ip = e.getAddress().getHostAddress();
-                if (pluginConfig.getSecureSettings().enableIpWhitelist()) {
-                    if (!isIPAllowed(ip, pluginConfig.getAccessData().ipWhitelist().get(playerName))) {
-                        if (!plugin.isExcluded(player, pluginConfig.getExcludedPlayers().ipWhitelist())) {
-                            plugin.checkFail(playerName, pluginConfig.getCommands().notAdminIp());
-                        }
+            final String ip = e.getAddress().getHostAddress();
+            if (pluginConfig.getSecureSettings().enableIpWhitelist()) {
+                if (!isIPAllowed(ip, pluginConfig.getAccessData().ipWhitelist().get(playerName))) {
+                    if (!plugin.isExcluded(player, pluginConfig.getExcludedPlayers().ipWhitelist())) {
+                        plugin.checkFail(playerName, pluginConfig.getCommands().notAdminIp());
                     }
                 }
-                if (pluginConfig.getSessionSettings().session() && !api.hasSession(playerName, ip)) {
-                    if (!plugin.isExcluded(player, pluginConfig.getExcludedPlayers().adminPass())) {
-                        ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(player, ip, captureReason);
-                        captureEvent.callEvent();
-                        if (pluginConfig.getApiSettings().allowCancelCaptureEvent() && captureEvent.isCancelled()) {
-                            return;
-                        }
-                        api.capturePlayer(playerName);
+            }
+            if (pluginConfig.getSessionSettings().session() && !api.hasSession(playerName, ip)) {
+                if (!plugin.isExcluded(player, pluginConfig.getExcludedPlayers().adminPass())) {
+                    long start = System.nanoTime();
+                    ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(player, ip, captureReason);
+                    captureEvent.callEvent();
+                    if (pluginConfig.getApiSettings().allowCancelCaptureEvent() && captureEvent.isCancelled()) {
+                        return;
                     }
+                    plugin.getPluginLogger().info("onLoin event done in " + (System.nanoTime() - start));
+                    api.capturePlayer(playerName);
                 }
             }
         });
@@ -76,24 +78,26 @@ public class ConnectionListener implements Listener {
 
     @EventHandler(priority = EventPriority.LOWEST)
     public void onJoin(PlayerJoinEvent e) {
-        runner.runAsync(() -> {
-            Player player = e.getPlayer();
+        final Player player = e.getPlayer();
+        runner.runDelayedAsync(() -> {
             CaptureReason captureReason = plugin.checkPermissions(player);
-            if (captureReason != null) {
-                if (api.isCaptured(player)) {
-                    if (pluginConfig.getEffectSettings().enableEffects()) {
-                        plugin.giveEffects(player);
-                    }
-                    plugin.applyHide(player);
-                }
-                if (pluginConfig.getLoggingSettings().loggingJoin()) {
-                    plugin.logAction(pluginConfig.getLogMessages().joined(), player, LocalDateTime.now());
-                }
-                if (pluginConfig.getBroadcasts() != null) {
-                    plugin.sendAlert(player, pluginConfig.getBroadcasts().joined());
-                }
+            if (captureReason == null) {
+                return;
             }
-        });
+            plugin.getPluginLogger().info("onJoin check capture time " + System.nanoTime());
+            if (api.isCaptured(player)) {
+                if (pluginConfig.getEffectSettings().enableEffects()) {
+                    plugin.giveEffects(player);
+                }
+                plugin.applyHide(player);
+            }
+            if (pluginConfig.getLoggingSettings().loggingJoin()) {
+                plugin.logAction(pluginConfig.getLogMessages().joined(), player, LocalDateTime.now());
+            }
+            if (pluginConfig.getBroadcasts() != null) {
+                plugin.sendAlert(player, pluginConfig.getBroadcasts().joined());
+            }
+        }, 2L);
     }
 
     private boolean isIPAllowed(String playerIp, List<String> allowedIps) {
