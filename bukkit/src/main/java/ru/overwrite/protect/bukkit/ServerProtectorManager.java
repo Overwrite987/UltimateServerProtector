@@ -23,10 +23,7 @@ import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.configuration.data.BlockingSettings;
 import ru.overwrite.protect.bukkit.configuration.data.SecureSettings;
 import ru.overwrite.protect.bukkit.configuration.data.SystemMessages;
-import ru.overwrite.protect.bukkit.listeners.ChatListener;
-import ru.overwrite.protect.bukkit.listeners.ConnectionListener;
-import ru.overwrite.protect.bukkit.listeners.MainListener;
-import ru.overwrite.protect.bukkit.listeners.TabCompleteListener;
+import ru.overwrite.protect.bukkit.listeners.*;
 import ru.overwrite.protect.bukkit.task.BukkitRunner;
 import ru.overwrite.protect.bukkit.task.PaperRunner;
 import ru.overwrite.protect.bukkit.task.Runner;
@@ -195,8 +192,13 @@ public class ServerProtectorManager extends JavaPlugin {
         pluginManager.registerEvents(new ChatListener(this), this);
         pluginManager.registerEvents(new ConnectionListener(this), this);
         pluginManager.registerEvents(new MainListener(this), this);
-        if (paper && pluginConfig.getBlockingSettings().blockTabComplete()) {
-            pluginManager.registerEvents(new TabCompleteListener(this), this);
+        if (pluginConfig.getBlockingSettings().blockTabComplete()) {
+            if (paper) {
+                pluginManager.registerEvents(new TabCompleteListener(this), this);
+            }
+            if (Utils.SUB_VERSION >= 13) {
+                pluginManager.registerEvents(new CommandSendListener(this), this);
+            }
         }
     }
 
