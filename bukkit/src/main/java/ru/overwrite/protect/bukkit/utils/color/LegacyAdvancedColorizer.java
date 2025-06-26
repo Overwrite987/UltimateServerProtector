@@ -134,7 +134,7 @@ public class LegacyAdvancedColorizer implements Colorizer {
         }
     }
 
-    public static boolean isValidColorCharacter(char c) {
+    private boolean isValidColorCharacter(char c) {
         return COLOR_CHARS_FLAGS[c];
     }
 
