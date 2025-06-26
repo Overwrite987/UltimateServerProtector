@@ -339,10 +339,10 @@ public class ServerProtectorManager extends JavaPlugin {
 
     public CaptureReason checkPermissions(Player player) {
         if (player.isOp()) {
-            return new CaptureReason(null);
+            return CaptureReason.OPERATOR_REASON;
         }
         if (player.hasPermission("serverprotector.protect")) {
-            return new CaptureReason("serverprotector.protect");
+            return CaptureReason.DEFAULT_PERMISSION_REASON;
         }
         for (String perm : pluginConfig.getAccessData().perms()) {
             if (player.hasPermission(perm)) {
