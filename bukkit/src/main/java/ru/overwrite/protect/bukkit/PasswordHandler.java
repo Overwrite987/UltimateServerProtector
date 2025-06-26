@@ -57,8 +57,10 @@ public final class PasswordHandler {
                 this.correctPassword(player);
                 return;
             }
-            if (encryptionSettings.enableEncryption() && !encryptionSettings.oldEncryptMethods().isEmpty()) {
-                for (List<String> oldEncryptMethod : encryptionSettings.oldEncryptMethods()) {
+            List<List<String>> oldMethods = encryptionSettings.oldEncryptMethods();
+            if (encryptionSettings.enableEncryption() && !oldMethods.isEmpty()) {
+                for (int i = 0; i < oldMethods.size(); i++) {
+                    List<String> oldEncryptMethod = oldMethods.get(i);
                     String oldgenPass = Utils.encryptPassword(input, salt, oldEncryptMethod);
                     if (oldgenPass.equals(playerPass)) {
                         this.correctPassword(player);
