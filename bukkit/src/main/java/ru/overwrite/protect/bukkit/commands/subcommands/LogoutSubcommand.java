@@ -21,10 +21,8 @@ public class LogoutSubcommand extends AbstractSubCommand {
             return false;
         }
         if (api.isAuthorised(player)) {
-            plugin.getRunner().run(() -> {
-                new ServerProtectorLogoutEvent(player, Utils.getIp(player)).callEvent();
-                api.deauthorisePlayer(player);
-            });
+            new ServerProtectorLogoutEvent(player, Utils.getIp(player)).callEvent();
+            api.deauthorisePlayer(player);
             player.kickPlayer(uspMessages.logout());
             return true;
         }

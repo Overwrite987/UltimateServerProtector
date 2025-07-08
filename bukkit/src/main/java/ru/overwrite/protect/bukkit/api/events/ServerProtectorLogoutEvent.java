@@ -11,7 +11,7 @@ public class ServerProtectorLogoutEvent extends ServerProtectorPlayerEvent {
     private final String ip;
 
     public ServerProtectorLogoutEvent(Player player, String ip) {
-        super(player, true);
+        super(player);
         this.player = player;
         this.ip = ip;
     }
