@@ -40,5 +40,6 @@ public class RempassSubcommand extends AbstractSubCommand {
         dataFile.set("data." + nick, null);
         pluginConfig.save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
         plugin.setDataFile(dataFile);
+        pluginConfig.setupPasswords(dataFile);
     }
 }

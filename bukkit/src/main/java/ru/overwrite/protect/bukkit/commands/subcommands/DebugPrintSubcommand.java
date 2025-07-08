@@ -54,11 +54,11 @@ public class DebugPrintSubcommand extends AbstractSubCommand {
                 logger.info("§6Has session: " + api.hasSession(playerToCheck));
                 logger.info("§6Is admin (has password): " + plugin.isAdmin(playerToCheck.getName()));
                 if (pluginConfig.getSecureSettings().enableExcludedPlayers()) {
-                    logger.info("§6Is excluded from adminPass: " + plugin.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().adminPass()));
-                    logger.info("§6Is excluded from opWhitelist: " + plugin.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().opWhitelist()));
-                    logger.info("§6Is excluded from ipWhitelist: " + plugin.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().ipWhitelist()));
-                    logger.info("§6Is excluded from blacklistedPerms: " + plugin.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().blacklistedPerms()));
-                    logger.info("§6Is excluded from alerts: " + plugin.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().alert()));
+                    logger.info("§6Is excluded from adminPass: " + api.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().adminPass()));
+                    logger.info("§6Is excluded from opWhitelist: " + api.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().opWhitelist()));
+                    logger.info("§6Is excluded from ipWhitelist: " + api.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().ipWhitelist()));
+                    logger.info("§6Is excluded from blacklistedPerms: " + api.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().blacklistedPerms()));
+                    logger.info("§6Is excluded from alerts: " + api.isExcluded(playerToCheck, pluginConfig.getExcludedPlayers().alert()));
                 }
                 break;
             default:

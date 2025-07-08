@@ -8,10 +8,7 @@ import ru.overwrite.protect.bukkit.configuration.Config;
 import ru.overwrite.protect.bukkit.utils.Utils;
 import ru.overwrite.protect.bukkit.utils.logging.Logger;
 
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 public final class ServerProtectorAPI {
 
@@ -69,6 +66,14 @@ public final class ServerProtectorAPI {
         if (!this.captured.remove(playerName)) {
             this.warning("Unable to uncapture " + playerName + " Reason: Not captured");
         }
+    }
+
+    public boolean isExcluded(Player player, List<String> list) {
+        return pluginConfig.getSecureSettings().enableExcludedPlayers() && !list.isEmpty() && list.contains(player.getName());
+    }
+
+    public boolean isExcluded(String playerName, List<String> list) {
+        return pluginConfig.getSecureSettings().enableExcludedPlayers() && !list.isEmpty() && list.contains(playerName);
     }
 
     public boolean isAuthorised(@NotNull Player player) {

@@ -55,5 +55,6 @@ public class SetpassSubcommand extends AbstractSubCommand {
         }
         pluginConfig.save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
         plugin.setDataFile(dataFile);
+        pluginConfig.setupPasswords(dataFile);
     }
 }

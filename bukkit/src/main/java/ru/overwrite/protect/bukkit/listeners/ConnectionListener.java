@@ -56,20 +56,18 @@ public class ConnectionListener implements Listener {
             final String ip = e.getAddress().getHostAddress();
             if (pluginConfig.getSecureSettings().enableIpWhitelist()) {
                 if (!isIPAllowed(ip, pluginConfig.getAccessData().ipWhitelist().get(playerName))) {
-                    if (!plugin.isExcluded(player, pluginConfig.getExcludedPlayers().ipWhitelist())) {
+                    if (!api.isExcluded(playerName, pluginConfig.getExcludedPlayers().ipWhitelist())) {
                         plugin.checkFail(playerName, pluginConfig.getCommands().notAdminIp());
                     }
                 }
             }
             if (pluginConfig.getSessionSettings().session() && !api.hasSession(playerName, ip)) {
-                if (!plugin.isExcluded(player, pluginConfig.getExcludedPlayers().adminPass())) {
-                    long start = System.nanoTime();
+                if (!api.isExcluded(playerName, pluginConfig.getExcludedPlayers().adminPass())) {
                     ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(player, ip, captureReason);
                     captureEvent.callEvent();
                     if (pluginConfig.getApiSettings().allowCancelCaptureEvent() && captureEvent.isCancelled()) {
                         return;
                     }
-                    plugin.getPluginLogger().info("onLoin event done in " + (System.nanoTime() - start));
                     api.capturePlayer(playerName);
                 }
             }
