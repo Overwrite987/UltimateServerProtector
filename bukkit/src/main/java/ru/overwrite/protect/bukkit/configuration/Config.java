@@ -36,8 +36,9 @@ public final class Config {
     public void setupPasswords(FileConfiguration dataFile) {
         ConfigurationSection data = dataFile.getConfigurationSection("data");
         boolean shouldSave = false;
-        Map<String, String> perPlayerPasswords = new HashMap<>();
-        for (String nick : data.getKeys(false)) {
+        Set<String> keys = data.getKeys(false);
+        Map<String, String> perPlayerPasswords = new HashMap<>(keys.size());
+        for (String nick : keys) {
             String playerNick = (this.geyserSettings.prefix() != null &&
                     !this.geyserSettings.prefix().isBlank() &&
                     this.geyserSettings.nicknames().contains(nick))
@@ -470,9 +471,11 @@ public final class Config {
             blacklistedPerms = Set.copyOf(config.getStringList("blacklisted-perms"));
         }
         if (secureSettings.getBoolean("enable-ip-whitelist")) {
-            Map<String, List<String>> ipWhitelistTemp = new HashMap<>();
-            for (String ipwlPlayer : config.getConfigurationSection("ip-whitelist").getKeys(false)) {
-                List<String> ips = List.copyOf(config.getStringList("ip-whitelist." + ipwlPlayer));
+            ConfigurationSection ipwlSection = config.getConfigurationSection("ip-whitelist");
+            Set<String> keys = ipwlSection.getKeys(false);
+            Map<String, List<String>> ipWhitelistTemp = new HashMap<>(keys.size());
+            for (String ipwlPlayer : keys) {
+                List<String> ips = List.copyOf(ipwlSection.getStringList(ipwlPlayer));
                 ipWhitelistTemp.put(ipwlPlayer, ips);
             }
             ipWhitelist = Map.copyOf(ipWhitelistTemp);
