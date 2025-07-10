@@ -21,7 +21,7 @@ public final class UspCommand implements TabExecutor {
     private final ServerProtectorManager plugin;
     private final Config pluginConfig;
 
-    private final Map<String, AbstractSubCommand> subCommands = new HashMap<>(12);
+    private final Map<String, AbstractSubCommand> subCommands = new HashMap<>();
 
     public UspCommand(ServerProtectorManager plugin) {
         this.plugin = plugin;
