@@ -20,10 +20,8 @@ public class CommandSendListener implements Listener {
 
     @EventHandler(ignoreCancelled = true)
     public void onCommandSend(PlayerCommandSendEvent e) {
-        if (pluginConfig.getBlockingSettings().blockTabComplete()) {
-            if (api.isCaptured(e.getPlayer())) {
-                e.getCommands().removeIf(command -> !command.equals(pluginConfig.getMainSettings().pasCommand()));
-            }
+        if (pluginConfig.getBlockingSettings().blockTabComplete() && api.isCaptured(e.getPlayer())) {
+            e.getCommands().removeIf(command -> !command.equals(pluginConfig.getMainSettings().pasCommand()));
         }
     }
 

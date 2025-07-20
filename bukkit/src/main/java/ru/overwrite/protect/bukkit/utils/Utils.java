@@ -80,8 +80,8 @@ public class Utils {
             return;
         }
         Sound sound = Sound.valueOf(soundArgs[0]);
-        float volume = soundArgs.length >= 2 ? Float.parseFloat(soundArgs[1]) : 1.0f;
-        float pitch = soundArgs.length == 3 ? Float.parseFloat(soundArgs[2]) : 1.0f;
+        float volume = soundArgs.length >= 2 ? Float.parseFloat(soundArgs[1]) : 1.0F;
+        float pitch = soundArgs.length == 3 ? Float.parseFloat(soundArgs[2]) : 1.0F;
         player.playSound(player.getLocation(), sound, volume, pitch);
     }
 
@@ -90,7 +90,7 @@ public class Utils {
     public String translateAlternateColorCodes(char altColorChar, String textToTranslate) {
         final char[] b = textToTranslate.toCharArray();
 
-        for (int i = 0, length = b.length - 1; i < length; ++i) {
+        for (int i = 0, length = b.length; i < length; i++) {
             if (b[i] == altColorChar && isValidColorCharacter(b[i + 1])) {
                 b[i++] = COLOR_CHAR;
                 b[i] |= 0x20;
