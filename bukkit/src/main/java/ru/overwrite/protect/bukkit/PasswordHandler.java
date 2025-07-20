@@ -127,6 +127,7 @@ public final class PasswordHandler {
             Utils.sendTitleMessage(pluginConfig.getTitles().correct(), player);
         }
         plugin.getPerPlayerTime().removeInt(playerName);
+        api.clearRejoins(playerName);
         if (pluginConfig.getSoundSettings().enableSounds()) {
             Utils.sendSound(pluginConfig.getSoundSettings().onPasCorrect(), player);
         }

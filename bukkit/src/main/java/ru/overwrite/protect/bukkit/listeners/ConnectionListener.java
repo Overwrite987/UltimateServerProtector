@@ -1,6 +1,5 @@
 package ru.overwrite.protect.bukkit.listeners;
 
-import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -132,8 +131,6 @@ public class ConnectionListener implements Listener {
         return false;
     }
 
-    private final Object2IntOpenHashMap<String> rejoins = new Object2IntOpenHashMap<>();
-
     @EventHandler(priority = EventPriority.HIGHEST)
     public void onLeave(PlayerQuitEvent event) {
         Player player = event.getPlayer();
@@ -161,10 +158,10 @@ public class ConnectionListener implements Listener {
     }
 
     private void handleRejoin(String playerName) {
-        int attempts = rejoins.addTo(playerName, 1);
-        if (attempts > pluginConfig.getPunishSettings().maxRejoins()) {
+        int attempts = api.addRejoin(playerName, 1);
+        if (pluginConfig.getPunishSettings().maxRejoins() > 0 && attempts > pluginConfig.getPunishSettings().maxRejoins()) {
             plugin.checkFail(playerName, pluginConfig.getCommands().failedRejoin());
-            rejoins.removeInt(playerName);
+            api.clearRejoins(playerName);
         }
     }
 }

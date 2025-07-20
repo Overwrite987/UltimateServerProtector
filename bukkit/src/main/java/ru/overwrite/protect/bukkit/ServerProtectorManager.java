@@ -313,6 +313,7 @@ public class ServerProtectorManager extends JavaPlugin {
             if (effects != null) {
                 player.addPotionEffects(effects);
             }
+            oldEffects.remove(player.getName());
         }, player);
     }
 

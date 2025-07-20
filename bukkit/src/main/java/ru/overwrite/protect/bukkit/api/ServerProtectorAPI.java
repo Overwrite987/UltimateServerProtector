@@ -1,5 +1,6 @@
 package ru.overwrite.protect.bukkit.api;
 
+import it.unimi.dsi.fastutil.objects.Object2IntOpenHashMap;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Cancellable;
 import org.jetbrains.annotations.NotNull;
@@ -20,6 +21,7 @@ public final class ServerProtectorAPI {
     private final Set<String> captured = new HashSet<>();
     private final Map<String, String> sessions = new HashMap<>();
     private final Set<String> saved = new HashSet<>();
+    private final Object2IntOpenHashMap<String> rejoins = new Object2IntOpenHashMap<>();
 
     public ServerProtectorAPI(@NotNull ServerProtectorManager plugin) {
         this.plugin = plugin;
@@ -68,11 +70,11 @@ public final class ServerProtectorAPI {
         }
     }
 
-    public boolean isExcluded(Player player, List<String> list) {
+    public boolean isExcluded(@NotNull Player player, @NotNull List<String> list) {
         return pluginConfig.getSecureSettings().enableExcludedPlayers() && !list.isEmpty() && list.contains(player.getName());
     }
 
-    public boolean isExcluded(String playerName, List<String> list) {
+    public boolean isExcluded(@NotNull String playerName, @NotNull List<String> list) {
         return pluginConfig.getSecureSettings().enableExcludedPlayers() && !list.isEmpty() && list.contains(playerName);
     }
 
@@ -162,10 +164,34 @@ public final class ServerProtectorAPI {
         this.saved.remove(playerName);
     }
 
-    public void handleInteraction(@NotNull Player player, Cancellable e) {
+    public void handleInteraction(@NotNull Player player, @NotNull Cancellable e) {
         if (this.isCaptured(player)) {
             e.setCancelled(true);
         }
+    }
+
+    public int getPlayerRejoins(@NotNull Player player) {
+        return getPlayerRejoins(player.getName());
+    }
+
+    public int getPlayerRejoins(@NotNull String playerName) {
+        return rejoins.getInt(playerName);
+    }
+
+    public int addRejoin(@NotNull Player player, int amount) {
+        return addRejoin(player.getName(), amount);
+    }
+
+    public int addRejoin(@NotNull String playerName, int amount) {
+        return rejoins.addTo(playerName, amount);
+    }
+
+    public void clearRejoins(@NotNull Player player) {
+        clearRejoins(player.getName());
+    }
+
+    public void clearRejoins(@NotNull String playerName) {
+        rejoins.removeInt(playerName);
     }
 
     public void clearCaptured() {
