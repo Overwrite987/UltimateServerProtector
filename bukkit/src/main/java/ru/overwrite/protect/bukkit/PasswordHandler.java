@@ -15,7 +15,7 @@ import ru.overwrite.protect.bukkit.configuration.data.EncryptionSettings;
 import ru.overwrite.protect.bukkit.utils.Utils;
 
 import java.time.LocalDateTime;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -29,7 +29,7 @@ public final class PasswordHandler {
     private final Object2IntOpenHashMap<String> attempts = new Object2IntOpenHashMap<>();
 
     @Getter
-    private final Map<String, BossBar> bossbars = new HashMap<>();
+    private final Map<String, BossBar> bossbars = new IdentityHashMap<>();
 
     public PasswordHandler(ServerProtectorManager plugin) {
         this.plugin = plugin;

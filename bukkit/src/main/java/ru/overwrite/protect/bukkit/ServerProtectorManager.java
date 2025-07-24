@@ -43,7 +43,7 @@ import java.lang.reflect.Constructor;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Collection;
-import java.util.HashMap;
+import java.util.IdentityHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -290,7 +290,7 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     @Getter(AccessLevel.NONE)
-    private final Map<String, Collection<PotionEffect>> oldEffects = new HashMap<>();
+    private final Map<String, Collection<PotionEffect>> oldEffects = new IdentityHashMap<>();
 
     public void giveEffects(Player player) {
         runner.runPlayer(() -> {
