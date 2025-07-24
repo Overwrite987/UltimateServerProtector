@@ -146,9 +146,7 @@ public class ConnectionListener implements Listener {
     private void handlePlayerLeave(Player player) {
         String playerName = player.getName();
         if (api.isCaptured(player)) {
-            for (PotionEffect effect : player.getActivePotionEffects()) { // Old versions compatibility
-                player.removePotionEffect(effect.getType());
-            }
+            plugin.removeEffects(player);
             if (pluginConfig.getPunishSettings().enableRejoin()) {
                 handleRejoin(playerName);
             }
