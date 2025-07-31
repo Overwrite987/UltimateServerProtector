@@ -1,4 +1,4 @@
-# UltimateServerProtector [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/overwrite987/ultimateserverprotector?style=flat-square)](https://www.codefactor.io/repository/github/overwrite987/ultimateserverprotector) [![Spigot downloads](https://img.shields.io/spiget/downloads/105237?label=Spigot%20downloads)](https://www.spigotmc.org/resources/ultimateserverprotector-admins-operators-security-plugin-lightweight-and-async.105237)
+# UltimateServerProtector [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/overwrite987/ultimateserverprotector?style=flat-square)](https://www.codefactor.io/repository/github/overwrite987/ultimateserverprotector)
 
 **• This is an  incredibly lightweight plugin, that add an "admin-password" to your server.**
 
@@ -30,7 +30,8 @@ Admin commands that can be included in the config:
 <br>/usp addip (ip) - add IP to adminipwhitelist 
 <br>/ultimateserverprotector and /serverprotector - analogs of the /usp command
   
-**• bStats**
+**• Statistics**
+<br>[![Spigot downloads](https://img.shields.io/spiget/downloads/105237?label=Spigot%20downloads)](https://www.spigotmc.org/resources/ultimateserverprotector-admins-operators-security-plugin-lightweight-and-async.105237)
 <br><img src="https://bstats.org/signatures/bukkit/UltimateServerProtector.svg" width="640"></img>
 
 **• Downloads**
