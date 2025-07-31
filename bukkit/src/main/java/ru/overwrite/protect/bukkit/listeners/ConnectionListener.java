@@ -5,7 +5,6 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
-import org.bukkit.potion.PotionEffect;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
@@ -81,7 +80,6 @@ public class ConnectionListener implements Listener {
             if (captureReason == null) {
                 return;
             }
-            plugin.getPluginLogger().info("onJoin check capture time " + System.nanoTime());
             if (api.isCaptured(player)) {
                 if (pluginConfig.getEffectSettings().enableEffects()) {
                     plugin.giveEffects(player);

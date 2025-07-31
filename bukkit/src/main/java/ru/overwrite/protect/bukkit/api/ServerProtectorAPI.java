@@ -111,7 +111,7 @@ public final class ServerProtectorAPI {
      * Checks if the player is excluded based on the provided exclusion list.
      *
      * @param player the player to check
-     * @param list the exclusion list to check against
+     * @param list   the exclusion list to check against
      * @return true if player is excluded, false otherwise
      */
     public boolean isExcluded(@NotNull Player player, @NotNull List<String> list) {
@@ -122,7 +122,7 @@ public final class ServerProtectorAPI {
      * Checks if the player (by name) is excluded based on the provided exclusion list.
      *
      * @param playerName the name of the player to check
-     * @param list the exclusion list to check against
+     * @param list       the exclusion list to check against
      * @return true if player is excluded, false otherwise
      */
     public boolean isExcluded(@NotNull String playerName, @NotNull List<String> list) {
@@ -143,7 +143,7 @@ public final class ServerProtectorAPI {
      * Checks if the player is currently authorized with the specified IP.
      *
      * @param player the player to check
-     * @param ip the IP address to verify
+     * @param ip     the IP address to verify
      * @return true if authorized, false otherwise
      */
     public boolean isAuthorised(@NotNull Player player, @NotNull String ip) {
@@ -154,7 +154,7 @@ public final class ServerProtectorAPI {
      * Checks if the player (by name) is currently authorized with the specified IP.
      *
      * @param playerName the name of the player to check
-     * @param ip the IP address to verify
+     * @param ip         the IP address to verify
      * @return true if authorized, false otherwise
      */
     public boolean isAuthorised(@NotNull String playerName, @NotNull String ip) {
@@ -177,7 +177,7 @@ public final class ServerProtectorAPI {
      * Checks if the player has an active session with the specified IP.
      *
      * @param player the player to check
-     * @param ip the IP address to verify
+     * @param ip     the IP address to verify
      * @return true if has active session, false otherwise
      */
     public boolean hasSession(@NotNull Player player, @NotNull String ip) {
@@ -188,7 +188,7 @@ public final class ServerProtectorAPI {
      * Checks if the player (by name) has an active session with the specified IP.
      *
      * @param playerName the name of the player to check
-     * @param ip the IP address to verify
+     * @param ip         the IP address to verify
      * @return true if has active session, false otherwise
      */
     public boolean hasSession(@NotNull String playerName, @NotNull String ip) {
@@ -212,7 +212,7 @@ public final class ServerProtectorAPI {
      * Authorizes the player with the specified IP.
      *
      * @param player the player to authorize
-     * @param ip the IP address to associate
+     * @param ip     the IP address to associate
      */
     public void authorisePlayer(@NotNull Player player, @NotNull String ip) {
         this.authorisePlayer(player.getName(), ip);
@@ -222,7 +222,7 @@ public final class ServerProtectorAPI {
      * Authorizes the player (by name) with the specified IP.
      *
      * @param playerName the name of the player to authorize
-     * @param ip the IP address to associate
+     * @param ip         the IP address to associate
      */
     public void authorisePlayer(@NotNull String playerName, @NotNull String ip) {
         if (!plugin.isCalledFromAllowedApplication()) {
@@ -253,7 +253,7 @@ public final class ServerProtectorAPI {
      * Deauthorizes the player with the specified IP.
      *
      * @param player the player to deauthorize
-     * @param ip the IP address to verify
+     * @param ip     the IP address to verify
      */
     public void deauthorisePlayer(@NotNull Player player, @NotNull String ip) {
         this.deauthorisePlayer(player.getName(), ip);
@@ -263,7 +263,7 @@ public final class ServerProtectorAPI {
      * Deauthorizes the player (by name) with the specified IP.
      *
      * @param playerName the name of the player to deauthorize
-     * @param ip the IP address to verify
+     * @param ip         the IP address to verify
      */
     public void deauthorisePlayer(@NotNull String playerName, @NotNull String ip) {
         if (!plugin.isCalledFromAllowedApplication()) {
@@ -303,7 +303,7 @@ public final class ServerProtectorAPI {
      * Handles player interaction by cancelling it if the player is captured.
      *
      * @param player the player interacting
-     * @param e the cancellable event
+     * @param e      the cancellable event
      */
     public void handleInteraction(@NotNull Player player, @NotNull Cancellable e) {
         if (this.isCaptured(player)) {
@@ -346,7 +346,7 @@ public final class ServerProtectorAPI {
      * Adds to the player's (by name) rejoin count.
      *
      * @param playerName the name of the player to modify
-     * @param amount the number of rejoins to add
+     * @param amount     the number of rejoins to add
      * @return the new total number of rejoins
      */
     public int addRejoin(@NotNull String playerName, int amount) {
