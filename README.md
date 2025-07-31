@@ -1,4 +1,6 @@
-# UltimateServerProtector [![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/overwrite987/ultimateserverprotector?style=flat-square)](https://www.codefactor.io/repository/github/overwrite987/ultimateserverprotector)
+# UltimateServerProtector 
+<br>[![CodeFactor Grade](https://img.shields.io/codefactor/grade/github/overwrite987/ultimateserverprotector?style=flat-square)](https://www.codefactor.io/repository/github/overwrite987/ultimateserverprotector)
+<br>[![Spigot download](https://img.shields.io/spiget/downloads/105237?label=Spigot%20downloads)
 
 **• This is an  incredibly lightweight plugin, that add an "admin-password" to your server.**
 
