@@ -26,7 +26,7 @@ public class CommandSendListener implements Listener {
     }
 
     @EventHandler
-    public void onSucsessPassword(ServerProtectorPasswordSuccessEvent e) {
+    public void onSuccessPassword(ServerProtectorPasswordSuccessEvent e) {
         e.getPlayer().updateCommands();
     }
 }
