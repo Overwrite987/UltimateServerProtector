@@ -130,12 +130,13 @@ public class ServerProtectorManager extends JavaPlugin {
         Utils.setupColorizer(config.getConfigurationSection("main-settings"));
         final ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
         boolean fullPath = fileSettings.getBoolean("use-full-path", false);
-        dataFilePath = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+        String absolutePath = getDataFolder().getAbsolutePath();
+        dataFilePath = fullPath ? fileSettings.getString("data-file-path") : absolutePath;
         dataFileName = fileSettings.getString("data-file");
         dataFile = pluginConfig.getFile(dataFilePath, dataFileName);
         pluginConfig.save(dataFilePath, dataFile, dataFileName);
-        messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
-        pluginConfig.save(getDataFolder().getAbsolutePath(), messageFile, "message.yml");
+        messageFile = pluginConfig.getFile(absolutePath, "message.yml");
+        pluginConfig.save(absolutePath, messageFile, "message.yml");
         setupPluginConfig(config);
         pluginConfig.setupPasswords(dataFile);
     }
@@ -145,10 +146,11 @@ public class ServerProtectorManager extends JavaPlugin {
             reloadConfig();
             final FileConfiguration config = getConfig();
             Utils.setupColorizer(config.getConfigurationSection("main-settings"));
-            messageFile = pluginConfig.getFile(getDataFolder().getAbsolutePath(), "message.yml");
+            String absolutePath = getDataFolder().getAbsolutePath();
+            messageFile = pluginConfig.getFile(absolutePath, "message.yml");
             final ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
             boolean fullPath = fileSettings.getBoolean("use-full-path", false);
-            dataFilePath = fullPath ? fileSettings.getString("data-file-path") : getDataFolder().getAbsolutePath();
+            dataFilePath = fullPath ? fileSettings.getString("data-file-path") : absolutePath;
             dataFileName = fileSettings.getString("data-file");
             dataFile = pluginConfig.getFile(dataFilePath, dataFileName);
             setupPluginConfig(config);
