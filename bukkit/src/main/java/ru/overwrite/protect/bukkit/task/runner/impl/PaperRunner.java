@@ -1,4 +1,4 @@
-package ru.overwrite.protect.bukkit.task;
+package ru.overwrite.protect.bukkit.task.runner.impl;
 
 import io.papermc.paper.threadedregions.scheduler.AsyncScheduler;
 import io.papermc.paper.threadedregions.scheduler.GlobalRegionScheduler;
@@ -6,6 +6,7 @@ import io.papermc.paper.threadedregions.scheduler.ScheduledTask;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.task.runner.Runner;
 
 import java.util.concurrent.TimeUnit;
 import java.util.function.Consumer;

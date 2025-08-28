@@ -11,8 +11,8 @@ import org.bukkit.potion.PotionEffect;
 import org.bukkit.potion.PotionEffectType;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.configuration.data.*;
+import ru.overwrite.protect.bukkit.logging.Logger;
 import ru.overwrite.protect.bukkit.utils.Utils;
-import ru.overwrite.protect.bukkit.utils.logging.Logger;
 
 import java.io.File;
 import java.io.IOException;

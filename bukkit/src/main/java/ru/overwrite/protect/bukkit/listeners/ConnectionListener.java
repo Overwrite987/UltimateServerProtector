@@ -10,7 +10,7 @@ import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorCaptureEvent;
 import ru.overwrite.protect.bukkit.configuration.Config;
-import ru.overwrite.protect.bukkit.task.Runner;
+import ru.overwrite.protect.bukkit.task.runner.Runner;
 
 import java.time.LocalDateTime;
 import java.util.List;

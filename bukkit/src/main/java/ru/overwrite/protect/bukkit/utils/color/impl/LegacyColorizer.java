@@ -1,6 +1,7 @@
-package ru.overwrite.protect.bukkit.utils.color;
+package ru.overwrite.protect.bukkit.utils.color.impl;
 
 import ru.overwrite.protect.bukkit.utils.Utils;
+import ru.overwrite.protect.bukkit.utils.color.Colorizer;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;

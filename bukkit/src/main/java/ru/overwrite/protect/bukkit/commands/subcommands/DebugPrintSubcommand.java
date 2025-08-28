@@ -4,7 +4,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
-import ru.overwrite.protect.bukkit.utils.logging.Logger;
+import ru.overwrite.protect.bukkit.logging.Logger;
 
 public class DebugPrintSubcommand extends AbstractSubCommand {
 

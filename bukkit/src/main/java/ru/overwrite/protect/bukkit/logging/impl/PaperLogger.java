@@ -1,7 +1,8 @@
-package ru.overwrite.protect.bukkit.utils.logging;
+package ru.overwrite.protect.bukkit.logging.impl;
 
 import net.kyori.adventure.text.serializer.legacy.LegacyComponentSerializer;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.logging.Logger;
 
 public class PaperLogger implements Logger {
 

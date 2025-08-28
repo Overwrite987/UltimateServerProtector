@@ -1,6 +1,7 @@
-package ru.overwrite.protect.bukkit.utils.color;
+package ru.overwrite.protect.bukkit.utils.color.impl;
 
 import ru.overwrite.protect.bukkit.utils.Utils;
+import ru.overwrite.protect.bukkit.utils.color.Colorizer;
 
 public class VanillaColorizer implements Colorizer {
 

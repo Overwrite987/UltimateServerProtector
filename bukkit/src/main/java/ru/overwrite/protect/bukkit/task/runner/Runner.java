@@ -1,4 +1,4 @@
-package ru.overwrite.protect.bukkit.task;
+package ru.overwrite.protect.bukkit.task.runner;
 
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.NotNull;

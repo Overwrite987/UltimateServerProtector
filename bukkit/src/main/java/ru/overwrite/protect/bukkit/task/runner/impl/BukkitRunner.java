@@ -1,9 +1,10 @@
-package ru.overwrite.protect.bukkit.task;
+package ru.overwrite.protect.bukkit.task.runner.impl;
 
 import org.bukkit.entity.Player;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
+import ru.overwrite.protect.bukkit.task.runner.Runner;
 
 @SuppressWarnings("deprecation")
 public final class BukkitRunner implements Runner {

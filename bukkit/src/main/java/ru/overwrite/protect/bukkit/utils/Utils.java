@@ -6,7 +6,11 @@ import org.bukkit.Sound;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
-import ru.overwrite.protect.bukkit.utils.color.*;
+import ru.overwrite.protect.bukkit.utils.color.Colorizer;
+import ru.overwrite.protect.bukkit.utils.color.impl.LegacyAdvancedColorizer;
+import ru.overwrite.protect.bukkit.utils.color.impl.LegacyColorizer;
+import ru.overwrite.protect.bukkit.utils.color.impl.MiniMessageColorizer;
+import ru.overwrite.protect.bukkit.utils.color.impl.VanillaColorizer;
 
 import java.io.BufferedReader;
 import java.io.IOException;

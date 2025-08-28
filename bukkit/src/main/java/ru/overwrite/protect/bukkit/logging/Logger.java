@@ -1,4 +1,4 @@
-package ru.overwrite.protect.bukkit.utils.logging;
+package ru.overwrite.protect.bukkit.logging;
 
 public interface Logger {
 
