@@ -30,6 +30,9 @@ jobs:
           restore-keys: |
             ${{ runner.os }}-gradle-
 
+      - name: Make Gradle wrapper executable
+        run: chmod +x ./gradlew
+
       - name: Build with Gradle | EN
         run: ./gradlew clean shadowJar -Plang=en
       - uses: actions/upload-artifact@v4
