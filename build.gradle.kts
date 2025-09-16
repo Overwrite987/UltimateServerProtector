@@ -57,16 +57,15 @@ tasks {
     shadowJar {
         archiveBaseName.set("UltimateServerProtector")
         archiveVersion.set("v${version}-${lang}")
+        archiveClassifier.set("")
 
         relocate("org.bstats", "ru.overwrite.protect.bukkit.utils.metrics")
-
-        minimize {
-            exclude(dependency("org.bstats:bstats-bukkit:.*"))
-        }
 
         manifest {
             attributes["paperweight-mappings-namespace"] = "mojang"
         }
+
+        minimize()
     }
 
     build {
