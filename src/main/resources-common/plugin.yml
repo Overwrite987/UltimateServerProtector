@@ -1,5 +1,5 @@
-name: '${project.name}'
-version: '${project.version}'
+name: '${name}'
+version: '${version}'
 author: OverwriteMC
 main: ru.overwrite.protect.bukkit.ServerProtector
 api-version: 1.13
