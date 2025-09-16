@@ -1,0 +1,45 @@
+name: Java CI (Gradle)
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build:
+
+    if: "! contains(toJSON(github.event.commits.*.message), '[SKIP-CI]')"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Set up JDK 21
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '21'
+
+      - uses: actions/cache@v3
+        with:
+          path: |
+            ~/.gradle/caches
+            ~/.gradle/wrapper
+          key: ${{ runner.os }}-gradle-${{ hashFiles('**/build.gradle.kts') }}
+          restore-keys: |
+            ${{ runner.os }}-gradle-
+
+      - name: Build with Gradle | EN
+        run: ./gradlew clean shadowJar -Plang=en
+      - uses: actions/upload-artifact@v3
+        with:
+          name: UltimateServerProtector (English)
+          path: build/libs/UltimateServerProtector-v*-en.jar
+
+      - name: Build with Gradle | RU
+        run: ./gradlew clean shadowJar -Plang=ru
+      - uses: actions/upload-artifact@v3
+        with:
+          name: UltimateServerProtector (Russian)
+          path: build/libs/UltimateServerProtector-v*-ru.jar
