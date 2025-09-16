@@ -46,7 +46,7 @@ Admin commands that can be included in the config:
 <br>Maven required
 ```bash
 # For English locale
-mvn clean package
+mvn gradlew shadowJar -Plang=en
 # For Russian locale
-mvn clean package -P ru
+mvn gradlew shadowJar -Plang=ru
 ```
