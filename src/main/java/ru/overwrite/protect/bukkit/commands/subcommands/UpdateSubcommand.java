@@ -75,7 +75,7 @@ public class UpdateSubcommand extends AbstractSubCommand {
                     lastPercentage = progressPercentage;
                     int downloadedKB = totalBytesRead / 1024;
                     int fullSizeKB = fileSize / 1024;
-                    sender.sendMessage(downloadedKB + "/" + fullSizeKB + "KB) (" + progressPercentage + "%)");
+                    sender.sendMessage(downloadedKB + "/" + fullSizeKB + "KB (" + progressPercentage + "%)");
                 }
             }
         }
