@@ -34,6 +34,7 @@ public final class UspCommand implements TabExecutor {
         registerSubCommand(new ReloadSubcommand(plugin));
         registerSubCommand(new RebootSubcommand(plugin));
         registerSubCommand(new EncryptSubcommand(plugin));
+        registerSubCommand(new GenpassSubcommand(plugin));
         registerSubCommand(new SetpassSubcommand(plugin));
         registerSubCommand(new AddopSubcommand(plugin));
         registerSubCommand(new AddipSubcommand(plugin));
