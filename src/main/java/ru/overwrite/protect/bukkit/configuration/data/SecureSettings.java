@@ -6,6 +6,7 @@ public record SecureSettings(
         boolean enablePermissionBlacklist,
         boolean enableIpWhitelist,
         boolean onlyConsoleUsp,
-        boolean enableExcludedPlayers
+        boolean enableExcludedPlayers,
+        boolean useFakePlugin
 ) {
 }

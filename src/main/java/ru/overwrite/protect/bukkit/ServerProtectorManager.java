@@ -31,6 +31,7 @@ import ru.overwrite.protect.bukkit.task.TaskManager;
 import ru.overwrite.protect.bukkit.task.runner.Runner;
 import ru.overwrite.protect.bukkit.task.runner.impl.BukkitRunner;
 import ru.overwrite.protect.bukkit.task.runner.impl.PaperRunner;
+import ru.overwrite.protect.bukkit.utils.FakePlugin;
 import ru.overwrite.protect.bukkit.utils.PAPIUtils;
 import ru.overwrite.protect.bukkit.utils.PluginMessage;
 import ru.overwrite.protect.bukkit.utils.Utils;
@@ -191,15 +192,19 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     public void registerListeners(PluginManager pluginManager) {
-        pluginManager.registerEvents(new ChatListener(this), this);
-        pluginManager.registerEvents(new ConnectionListener(this), this);
-        pluginManager.registerEvents(new MainListener(this), this);
+        Plugin plugin = this;
+        if (paper && pluginConfig.getSecureSettings().useFakePlugin()) {
+            plugin = FakePlugin.createFakePlugin();
+        }
+        pluginManager.registerEvents(new ChatListener(this), plugin);
+        pluginManager.registerEvents(new ConnectionListener(this), plugin);
+        pluginManager.registerEvents(new MainListener(this), plugin);
         if (pluginConfig.getBlockingSettings().blockTabComplete()) {
             if (paper) {
-                pluginManager.registerEvents(new TabCompleteListener(this), this);
+                pluginManager.registerEvents(new TabCompleteListener(this), plugin);
             }
             if (Utils.SUB_VERSION >= 13) {
-                pluginManager.registerEvents(new CommandSendListener(this), this);
+                pluginManager.registerEvents(new CommandSendListener(this), plugin);
             }
         }
     }

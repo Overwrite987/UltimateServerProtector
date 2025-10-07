@@ -139,6 +139,10 @@ secure-settings:
   shutdown-on-disable: true
   # Allow certain players to enter the game without an admin password (disabled by default and unsafe)
   enable-excluded-players: false
+  # Should I use a fake plugin to register listeners?
+  # If you use this feature, malicious plugins will not be able to upload USP listeners
+  use-fake-plugin: true
+
 
 # Api settings
 api-settings:

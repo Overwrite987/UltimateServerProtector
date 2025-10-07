@@ -259,6 +259,7 @@ public final class Config {
             section.set("enable-ip-whitelist", false);
             section.set("only-console-usp", false);
             section.set("enable-excluded-players", false);
+            section.set("use-fake-plugin", true);
             save(plugin.getDataFilePath(), configFile, "config.yml");
             pluginLogger.info("Created section secure-settings");
             secureSettings = configFile.getConfigurationSection("secure-settings");
@@ -269,7 +270,8 @@ public final class Config {
                 secureSettings.getBoolean("enable-permission-blacklist", false),
                 secureSettings.getBoolean("enable-ip-whitelist", false),
                 secureSettings.getBoolean("only-console-usp", false),
-                secureSettings.getBoolean("enable-excluded-players", false)
+                secureSettings.getBoolean("enable-excluded-players", false),
+                secureSettings.getBoolean("use-fake-plugin", true)
         );
     }
 
