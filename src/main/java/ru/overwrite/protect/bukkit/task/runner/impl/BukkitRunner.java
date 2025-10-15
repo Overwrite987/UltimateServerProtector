@@ -1,6 +1,7 @@
 package ru.overwrite.protect.bukkit.task.runner.impl;
 
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.scheduler.BukkitScheduler;
 import org.jetbrains.annotations.NotNull;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
@@ -10,10 +11,12 @@ import ru.overwrite.protect.bukkit.task.runner.Runner;
 public final class BukkitRunner implements Runner {
 
     private final ServerProtectorManager plugin;
+    private final Plugin taskOwner;
     private final BukkitScheduler scheduler;
 
-    public BukkitRunner(ServerProtectorManager plugin) {
+    public BukkitRunner(ServerProtectorManager plugin, Plugin taskOwner) {
         this.plugin = plugin;
+        this.taskOwner = taskOwner;
         this.scheduler = plugin.getServer().getScheduler();
     }
 
@@ -24,32 +27,32 @@ public final class BukkitRunner implements Runner {
 
     @Override
     public void run(@NotNull Runnable task) {
-        scheduler.runTask(plugin, task);
+        scheduler.runTask(taskOwner, task);
     }
 
     @Override
     public void runAsync(@NotNull Runnable task) {
-        scheduler.runTaskAsynchronously(plugin, task);
+        scheduler.runTaskAsynchronously(taskOwner, task);
     }
 
     @Override
     public void runDelayed(@NotNull Runnable task, long delayTicks) {
-        scheduler.runTaskLater(plugin, task, delayTicks);
+        scheduler.runTaskLater(taskOwner, task, delayTicks);
     }
 
     @Override
     public void runDelayedAsync(@NotNull Runnable task, long delayTicks) {
-        scheduler.runTaskLaterAsynchronously(plugin, task, delayTicks);
+        scheduler.runTaskLaterAsynchronously(taskOwner, task, delayTicks);
     }
 
     @Override
     public void runPeriodical(@NotNull Runnable task, long delayTicks, long periodTicks) {
-        scheduler.runTaskTimer(plugin, task, delayTicks, periodTicks);
+        scheduler.runTaskTimer(taskOwner, task, delayTicks, periodTicks);
     }
 
     @Override
     public void runPeriodicalAsync(@NotNull Runnable task, long delayTicks, long periodTicks) {
-        scheduler.runTaskTimerAsynchronously(plugin, task, delayTicks, periodTicks);
+        scheduler.runTaskTimerAsynchronously(taskOwner, task, delayTicks, periodTicks);
     }
 
     @Override
@@ -57,6 +60,6 @@ public final class BukkitRunner implements Runner {
         if (!plugin.isCalledFromAllowedApplication()) {
             return;
         }
-        scheduler.cancelTasks(plugin);
+        scheduler.cancelTasks(taskOwner);
     }
 }

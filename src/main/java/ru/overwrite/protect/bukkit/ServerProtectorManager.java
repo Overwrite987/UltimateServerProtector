@@ -69,7 +69,7 @@ public class ServerProtectorManager extends JavaPlugin {
     private final Config pluginConfig = new Config(this);
     private final ServerProtectorAPI api = new ServerProtectorAPI(this);
     private final PasswordHandler passwordHandler = new PasswordHandler(this);
-    private final Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
+    private Runner runner;
 
     private PluginMessage pluginMessage;
 
@@ -81,7 +81,15 @@ public class ServerProtectorManager extends JavaPlugin {
     @Getter(AccessLevel.NONE)
     public final Server server = getServer();
 
-    public void checkPaper() {
+    protected void setupRunner() {
+        Plugin plugin = this;
+        if (paper && pluginConfig.getSecureSettings().useFakePlugin()) {
+            plugin = FakePlugin.createFakePlugin();
+        }
+        runner = Utils.FOLIA ? new PaperRunner(this, plugin) : new BukkitRunner(this, plugin);
+    }
+
+    protected void checkPaper() {
         if (server.getName().equals("CraftBukkit")) {
             SystemMessages systemMessages = pluginConfig.getSystemMessages();
             runner.runPeriodical(() -> {
@@ -97,7 +105,7 @@ public class ServerProtectorManager extends JavaPlugin {
 
     private boolean safe;
 
-    public void checkSafe(PluginManager pluginManager) {
+    protected void checkSafe(PluginManager pluginManager) {
         if (server.spigot().getConfig().getBoolean("settings.bungeecord")) {
             if (pluginManager.isPluginEnabled("BungeeGuard") || pluginManager.isPluginEnabled("SafeNET")) {
                 this.safe = true;
@@ -118,7 +126,18 @@ public class ServerProtectorManager extends JavaPlugin {
         pluginLogger.info(systemMessages.baselineWarn());
     }
 
-    public void setupProxy(FileConfiguration config) {
+    protected void setupLogger(FileConfiguration config) {
+        File dataFolder = getDataFolder();
+        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
+            throw new RuntimeException("Unable to create data folder");
+        }
+        ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
+        boolean fullPath = fileSettings.getBoolean("use-full-path");
+        String logFilePath = fullPath ? fileSettings.getString("log-file-path") : dataFolder.getPath();
+        logFile = new File(logFilePath, fileSettings.getString("log-file"));
+    }
+
+    protected void setupProxy(FileConfiguration config) {
         if (config.getBoolean("main-settings.proxy", false)) {
             Messenger messenger = server.getMessenger();
             messenger.registerOutgoingPluginChannel(this, "BungeeCord");
@@ -127,7 +146,7 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void loadConfigs(FileConfiguration config) {
+    protected void loadConfigs(FileConfiguration config) {
         Utils.setupColorizer(config.getConfigurationSection("main-settings"));
         final ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
         boolean fullPath = fileSettings.getBoolean("use-full-path", false);
@@ -191,7 +210,7 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void registerListeners(PluginManager pluginManager) {
+    protected void registerListeners(PluginManager pluginManager) {
         Plugin plugin = this;
         if (paper && pluginConfig.getSecureSettings().useFakePlugin()) {
             plugin = FakePlugin.createFakePlugin();
@@ -209,7 +228,7 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void registerCommands(PluginManager pluginManager, ConfigurationSection mainSettings) {
+    protected void registerCommands(PluginManager pluginManager, ConfigurationSection mainSettings) {
         if (paper && mainSettings.getBoolean("use-command", true)) {
             try {
                 CommandMap commandMap = server.getCommandMap();
@@ -249,18 +268,7 @@ public class ServerProtectorManager extends JavaPlugin {
         }
     }
 
-    public void setupLogger(FileConfiguration config) {
-        File dataFolder = getDataFolder();
-        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            throw new RuntimeException("Unable to create data folder");
-        }
-        ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
-        boolean fullPath = fileSettings.getBoolean("use-full-path");
-        String logFilePath = fullPath ? fileSettings.getString("log-file-path") : dataFolder.getPath();
-        logFile = new File(logFilePath, fileSettings.getString("log-file"));
-    }
-
-    public void checkForUpdates(ConfigurationSection mainSettings) {
+    protected void checkForUpdates(ConfigurationSection mainSettings) {
         if (!mainSettings.getBoolean("update-checker", true)) {
             return;
         }
@@ -341,7 +349,7 @@ public class ServerProtectorManager extends JavaPlugin {
         }, player);
     }
 
-    public void logEnableDisable(String msg, LocalDateTime date) {
+    protected void logEnableDisable(String msg, LocalDateTime date) {
         if (getConfig().getBoolean("logging-settings.logging-enable-disable", true)) {
             logToFile(msg.replace("%date%", date.format(TIME_FORMATTER)));
         }
