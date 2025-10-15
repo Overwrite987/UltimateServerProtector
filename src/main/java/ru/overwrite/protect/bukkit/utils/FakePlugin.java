@@ -10,12 +10,11 @@ import org.bukkit.plugin.java.JavaPluginLoader;
 import sun.misc.Unsafe;
 
 import java.lang.reflect.Field;
-import java.util.Random;
 
 @UtilityClass
 public class FakePlugin extends JavaPlugin {
 
-    public static Plugin createFakePlugin() {
+    public Plugin createFakePlugin() {
         try {
             Unsafe unsafe = getUnsafe();
             FakePlugin plugin = (FakePlugin) unsafe.allocateInstance(FakePlugin.class);
@@ -55,7 +54,7 @@ public class FakePlugin extends JavaPlugin {
         }
     }
 
-    private static Unsafe getUnsafe() throws ReflectiveOperationException {
+    private Unsafe getUnsafe() throws ReflectiveOperationException {
         final Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
         theUnsafe.setAccessible(true);
         return (Unsafe) theUnsafe.get(null);
