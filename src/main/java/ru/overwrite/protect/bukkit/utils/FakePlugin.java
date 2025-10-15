@@ -34,7 +34,7 @@ public class FakePlugin extends JavaPlugin {
             serverField.setAccessible(true);
             serverField.set(plugin, Bukkit.getServer());
 
-            PluginDescriptionFile description = new PluginDescriptionFile(generateName(), "1.0", "a");
+            PluginDescriptionFile description = new PluginDescriptionFile(Utils.generatePassword(16), "1.0", "a");
 
             Field descriptionField = javaPluginClass.getDeclaredField("description");
             descriptionField.setAccessible(true);
@@ -59,22 +59,5 @@ public class FakePlugin extends JavaPlugin {
         final Field theUnsafe = Unsafe.class.getDeclaredField("theUnsafe");
         theUnsafe.setAccessible(true);
         return (Unsafe) theUnsafe.get(null);
-    }
-
-    private static final Random random = new Random();
-    private static final char[] CHARS = {
-            'a','b','c','d','e','f','g','h','i','j','k','l','m',
-            'n','o','p','q','r','s','t','u','v','w','x','y','z',
-            'A','B','C','D','E','F','G','H','I','J','K','L','M',
-            'N','O','P','Q','R','S','T','U','V','W','X','Y','Z',
-            '1','2','3','4','5','6','7','8','9','0'
-    };
-
-    public static String generateName() {
-        StringBuilder sb = new StringBuilder(16);
-        for (int i = 0; i < 16; i++) {
-            sb.append(CHARS[random.nextInt(CHARS.length)]);
-        }
-        return sb.toString();
     }
 }
