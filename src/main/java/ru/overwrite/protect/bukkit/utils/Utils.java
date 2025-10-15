@@ -167,7 +167,7 @@ public class Utils {
         return Base64.getEncoder().encodeToString(saltBytes);
     }
 
-    private static final char[] CHARS = {
+    private final char[] CHARS = {
             'a', 'b', 'c', 'd', 'e', 'f', 'g', 'h', 'i', 'j', 'k', 'l', 'm',
             'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w', 'x', 'y', 'z',
             'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J', 'K', 'L', 'M',
@@ -175,7 +175,7 @@ public class Utils {
             '1', '2', '3', '4', '5', '6', '7', '8', '9', '0'
     };
 
-    public static String generatePassword(int length) {
+    public String generatePassword(int length) {
         StringBuilder sb = new StringBuilder(length);
         for (int i = 0; i < length; i++) {
             sb.append(CHARS[random.nextInt(CHARS.length)]);
