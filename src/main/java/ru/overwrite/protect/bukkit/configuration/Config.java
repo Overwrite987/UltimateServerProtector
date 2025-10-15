@@ -61,7 +61,7 @@ public final class Config {
         }
         this.perPlayerPasswords = Map.copyOf(perPlayerPasswords);
         if (shouldSave) {
-            save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
+            save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName(), false);
         }
     }
 
@@ -80,7 +80,7 @@ public final class Config {
             section.set("check-interval", 40);
             section.set("papi-support", false);
             section.set("suppress-api-warnings", false);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section main-settings");
             mainSettings = configFile.getConfigurationSection("main-settings");
         }
@@ -107,7 +107,7 @@ public final class Config {
             section.set("old-encrypt-methods", List.of());
             section.set("salt-length", 24);
             section.set("auto-encrypt-passwords", true);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section encryption-settings");
             encryptionSettings = configFile.getConfigurationSection("encryption-settings");
         }
@@ -155,7 +155,7 @@ public final class Config {
             ConfigurationSection section = configFile.createSection("geyser-settings");
             section.set("geyser-prefix", ".");
             section.set("geyser-nicknames", List.of("test99999"));
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section geyser-settings");
             geyserSettings = configFile.getConfigurationSection("geyser-settings");
         }
@@ -181,7 +181,7 @@ public final class Config {
             section.set("hide-on-entering", true);
             section.set("hide-other-on-entering", true);
             section.set("allow-orientation-change", false);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section blocking-settings");
             blockingSettings = configFile.getConfigurationSection("blocking-settings");
         }
@@ -208,7 +208,7 @@ public final class Config {
             section.set("session", true);
             section.set("session-time-enabled", true);
             section.set("session-time", 21600);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section session-settings");
             sessionSettings = configFile.getConfigurationSection("session-settings");
         }
@@ -232,7 +232,7 @@ public final class Config {
             section.set("time", 60);
             section.set("enable-rejoin", true);
             section.set("max-rejoins", 3);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section punish-settings");
             punishSettings = configFile.getConfigurationSection("punish-settings");
         }
@@ -260,7 +260,7 @@ public final class Config {
             section.set("only-console-usp", false);
             section.set("enable-excluded-players", false);
             section.set("use-fake-plugin", true);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section secure-settings");
             secureSettings = configFile.getConfigurationSection("secure-settings");
         }
@@ -285,7 +285,7 @@ public final class Config {
             section.set("allow-cancel-capture-event", false);
             section.set("call-event-on-password-enter", false);
             section.set("allowed-auth-api-calls-packages", List.of());
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section api-settings");
             apiSettings = configFile.getConfigurationSection("api-settings");
         }
@@ -306,7 +306,7 @@ public final class Config {
             section.set("send-titles", true);
             section.set("enable-broadcasts", true);
             section.set("enable-console-broadcasts", true);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section message-settings");
             messageSettings = configFile.getConfigurationSection("message-settings");
         }
@@ -327,7 +327,7 @@ public final class Config {
             section.set("enable-bossbar", false);
             section.set("bar-color", "RED");
             section.set("bar-style", "SEGMENTED_12");
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section bossbar-settings");
             bossbarSettings = configFile.getConfigurationSection("bossbar-settings");
         }
@@ -353,7 +353,7 @@ public final class Config {
             section.set("on-capture", "ENTITY_ITEM_BREAK;1.0;1.0");
             section.set("on-pas-fail", "ENTITY_VILLAGER_NO;1.0;1.0");
             section.set("on-pas-correct", "ENTITY_PLAYER_LEVELUP;1.0;1.0");
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section sound-settings");
             soundSettings = configFile.getConfigurationSection("sound-settings");
         }
@@ -374,7 +374,7 @@ public final class Config {
             ConfigurationSection section = configFile.createSection("effect-settings");
             section.set("enable-effects", true);
             section.set("effects", List.of("BLINDNESS;3"));
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section effect-settings");
             effectSettings = configFile.getConfigurationSection("effect-settings");
         }
@@ -413,7 +413,7 @@ public final class Config {
             section.set("logging-join", true);
             section.set("logging-enable-disable", true);
             section.set("logging-command-execution", true);
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section logging-settings");
             loggingSettings = configFile.getConfigurationSection("logging-settings");
         }
@@ -439,7 +439,7 @@ public final class Config {
             section.set("failed-pass", List.of());
             section.set("failed-time", List.of());
             section.set("failed-rejoin", List.of());
-            save(plugin.getDataFilePath(), configFile, "config.yml");
+            save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section main-settings");
             commands = configFile.getConfigurationSection("commands");
         }
@@ -630,13 +630,18 @@ public final class Config {
         return YamlConfiguration.loadConfiguration(file);
     }
 
-    public void save(String path, FileConfiguration config, String fileName) {
-        plugin.getRunner().runAsync(() -> {
+    public void save(String path, FileConfiguration config, String fileName, boolean async) {
+        Runnable runnable = () -> {
             try {
                 config.save(new File(path, fileName));
             } catch (IOException ex) {
                 ex.printStackTrace();
             }
-        });
+        };
+        if (async) {
+            plugin.getRunner().runAsync(runnable);
+            return;
+        }
+        runnable.run();
     }
 }

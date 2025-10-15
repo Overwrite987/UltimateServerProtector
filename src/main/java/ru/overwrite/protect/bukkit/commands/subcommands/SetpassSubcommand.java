@@ -53,7 +53,7 @@ public class SetpassSubcommand extends AbstractSubCommand {
         } else {
             dataFile.set("data." + nick + ".encrypted-pass", pas);
         }
-        pluginConfig.save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName());
+        pluginConfig.save(plugin.getDataFilePath(), dataFile, plugin.getDataFileName(), true);
         plugin.setDataFile(dataFile);
         pluginConfig.setupPasswords(dataFile);
     }

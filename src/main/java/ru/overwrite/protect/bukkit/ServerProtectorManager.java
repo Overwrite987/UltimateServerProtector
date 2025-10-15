@@ -154,9 +154,9 @@ public class ServerProtectorManager extends JavaPlugin {
         dataFilePath = fullPath ? fileSettings.getString("data-file-path") : absolutePath;
         dataFileName = fileSettings.getString("data-file");
         dataFile = pluginConfig.getFile(dataFilePath, dataFileName);
-        pluginConfig.save(dataFilePath, dataFile, dataFileName);
+        pluginConfig.save(dataFilePath, dataFile, dataFileName, false);
         messageFile = pluginConfig.getFile(absolutePath, "message.yml");
-        pluginConfig.save(absolutePath, messageFile, "message.yml");
+        pluginConfig.save(absolutePath, messageFile, "message.yml", false);
         setupPluginConfig(config);
         pluginConfig.setupPasswords(dataFile);
     }
