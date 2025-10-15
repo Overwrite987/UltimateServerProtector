@@ -143,7 +143,6 @@ secure-settings:
   # If you use this feature, malicious plugins will not be able to upload USP listeners
   use-fake-plugin: true
 
-
 # Api settings
 api-settings:
   # Whether to allow canceling ServerProtectorCaptureEvent? (Disabled by default for security reasons)
