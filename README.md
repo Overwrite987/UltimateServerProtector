@@ -43,7 +43,7 @@ Admin commands that can be included in the config:
 <br><a href="https://black-minecraft.com/resources/ultimateserverprotector-plagin-na-unikalnyj-admin-parol-dlja-kazhdogo-igroka.2160/">**Black-Minecraft.com**</a>
 
 **• Build**
-<br>Maven required
+<br>Gradle required
 ```bash
 # For English locale
 gradlew shadowJar -Plang=en
