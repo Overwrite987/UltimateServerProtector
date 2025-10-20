@@ -18,7 +18,7 @@ public final class ServerProtector extends ServerProtectorManager {
         final FileConfiguration config = getConfig();
         final ConfigurationSection mainSettings = config.getConfigurationSection("main-settings");
         setupLogger(config);
-        setupProxy(config);
+        setupProxy(mainSettings);
         loadConfigs(config);
         setupRunner();
         PluginManager pluginManager = server.getPluginManager();

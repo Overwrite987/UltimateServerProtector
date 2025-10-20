@@ -137,8 +137,8 @@ public class ServerProtectorManager extends JavaPlugin {
         logFile = new File(logFilePath, fileSettings.getString("log-file"));
     }
 
-    protected void setupProxy(FileConfiguration config) {
-        if (config.getBoolean("main-settings.proxy", false)) {
+    protected void setupProxy(ConfigurationSection mainSettings) {
+        if (mainSettings.getBoolean("proxy", false)) {
             Messenger messenger = server.getMessenger();
             messenger.registerOutgoingPluginChannel(this, "BungeeCord");
             pluginMessage = new PluginMessage(this);
