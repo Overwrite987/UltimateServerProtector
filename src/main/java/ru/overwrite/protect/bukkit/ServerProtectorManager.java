@@ -127,13 +127,9 @@ public class ServerProtectorManager extends JavaPlugin {
     }
 
     protected void setupLogger(FileConfiguration config) {
-        File dataFolder = getDataFolder();
-        if (!dataFolder.exists() && !dataFolder.mkdirs()) {
-            throw new RuntimeException("Unable to create data folder");
-        }
         ConfigurationSection fileSettings = config.getConfigurationSection("file-settings");
         boolean fullPath = fileSettings.getBoolean("use-full-path");
-        String logFilePath = fullPath ? fileSettings.getString("log-file-path") : dataFolder.getPath();
+        String logFilePath = fullPath ? fileSettings.getString("log-file-path") : getDataFolder().getPath();
         logFile = new File(logFilePath, fileSettings.getString("log-file"));
     }
 
