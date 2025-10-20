@@ -10,8 +10,8 @@ public class LegacyAdvancedColorizer implements Colorizer {
         if (message == null || message.isEmpty()) {
             return message;
         }
-        final StringBuilder builder = new StringBuilder();
         final char[] messageChars = message.toCharArray();
+        final StringBuilder builder = new StringBuilder(messageChars.length + 32);
         boolean isColor = false, isHashtag = false, isDoubleTag = false;
 
         for (int index = 0; index < messageChars.length; ) {
