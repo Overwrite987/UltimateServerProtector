@@ -154,8 +154,11 @@ public class ConnectionListener implements Listener {
     }
 
     private void handleRejoin(String playerName) {
+        if (pluginConfig.getPunishSettings().maxRejoins() <= 0) {
+            return;
+        }
         int attempts = api.addRejoin(playerName, 1);
-        if (pluginConfig.getPunishSettings().maxRejoins() > 0 && attempts > pluginConfig.getPunishSettings().maxRejoins()) {
+        if (attempts > pluginConfig.getPunishSettings().maxRejoins()) {
             plugin.checkFail(playerName, pluginConfig.getCommands().failedRejoin());
             api.clearRejoins(playerName);
         }
