@@ -69,7 +69,7 @@ public final class Config {
 
     public void loadMainSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection mainSettings = config.getConfigurationSection("main-settings");
-        if (!configFile.contains("main-settings")) {
+        if (mainSettings == null) {
             pluginLogger.warn("Configuration section main-settings not found!");
             ConfigurationSection section = configFile.createSection("main-settings");
             section.set("serializer", "LEGACY");
@@ -82,7 +82,7 @@ public final class Config {
             section.set("suppress-api-warnings", false);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section main-settings");
-            mainSettings = configFile.getConfigurationSection("main-settings");
+            mainSettings = section;
         }
         this.mainSettings = new MainSettings(
                 mainSettings.getString("prefix", "[UltimateServerProtector]"),
@@ -99,7 +99,7 @@ public final class Config {
 
     public void loadEncryptionSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection encryptionSettings = config.getConfigurationSection("encryption-settings");
-        if (!configFile.contains("encryption-settings")) {
+        if (encryptionSettings == null) {
             pluginLogger.warn("Configuration section encryption-settings not found!");
             ConfigurationSection section = configFile.createSection("encryption-settings");
             section.set("enable-encryption", false);
@@ -109,7 +109,7 @@ public final class Config {
             section.set("auto-encrypt-passwords", true);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section encryption-settings");
-            encryptionSettings = configFile.getConfigurationSection("encryption-settings");
+            encryptionSettings = section;
         }
         this.encryptionSettings = new EncryptionSettings(
                 encryptionSettings.getBoolean("enable-encryption", false),
@@ -150,14 +150,14 @@ public final class Config {
 
     public void loadGeyserSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection geyserSettings = config.getConfigurationSection("geyser-settings");
-        if (!configFile.contains("geyser-settings")) {
+        if (geyserSettings == null) {
             pluginLogger.warn("Configuration section geyser-settings not found!");
             ConfigurationSection section = configFile.createSection("geyser-settings");
             section.set("geyser-prefix", ".");
             section.set("geyser-nicknames", List.of("test99999"));
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section geyser-settings");
-            geyserSettings = configFile.getConfigurationSection("geyser-settings");
+            geyserSettings = section;
         }
         this.geyserSettings = new GeyserSettings(
                 geyserSettings.getString("geyser-prefix", "."),
@@ -169,7 +169,7 @@ public final class Config {
 
     public void loadAdditionalChecks(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection blockingSettings = config.getConfigurationSection("blocking-settings");
-        if (!configFile.contains("blocking-settings")) {
+        if (blockingSettings == null) {
             pluginLogger.warn("Configuration section blocking-settings not found!");
             ConfigurationSection section = configFile.createSection("blocking-settings");
             section.set("block-item-drop", true);
@@ -183,7 +183,7 @@ public final class Config {
             section.set("allow-orientation-change", false);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section blocking-settings");
-            blockingSettings = configFile.getConfigurationSection("blocking-settings");
+            blockingSettings = section;
         }
         this.blockingSettings = new BlockingSettings(
                 blockingSettings.getBoolean("block-item-drop", true),
@@ -202,7 +202,7 @@ public final class Config {
 
     public void loadSessionSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection sessionSettings = config.getConfigurationSection("session-settings");
-        if (!configFile.contains("session-settings")) {
+        if (sessionSettings == null) {
             pluginLogger.warn("Configuration section session-settings not found!");
             ConfigurationSection section = configFile.createSection("session-settings");
             section.set("session", true);
@@ -210,7 +210,7 @@ public final class Config {
             section.set("session-time", 21600);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section session-settings");
-            sessionSettings = configFile.getConfigurationSection("session-settings");
+            sessionSettings = section;
         }
         this.sessionSettings = new SessionSettings(
                 sessionSettings.getBoolean("session", true),
@@ -223,7 +223,7 @@ public final class Config {
 
     public void loadPunishSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection punishSettings = config.getConfigurationSection("punish-settings");
-        if (!configFile.contains("punish-settings")) {
+        if (punishSettings == null) {
             pluginLogger.warn("Configuration section punish-settings not found!");
             ConfigurationSection section = configFile.createSection("punish-settings");
             section.set("enable-attempts", true);
@@ -234,7 +234,7 @@ public final class Config {
             section.set("max-rejoins", 3);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section punish-settings");
-            punishSettings = configFile.getConfigurationSection("punish-settings");
+            punishSettings = section;
         }
         this.punishSettings = new PunishSettings(
                 punishSettings.getBoolean("enable-attempts", true),
@@ -250,7 +250,7 @@ public final class Config {
 
     public void loadSecureSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection secureSettings = config.getConfigurationSection("secure-settings");
-        if (!configFile.contains("secure-settings")) {
+        if (secureSettings == null) {
             pluginLogger.warn("Configuration section secure-settings not found!");
             ConfigurationSection section = configFile.createSection("secure-settings");
             section.set("enable-op-whitelist", false);
@@ -262,7 +262,7 @@ public final class Config {
             section.set("use-fake-plugin", true);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section secure-settings");
-            secureSettings = configFile.getConfigurationSection("secure-settings");
+            secureSettings = section;
         }
         this.secureSettings = new SecureSettings(
                 secureSettings.getBoolean("enable-op-whitelist", false),
@@ -279,7 +279,7 @@ public final class Config {
 
     public void loadApiSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection apiSettings = config.getConfigurationSection("api-settings");
-        if (!configFile.contains("api-settings")) {
+        if (apiSettings == null) {
             pluginLogger.warn("Configuration section api-settings not found!");
             ConfigurationSection section = configFile.createSection("api-settings");
             section.set("allow-cancel-capture-event", false);
@@ -287,7 +287,7 @@ public final class Config {
             section.set("allowed-auth-api-calls-packages", List.of());
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section api-settings");
-            apiSettings = configFile.getConfigurationSection("api-settings");
+            apiSettings = section;
         }
         this.apiSettings = new ApiSettings(
                 apiSettings.getBoolean("allow-cancel-capture-event", false),
@@ -300,7 +300,7 @@ public final class Config {
 
     public void loadMessageSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection messageSettings = config.getConfigurationSection("message-settings");
-        if (!configFile.contains("message-settings")) {
+        if (messageSettings == null) {
             pluginLogger.warn("Configuration section message-settings not found!");
             ConfigurationSection section = configFile.createSection("message-settings");
             section.set("send-titles", true);
@@ -308,7 +308,7 @@ public final class Config {
             section.set("enable-console-broadcasts", true);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section message-settings");
-            messageSettings = configFile.getConfigurationSection("message-settings");
+            messageSettings = section;
         }
         this.messageSettings = new MessageSettings(
                 messageSettings.getBoolean("send-titles", true),
@@ -321,7 +321,7 @@ public final class Config {
 
     public void loadBossbarSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection bossbarSettings = config.getConfigurationSection("bossbar-settings");
-        if (!configFile.contains("bossbar-settings")) {
+        if (bossbarSettings == null) {
             pluginLogger.warn("Configuration section bossbar-settings not found!");
             ConfigurationSection section = configFile.createSection("bossbar-settings");
             section.set("enable-bossbar", false);
@@ -329,7 +329,7 @@ public final class Config {
             section.set("bar-style", "SEGMENTED_12");
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section bossbar-settings");
-            bossbarSettings = configFile.getConfigurationSection("bossbar-settings");
+            bossbarSettings = section;
         }
         ConfigurationSection bossbar = plugin.getMessageFile().getConfigurationSection("bossbar");
         String bossbarMessage = getMessage(bossbar, "message");
@@ -346,7 +346,7 @@ public final class Config {
 
     public void loadSoundSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection soundSettings = config.getConfigurationSection("sound-settings");
-        if (!configFile.contains("sound-settings")) {
+        if (soundSettings == null) {
             pluginLogger.warn("Configuration section sound-settings not found!");
             ConfigurationSection section = configFile.createSection("sound-settings");
             section.set("enable-sounds", false);
@@ -355,7 +355,7 @@ public final class Config {
             section.set("on-pas-correct", "ENTITY_PLAYER_LEVELUP;1.0;1.0");
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section sound-settings");
-            soundSettings = configFile.getConfigurationSection("sound-settings");
+            soundSettings = section;
         }
         this.soundSettings = new SoundSettings(
                 soundSettings.getBoolean("enable-sounds"),
@@ -369,14 +369,14 @@ public final class Config {
 
     public void loadEffects(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection effectSettings = config.getConfigurationSection("effect-settings");
-        if (!configFile.contains("effect-settings")) {
+        if (effectSettings == null) {
             pluginLogger.warn("Configuration section effect-settings not found!");
             ConfigurationSection section = configFile.createSection("effect-settings");
             section.set("enable-effects", true);
             section.set("effects", List.of("BLINDNESS;3"));
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section effect-settings");
-            effectSettings = configFile.getConfigurationSection("effect-settings");
+            effectSettings = section;
         }
         List<PotionEffect> effectList = getEffectList(effectSettings.getStringList("effects"));
         this.effectSettings = new EffectSettings(
@@ -406,7 +406,7 @@ public final class Config {
 
     public void loadLoggingSettings(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection loggingSettings = config.getConfigurationSection("logging-settings");
-        if (!configFile.contains("logging-settings")) {
+        if (loggingSettings == null) {
             pluginLogger.warn("Configuration section logging-settings not found!");
             ConfigurationSection section = configFile.createSection("logging-settings");
             section.set("logging-pas", true);
@@ -415,7 +415,7 @@ public final class Config {
             section.set("logging-command-execution", true);
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section logging-settings");
-            loggingSettings = configFile.getConfigurationSection("logging-settings");
+            loggingSettings = section;
         }
         this.loggingSettings = new LoggingSettings(
                 loggingSettings.getBoolean("logging-pas", true),
@@ -429,7 +429,7 @@ public final class Config {
 
     public void loadFailCommands(FileConfiguration config, FileConfiguration configFile) {
         ConfigurationSection commands = config.getConfigurationSection("commands");
-        if (!configFile.contains("commands")) {
+        if (commands == null) {
             pluginLogger.warn("Configuration section commands not found!");
             ConfigurationSection section = configFile.createSection("commands");
             section.set("not-in-config", List.of());
@@ -441,7 +441,7 @@ public final class Config {
             section.set("failed-rejoin", List.of());
             save(plugin.getDataFilePath(), configFile, "config.yml", false);
             pluginLogger.info("Created section main-settings");
-            commands = configFile.getConfigurationSection("commands");
+            commands = section;
         }
         this.commands = new Commands(
                 List.copyOf(commands.getStringList("not-in-config")),
