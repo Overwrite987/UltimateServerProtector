@@ -5,6 +5,7 @@ import lombok.Getter;
 import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredListener;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordEnterEvent;
 import ru.overwrite.protect.bukkit.api.events.ServerProtectorPasswordFailEvent;
@@ -40,7 +41,8 @@ public final class PasswordHandler {
     public void checkPassword(Player player, String input, boolean resync) {
         Runnable run = () -> {
             ServerProtectorPasswordEnterEvent enterEvent = new ServerProtectorPasswordEnterEvent(player, input);
-            if (pluginConfig.getApiSettings().callEventOnPasswordEnter() && !enterEvent.callEvent()) {
+            RegisteredListener[] listeners = enterEvent.getHandlers().getRegisteredListeners();
+            if (pluginConfig.getApiSettings().callEventOnPasswordEnter() && listeners.length != 0 && !enterEvent.callEvent()) {
                 return;
             }
             String playerPass = pluginConfig.getPerPlayerPasswords().get(player.getName());
@@ -94,7 +96,8 @@ public final class PasswordHandler {
             attempts.addTo(playerName, 1);
         }
         ServerProtectorPasswordFailEvent failEvent = new ServerProtectorPasswordFailEvent(player, attempts.getInt(playerName));
-        if (!failEvent.callEvent()) {
+        RegisteredListener[] listeners = failEvent.getHandlers().getRegisteredListeners();
+        if (listeners.length != 0 && !failEvent.callEvent()) {
             return;
         }
         player.sendMessage(pluginConfig.getMessages().incorrect());
@@ -117,7 +120,8 @@ public final class PasswordHandler {
             return;
         }
         ServerProtectorPasswordSuccessEvent successEvent = new ServerProtectorPasswordSuccessEvent(player);
-        if (!successEvent.callEvent()) {
+        RegisteredListener[] listeners = successEvent.getHandlers().getRegisteredListeners();
+        if (listeners.length != 0 && !successEvent.callEvent()) {
             return;
         }
         String playerName = player.getName();

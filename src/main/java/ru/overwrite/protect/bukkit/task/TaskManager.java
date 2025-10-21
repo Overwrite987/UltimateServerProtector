@@ -5,6 +5,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.boss.BossBar;
 import org.bukkit.configuration.file.FileConfiguration;
 import org.bukkit.entity.Player;
+import org.bukkit.plugin.RegisteredListener;
 import ru.overwrite.protect.bukkit.PasswordHandler;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
@@ -52,6 +53,10 @@ public final class TaskManager {
                 if (!api.isAuthorised(onlinePlayer)) {
                     ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(onlinePlayer, Utils.getIp(onlinePlayer), captureReason);
                     captureEvent.callEvent();
+                    RegisteredListener[] listeners = captureEvent.getHandlers().getRegisteredListeners();
+                    if (listeners.length != 0) {
+                        captureEvent.callEvent();
+                    }
                     if (pluginConfig.getApiSettings().allowCancelCaptureEvent() && captureEvent.isCancelled()) {
                         continue;
                     }

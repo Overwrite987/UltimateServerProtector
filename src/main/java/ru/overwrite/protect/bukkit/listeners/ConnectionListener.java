@@ -5,6 +5,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.player.*;
+import org.bukkit.plugin.RegisteredListener;
 import ru.overwrite.protect.bukkit.ServerProtectorManager;
 import ru.overwrite.protect.bukkit.api.CaptureReason;
 import ru.overwrite.protect.bukkit.api.ServerProtectorAPI;
@@ -62,7 +63,10 @@ public class ConnectionListener implements Listener {
             if (pluginConfig.getSessionSettings().session() && !api.hasSession(playerName, ip)) {
                 if (!api.isExcluded(playerName, pluginConfig.getExcludedPlayers().adminPass())) {
                     ServerProtectorCaptureEvent captureEvent = new ServerProtectorCaptureEvent(player, ip, captureReason);
-                    captureEvent.callEvent();
+                    RegisteredListener[] listeners = captureEvent.getHandlers().getRegisteredListeners();
+                    if (listeners.length != 0) {
+                        captureEvent.callEvent();
+                    }
                     if (pluginConfig.getApiSettings().allowCancelCaptureEvent() && captureEvent.isCancelled()) {
                         return;
                     }
