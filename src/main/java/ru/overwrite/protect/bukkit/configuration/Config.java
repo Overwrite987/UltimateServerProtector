@@ -39,9 +39,7 @@ public final class Config {
         Set<String> keys = data.getKeys(false);
         Map<String, String> perPlayerPasswords = new HashMap<>(keys.size());
         for (String nick : keys) {
-            String playerNick = (this.geyserSettings.prefix() != null &&
-                    !this.geyserSettings.prefix().isBlank() &&
-                    this.geyserSettings.nicknames().contains(nick))
+            String playerNick = !this.geyserSettings.prefix().isBlank() && this.geyserSettings.nicknames().contains(nick)
                     ? this.geyserSettings.prefix() + nick
                     : nick;
             if (!this.encryptionSettings.enableEncryption()) {
@@ -51,10 +49,12 @@ public final class Config {
             if (this.encryptionSettings.autoEncryptPasswords()) {
                 if (data.getString(nick + ".pass") != null) {
                     String encryptedPas = Utils.encryptPassword(data.getString(nick + ".pass"), Utils.generateSalt(this.encryptionSettings.saltLength()), this.encryptionSettings.encryptMethods());
-                    dataFile.set("data." + nick + ".encrypted-pass", encryptedPas);
-                    dataFile.set("data." + nick + ".pass", null);
+                    data.set(nick + ".encrypted-pass", encryptedPas);
+                    data.set(nick + ".pass", null);
+                    perPlayerPasswords.put(playerNick, encryptedPas);
                     shouldSave = true;
                     plugin.setDataFile(dataFile);
+                    continue;
                 }
             }
             perPlayerPasswords.put(playerNick, data.getString(nick + ".encrypted-pass"));
