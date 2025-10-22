@@ -130,6 +130,9 @@ public final class Config {
 
     private List<List<String>> getOldEncryptionMethods(ConfigurationSection section) {
         List<String> oldEncryptionMethods = section.getStringList("old-encrypt-methods");
+        if (oldEncryptionMethods.isEmpty()) {
+            return List.of();
+        }
         List<List<String>> result = new ArrayList<>(oldEncryptionMethods.size());
         for (String encryptionMethod : oldEncryptionMethods) {
             result.add(parseEncryptionMethod(encryptionMethod));
@@ -139,11 +142,10 @@ public final class Config {
 
     private List<String> parseEncryptionMethod(String encryptionMethod) {
         String[] parts = encryptionMethod.split(";");
-        List<String> methods = new ArrayList<>(parts.length);
-        for (String part : parts) {
-            methods.add(part.trim().toUpperCase());
+        for (int i = 0; i < parts.length; i++) {
+            parts[i] = parts[i].trim().toUpperCase();
         }
-        return List.copyOf(methods);
+        return List.of(parts);
     }
 
     private GeyserSettings geyserSettings;
