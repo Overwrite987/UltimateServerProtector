@@ -69,7 +69,7 @@ public class ServerProtectorManager extends JavaPlugin {
     private final Config pluginConfig = new Config(this);
     private final ServerProtectorAPI api = new ServerProtectorAPI(this);
     private final PasswordHandler passwordHandler = new PasswordHandler(this);
-    private Runner runner;
+    private final Runner runner = Utils.FOLIA ? new PaperRunner(this) : new BukkitRunner(this);
 
     private PluginMessage pluginMessage;
 
@@ -80,14 +80,6 @@ public class ServerProtectorManager extends JavaPlugin {
 
     @Getter(AccessLevel.NONE)
     public final Server server = getServer();
-
-    protected void setupRunner() {
-        Plugin plugin = this;
-        if (paper && pluginConfig.getSecureSettings().useFakePlugin()) {
-            plugin = FakePlugin.createFakePlugin();
-        }
-        runner = Utils.FOLIA ? new PaperRunner(this, plugin) : new BukkitRunner(this, plugin);
-    }
 
     protected void checkPaper() {
         if (server.getName().equals("CraftBukkit")) {
