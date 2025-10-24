@@ -48,7 +48,7 @@ public class FakePlugin extends JavaPlugin {
             loggerField.setAccessible(true);
             loggerField.set(plugin, PaperPluginLogger.getLogger(description));
 
-            if (Utils.SUB_VERSION >= 21) {
+            if (Utils.SUB_VERSION >= 20) {
                 Field pluginMetaField = javaPluginClass.getDeclaredField("pluginMeta");
                 pluginMetaField.setAccessible(true);
                 pluginMetaField.set(plugin, description);
